@@ -25,9 +25,11 @@ function log(msg) {
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
   const error = params.get("error");
+  const returnedState = params.get("state");
 
   log("Incoming code: " + code);
   log("Incoming error: " + error);
+  log("Incoming state: " + returnedState);
 
   if (error) {
     log("OAuth error: " + error);
@@ -35,7 +37,15 @@ function log(msg) {
   }
 
   if (!code) {
-    log("No ?code found in URL — Twitch never redirected properly.");
+    log("No ?code found — Twitch never redirected properly.");
+    return;
+  }
+
+  const storedState = sessionStorage.getItem("pkce_state");
+  log("Stored state: " + storedState);
+
+  if (!returnedState || returnedState !== storedState) {
+    log("STATE MISMATCH — stopping.");
     return;
   }
 
@@ -75,13 +85,6 @@ function log(msg) {
     window.location.href = appUrl + "?token=" + encodeURIComponent(json.access_token);
   } else {
     log("Token exchange failed.");
-  }
-  const returnedState = params.get("state");
-  const storedState = sessionStorage.getItem("pkce_state");
-  
-  if (!returnedState || returnedState !== storedState) {
-    log("State mismatch — possible CSRF attack.");
-    return;
   }
 })();
 </script>
