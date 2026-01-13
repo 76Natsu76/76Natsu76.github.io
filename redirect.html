@@ -3,42 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <title>Twitch Redirect (DEBUG)</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    pre { background: #eee; padding: 10px; }
+  </style>
 </head>
 <body>
-  <p>Completing login... (DEBUG MODE)</p>
+  <h2>Redirect Debug</h2>
+  <p>This page is receiving Twitch's redirect...</p>
+  <pre id="log"></pre>
 
 <script>
+function log(msg) {
+  console.log(msg);
+  document.getElementById("log").textContent += msg + "\n";
+}
+
 (async function () {
-  console.log("=== redirect.html DEBUG ===");
+  log("=== redirect.html DEBUG ===");
 
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
   const error = params.get("error");
 
-  console.log("Incoming code:", code);
-  console.log("Incoming error:", error);
+  log("Incoming code: " + code);
+  log("Incoming error: " + error);
 
   if (error) {
-    document.body.innerHTML = "<p>OAuth error: " + error + "</p>";
+    log("OAuth error: " + error);
     return;
   }
 
   if (!code) {
-    document.body.innerHTML = "<p>No ?code found in URL.</p>";
+    log("No ?code found in URL — Twitch never redirected properly.");
     return;
   }
 
   const codeVerifier = sessionStorage.getItem("pkce_code_verifier");
-  console.log("Loaded code_verifier:", codeVerifier);
+  log("Loaded code_verifier: " + codeVerifier);
 
   if (!codeVerifier) {
-    document.body.innerHTML = "<p>Missing PKCE code_verifier.</p>";
+    log("Missing PKCE code_verifier.");
     return;
   }
 
   const appUrl = "https://script.google.com/macros/s/AKfycbyk-fbDyRiLscc7JFjayabaY2h7G98NJkQ44prCiUJEAJI-_DtqKhM80rwB1GozmwKL/exec";
 
-  console.log("Sending POST to Apps Script...");
+  log("Sending POST to Apps Script...");
 
   let res;
   try {
@@ -52,20 +63,18 @@
       })
     });
   } catch (err) {
-    console.error("Fetch error:", err);
-    document.body.innerHTML = "<p>Fetch error: " + err + "</p>";
+    log("Fetch error: " + err);
     return;
   }
 
   const json = await res.json();
-  console.log("Apps Script response:", json);
+  log("Apps Script response: " + JSON.stringify(json));
 
   if (json.access_token) {
-    console.log("SUCCESS — redirecting with token:", json.access_token);
+    log("SUCCESS — redirecting with token...");
     window.location.href = appUrl + "?token=" + encodeURIComponent(json.access_token);
   } else {
-    console.error("Token exchange failed:", json);
-    document.body.innerHTML = "<p>Token exchange failed:<br>" + JSON.stringify(json) + "</p>";
+    log("Token exchange failed.");
   }
 })();
 </script>
