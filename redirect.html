@@ -76,6 +76,13 @@ function log(msg) {
   } else {
     log("Token exchange failed.");
   }
+  const returnedState = params.get("state");
+  const storedState = sessionStorage.getItem("pkce_state");
+  
+  if (!returnedState || returnedState !== storedState) {
+    log("State mismatch — possible CSRF attack.");
+    return;
+  }
 })();
 </script>
 </body>
