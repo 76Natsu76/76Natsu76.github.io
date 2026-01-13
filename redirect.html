@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Twitch Redirect</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+  </style>
+</head>
+<body>
+  <div id="status">Completing login...</div>
+
+<script>
+(function () {
+  const params = new URLSearchParams(window.location.hash.substring(1));
+  const token = params.get("access_token");
+
+  if (!token) {
+    document.getElementById("status").textContent = "No token found in URL.";
+    return;
+  }
+
+  // Your Apps Script web app URL
+  const APP_URL = "https://script.google.com/macros/s/AKfycbyKkajYZifVdpKnfT3wgOH4zFxgEdRFqjxRQZEK-I7F182Eq2n_s3ANL7URFYM0WoXk/exec";
+  // Redirect to Apps Script with token in URL
+  const finalURL = APP_URL + "?token=" + encodeURIComponent(token);
+
+  window.location.href = finalURL;
+})();
+</script>
+</body>
+</html>
