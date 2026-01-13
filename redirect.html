@@ -2,38 +2,47 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Twitch Redirect</title>
+  <title>Twitch Redirect (DEBUG)</title>
 </head>
 <body>
-  <p>Completing login...</p>
+  <p>Completing login... (DEBUG MODE)</p>
 
 <script>
 (async function () {
+  console.log("=== redirect.html DEBUG ===");
+
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
   const error = params.get("error");
 
+  console.log("Incoming code:", code);
+  console.log("Incoming error:", error);
+
   if (error) {
-    console.error("Twitch OAuth error:", error);
-    document.body.innerHTML = "<p>Login failed: " + error + "</p>";
+    document.body.innerHTML = "<p>OAuth error: " + error + "</p>";
     return;
   }
 
   if (!code) {
-    document.body.innerHTML = "<p>No authorization code found.</p>";
+    document.body.innerHTML = "<p>No ?code found in URL.</p>";
     return;
   }
 
   const codeVerifier = sessionStorage.getItem("pkce_code_verifier");
+  console.log("Loaded code_verifier:", codeVerifier);
+
   if (!codeVerifier) {
-    document.body.innerHTML = "<p>Missing PKCE code verifier.</p>";
+    document.body.innerHTML = "<p>Missing PKCE code_verifier.</p>";
     return;
   }
 
   const appUrl = "https://script.google.com/macros/s/AKfycbyk-fbDyRiLscc7JFjayabaY2h7G98NJkQ44prCiUJEAJI-_DtqKhM80rwB1GozmwKL/exec";
 
+  console.log("Sending POST to Apps Script...");
+
+  let res;
   try {
-    const res = await fetch(appUrl, {
+    res = await fetch(appUrl, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
@@ -42,17 +51,21 @@
         code_verifier: codeVerifier
       })
     });
-
-    const json = await res.json();
-    if (json.access_token) {
-      window.location.href = appUrl + "?token=" + encodeURIComponent(json.access_token);
-    } else {
-      console.error("Token exchange failed:", json);
-      document.body.innerHTML = "<p>Token exchange failed.</p>";
-    }
   } catch (err) {
-    console.error("Error calling Apps Script:", err);
-    document.body.innerHTML = "<p>Error completing login.</p>";
+    console.error("Fetch error:", err);
+    document.body.innerHTML = "<p>Fetch error: " + err + "</p>";
+    return;
+  }
+
+  const json = await res.json();
+  console.log("Apps Script response:", json);
+
+  if (json.access_token) {
+    console.log("SUCCESS — redirecting with token:", json.access_token);
+    window.location.href = appUrl + "?token=" + encodeURIComponent(json.access_token);
+  } else {
+    console.error("Token exchange failed:", json);
+    document.body.innerHTML = "<p>Token exchange failed:<br>" + JSON.stringify(json) + "</p>";
   }
 })();
 </script>
