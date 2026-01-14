@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Twitch Redirect (DEBUG)</title>
+  <title>Twitch Redirect (LOCALHOST CONFIDENTIAL DEBUG)</title>
   <style>
     body { font-family: Arial; padding: 20px; }
     pre { background: #eee; padding: 10px; }
   </style>
 </head>
 <body>
-  <h2>Redirect Debug</h2>
+  <h2>Redirect Debug (Localhost)</h2>
   <p>This page is receiving Twitch's redirect...</p>
   <pre id="log"></pre>
 
@@ -20,7 +20,7 @@ function log(msg) {
 }
 
 (async function () {
-  log("=== redirect.html DEBUG ===");
+  log("=== redirect.html DEBUG (LOCALHOST CONFIDENTIAL) ===");
 
   const params = new URLSearchParams(window.location.search);
   const code = params.get("code");
@@ -41,19 +41,11 @@ function log(msg) {
     return;
   }
 
-  const storedState = sessionStorage.getItem("pkce_state");
+  const storedState = sessionStorage.getItem("oauth_state");
   log("Stored state: " + storedState);
 
   if (!returnedState || returnedState !== storedState) {
     log("STATE MISMATCH — stopping.");
-    return;
-  }
-
-  const codeVerifier = sessionStorage.getItem("pkce_code_verifier");
-  log("Loaded code_verifier: " + codeVerifier);
-
-  if (!codeVerifier) {
-    log("Missing PKCE code_verifier.");
     return;
   }
 
@@ -68,8 +60,7 @@ function log(msg) {
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
       body: new URLSearchParams({
         action: "exchange",
-        code: code,
-        code_verifier: codeVerifier
+        code: code
       })
     });
   } catch (err) {
