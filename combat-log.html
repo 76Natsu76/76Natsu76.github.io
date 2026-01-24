@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Combat Log</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .log-entry {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .log-header {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:8px;
+      font-size:14px;
+      opacity:0.8;
+    }
+
+    .log-title {
+      font-size:16px;
+      font-weight:600;
+      color:#9af7ff;
+      cursor:pointer;
+    }
+
+    .log-body {
+      white-space:pre-wrap;
+      font-family:monospace;
+      background:#000;
+      padding:12px;
+      border-radius:6px;
+      border:1px solid #333;
+      margin-top:10px;
+      max-height:300px;
+      overflow-y:auto;
+      display:none;
+    }
+
+    .btn {
+      margin-top:16px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Combat Log</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="logContainer">Loading...</div>
+
+  <button class="btn" onclick="loadLogs()">Refresh</button>
+  <button class="btn" onclick="goToMap()">World Map</button>
+  <button class="btn" onclick="goToFight()">Fight</button>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    /* ============================================================
+       LOAD LOGS
+       ============================================================ */
+
+    async function loadLogs() {
+      const container = document.getElementById("logContainer");
+
+      if (!username) {
+        container.textContent = "Error: No Twitch username found.";
+        return;
+      }
+
+      container.textContent = "Loading combat logs...";
+
+      try {
+        const logs = await api.getCombatLogs(username);
+        renderLogs(logs);
+      } catch (err) {
+        container.textContent = "Network error: " + err.message;
+      }
+    }
+
+    /* ============================================================
+       RENDER LOGS
+       ============================================================ */
+
+    function renderLogs(logs) {
+      const container = document.getElementById("logContainer");
+
+      if (!logs || logs.length === 0) {
+        container.innerHTML = "<div>No combat logs found.</div>";
+        return;
+      }
+
+      container.innerHTML = logs
+        .map((log, index) => {
+          const timestamp = new Date(log.timestamp).toLocaleString();
+          const title = `${format(log.region)} — ${format(log.enemyKey)} (${log.outcome})`;
+
+          const body = [
+            `Outcome: ${log.outcome}`,
+            `Rounds: ${log.rounds}`,
+            `XP: ${log.rewards?.xp ?? 0}`,
+            `Gold: ${log.rewards?.gold ?? 0}`,
+            log.rewards?.loot?.length
+              ? `Loot: ${log.rewards.loot.map(l => `${l.quantity}x ${l.name}`).join(", ")}`
+              : `Loot: None`,
+            "",
+            "=== Combat Log ===",
+            ...log.log.map(formatEntry)
+          ].join("\n");
+
+          return `
+            <div class="log-entry">
+              <div class="log-header">
+                <span>${timestamp}</span>
+                <span>${format(log.region)}</span>
+              </div>
+
+              <div class="log-title" onclick="toggleBody(${index})">
+                ${title}
+              </div>
+
+              <div class="log-body" id="body-${index}">
+                ${body}
+              </div>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function toggleBody(i) {
+      const el = document.getElementById(`body-${i}`);
+      el.style.display = el.style.display === "block" ? "none" : "block";
+    }
+
+    function formatEntry(entry) {
+      if (typeof entry === "string") return entry;
+
+      switch (entry.type) {
+        case "attack":
+          return `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg`;
+        case "dot":
+          return `${entry.effectKey} deals ${entry.amount} DOT`;
+        case "hot":
+          return `${entry.effectKey} heals ${entry.amount} HOT`;
+        case "expire":
+          return `${entry.effectKey} expired`;
+        default:
+          return JSON.stringify(entry);
+      }
+    }
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+
+    function goToFight() {
+      window.location.href = "fight-interactive.html";
+    }
+
+    loadLogs();
+  </script>
+
+</body>
+</html>
