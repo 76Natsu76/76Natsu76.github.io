@@ -2,82 +2,106 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Twitch Redirect (LOCALHOST CONFIDENTIAL DEBUG)</title>
+  <title>Completing Login…</title>
+
   <style>
-    body { font-family: Arial; padding: 20px; }
-    pre { background: #eee; padding: 10px; }
+    body {
+      background: #0d0d0d;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    #debug {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-size: 14px;
+      color: #7fffd4;
+    }
   </style>
 </head>
+
 <body>
-  <h2>Redirect Debug (Localhost)</h2>
-  <p>This page is receiving Twitch's redirect...</p>
-  <pre id="log"></pre>
 
-<script>
-function log(msg) {
-  console.log(msg);
-  document.getElementById("log").textContent += msg + "\n";
-}
+  <h2>Completing Twitch Login…</h2>
+  <div id="debug"></div>
 
-(async function () {
-  log("=== redirect.html DEBUG (LOCALHOST CONFIDENTIAL) ===");
+  <script>
+    const log = msg => {
+      console.log(msg);
+      document.getElementById("debug").textContent += msg + "\n";
+    };
 
-  const params = new URLSearchParams(window.location.search);
-  const code = params.get("code");
-  const error = params.get("error");
-  const returnedState = params.get("state");
+    // 1. Read Twitch OAuth parameters
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
 
-  log("Incoming code: " + code);
-  log("Incoming error: " + error);
-  log("Incoming state: " + returnedState);
+    log("Received code: " + code);
+    log("Received state: " + state);
 
-  if (error) {
-    log("OAuth error: " + error);
-    return;
-  }
+    if (!code) {
+      log("No code received — cannot continue.");
+      throw new Error("Missing code");
+    }
 
-  if (!code) {
-    log("No ?code found — Twitch never redirected properly.");
-    return;
-  }
+    // 2. Validate state (optional but recommended)
+    const savedState = sessionStorage.getItem("oauth_state");
+    if (savedState && state !== savedState) {
+      log("State mismatch — aborting.");
+      throw new Error("State mismatch");
+    }
 
-  const storedState = sessionStorage.getItem("oauth_state");
-  log("Stored state: " + storedState);
+    // 3. Apps Script backend endpoint
+    const BACKEND_URL =
+      "https://script.google.com/macros/s/AKfycbydzeFGOHef1-0VpS6rVsnw--qYcdW5N79mylibTDMGJnBjd3iq4lT5ORrWqbDZHRVVng/exec?cmd=exchange";
 
-  if (!returnedState || returnedState !== storedState) {
-    log("STATE MISMATCH — stopping.");
-    return;
-  }
+    async function exchangeCode() {
+      log("Sending POST to backend…");
 
-  const appUrl = "https://script.google.com/macros/s/AKfycbyk-fbDyRiLscc7JFjayabaY2h7G98NJkQ44prCiUJEAJI-_DtqKhM80rwB1GozmwKL/exec";
+      const res = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          action: "exchange",
+          code: code
+        })
+      });
 
-  log("Sending POST to Apps Script...");
+      const text = await res.text();
+      log("Raw response: " + text);
 
-  let res;
-  try {
-    res = await fetch(appUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        action: "exchange",
-        code: code
-      })
-    });
-  } catch (err) {
-    log("Fetch error: " + err);
-    return;
-  }
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch (e) {
+        log("JSON parse error: " + e);
+        return;
+      }
 
-  const json = await res.json();
-  log("Apps Script response: " + JSON.stringify(json));
+      if (!json.access_token) {
+        log("Token exchange failed.");
+        return;
+      }
 
-  if (json.access_token) {
-    log("SUCCESS — redirecting with token...");
-    window.location.href = appUrl + "?token=" + encodeURIComponent(json.access_token);
-  } else {
-    log("Token exchange failed.");
-  }
-})();
-</script>
+      // 4. Store token + username
+      sessionStorage.setItem("twitch_access_token", json.access_token);
+      sessionStorage.setItem("twitch_username", json.username);
+
+      log("Login successful — redirecting to RPG…");
+
+      // 5. Redirect to Apps Script landing page
+      window.location.href =
+        "https://script.google.com/macros/s/AKfycbydzeFGOHef1-0VpS6rVsnw--qYcdW5N79mylibTDMGJnBjd3iq4lT5ORrWqbDZHRVVng/exec?page=landing";
+    }
+
+    exchangeCode();
+  </script>
+
 </body>
 </html>
