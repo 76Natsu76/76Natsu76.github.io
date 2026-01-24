@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Completing Login…</title>
+
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    #debug {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-size: 14px;
+      color: #7fffd4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Completing Twitch Login…</h2>
+  <div id="debug"></div>
+
+  <script>
+    const log = msg => {
+      console.log(msg);
+      document.getElementById("debug").textContent += msg + "\n";
+    };
+
+    // 1. Read Twitch OAuth parameters
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    const state = params.get("state");
+
+    log("Received code: " + code);
+    log("Received state: " + state);
+
+    if (!code) {
+      log("No code received — cannot continue.");
+      throw new Error("Missing code");
+    }
+
+    // 2. Validate state (optional but recommended)
+    const savedState = sessionStorage.getItem("oauth_state");
+    if (savedState && state !== savedState) {
+      log("State mismatch — aborting.");
+      throw new Error("State mismatch");
+    }
+
+    // 3. Apps Script backend endpoint
+    const BACKEND_URL =
+      "https://76natsu76.github.io/exchange";
+
+    async function exchangeCode() {
+      log("Sending POST to backend…");
+
+      const res = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          action: "exchange",
+          code: code
+        })
+      });
+
+      const text = await res.text();
+      log("Raw response: " + text);
+
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch (e) {
+        log("JSON parse error: " + e);
+        return;
+      }
+
+      if (!json.access_token) {
+        log("Token exchange failed.");
+        return;
+      }
+
+      // 4. Store token + username
+      sessionStorage.setItem("twitch_access_token", json.access_token);
+      sessionStorage.setItem("twitch_username", json.username);
+
+      log("Login successful — redirecting to RPG…");
+
+      // 5. Redirect to Apps Script landing page
+      window.location.href =
+        "https://76natsu76.github.io/landing.html";
+    }
+
+    exchangeCode();
+  </script>
+
+</body>
+</html>
