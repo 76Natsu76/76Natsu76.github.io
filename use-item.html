@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Use Item</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .section {
+      margin-top:24px;
+      padding:16px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+    }
+
+    .section h2 {
+      margin-top:0;
+      font-size:18px;
+      color:#9af7ff;
+    }
+
+    .item {
+      padding:12px;
+      margin:10px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      transition:0.15s;
+    }
+
+    .item:hover {
+      background:#222832;
+    }
+
+    .item-info {
+      max-width:70%;
+    }
+
+    .item-name {
+      font-weight:600;
+      font-size:15px;
+    }
+
+    .item-desc {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .item-qty {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .item-actions button {
+      padding:6px 10px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    .item-actions button:hover {
+      background:#222832;
+    }
+
+    .btn {
+      margin-top:16px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+
+    /* Rarity Colors */
+    .rarity-common { color:#bfbfbf; }
+    .rarity-uncommon { color:#7fff7f; }
+    .rarity-rare { color:#7fcfff; }
+    .rarity-epic { color:#c77fff; }
+    .rarity-legendary { color:#ffbf5f; }
+  </style>
+</head>
+
+<body>
+
+  <h1>Use Item</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="useItemContainer">Loading...</div>
+
+  <button class="btn" onclick="goToInventory()">Inventory</button>
+  <button class="btn" onclick="goToCharacter()">Character</button>
+  <button class="btn" onclick="goToMap()">World Map</button>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    /* ============================================================
+       LOAD USABLE ITEMS
+       ============================================================ */
+
+    async function loadUsableItems() {
+      const container = document.getElementById("useItemContainer");
+
+      if (!username) {
+        container.textContent = "Error: No Twitch username found.";
+        return;
+      }
+
+      try {
+        const player = await api.getPlayer(username);
+        renderUsableItems(player);
+      } catch (err) {
+        container.textContent = "Network error: " + err.message;
+      }
+    }
+
+    /* ============================================================
+       RENDER ITEMS
+       ============================================================ */
+
+    function renderUsableItems(player) {
+      const container = document.getElementById("useItemContainer");
+
+      const usable = (player.inventory || []).filter(
+        item => item.type === "consumable"
+      );
+
+      container.innerHTML = `
+        <div class="section">
+          <h2>Usable Items</h2>
+          ${
+            usable.length === 0
+              ? "<div>No usable items.</div>"
+              : usable.map(item => {
+                  const rarityClass = "rarity-" + (item.rarity || "common").toLowerCase();
+                  return `
+                    <div class="item">
+                      <div class="item-info">
+                        <div class="item-name ${rarityClass}">${item.name}</div>
+                        <div class="item-desc">${item.description || item.meta?.description || "No description"}</div>
+                        <div class="item-qty">x${item.quantity}</div>
+                      </div>
+                      <div class="item-actions">
+                        <button onclick="useItem('${item.id}')">Use</button>
+                      </div>
+                    </div>
+                  `;
+                }).join("")
+          }
+        </div>
+      `;
+    }
+
+    /* ============================================================
+       USE ITEM
+       ============================================================ */
+
+    async function useItem(itemId) {
+      try {
+        const result = await api.useItem(username, itemId);
+        alert(result.message || "Item used.");
+        loadUsableItems();
+      } catch (err) {
+        alert("Error using item: " + err.message);
+      }
+    }
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+
+    function goToInventory() {
+      window.location.href = "inventory.html";
+    }
+
+    function goToCharacter() {
+      window.location.href = "character.html";
+    }
+
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+
+    loadUsableItems();
+  </script>
+
+</body>
+</html>
