@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>S3ven's RPG — Landing</title>
+
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+    }
+    h1 {
+      color: #7fffd4;
+      margin-bottom: 10px;
+    }
+    #status {
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-size: 14px;
+      color: #7fffd4;
+    }
+    button {
+      background: #6441a5;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      font-size: 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #7d5bbe;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Welcome to S3ven's RPG</h1>
+  <div id="status">Loading your character…</div>
+
+  <button id="enterBtn" style="display:none;">Enter the World</button>
+
+  <script>
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbyqqCpcGmg_k3d4Zo6bmkiYZ3AzMWhjgaKEqYrGz-Ii/exec";
+
+    const statusBox = document.getElementById("status");
+    const enterBtn = document.getElementById("enterBtn");
+
+    function log(msg) {
+      console.log(msg);
+      statusBox.textContent += "\n" + msg;
+    }
+
+    // Load identity from sessionStorage
+    const accessToken = sessionStorage.getItem("twitch_access_token");
+    const username = sessionStorage.getItem("twitch_username");
+    const userId = sessionStorage.getItem("twitch_user_id");
+
+    if (!accessToken || !username || !userId) {
+      statusBox.textContent = "Missing login info — redirecting to login…";
+      setTimeout(() => {
+        window.location.href = "https://76natsu76.github.io/index.html";
+      }, 1500);
+    }
+
+    log("Logged in as: " + username);
+
+    async function loadPlayer() {
+      log("Contacting RPG server…");
+
+      const url =
+        `${API_URL}?cmd=loadPlayer&userId=${encodeURIComponent(userId)}&origin=${encodeURIComponent(location.origin)}`;
+
+      const res = await fetch(url);
+      const json = await res.json();
+
+      log("Server response: " + JSON.stringify(json));
+
+      if (!json.ok) {
+        log("Creating new character…");
+      }
+
+      // Store player data for other pages
+      sessionStorage.setItem("player_data", JSON.stringify(json.player || {}));
+
+      statusBox.textContent = `Welcome, ${username}!`;
+      enterBtn.style.display = "block";
+    }
+
+    enterBtn.addEventListener("click", () => {
+      window.location.href = "https://76natsu76.github.io/world-map.html";
+    });
+
+    loadPlayer();
+  </script>
+
+</body>
+</html>
