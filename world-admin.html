@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – World State</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+      max-width:900px;
+      margin:auto;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #adminDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .section {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:20px;
+    }
+
+    .section h2 {
+      margin-top:0;
+      color:#9af7ff;
+      font-size:18px;
+    }
+
+    .stat-row {
+      display:flex;
+      justify-content:space-between;
+      padding:4px 0;
+      border-bottom:1px solid #1c1f28;
+      font-size:14px;
+    }
+
+    .stat-row:last-child {
+      border-bottom:none;
+    }
+
+    .tag {
+      display:inline-block;
+      padding:2px 6px;
+      border-radius:4px;
+      background:#1a1d24;
+      border:1px solid #333;
+      font-size:12px;
+      margin-right:4px;
+      margin-top:4px;
+    }
+
+    button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px 10px;
+      border-radius:4px;
+      font-size:14px;
+      cursor:pointer;
+      margin-right:8px;
+      margin-top:6px;
+    }
+
+    button:hover {
+      background:#222832;
+    }
+
+    #worldJson {
+      margin-top:10px;
+      background:#000;
+      border-radius:6px;
+      border:1px solid #333;
+      padding:12px;
+      font-family:monospace;
+      font-size:12px;
+      max-height:40vh;
+      overflow-y:auto;
+      white-space:pre-wrap;
+    }
+
+    .btn-nav {
+      margin-top:16px;
+      padding:8px 12px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .btn-nav:hover {
+      background:#222832;
+    }
+
+    #statusMessage {
+      margin-top:8px;
+      font-size:13px;
+      opacity:0.85;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>World State</h1>
+  <div id="adminDisplay"></div>
+
+  <div class="section">
+    <h2>Overview</h2>
+    <div id="worldOverview">Loading world...</div>
+    <div id="statusMessage"></div>
+  </div>
+
+  <div class="section">
+    <h2>Controls</h2>
+    <button onclick="reloadWorld()">Reload World</button>
+    <button onclick="advanceDay()">Advance Day</button>
+    <button onclick="tickWorld()">Force Tick</button>
+  </div>
+
+  <div class="section">
+    <h2>Raw World JSON</h2>
+    <div id="worldJson">Waiting...</div>
+  </div>
+
+  <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
+
+  <script>
+    const admin = sessionStorage.getItem("twitch_username");
+    document.getElementById("adminDisplay").textContent =
+      admin ? "Admin: " + admin : "Not logged in";
+
+    async function loadWorld() {
+      const overview = document.getElementById("worldOverview");
+      const jsonBox = document.getElementById("worldJson");
+      overview.textContent = "Loading world...";
+      jsonBox.textContent = "Loading...";
+
+      try {
+        const res = await fetch("/api/admin/world", { cache:"no-store" });
+        if (!res.ok) {
+          overview.textContent = "Failed to load world state.";
+          jsonBox.textContent = "Failed to load.";
+          return;
+        }
+
+        const data = await res.json();
+        renderWorld(data);
+      } catch (err) {
+        overview.textContent = "Network error: " + err.message;
+        jsonBox.textContent = "Network error.";
+      }
+    }
+
+    function renderWorld(world) {
+      const overview = document.getElementById("worldOverview");
+      const jsonBox = document.getElementById("worldJson");
+
+      if (!world) {
+        overview.textContent = "No world data.";
+        jsonBox.textContent = "No data.";
+        return;
+      }
+
+      const day = world.day ?? "?";
+      const season = world.season ?? "Unknown";
+      const weather = world.weather ?? "Unknown";
+      const activeEvents = world.activeEvents || [];
+      const globalModifiers = world.globalModifiers || [];
+
+      const rows = [];
+      rows.push(row("Day", day));
+      rows.push(row("Season", format(season)));
+      rows.push(row("Weather", format(weather)));
+      rows.push(row("Regions Active", (world.regions || []).length));
+
+      overview.innerHTML = `
+        ${rows.join("")}
+        <div style="margin-top:10px;">
+          <strong>Active Events:</strong><br>
+          ${
+            activeEvents.length
+              ? activeEvents.map(e => `<span class="tag">${format(e)}</span>`).join("")
+              : "<span style='opacity:0.7;'>None</span>"
+          }
+        </div>
+        <div style="margin-top:10px;">
+          <strong>Global Modifiers:</strong><br>
+          ${
+            globalModifiers.length
+              ? globalModifiers.map(m => `<span class="tag">${format(m)}</span>`).join("")
+              : "<span style='opacity:0.7;'>None</span>"
+          }
+        </div>
+      `;
+
+      jsonBox.textContent = JSON.stringify(world, null, 2);
+    }
+
+    function row(label, value) {
+      return `
+        <div class="stat-row">
+          <span>${label}</span>
+          <span>${value}</span>
+        </div>
+      `;
+    }
+
+    async function reloadWorld() {
+      await postWorldAction("/api/admin/world/reload", { admin }, "World reloaded.");
+    }
+
+    async function advanceDay() {
+      await postWorldAction("/api/admin/world/advance-day", { admin }, "Day advanced.");
+    }
+
+    async function tickWorld() {
+      await postWorldAction("/api/admin/world/tick", { admin }, "World tick executed.");
+    }
+
+    async function postWorldAction(url, payload, fallbackMessage) {
+      const status = document.getElementById("statusMessage");
+      status.textContent = "Working...";
+
+      try {
+        const res = await fetch(url, {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body:JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        status.textContent = data.message || fallbackMessage;
+        await loadWorld();
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    }
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g," ")
+        .replace(/\b\w/g,c=>c.toUpperCase());
+    }
+
+    function goAdmin() {
+      window.location.href = "admin-dashboard.html";
+    }
+
+    loadWorld();
+  </script>
+
+</body>
+</html>
