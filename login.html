@@ -42,19 +42,45 @@
 
   <script>
     const CLIENT_ID = "5xu3qolkx8ym1altj0c2ecvu9tw6u9";
+    const REDIRECT_URI = "https://76natsu76.github.io/redirect.html";
 
-    // Your Apps Script redirect endpoint
-    const REDIRECT_URI =
-  "https://script.google.com/macros/s/AKfycbyqqCpcGmg_k3d4Zo6bmkiYZ3AzMWhjgaKEqYrGz-Ii/dev?page=redirect";
+    // PKCE helper: generate random string
+    function generateRandomString(length) {
+      const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let result = "";
+      for (let i = 0; i < length; i++) {
+        result += charset.charAt(Math.floor(Math.random() * charset.length));
+      }
+      return result;
+    }
 
-    document.getElementById("loginBtn").addEventListener("click", () => {
+    // PKCE helper: SHA256 → base64url
+    async function sha256ToBase64URL(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+      const hash = await crypto.subtle.digest("SHA-256", data);
+      const bytes = new Uint8Array(hash);
+      let base64 = btoa(String.fromCharCode(...bytes));
+      return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", async () => {
       const state = crypto.randomUUID();
+      const codeVerifier = generateRandomString(64);
+      const codeChallenge = await sha256ToBase64URL(codeVerifier);
+
       sessionStorage.setItem("oauth_state", state);
+      sessionStorage.setItem("pkce_verifier", codeVerifier);
 
       const url =
-        `https://id.twitch.tv/oauth2/authorize?client_id=${CLIENT_ID}` +
+        `https://id.twitch.tv/oauth2/authorize` +
+        `?client_id=${CLIENT_ID}` +
         `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-        `&response_type=code&scope=user:read:email&state=${state}`;
+        `&response_type=code` +
+        `&scope=user:read:email` +
+        `&state=${state}` +
+        `&code_challenge=${codeChallenge}` +
+        `&code_challenge_method=S256`;
 
       window.location.href = url;
     });
