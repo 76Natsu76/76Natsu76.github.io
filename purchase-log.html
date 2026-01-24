@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Purchase Log</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:20px;
+    }
+
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:20px;
+    }
+
+    select, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px;
+      border-radius:4px;
+      font-size:14px;
+    }
+
+    button:hover {
+      background:#222832;
+      cursor:pointer;
+    }
+
+    .log-entry {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .log-header {
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:8px;
+      font-size:14px;
+      opacity:0.8;
+    }
+
+    .log-title {
+      font-size:16px;
+      font-weight:600;
+      color:#9af7ff;
+      margin-bottom:6px;
+    }
+
+    .stat-row {
+      display:flex;
+      justify-content:space-between;
+      padding:4px 0;
+      border-bottom:1px solid #1c1f28;
+      font-size:14px;
+    }
+
+    .stat-row:last-child {
+      border-bottom:none;
+    }
+
+    .btn-nav {
+      margin-top:16px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+    }
+
+    .btn-nav:hover {
+      background:#222832;
+    }
+
+    #errorMessage {
+      margin-top:12px;
+      font-size:14px;
+      color:#ff8080;
+      display:none;
+    }
+
+    #summaryBar {
+      margin-bottom:12px;
+      font-size:14px;
+      opacity:0.85;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Purchase Log</h1>
+  <div id="usernameDisplay"></div>
+
+  <div class="controls">
+    <select id="sourceFilter">
+      <option value="">All Sources</option>
+      <option value="daily">Daily Shop</option>
+      <option value="global">Global Shop</option>
+      <option value="admin">Admin</option>
+    </select>
+
+    <select id="sortOrder">
+      <option value="newest">Newest First</option>
+      <option value="oldest">Oldest First</option>
+    </select>
+
+    <button onclick="loadLogs()">Apply</button>
+  </div>
+
+  <div id="summaryBar"></div>
+  <div id="logContainer">Loading...</div>
+  <div id="errorMessage"></div>
+
+  <button class="btn-nav" onclick="goToMap()">World Map</button>
+  <button class="btn-nav" onclick="goToInventory()">Inventory</button>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    /* ============================================================
+       LOAD LOGS
+       ============================================================ */
+
+    async function loadLogs() {
+      const container = document.getElementById("logContainer");
+      const errorEl = document.getElementById("errorMessage");
+      const summaryEl = document.getElementById("summaryBar");
+
+      errorEl.style.display = "none";
+      summaryEl.textContent = "";
+
+      if (!username) {
+        container.textContent = "Error: No Twitch username found.";
+        return;
+      }
+
+      container.textContent = "Loading purchase logs...";
+
+      try {
+        let logs = await api.getPurchaseLogs(username);
+        const totalCount = logs.length;
+
+        // Filter
+        const sourceFilter = document.getElementById("sourceFilter").value;
+        if (sourceFilter) {
+          logs = logs.filter(l => l.source === sourceFilter);
+        }
+
+        // Sort
+        const sortOrder = document.getElementById("sortOrder").value;
+        logs.sort((a, b) =>
+          sortOrder === "newest"
+            ? new Date(b.timestamp) - new Date(a.timestamp)
+            : new Date(a.timestamp) - new Date(b.timestamp)
+        );
+
+        renderLogs(logs, totalCount);
+
+      } catch (err) {
+        container.textContent = "Network error: " + err.message;
+        errorEl.textContent = "Network error while loading logs.";
+        errorEl.style.display = "block";
+      }
+    }
+
+    /* ============================================================
+       RENDER LOGS
+       ============================================================ */
+
+    function renderLogs(logs, totalCount) {
+      const container = document.getElementById("logContainer");
+      const summaryEl = document.getElementById("summaryBar");
+
+      if (!logs || logs.length === 0) {
+        container.innerHTML = "<div>No purchase logs found for current filters.</div>";
+      } else {
+        container.innerHTML = logs
+          .map(log => {
+            const timestamp = new Date(log.timestamp).toLocaleString();
+
+            return `
+              <div class="log-entry">
+                <div class="log-header">
+                  <span>${timestamp}</span>
+                  <span>${format(log.source)}</span>
+                </div>
+
+                <div class="log-title">${log.item}</div>
+
+                <div class="stat-row"><span>Quantity</span><span>${log.quantity}</span></div>
+                <div class="stat-row"><span>Cost</span><span>${log.cost}</span></div>
+                <div class="stat-row"><span>Gold Before</span><span>${log.pointsBefore}</span></div>
+                <div class="stat-row"><span>Gold After</span><span>${log.pointsAfter}</span></div>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      summaryEl.textContent =
+        `Showing ${logs.length} of ${totalCount} total purchases for ${username}.`;
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+
+    function goToInventory() {
+      window.location.href = "inventory.html";
+    }
+
+    loadLogs();
+  </script>
+
+</body>
+</html>
