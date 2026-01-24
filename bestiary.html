@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Bestiary</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .controls {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .controls-group {
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      flex:1 1 100%;
+    }
+
+    input, select, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px;
+      border-radius:4px;
+      font-size:14px;
+    }
+
+    button:hover {
+      background:#222832;
+      cursor:pointer;
+    }
+
+    #enemyContainer {
+      margin-top:8px;
+    }
+
+    .enemy-card {
+      display:flex;
+      gap:12px;
+      padding:12px;
+      margin:10px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      cursor:pointer;
+      transition:0.15s;
+    }
+
+    .enemy-card:hover {
+      background:#222832;
+    }
+
+    .enemy-portrait-frame {
+      width:72px;
+      height:72px;
+      border-radius:6px;
+      overflow:hidden;
+      border:2px solid #444;
+      background:#000;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-shrink:0;
+    }
+
+    .enemy-portrait-img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .enemy-info-main {
+      flex:1;
+    }
+
+    .enemy-name {
+      font-weight:600;
+      font-size:16px;
+      margin-bottom:2px;
+    }
+
+    .enemy-meta {
+      font-size:13px;
+      opacity:0.85;
+      margin-bottom:4px;
+    }
+
+    .enemy-flavor {
+      font-size:13px;
+      opacity:0.8;
+      margin-top:4px;
+    }
+
+    .enemy-tags {
+      font-size:12px;
+      opacity:0.8;
+      margin-top:4px;
+    }
+
+    .pagination {
+      margin-top:16px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .btn-nav {
+      margin-top:16px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .btn-nav:hover {
+      background:#222832;
+    }
+
+    #pageInfo {
+      font-size:14px;
+      opacity:0.85;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Bestiary</h1>
+  <div id="usernameDisplay"></div>
+
+  <div class="controls">
+    <div class="controls-group">
+      <select id="regionFilter">
+        <option value="">All Regions</option>
+        <option value="VERDANT_WILDS">Verdant Wilds</option>
+        <option value="ASHEN_WASTES">Ashen Wastes</option>
+        <option value="FROSTPEAK">Frostpeak</option>
+        <option value="EMBER_DEPTHS">Ember Depths</option>
+      </select>
+
+      <select id="biomeFilter">
+        <option value="">All Biomes</option>
+        <option value="FOREST">Forest</option>
+        <option value="DESERT">Desert</option>
+        <option value="MOUNTAIN">Mountain</option>
+        <option value="SWAMP">Swamp</option>
+        <option value="COAST">Coast</option>
+      </select>
+
+      <select id="raceFilter">
+        <option value="">All Races</option>
+        <option value="HUMANOID">Humanoid</option>
+        <option value="BEAST">Beast</option>
+        <option value="UNDEAD">Undead</option>
+        <option value="ELEMENTAL">Elemental</option>
+        <option value="DRACONIC">Draconic</option>
+      </select>
+
+      <select id="subraceFilter">
+        <option value="">All Subraces</option>
+        <option value="NONE">None</option>
+        <option value="ELF">Elf</option>
+        <option value="DWARF">Dwarf</option>
+        <option value="ORC">Orc</option>
+        <option value="SPIRIT">Spirit</option>
+      </select>
+    </div>
+
+    <div class="controls-group">
+      <input id="searchBox" placeholder="Search enemies...">
+
+      <select id="levelFilter">
+        <option value="">All Levels</option>
+        <option value="1-10">Lv 1–10</option>
+        <option value="11-20">Lv 11–20</option>
+        <option value="21-30">Lv 21–30</option>
+        <option value="31-40">Lv 31–40</option>
+        <option value="41+">Lv 41+</option>
+      </select>
+
+      <button onclick="applyFilters()">Search</button>
+    </div>
+  </div>
+
+  <div id="enemyContainer">Loading...</div>
+
+  <div class="pagination">
+    <button onclick="prevPage()">Prev</button>
+    <span id="pageInfo"></span>
+    <button onclick="nextPage()">Next</button>
+  </div>
+
+  <button class="btn-nav" onclick="goToMap()">World Map</button>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    let page = 1;
+    const limit = 20;
+    let totalPages = 1;
+
+    async function loadEnemies() {
+      const container = document.getElementById("enemyContainer");
+      container.textContent = "Loading enemies...";
+
+      const region = document.getElementById("regionFilter").value;
+      const biome = document.getElementById("biomeFilter").value;
+      const race = document.getElementById("raceFilter").value;
+      const subrace = document.getElementById("subraceFilter").value;
+      const search = document.getElementById("searchBox").value;
+      const levelFilter = document.getElementById("levelFilter").value;
+
+      const levelRange = parseLevelRange(levelFilter);
+
+      const params = {
+        page,
+        limit,
+        region: region || undefined,
+        biome: biome || undefined,
+        race: race || undefined,
+        subrace: subrace || undefined,
+        search: search || undefined,
+        minLevel: levelRange.min,
+        maxLevel: levelRange.max
+      };
+
+      try {
+        const data = await api.getBestiary(params);
+        const enemies = data.enemies || [];
+        totalPages = data.totalPages || 1;
+        page = data.page || page;
+
+        renderEnemies(enemies);
+        updatePageInfo();
+      } catch (err) {
+        container.textContent = "Failed to load enemies: " + err.message;
+      }
+    }
+
+    function parseLevelRange(filterValue) {
+      switch (filterValue) {
+        case "1-10": return { min: 1, max: 10 };
+        case "11-20": return { min: 11, max: 20 };
+        case "21-30": return { min: 21, max: 30 };
+        case "31-40": return { min: 31, max: 40 };
+        case "41+": return { min: 41, max: null };
+        default: return { min: null, max: null };
+      }
+    }
+
+    function renderEnemies(list) {
+      const container = document.getElementById("enemyContainer");
+
+      if (!list || list.length === 0) {
+        container.innerHTML = "<div>No enemies found.</div>";
+        return;
+      }
+
+      container.innerHTML = list.map(e => {
+        const portraitSrc = `assets/enemies/${e.key}.png`;
+        const levelText = e.level != null ? `Lv ${e.level}` : "Unknown level";
+        const familyVariant = `${format(e.family)} — ${format(e.variant)}`;
+        const regionBiome = `${format(e.region)} • ${format(e.biome)}`;
+        const raceSubrace = `${format(e.race)}${e.subrace ? " / " + format(e.subrace) : ""}`;
+        const flavor = e.flavor || "No description recorded yet.";
+
+        return `
+          <div class="enemy-card" onclick="viewEnemy('${e.key}')">
+            <div class="enemy-portrait-frame">
+              <img class="enemy-portrait-img"
+                   src="${portraitSrc}"
+                   onerror="this.src='assets/enemies/default.png'">
+            </div>
+
+            <div class="enemy-info-main">
+              <div class="enemy-name">${e.name || format(e.key)}</div>
+              <div class="enemy-meta">
+                ${levelText} • ${familyVariant}<br>
+                ${regionBiome}<br>
+                ${raceSubrace}
+              </div>
+              <div class="enemy-flavor">${flavor}</div>
+              <div class="enemy-tags">
+                Key: ${e.key}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function updatePageInfo() {
+      const info = document.getElementById("pageInfo");
+      info.textContent = `Page ${page} of ${totalPages}`;
+    }
+
+    function applyFilters() {
+      page = 1;
+      loadEnemies();
+    }
+
+    function prevPage() {
+      if (page > 1) {
+        page--;
+        loadEnemies();
+      }
+    }
+
+    function nextPage() {
+      if (page < totalPages) {
+        page++;
+        loadEnemies();
+      }
+    }
+
+    function viewEnemy(key) {
+      // If you later add a dedicated enemy detail page, wire it here.
+      // For now, we can route to encounter or keep it as a no-op.
+      // Example (placeholder):
+      // window.location.href = `enemy.html?key=${encodeURIComponent(key)}`;
+      alert("Detailed enemy view coming soon for: " + key);
+    }
+
+    function format(str) {
+      if (str == null) return "";
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+
+    loadEnemies();
+  </script>
+
+</body>
+</html>
