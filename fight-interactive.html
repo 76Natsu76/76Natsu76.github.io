@@ -640,133 +640,673 @@
   <h1>Combat</h1>
   <div id="usernameDisplay"></div>
 
-  <!-- Player Panel -->
-  <div class="panel" id="playerPanel">
-    <h2>Player</h2>
-    <div class="portrait-frame"><img id="playerPortrait" class="portrait-img"></div>
-    <div id="playerHP"></div>
-    <div class="hp-bar"><div id="playerHPFill" class="hp-fill"></div></div>
-    <div class="ult-bar"><div id="ultFill" class="ult-fill"></div></div>
+  <!-- ============================
+       ENEMY PANEL
+  ============================ -->
+  <div id="enemyPanel" class="panel">Loading enemy...</div>
+
+  <!-- ============================
+       PLAYER PANEL
+  ============================ -->
+  <div id="playerPanel" class="panel">Loading player...</div>
+
+  <!-- ============================
+       ACTION PANEL
+  ============================ -->
+  <div id="actionPanel" class="panel actions" style="display:none;">
+    <h2>Choose Your Action</h2>
+
+    <button onclick="inspectEnemy()">Inspect Enemy</button>
+    <button onclick="attemptFlee()">Flee</button>
+
+    <button class="primary" onclick="playerBasicAttack()">Basic Attack</button>
+
+    <button onclick="openAbilityMenu()">Use Ability</button>
+    <button onclick="useUltimate()">Use Ultimate</button>
+
+    <button onclick="openSwapMenu()">Swap Equipment</button>
   </div>
 
-  <!-- Enemy Panel -->
-  <div class="panel" id="enemyPanel">
-    <h2>Enemy</h2>
-    <div class="portrait-frame"><img id="enemyPortrait" class="portrait-img"></div>
-    <div id="enemyHP"></div>
-    <div class="hp-bar"><div id="enemyHPFill" class="hp-fill"></div></div>
-  </div>
+  <!-- ============================
+       COMBAT LOG
+  ============================ -->
+  <div id="log" class="panel">Waiting...</div>
 
-  <!-- Actions -->
-  <div class="panel actions" id="actionPanel">
-    <h2>Actions</h2>
-    <div id="abilityList"></div>
-    <button class="primary" id="basicAttackBtn">Basic Attack</button>
-    <button id="ultimateBtn">Ultimate</button>
-  </div>
-
-  <!-- Combat Log -->
-  <div class="panel">
-    <h2>Combat Log</h2>
-    <div id="log"></div>
-  </div>
-
-  <!-- Reward Panel -->
+  <!-- ============================
+       REWARD PANEL
+  ============================ -->
   <div id="rewardPanel" style="display:none;"></div>
 
-  <!-- Scripts -->
-  <script src="api.js"></script>
-  <script src="world-data.js"></script>
-  <script src="encounters.js"></script>
-  <script src="combat-engine.js"></script>
+  <!-- ============================
+       ABILITY MENU MODAL
+  ============================ -->
+  <div id="abilityMenu" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Your Abilities</h2>
 
+      <div id="abilityList">Loading...</div>
+
+      <button class="close-btn" onclick="closeAbilityMenu()">Close</button>
+    </div>
+  </div>
+
+  <!-- ============================
+       ENEMY INSPECTION MODAL
+  ============================ -->
+  <div id="inspectMenu" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Enemy Info</h2>
+
+      <div id="inspectContent">Loading...</div>
+
+      <button class="close-btn" onclick="closeInspectMenu()">Close</button>
+    </div>
+  </div>
+
+  <!-- ============================
+       EQUIPMENT SWAP MODAL
+  ============================ -->
+  <div id="swapMenu" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Swap Equipment</h2>
+
+      <div id="swapSlotList">Loading...</div>
+      <div id="swapItemList" style="margin-top:12px;"></div>
+
+      <button class="close-btn" onclick="closeSwapMenu()">Close</button>
+    </div>
+  </div>
+
+  <!-- ============================
+       CINEMATIC INTRO
+  ============================ -->
+  <div id="cinematicIntro" class="cinematic-intro" style="display:none;">
+    <div class="cinematic-content">
+      <div id="cinematicPortrait" class="portrait-frame"></div>
+      <div id="cinematicName" style="margin-top:12px; font-size:24px;"></div>
+      <div class="vs-text">VS</div>
+    </div>
+  </div>
+
+  <!-- ============================
+       RESUME PREVIOUS FIGHT MODAL
+  ============================= -->
+  <div id="resumeModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Resume Previous Fight?</h2>
+      <p>You have an unfinished battle. Would you like to continue it?</p>
+
+      <button class="close-btn" onclick="resumeFight()">Resume</button>
+      <button class="close-btn" onclick="startNewFight()">Start New Fight</button>
+    </div>
+  </div>
+  <!-- ============================
+      UPDATED SCRIPT LOGIC
+  ============================= -->
   <script>
-    // ============================
-    // Load player + encounter
-    // ============================
+    /* ============================================================
+       INITIALIZATION
+       ============================================================ */
+    
     const username = sessionStorage.getItem("twitch_username");
-    const player = JSON.parse(sessionStorage.getItem("player"));
-    const encounter = JSON.parse(sessionStorage.getItem("encounter"));
-
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
-
-    // ============================
-    // Initialize combat engine
-    // ============================
-    const engine = new CombatEngine(player, encounter, {
-      onUpdate: updateUI,
-      onLog: addLog,
-      onEnd: showRewards
-    });
-
-    // ============================
-    // UI Update
-    // ============================
-    function updateUI(state) {
-      const p = state.player;
-      const e = state.enemy;
-
-      document.getElementById("playerHP").textContent =
-        `HP: ${p.hp}/${p.hpMax}`;
-      document.getElementById("playerHPFill").style.width =
-        (p.hp / p.hpMax * 100) + "%";
-
-      document.getElementById("enemyHP").textContent =
-        `HP: ${e.hp}/${e.hpMax}`;
-      document.getElementById("enemyHPFill").style.width =
-        (e.hp / e.hpMax * 100) + "%";
-
-      document.getElementById("ultFill").style.width =
-        (p.ultCharge * 100) + "%";
+      username ? "Logged in as: " + username : "No user logged in";
+    
+    // Load player + encounter from sessionStorage
+    let player = JSON.parse(sessionStorage.getItem("player"));
+    let encounter = JSON.parse(sessionStorage.getItem("encounter"));
+    let combatState = null;
+    
+    // If no encounter exists, redirect back to map
+    if (!encounter) {
+      document.getElementById("log").textContent =
+        "No encounter found. Returning to map...";
+      setTimeout(() => (window.location.href = "world-map.html"), 1200);
     }
-
-    // ============================
-    // Log
-    // ============================
+    
+    // Create combat engine
+    let engine = null;
+    
+    /* ============================================================
+       START / RESUME COMBAT
+       ============================================================ */
+    
+    function startCombat() {
+      document.getElementById("log").textContent = "Starting encounter...";
+    
+      engine = new CombatEngine(player, encounter, {
+        onUpdate: updateUI,
+        onLog: addLog,
+        onEnd: endCombat
+      });
+    
+      combatState = engine.getState();
+    
+      renderPanels();
+      showCinematicIntro(combatState.enemy);
+    
+      if (combatState.turn === "ENEMY") {
+        enemyTurn();
+      } else {
+        showActionPanel();
+      }
+    }
+    
+    function resumeFight() {
+      engine = new CombatEngine(player, encounter, {
+        onUpdate: updateUI,
+        onLog: addLog,
+        onEnd: endCombat
+      });
+    
+      combatState = engine.getState();
+      renderPanels();
+      document.getElementById("resumeModal").style.display = "none";
+    }
+    
+    function startNewFight() {
+      document.getElementById("resumeModal").style.display = "none";
+      startCombat();
+    }
+    
+    // If a saved combat exists in sessionStorage
+    if (sessionStorage.getItem("savedCombat")) {
+      combatState = JSON.parse(sessionStorage.getItem("savedCombat"));
+      document.getElementById("resumeModal").style.display = "flex";
+    } else {
+      startCombat();
+    }
+    
+    /* ============================================================
+       UI RENDERING
+       ============================================================ */
+    
+    function renderPanels() {
+      renderEnemyPanel();
+      renderPlayerPanel();
+      renderLog();
+    }
+    
+    function renderEnemyPanel() {
+      const e = combatState.enemy;
+      const container = document.getElementById("enemyPanel");
+      const previousHP = Number(container.getAttribute("data-prev-hp")) || e.hpMax;
+    
+      let modifiersHTML = "";
+      if (e.modifiers?.length) {
+        modifiersHTML = `
+          <div class="modifier-box">
+            ${e.modifiers
+              .map(
+                (m) => `
+              <div class="modifier-row">
+                <img class="modifier-icon" src="${m.icon}">
+                <div class="modifier-label">${m.text}</div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+      }
+    
+      container.innerHTML = `
+        <div class="portrait-frame portrait-${e.rarity.toLowerCase()}">
+          <img class="portrait-img" src="${e.portrait}">
+        </div>
+    
+        <h2 style="text-align:center; margin-top:12px;">
+          ${format(e.name)} (Lv ${e.level})
+        </h2>
+    
+        <div style="text-align:center;">
+          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(
+        e.rarity
+      )}</span>
+        </div>
+    
+        <div class="hp-bar" id="enemyHPBar">
+          <div class="hp-fill" style="width:0%;"></div>
+        </div>
+    
+        ${modifiersHTML}
+      `;
+    
+      updateHPBar("enemyHPBar", previousHP, e.hp, e.hpMax);
+      container.setAttribute("data-prev-hp", e.hp);
+    }
+    
+    function renderPlayerPanel() {
+      const p = combatState.player;
+      const container = document.getElementById("playerPanel");
+    
+      const previousHP = Number(container.getAttribute("data-prev-hp")) || p.hpMax;
+      const previousUlt =
+        Number(container.getAttribute("data-prev-ult")) || p.ultCharge;
+    
+      const abilityCooldowns = p.cooldowns
+        .map((c) => `${c.name}: ${c.remaining}`)
+        .join("<br>");
+    
+      container.innerHTML = `
+        <h2>${format(p.name)} (Lv ${p.level})</h2>
+    
+        <div>Ultimate: ${p.ultReady ? "READY" : p.ultCharge + "%"}</div>
+    
+        <div class="ult-bar" id="ultBar">
+          <div class="ult-fill"></div>
+        </div>
+    
+        <div class="hp-bar" id="playerHPBar">
+          <div class="hp-fill" style="width:0%;"></div>
+        </div>
+    
+        <div style="margin-top:8px; font-size:13px; opacity:0.8;">
+          ${abilityCooldowns}
+        </div>
+      `;
+    
+      updateHPBar("playerHPBar", previousHP, p.hp, p.hpMax);
+      updateUltimateBar("ultBar", previousUlt, p.ultCharge);
+    
+      container.setAttribute("data-prev-hp", p.hp);
+      container.setAttribute("data-prev-ult", p.ultCharge);
+    }
+    
+    function renderLog() {
+      document.getElementById("log").textContent =
+        combatState.log.map(formatLog).join("\n");
+    
+      combatState.log.forEach((entry) => applyVFX(entry));
+    }
+    
+    /* ============================================================
+       UI HELPERS
+       ============================================================ */
+    
+    function updateUI(state) {
+      combatState = state;
+      renderPanels();
+    }
+    
     function addLog(text) {
       const log = document.getElementById("log");
       log.textContent += text + "\n";
       log.scrollTop = log.scrollHeight;
     }
-
-    // ============================
-    // Rewards
-    // ============================
-    function showRewards(result) {
-      const panel = document.getElementById("rewardPanel");
-      panel.style.display = "block";
-
-      panel.innerHTML = `
+    
+    function showActionPanel() {
+      document.getElementById("actionPanel").style.display = "block";
+    }
+    
+    function hideActionPanel() {
+      document.getElementById("actionPanel").style.display = "none";
+    }
+    
+    function updateHPBar(elementId, oldHP, newHP, maxHP) {
+      const pct = Math.max(0, (newHP / maxHP) * 100);
+      const bar = document.querySelector(`#${elementId} .hp-fill`);
+      if (!bar) return;
+    
+      if (newHP < oldHP) bar.classList.add("damage-flash");
+      else if (newHP > oldHP) bar.classList.add("heal-flash");
+    
+      bar.style.width = pct + "%";
+    
+      setTimeout(() => {
+        bar.classList.remove("damage-flash");
+        bar.classList.remove("heal-flash");
+      }, 500);
+    }
+    
+    function updateUltimateBar(elementId, oldCharge, newCharge) {
+      const bar = document.querySelector(`#${elementId} .ult-fill`);
+      if (!bar) return;
+    
+      bar.style.width = newCharge + "%";
+    
+      if (newCharge >= 100) bar.classList.add("ult-ready-glow");
+      else bar.classList.remove("ult-ready-glow");
+    
+      if (newCharge < oldCharge) {
+        bar.classList.add("ult-pulse");
+        setTimeout(() => bar.classList.remove("ult-pulse"), 500);
+      }
+    }
+    
+    /* ============================================================
+       PLAYER ACTIONS
+       ============================================================ */
+    
+    async function playerBasicAttack() {
+      hideActionPanel();
+      addLog("\nPlayer acts...\n");
+      await engine.basicAttack();
+    }
+    
+    async function useUltimate() {
+      hideActionPanel();
+      addLog("\nPlayer uses Ultimate...\n");
+      await engine.useUltimate();
+    }
+    
+    async function attemptFlee() {
+      hideActionPanel();
+      addLog("\nPlayer attempts to flee...\n");
+      await engine.flee();
+    }
+    
+    async function useAbility(key) {
+      closeAbilityMenu();
+      hideActionPanel();
+      addLog(`\nPlayer uses ${key}...\n`);
+      await engine.useAbility(key);
+    }
+    
+    /* ============================================================
+       ENEMY TURN
+       ============================================================ */
+    
+    async function enemyTurn() {
+      hideActionPanel();
+      addLog("\nEnemy acts...\n");
+      await engine.enemyTurn();
+    }
+    
+    /* ============================================================
+       END COMBAT
+       ============================================================ */
+    
+    function endCombat(result) {
+      hideActionPanel();
+    
+      const r = result;
+      const rewardPanel = document.getElementById("rewardPanel");
+    
+      let lootHTML = "None";
+      if (r.loot) {
+        const rarityClass = "loot-" + r.loot.rarity.toLowerCase();
+        lootHTML = `
+          <div class="loot-card ${rarityClass}">
+            <strong>${r.loot.name}</strong><br>
+            <span>${r.loot.quantity}x — ${format(r.loot.rarity)}</span>
+          </div>
+        `;
+      }
+    
+      const levelUpHTML = r.levelUp
+        ? `<div class="level-up">Level Up! You are now level ${r.newLevel}</div>`
+        : "";
+    
+      rewardPanel.innerHTML = `
         <div class="reward-box">
-          <h2>Battle Complete</h2>
-          <p>${result.outcome.toUpperCase()}</p>
-          <p>XP Gained: ${result.xp}</p>
-          <p>Gold Gained: ${result.gold}</p>
-          ${result.loot.map(item => `
-            <div class="loot-card loot-${item.rarity}">
-              ${item.name}
-            </div>
-          `).join("")}
-          <button class="reward-btn" onclick="returnToMap()">Return to Map</button>
+          <h2>Rewards</h2>
+    
+          <div>XP Gained: ${r.xp}</div>
+    
+          <div class="xp-bar">
+            <div class="xp-fill" id="xpFill"></div>
+          </div>
+    
+          ${levelUpHTML}
+    
+          <h3 style="margin-top:16px;">Loot</h3>
+          ${lootHTML}
+    
+          <button class="reward-btn" onclick="goToMap()">Return to Map</button>
+          <button class="reward-btn" onclick="continueExploring()">Continue Exploring</button>
         </div>
       `;
+    
+      rewardPanel.style.display = "block";
+    
+      setTimeout(() => {
+        document.getElementById("xpFill").style.width = r.xpPercent + "%";
+      }, 50);
     }
-
-    function returnToMap() {
+    
+    function goToMap() {
       window.location.href = "world-map.html";
     }
-
-    // ============================
-    // Bind buttons
-    // ============================
-    document.getElementById("basicAttackBtn").onclick = () => engine.basicAttack();
-    document.getElementById("ultimateBtn").onclick = () => engine.useUltimate();
-
-    // ============================
-    // Start combat
-    // ============================
-    engine.start();
+    
+    function continueExploring() {
+      const region = encounter.region;
+      window.location.href = `world-map.html?region=${region}`;
+    }
+    
+    /* ============================================================
+       ABILITY MENU
+       ============================================================ */
+    
+    function openAbilityMenu() {
+      loadAbilities();
+      document.getElementById("abilityMenu").style.display = "flex";
+    }
+    
+    function closeAbilityMenu() {
+      document.getElementById("abilityMenu").style.display = "none";
+    }
+    
+    function loadAbilities() {
+      const list = document.getElementById("abilityList");
+      const abilities = combatState.player.abilities;
+      const cooldowns = combatState.player.cooldowns;
+    
+      list.innerHTML = abilities
+        .map((a) => {
+          const cd = cooldowns.find((c) => c.key === a.key);
+          const remaining = cd ? cd.remaining : 0;
+          const disabled = remaining > 0 ? "ability-disabled" : "";
+    
+          return `
+            <div class="ability-card ${disabled}" onclick="useAbility('${a.key}')">
+              <img class="ability-icon" src="${a.icon}">
+              <div>
+                <strong>${a.name}</strong><br>
+                <span style="opacity:0.8;">${a.description}</span>
+              </div>
+              ${
+                remaining > 0
+                  ? `<div class="cooldown-overlay">${remaining}</div>`
+                  : ""
+              }
+            </div>
+          `;
+        })
+        .join("");
+    }
+    
+    /* ============================================================
+       EQUIPMENT SWAP
+       ============================================================ */
+    
+    function openSwapMenu() {
+      const p = combatState.player;
+      const slotList = document.getElementById("swapSlotList");
+      const itemList = document.getElementById("swapItemList");
+    
+      itemList.innerHTML = "";
+    
+      slotList.innerHTML = Object.entries(p.equipment)
+        .map(
+          ([slot, item]) => `
+          <div class="swap-slot" onclick="selectSwapSlot('${slot}')">
+            <strong>${format(slot)}</strong>: ${item ? item.name : "—"}
+          </div>
+        `
+        )
+        .join("");
+    
+      document.getElementById("swapMenu").style.display = "flex";
+    }
+    
+    function closeSwapMenu() {
+      document.getElementById("swapMenu").style.display = "none";
+    }
+    
+    function selectSwapSlot(slot) {
+      const p = combatState.player;
+      const itemList = document.getElementById("swapItemList");
+    
+      const items = p.inventoryEquipment || [];
+    
+      if (!items.length) {
+        itemList.innerHTML = "<div>No equipment available.</div>";
+        return;
+      }
+    
+      itemList.innerHTML = items
+        .map(
+          (i) => `
+          <div class="swap-item" onclick="confirmSwap('${slot}', '${i.id}')">
+            <strong>${i.name}</strong><br>
+            <span class="rarity-${i.rarity.toLowerCase()}">${format(
+            i.rarity
+          )}</span>
+          </div>
+        `
+        )
+        .join("");
+    }
+    
+    async function confirmSwap(slot, itemId) {
+      closeSwapMenu();
+      await engine.swapEquipment(slot, itemId);
+    }
+    
+    /* ============================================================
+       INSPECT ENEMY
+       ============================================================ */
+    
+    function inspectEnemy() {
+      const e = combatState.enemy;
+      const box = document.getElementById("inspectContent");
+    
+      box.innerHTML = `
+        <div class="inspect-row"><strong>Name:</strong> ${format(e.name)}</div>
+        <div class="inspect-row"><strong>Level:</strong> ${e.level}</div>
+        <div class="inspect-row"><strong>Rarity:</strong> ${format(
+          e.rarity
+        )}</div>
+        <div class="inspect-row"><strong>Family:</strong> ${format(
+          e.family
+        )}</div>
+        <div class="inspect-row"><strong>HP:</strong> ${e.hp}/${e.hpMax}</div>
+        <div class="inspect-row"><strong>Element:</strong> ${format(
+          e.element
+        )}</div>
+      `;
+    
+      document.getElementById("inspectMenu").style.display = "flex";
+    }
+    
+    function closeInspectMenu() {
+      document.getElementById("inspectMenu").style.display = "none";
+    }
+    
+    /* ============================================================
+       CINEMATIC INTRO
+       ============================================================ */
+    
+    function showCinematicIntro(enemy) {
+      const intro = document.getElementById("cinematicIntro");
+      const portrait = document.getElementById("cinematicPortrait");
+      const name = document.getElementById("cinematicName");
+    
+      portrait.className = `portrait-frame portrait-${enemy.rarity.toLowerCase()}`;
+      portrait.innerHTML = `
+        <img class="portrait-img" src="${enemy.portrait}">
+      `;
+    
+      name.textContent = `${format(enemy.name)} (Lv ${enemy.level})`;
+    
+      intro.style.display = "flex";
+    
+      portrait.classList.add("roar-shake");
+      setTimeout(() => portrait.classList.remove("roar-shake"), 600);
+    
+      setTimeout(() => {
+        intro.style.display = "none";
+      }, 1800);
+    }
+    
+    /* ============================================================
+       VFX HELPERS
+       ============================================================ */
+    
+    function applyVFX(entry) {
+      if (!entry || typeof entry !== "object") return;
+    
+      const target =
+        entry.target === "PLAYER" ? "playerPanel" : "enemyPanel";
+    
+      if (entry.type === "attack") {
+        screenShake();
+        if (entry.crit) critFlash(target);
+        if (entry.element) elementalPulse(target, entry.element.toLowerCase());
+      }
+    
+      if (entry.type === "dot") dotTick(target);
+      if (entry.type === "hot") hotTick(target);
+    }
+    
+    function screenShake() {
+      document.body.classList.add("screen-shake");
+      setTimeout(() => document.body.classList.remove("screen-shake"), 400);
+    }
+    
+    function critFlash(targetPanelId) {
+      const panel = document.getElementById(targetPanelId);
+      panel.classList.add("crit-flash");
+      setTimeout(() => panel.classList.remove("crit-flash"), 400);
+    }
+    
+    function elementalPulse(targetPanelId, element) {
+      const panel = document.getElementById(targetPanelId);
+      const cls = `${element}-pulse`;
+      panel.classList.add(cls);
+      setTimeout(() => panel.classList.remove(cls), 500);
+    }
+    
+    function dotTick(targetPanelId) {
+      const panel = document.getElementById(targetPanelId);
+      panel.classList.add("dot-tick");
+      setTimeout(() => panel.classList.remove("dot-tick"), 400);
+    }
+    
+    function hotTick(targetPanelId) {
+      const panel = document.getElementById(targetPanelId);
+      panel.classList.add("hot-tick");
+      setTimeout(() => panel.classList.remove("hot-tick"), 400);
+    }
+    
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+    
+    function formatLog(entry) {
+      if (typeof entry === "string") return entry;
+    
+      switch (entry.type) {
+        case "attack":
+          return `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg`;
+        case "dot":
+          return `${entry.effectKey} deals ${entry.amount} DOT`;
+        case "hot":
+          return `${entry.effectKey} heals ${entry.amount} HOT`;
+        case "expire":
+          return `${entry.effectKey} expired`;
+        default:
+          return JSON.stringify(entry);
+      }
+    }
+    
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+    }
   </script>
 </body>
 </html>
