@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Character</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .section {
+      margin-top:24px;
+      padding:16px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+    }
+
+    .section h2 {
+      margin-top:0;
+      font-size:18px;
+      color:#9af7ff;
+    }
+
+    .stat-row {
+      display:flex;
+      justify-content:space-between;
+      padding:4px 0;
+      border-bottom:1px solid #1c1f28;
+      font-size:14px;
+    }
+
+    .stat-row:last-child {
+      border-bottom:none;
+    }
+
+    .portrait-frame {
+      width:160px;
+      height:160px;
+      border-radius:8px;
+      overflow:hidden;
+      border:2px solid #444;
+      background:#000;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin:0 auto;
+      position:relative;
+    }
+
+    .portrait-img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    /* Rarity glows */
+    .portrait-common { box-shadow:0 0 6px #bfbfbf55; }
+    .portrait-uncommon { box-shadow:0 0 8px #7fff7f88; }
+    .portrait-rare { box-shadow:0 0 8px #7fcfff88; }
+    .portrait-epic { box-shadow:0 0 10px #c77fffaa; }
+    .portrait-legendary { box-shadow:0 0 12px #ffbf5faa; }
+
+    .equipment-card,
+    .ability-card,
+    .status-card {
+      padding:10px;
+      margin:8px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      position:relative;
+    }
+
+    .equipment-card:hover,
+    .ability-card:hover,
+    .status-card:hover {
+      background:#222832;
+    }
+
+    .tooltip {
+      display:none;
+      position:absolute;
+      left:10px;
+      top:100%;
+      background:#11141c;
+      border:1px solid #262a36;
+      padding:10px;
+      border-radius:6px;
+      width:260px;
+      z-index:1000;
+      font-size:13px;
+    }
+
+    .equipment-card:hover .tooltip,
+    .ability-card:hover .tooltip,
+    .status-card:hover .tooltip {
+      display:block;
+    }
+
+    .xp-bar {
+      margin-top:10px;
+      height:14px;
+      background:#333;
+      border-radius:7px;
+      overflow:hidden;
+    }
+
+    .xp-fill {
+      height:100%;
+      background:#7fcfff;
+      width:0%;
+      transition:width 1s ease-in-out;
+    }
+
+    .btn {
+      margin-top:16px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Character</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="characterContainer">Loading...</div>
+
+  <button class="btn" onclick="goToInventory()">Inventory</button>
+  <button class="btn" onclick="goToMap()">World Map</button>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    let player = null;
+
+    loadCharacter();
+
+    /* ============================================================
+       HYBRID LOADING: sessionStorage → api.js refresh
+       ============================================================ */
+
+    async function loadCharacter() {
+      const cached = sessionStorage.getItem("player");
+      if (cached) {
+        player = JSON.parse(cached);
+        renderCharacter(player, true);
+      }
+
+      if (username) {
+        const fresh = await api.getPlayer(username);
+        if (fresh) {
+          player = fresh;
+          sessionStorage.setItem("player", JSON.stringify(player));
+          renderCharacter(player, false);
+        }
+      }
+    }
+
+    /* ============================================================
+       RENDER CHARACTER
+       ============================================================ */
+
+    function renderCharacter(p, isCached) {
+      const container = document.getElementById("characterContainer");
+      const out = [];
+
+      /* ------------------------------
+         PORTRAIT + OVERVIEW
+      ------------------------------ */
+      out.push(`
+        <div class="section">
+          <div class="portrait-frame portrait-${p.rarity?.toLowerCase() || "common"}">
+            <img class="portrait-img" src="${p.portrait || "/assets/portraits/default.png"}"
+                 onerror="this.src='/assets/portraits/default.png'">
+          </div>
+
+          <h2 style="text-align:center; margin-top:12px;">${p.username}</h2>
+
+          <div class="stat-row"><span>Level</span><span>${p.level}</span></div>
+          <div class="stat-row"><span>Profession</span><span>${format(p.profession)}</span></div>
+          <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
+
+          <div style="margin-top:10px;">XP: ${p.xp} / ${p.xpRequired}</div>
+          <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+        </div>
+      `);
+
+      /* ------------------------------
+         BASE STATS
+      ------------------------------ */
+      out.push(`
+        <div class="section">
+          <h2>Stats</h2>
+          ${Object.entries(p.stats || {})
+            .map(([k, v]) => `
+              <div class="stat-row">
+                <span>${format(k)}</span><span>${v}</span>
+              </div>
+            `)
+            .join("")}
+        </div>
+      `);
+
+      /* ------------------------------
+         DERIVED STATS
+      ------------------------------ */
+      out.push(`
+        <div class="section">
+          <h2>Derived Stats</h2>
+          ${Object.entries(p.derived || {})
+            .map(([k, v]) => `
+              <div class="stat-row">
+                <span>${format(k)}</span><span>${v}</span>
+              </div>
+            `)
+            .join("")}
+        </div>
+      `);
+
+      /* ------------------------------
+         EQUIPMENT
+      ------------------------------ */
+      out.push(`
+        <div class="section">
+          <h2>Equipment</h2>
+          ${Object.entries(p.equipment || {})
+            .map(([slot, item]) => `
+              <div class="equipment-card">
+                <strong>${format(slot)}</strong>: ${item ? item.name : "—"}
+                ${
+                  item
+                    ? `<div class="tooltip">
+                        <strong>${item.name}</strong><br>
+                        Rarity: ${format(item.rarity)}<br>
+                        ${item.bonuses ? formatBonuses(item.bonuses) : ""}
+                      </div>`
+                    : ""
+                }
+              </div>
+            `)
+            .join("")}
+        </div>
+      `);
+
+      /* ------------------------------
+         ABILITIES
+      ------------------------------ */
+      out.push(`
+        <div class="section">
+          <h2>Abilities</h2>
+          ${
+            (p.abilities || []).length === 0
+              ? "<div>No abilities</div>"
+              : p.abilities
+                  .map(
+                    (a) => `
+              <div class="ability-card">
+                <strong>${a.name}</strong>
+                <div class="tooltip">
+                  <strong>${a.name}</strong><br>
+                  ${a.description}<br>
+                  Cooldown: ${a.cooldown}
+                </div>
+              </div>
+            `
+                  )
+                  .join("")
+          }
+        </div>
+      `);
+
+      /* ------------------------------
+         STATUS EFFECTS
+      ------------------------------ */
+      out.push(`
+        <div class="section">
+          <h2>Status Effects</h2>
+          ${
+            (p.statusEffects || []).length === 0
+              ? "<div>No active effects</div>"
+              : p.statusEffects
+                  .map(
+                    (e) => `
+              <div class="status-card">
+                <strong>${e.name}</strong> (${e.duration} turns)
+                <div class="tooltip">
+                  <strong>${e.name}</strong><br>
+                  Stacks: ${e.stacks}<br>
+                  ${e.description || ""}
+                </div>
+              </div>
+            `
+                  )
+                  .join("")
+          }
+        </div>
+      `);
+
+      container.innerHTML = out.join("");
+
+      /* Animate XP bar */
+      const pct = Math.min(100, (p.xp / p.xpRequired) * 100);
+      setTimeout(() => {
+        document.getElementById("xpFill").style.width = pct + "%";
+      }, 50);
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+    }
+
+    function formatBonuses(b) {
+      return Object.entries(b)
+        .map(([k, v]) => `${format(k)}: +${v}`)
+        .join("<br>");
+    }
+
+    function goToInventory() {
+      window.location.href = "inventory.html";
+    }
+
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+  </script>
+
+</body>
+</html>
