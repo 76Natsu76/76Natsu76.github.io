@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Encounter</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .panel {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-top:20px;
+    }
+
+    .btn {
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      margin-top:10px;
+      width:100%;
+      text-align:center;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+
+    .primary {
+      background:#2e7d32;
+      border-color:#1b5e20;
+    }
+
+    .primary:hover {
+      background:#388e3c;
+    }
+
+    .rarity-common { color:#bfbfbf; }
+    .rarity-uncommon { color:#7fff7f; }
+    .rarity-rare { color:#7fcfff; }
+    .rarity-epic { color:#c77fff; }
+    .rarity-legendary { color:#ffbf5f; }
+
+    .modifier-row {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:8px;
+      padding:8px;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      font-size:14px;
+    }
+
+    .modifier-icon {
+      width:32px;
+      height:32px;
+      object-fit:contain;
+    }
+
+    .modifier-label {
+      opacity:0.9;
+    }
+
+    .modifier-box {
+      margin-top:16px;
+    }
+
+    .portrait-frame {
+      width:140px;
+      height:140px;
+      border-radius:8px;
+      overflow:hidden;
+      border:2px solid #444;
+      background:#000;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin:0 auto;
+      position:relative;
+    }
+
+    .portrait-img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    .portrait-common { box-shadow:0 0 6px #bfbfbf55; }
+    .portrait-uncommon { box-shadow:0 0 8px #7fff7f88; }
+    .portrait-rare { box-shadow:0 0 8px #7fcfff88; }
+    .portrait-epic { box-shadow:0 0 8px #c77fff88; }
+    .portrait-legendary { box-shadow:0 0 10px #ffbf5faa; }
+  </style>
+</head>
+
+<body>
+
+  <h1>Encounter</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="encounterPanel" class="panel">Rolling encounter...</div>
+
+  <button class="btn" onclick="goToMap()">Return to Map</button>
+
+  <!-- ============================================================
+       SCRIPTS
+       ============================================================ -->
+  <script src="world-data.js"></script>
+  <script src="encounters.js"></script>
+  <script src="encounter.js"></script>
+
+  <script>
+    /* ============================================================
+       INITIALIZATION
+       ============================================================ */
+
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    const region =
+      new URLSearchParams(window.location.search).get("region") ||
+      "VERDANT_WILDS";
+
+    let encounter = null;
+
+    startEncounter();
+
+    /* ============================================================
+       MAIN FLOW
+       ============================================================ */
+
+    function startEncounter() {
+      try {
+        // Use the new encounter engine
+        encounter = EncounterEngine.rollEncounter(region);
+
+        renderEncounter();
+      } catch (err) {
+        document.getElementById("encounterPanel").textContent =
+          "Encounter error: " + err.message;
+      }
+    }
+
+    /* ============================================================
+       RENDER ENCOUNTER
+       ============================================================ */
+
+    function renderEncounter() {
+      const e = encounter.enemy;
+
+      let modifiersHTML = "";
+      if (e.modifiers?.length) {
+        modifiersHTML = `
+          <div class="modifier-box">
+            <h3 style="margin-bottom:6px;">Modifiers</h3>
+            ${e.modifiers
+              .map(
+                (m) => `
+              <div class="modifier-row">
+                <img class="modifier-icon" src="/assets/modifiers/${m.icon}"
+                    onerror="this.src='/assets/modifiers/default.png'">
+                <div class="modifier-label">${m.text}</div>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+      }
+
+      document.getElementById("encounterPanel").innerHTML = `
+        <div class="portrait-frame portrait-${e.rarity.toLowerCase()}">
+          <img class="portrait-img" src="${e.portrait}"
+              onerror="this.src='/assets/enemies/default.png'">
+        </div>
+
+        <h2 style="text-align:center; margin-top:12px;">
+          ${format(e.name)} (Lv ${e.level})
+        </h2>
+
+        <div style="text-align:center; opacity:0.8;">
+          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(
+        e.rarity
+      )}</span>
+        </div>
+
+        <div style="margin-top:10px; opacity:0.8; text-align:center;">
+          ${e.flavor || ""}
+        </div>
+
+        ${modifiersHTML}
+
+        <button class="btn" onclick="inspect()">Inspect</button>
+        <button class="btn primary" onclick="fight()">Fight</button>
+        <button class="btn" onclick="goToMap()">Flee</button>
+      `;
+    }
+
+    /* ============================================================
+       BUTTON ACTIONS
+       ============================================================ */
+
+    function inspect() {
+      const e = encounter.enemy;
+      alert(
+        `${e.name} (Lv ${e.level})\n` +
+          `Rarity: ${e.rarity}\n\n` +
+          (e.flavor || "")
+      );
+    }
+
+    function fight() {
+      // Encounter already saved to sessionStorage by encounter.js
+      window.location.href = "fight-interactive.html";
+    }
+
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
+    }
+  </script>
+
+</body>
+</html>
