@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Player Tools</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+      max-width:900px;
+      margin:auto;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #adminDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .section {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:20px;
+    }
+
+    .section h2 {
+      margin-top:0;
+      color:#9af7ff;
+      font-size:18px;
+    }
+
+    input, select, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px;
+      border-radius:4px;
+      font-size:14px;
+    }
+
+    button {
+      cursor:pointer;
+    }
+
+    button:hover {
+      background:#222832;
+    }
+
+    .row {
+      display:flex;
+      gap:10px;
+      margin-top:8px;
+      flex-wrap:wrap;
+    }
+
+    .row > * {
+      flex:1;
+      min-width:160px;
+    }
+
+    .btn-action {
+      margin-top:8px;
+      padding:8px 10px;
+      font-size:13px;
+    }
+
+    #playerSummary {
+      font-size:14px;
+      margin-top:8px;
+      opacity:0.9;
+    }
+
+    #resultBox {
+      margin-top:12px;
+      padding:12px;
+      background:#000;
+      border-radius:6px;
+      border:1px solid #333;
+      white-space:pre-wrap;
+      font-family:monospace;
+      font-size:13px;
+      max-height:40vh;
+      overflow-y:auto;
+    }
+
+    .btn-nav {
+      margin-top:16px;
+      padding:8px 12px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .btn-nav:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Player Tools</h1>
+  <div id="adminDisplay"></div>
+
+  <div class="section">
+    <h2>Target Player</h2>
+
+    <div class="row">
+      <input id="usernameInput" placeholder="Username (required)">
+      <input id="twitchIdInput" placeholder="Twitch ID (optional)">
+    </div>
+
+    <button class="btn-action" onclick="loadPlayer()">Load Player Summary</button>
+    <div id="playerSummary">Waiting for player...</div>
+  </div>
+
+  <div class="section">
+    <h2>Quick Actions</h2>
+
+    <div class="row">
+      <button class="btn-action" onclick="runAction('reset_cooldowns')">Reset Cooldowns</button>
+      <button class="btn-action" onclick="runAction('force_level_up')">Force Level Up</button>
+      <button class="btn-action" onclick="runAction('clear_status')">Clear Status Effects</button>
+    </div>
+
+    <div class="row">
+      <button class="btn-action" onclick="runAction('reset_profession')">Reset Profession</button>
+      <button class="btn-action" onclick="runAction('teleport_region')">Teleport Region</button>
+      <button class="btn-action" onclick="runAction('grant_item')">Grant Item</button>
+    </div>
+
+    <div class="row">
+      <input id="regionKeyInput" placeholder="Region key (for Teleport)">
+      <input id="itemKeyInput" placeholder="Item key (for Grant Item)">
+      <input id="itemQtyInput" type="number" placeholder="Qty (for Grant Item)">
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Result</h2>
+    <div id="resultBox">No actions yet.</div>
+  </div>
+
+  <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
+
+  <script>
+    const admin = sessionStorage.getItem("twitch_username");
+    document.getElementById("adminDisplay").textContent =
+      admin ? "Admin: " + admin : "Not logged in";
+
+    function getTarget() {
+      const username = document.getElementById("usernameInput").value.trim();
+      const twitchId = document.getElementById("twitchIdInput").value.trim() || null;
+      return { username, twitchId };
+    }
+
+    async function loadPlayer() {
+      const { username } = getTarget();
+      const summaryEl = document.getElementById("playerSummary");
+
+      if (!username) {
+        summaryEl.textContent = "Username is required.";
+        return;
+      }
+
+      summaryEl.textContent = "Loading player...";
+
+      try {
+        const res = await fetch(`/api/admin/player/summary?username=${encodeURIComponent(username)}`, {
+          cache:"no-store"
+        });
+
+        if (!res.ok) {
+          summaryEl.textContent = "Failed to load player.";
+          return;
+        }
+
+        const data = await res.json();
+        if (!data || !data.player) {
+          summaryEl.textContent = "Player not found.";
+          return;
+        }
+
+        const p = data.player;
+        summaryEl.textContent =
+          `${p.username} — Level ${p.level} ${format(p.profession)} | ` +
+          `Region: ${format(p.region)} | Points: ${p.points}`;
+      } catch (err) {
+        summaryEl.textContent = "Error: " + err.message;
+      }
+    }
+
+    async function runAction(action) {
+      const { username, twitchId } = getTarget();
+      const resultBox = document.getElementById("resultBox");
+
+      if (!username) {
+        resultBox.textContent = "Username is required.";
+        return;
+      }
+
+      const payload = { admin, username, twitchId, action };
+
+      if (action === "teleport_region") {
+        payload.region = document.getElementById("regionKeyInput").value.trim();
+      }
+
+      if (action === "grant_item") {
+        payload.itemKey = document.getElementById("itemKeyInput").value.trim();
+        payload.quantity = Number(document.getElementById("itemQtyInput").value || "1");
+      }
+
+      resultBox.textContent = "Running action: " + action + "...";
+
+      try {
+        const res = await fetch("/api/admin/player/tools", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body:JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        resultBox.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultBox.textContent = "Error: " + err.message;
+      }
+    }
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g," ")
+        .replace(/\b\w/g,c=>c.toUpperCase());
+    }
+
+    function goAdmin() {
+      window.location.href = "admin-dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
