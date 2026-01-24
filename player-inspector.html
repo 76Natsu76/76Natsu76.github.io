@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Player Inspector</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #adminDisplay {
+      opacity:0.8;
+      margin-bottom:20px;
+    }
+
+    .section {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:20px;
+    }
+
+    .section h2 {
+      margin-top:0;
+      color:#9af7ff;
+    }
+
+    input, select, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px;
+      border-radius:4px;
+      margin-top:6px;
+      font-size:14px;
+    }
+
+    button:hover {
+      background:#222832;
+      cursor:pointer;
+    }
+
+    .player-card {
+      padding:12px;
+      margin:10px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+    }
+
+    .player-card strong {
+      color:#9af7ff;
+    }
+
+    .btn {
+      margin-top:16px;
+      padding:8px 12px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+
+    #toast {
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#1a1d24;
+      border:1px solid #444;
+      padding:12px 18px;
+      border-radius:6px;
+      color:#eee;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.3s ease-out;
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Player Inspector</h1>
+  <div id="adminDisplay"></div>
+
+  <div class="section">
+    <h2>Search Players</h2>
+
+    <input id="searchUsername" placeholder="Username">
+    <input id="searchPartial" placeholder="Partial match">
+    <input id="searchTwitch" placeholder="Twitch ID">
+
+    <div style="display:flex; gap:12px; margin-top:10px;">
+      <input id="levelMin" type="number" placeholder="Min Level">
+      <input id="levelMax" type="number" placeholder="Max Level">
+    </div>
+
+    <select id="profession">
+      <option value="">Any Profession</option>
+      <option value="WARRIOR">Warrior</option>
+      <option value="MAGE">Mage</option>
+      <option value="ROGUE">Rogue</option>
+      <option value="CLERIC">Cleric</option>
+      <option value="RANGER">Ranger</option>
+    </select>
+
+    <button class="btn" onclick="searchPlayers()">Search</button>
+  </div>
+
+  <div id="resultsContainer">Waiting...</div>
+
+  <button class="btn" onclick="goBack()">Back to Admin Dashboard</button>
+
+  <div id="toast"></div>
+
+  <script src="api.js"></script>
+
+  <script>
+    const admin = sessionStorage.getItem("twitch_username");
+    document.getElementById("adminDisplay").textContent =
+      admin ? "Admin: " + admin : "Not logged in";
+
+    function toast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.opacity = 1;
+      setTimeout(() => t.style.opacity = 0, 2500);
+    }
+
+    async function searchPlayers() {
+      const params = {};
+
+      const u = document.getElementById("searchUsername").value.trim();
+      const p = document.getElementById("searchPartial").value.trim();
+      const t = document.getElementById("searchTwitch").value.trim();
+      const lmin = document.getElementById("levelMin").value;
+      const lmax = document.getElementById("levelMax").value;
+      const prof = document.getElementById("profession").value;
+
+      if (u) params.username = u;
+      if (p) params.partial = p;
+      if (t) params.twitchId = t;
+      if (lmin) params.levelMin = lmin;
+      if (lmax) params.levelMax = lmax;
+      if (prof) params.profession = prof;
+
+      try {
+        const list = await api.admin.searchPlayers(params);
+        renderResults(list);
+        toast("Search complete");
+      } catch (err) {
+        document.getElementById("resultsContainer").textContent =
+          "Error: " + err.message;
+        toast("Search failed");
+      }
+    }
+
+    function renderResults(list) {
+      const container = document.getElementById("resultsContainer");
+
+      if (!list.length) {
+        container.innerHTML = "<div>No players found.</div>";
+        return;
+      }
+
+      container.innerHTML = list
+        .map(p => `
+          <div class="player-card">
+            <strong>${p.username}</strong><br>
+            Level ${p.level} — ${format(p.profession)}<br>
+            Region: ${format(p.region)}<br>
+            Last Action: ${p.lastAction || "Unknown"}<br><br>
+
+            <a href="character.html?user=${p.username}">Character</a> |
+            <a href="inventory.html?user=${p.username}">Inventory</a> |
+            <a href="combat-log.html?user=${p.username}">Combat Log</a> |
+            <a href="purchase-log.html?user=${p.username}">Purchases</a>
+          </div>
+        `)
+        .join("");
+    }
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g," ")
+        .replace(/\b\w/g,c=>c.toUpperCase());
+    }
+
+    function goBack() {
+      window.location.href = "admin-dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
