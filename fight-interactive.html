@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Combat</title>
+
+  <!-- ===== YOUR ORIGINAL CSS (UNMODIFIED) ===== -->
+  <style>
+    body {background:#0d0f14;color:#e8e8e8;font-family:system-ui, sans-serif;padding:24px;}
+    h1 {color:#7fffd4;margin-bottom:4px;}
+    #usernameDisplay {opacity:0.8;margin-bottom:16px;}
+    .panel {background:#11141c;border:1px solid #262a36;border-radius:8px;padding:16px;margin-bottom:20px;}
+    .panel h2 {margin-top:0;color:#9af7ff;}
+    .hp-bar {height:12px;background:#333;border-radius:6px;overflow:hidden;margin-top:6px;}
+    .actions button {display:block;width:100%;margin-top:10px;padding:10px;border-radius:6px;border:1px solid #444;background:#1a1d24;color:#eee;cursor:pointer;font-size:15px;}
+    .actions button:hover {background:#222832;}
+    .primary {background:#2e7d32;border-color:#1b5e20;}
+    .primary:hover {background:#388e3c;}
+    #log {background:#000;border:1px solid #333;padding:12px;border-radius:6px;font-family:monospace;font-size:14px;max-height:50vh;overflow-y:auto;white-space:pre-wrap;}
+
+    .reward-box {background:#11141c;border:1px solid #262a36;border-radius:8px;padding:20px;margin-top:20px;animation: rewardFade 0.6s ease-out;}
+    @keyframes rewardFade {from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0);}}
+
+    .xp-bar {margin-top:10px;height:14px;background:#333;border-radius:7px;overflow:hidden;}
+    .xp-fill {height:100%;background:#7fcfff;width:0%;transition: width 1s ease-in-out;}
+
+    .loot-card {margin-top:12px;padding:12px;background:#1a1d24;border-radius:6px;border:1px solid #333;animation: lootPop 0.4s ease-out;}
+    @keyframes lootPop {0% { transform:scale(0.8); opacity:0; } 100% { transform:scale(1); opacity:1;}}
+
+    .loot-common { border-color:#bfbfbf; }
+    .loot-uncommon { border-color:#7fff7f; box-shadow:0 0 6px #7fff7f55; }
+    .loot-rare { border-color:#7fcfff; box-shadow:0 0 6px #7fcfff55; }
+    .loot-epic { border-color:#c77fff; box-shadow:0 0 6px #c77fff55; }
+    .loot-legendary { border-color:#ffbf5f; box-shadow:0 0 6px #ffbf5f55; }
+
+    .level-up {margin-top:10px;padding:10px;background:#2e7d32;border-radius:6px;border:1px solid #1b5e20;color:#fff;animation: levelUpGlow 1.2s infinite ease-in-out;}
+    @keyframes levelUpGlow {0% { box-shadow:0 0 6px rgba(46,125,50,0.4); } 50% { box-shadow:0 0 12px rgba(46,125,50,0.9); } 100% { box-shadow:0 0 6px rgba(46,125,50,0.4);}}
+
+    .reward-btn {margin-top:14px;padding:10px 14px;border-radius:6px;border:1px solid #444;background:#1a1d24;color:#eee;cursor:pointer;width:100%;text-align:center;}
+    .reward-btn:hover {background:#222832;}
+
+    .modal {position:fixed;top:0; left:0;width:100%; height:100%;background:rgba(0,0,0,0.6);display:flex;justify-content:center;align-items:center;z-index:999;}
+    .modal-content {background:#11141c;border:1px solid #262a36;padding:20px;border-radius:8px;width:400px;}
+    .close-btn {margin-top:12px;padding:8px 12px;border-radius:4px;border:1px solid #444;background:#1a1d24;color:#eee;cursor:pointer;}
+    .close-btn:hover {background:#222832;}
+
+    .inspect-row {margin:6px 0;font-size:14px;opacity:0.9;}
+    .inspect-ability {padding:6px;margin:4px 0;background:#1a1d24;border-radius:4px;border:1px solid #333;}
+
+    .swap-slot, .swap-item {padding:8px;margin:6px 0;background:#1a1d24;border-radius:4px;border:1px solid #333;cursor:pointer;}
+    .swap-slot:hover, .swap-item:hover {background:#222832;}
+
+    .hp-fill {transition: width 0.6s ease-in-out;}
+    .damage-flash {animation: damageFlash 0.4s ease-out;}
+    @keyframes damageFlash {0% { background-color: rgba(255,0,0,0.6); } 100% { background-color: transparent;}}
+    .heal-flash {animation: healFlash 0.4s ease-out;}
+    @keyframes healFlash {0% { background-color: rgba(0,255,0,0.6); } 100% { background-color: transparent;}}
+
+    .ability-card {display:flex;align-items:center;gap:10px;padding:10px;margin:8px 0;background:#1a1d24;border-radius:6px;border:1px solid #333;position:relative;}
+    .ability-icon {width:48px;height:48px;border-radius:4px;background:#000;border:1px solid #444;object-fit:cover;}
+
+    .ability-tooltip {display:none;position:absolute;left:60px;top:0;background:#11141c;border:1px solid #262a36;padding:10px;border-radius:6px;width:260px;z-index:1000;font-size:13px;}
+    .ability-card:hover .ability-tooltip {display:block;}
+
+    .cooldown-overlay {position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);color:#fff;font-size:20px;display:flex;justify-content:center;align-items:center;border-radius:6px;pointer-events:none;}
+    .ability-disabled {opacity:0.4;pointer-events:none;}
+
+    .ult-bar {margin-top:8px;height:12px;background:#333;border-radius:6px;overflow:hidden;position:relative;}
+    .ult-fill {height:100%;background:#ffbf5f;width:0%;transition: width 0.6s ease-in-out;}
+    .ult-ready-glow {animation: ultGlow 1.2s infinite ease-in-out;}
+    @keyframes ultGlow {0% { box-shadow: 0 0 6px rgba(255,191,95,0.4); } 50% { box-shadow: 0 0 12px rgba(255,191,95,0.9); } 100% { box-shadow: 0 0 6px rgba(255,191,95,0.4);}}
+    .ult-pulse {animation: ultPulse 0.5s ease-out;}
+    @keyframes ultPulse {0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1);}}
+
+    .portrait-frame {width:140px;height:140px;border-radius:8px;overflow:hidden;border:2px solid #444;background:#000;display:flex;justify-content:center;align-items:center;margin:0 auto;position:relative;}
+    .portrait-img {width:100%;height:100%;object-fit:cover;}
+
+    .portrait-common { box-shadow:0 0 6px #bfbfbf55; }
+    .portrait-uncommon { box-shadow:0 0 8px #7fff7f88; }
+    .portrait-rare { box-shadow:0 0 8px #7fcfff88; }
+    .portrait-epic { box-shadow:0 0 8px #c77fff88; }
+    .portrait-legendary { box-shadow:0 0 10px #ffbf5faa; }
+
+    .cinematic-intro {position:fixed;top:0; left:0;width:100%; height:100%;background:rgba(0,0,0,0.85);display:flex;justify-content:center;align-items:center;z-index:2000;animation: introFadeIn 0.6s ease-out;}
+    @keyframes introFadeIn {from { opacity:0; } to { opacity:1;}}
+    .cinematic-content {text-align:center;animation: introPop 0.5s ease-out;}
+    @keyframes introPop {0% { transform:scale(0.8); opacity:0; } 100% { transform:scale(1); opacity:1;}}
+    .vs-text {font-size:48px;font-weight:700;color:#ffbf5f;margin-top:20px;text-shadow:0 0 12px #ffbf5f;}
+
+    .roar-shake {animation: roarShake 0.5s ease-in-out;}
+    @keyframes roarShake {0% { transform:translateX(0); } 20% { transform:translateX(-8px); } 40% { transform:translateX(8px); } 60% { transform:translateX(-6px); } 80% { transform:translateX(6px); } 100% { transform:translateX(0);}}
+
+    .screen-shake {animation: screenShake 0.4s ease-in-out;}
+    @keyframes screenShake {0% { transform:translate(0,0); } 20% { transform:translate(-6px, 4px); } 40% { transform:translate(6px, -4px); } 60% { transform:translate(-4px, 2px); } 80% { transform:translate(4px, -2px); } 100% { transform:translate(0,0);}}
+
+    .crit-flash {animation: critFlash 0.4s ease-out;}
+    @keyframes critFlash {0% { box-shadow:0 0 12px rgba(255,255,0,0.9); } 100% { box-shadow:0 0 0 rgba(255,255,0,0);}}
+
+    .fire-pulse {animation: firePulse 0.5s ease-out;}
+    @keyframes firePulse {0% { box-shadow:0 0 12px rgba(255,80,0,0.9); } 100% { box-shadow:0 0 0 rgba(255,80,0,0);}}
+    .ice-pulse {animation: icePulse 0.5s ease-out;}
+    @keyframes icePulse {0% { box-shadow:0 0 12px rgba(120,200,255,0.9); } 100% { box-shadow:0 0 0 rgba(120,200,255,0);}}
+    .lightning-pulse {animation: lightningPulse 0.5s ease-out;}
+    @keyframes lightningPulse {0% { box-shadow:0 0 12px rgba(255,255,120,0.9); } 100% { box-shadow:0 0 0 rgba(255,255,120,0);}}
+
+    .dot-tick {animation: dotTick 0.4s ease-out;}
+    @keyframes dotTick {0% { background-color:rgba(255,80,0,0.4); } 100% { background-color:transparent;}}
+    .hot-tick {animation: hotTick 0.4s ease-out;}
+    @keyframes hotTick {0% { background-color:rgba(80,255,80,0.4); } 100% { background-color:transparent;}}
+
+    .modifier-row {display:flex;align-items:center;gap:10px;margin-top:8px;padding:8px;background:#1a1d24;border-radius:6px;border:1px solid #333;font-size:14px;}
+    .modifier-icon {width:32px;height:32px;object-fit:contain;}
+    .modifier-label {opacity:0.9;}
+    .modifier-box {margin-top:16px;}
+  </style>
+</head>
+
+<body>
+  <h1>Combat</h1>
+  <div id="usernameDisplay"></div>
+
+  <!-- Player Panel -->
+  <div class="panel" id="playerPanel">
+    <h2>Player</h2>
+    <div class="portrait-frame"><img id="playerPortrait" class="portrait-img"></div>
+    <div id="playerHP"></div>
+    <div class="hp-bar"><div id="playerHPFill" class="hp-fill"></div></div>
+    <div class="ult-bar"><div id="ultFill" class="ult-fill"></div></div>
+  </div>
+
+  <!-- Enemy Panel -->
+  <div class="panel" id="enemyPanel">
+    <h2>Enemy</h2>
+    <div class="portrait-frame"><img id="enemyPortrait" class="portrait-img"></div>
+    <div id="enemyHP"></div>
+    <div class="hp-bar"><div id="enemyHPFill" class="hp-fill"></div></div>
+  </div>
+
+  <!-- Actions -->
+  <div class="panel actions" id="actionPanel">
+    <h2>Actions</h2>
+    <div id="abilityList"></div>
+    <button class="primary" id="basicAttackBtn">Basic Attack</button>
+    <button id="ultimateBtn">Ultimate</button>
+  </div>
+
+  <!-- Combat Log -->
+  <div class="panel">
+    <h2>Combat Log</h2>
+    <div id="log"></div>
+  </div>
+
+  <!-- Reward Panel -->
+  <div id="rewardPanel" style="display:none;"></div>
+
+  <!-- Scripts -->
+  <script src="api.js"></script>
+  <script src="world-data.js"></script>
+  <script src="encounters.js"></script>
+  <script src="combat-engine.js"></script>
+
+  <script>
+    // ============================
+    // Load player + encounter
+    // ============================
+    const username = sessionStorage.getItem("twitch_username");
+    const player = JSON.parse(sessionStorage.getItem("player"));
+    const encounter = JSON.parse(sessionStorage.getItem("encounter"));
+
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+
+    // ============================
+    // Initialize combat engine
+    // ============================
+    const engine = new CombatEngine(player, encounter, {
+      onUpdate: updateUI,
+      onLog: addLog,
+      onEnd: showRewards
+    });
+
+    // ============================
+    // UI Update
+    // ============================
+    function updateUI(state) {
+      const p = state.player;
+      const e = state.enemy;
+
+      document.getElementById("playerHP").textContent =
+        `HP: ${p.hp}/${p.hpMax}`;
+      document.getElementById("playerHPFill").style.width =
+        (p.hp / p.hpMax * 100) + "%";
+
+      document.getElementById("enemyHP").textContent =
+        `HP: ${e.hp}/${e.hpMax}`;
+      document.getElementById("enemyHPFill").style.width =
+        (e.hp / e.hpMax * 100) + "%";
+
+      document.getElementById("ultFill").style.width =
+        (p.ultCharge * 100) + "%";
+    }
+
+    // ============================
+    // Log
+    // ============================
+    function addLog(text) {
+      const log = document.getElementById("log");
+      log.textContent += text + "\n";
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // ============================
+    // Rewards
+    // ============================
+    function showRewards(result) {
+      const panel = document.getElementById("rewardPanel");
+      panel.style.display = "block";
+
+      panel.innerHTML = `
+        <div class="reward-box">
+          <h2>Battle Complete</h2>
+          <p>${result.outcome.toUpperCase()}</p>
+          <p>XP Gained: ${result.xp}</p>
+          <p>Gold Gained: ${result.gold}</p>
+          ${result.loot.map(item => `
+            <div class="loot-card loot-${item.rarity}">
+              ${item.name}
+            </div>
+          `).join("")}
+          <button class="reward-btn" onclick="returnToMap()">Return to Map</button>
+        </div>
+      `;
+    }
+
+    function returnToMap() {
+      window.location.href = "world-map.html";
+    }
+
+    // ============================
+    // Bind buttons
+    // ============================
+    document.getElementById("basicAttackBtn").onclick = () => engine.basicAttack();
+    document.getElementById("ultimateBtn").onclick = () => engine.useUltimate();
+
+    // ============================
+    // Start combat
+    // ============================
+    engine.start();
+  </script>
+</body>
+</html>
