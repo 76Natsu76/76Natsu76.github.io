@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Gift Points</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:40px;
+      max-width:600px;
+      margin:auto;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:10px;
+    }
+
+    #adminDisplay {
+      opacity:0.8;
+      margin-bottom:20px;
+    }
+
+    label {
+      margin-top:14px;
+      display:block;
+      font-size:14px;
+      opacity:0.85;
+    }
+
+    input, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:10px;
+      border-radius:4px;
+      width:100%;
+      margin-top:6px;
+      font-size:15px;
+    }
+
+    button {
+      cursor:pointer;
+      margin-top:14px;
+    }
+
+    button:hover {
+      background:#222832;
+    }
+
+    #resultBox {
+      margin-top:24px;
+      padding:20px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+      white-space:pre-wrap;
+      min-height:40px;
+    }
+
+    #toast {
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      background:#1a1d24;
+      border:1px solid #444;
+      padding:12px 18px;
+      border-radius:6px;
+      color:#eee;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.3s ease-out;
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Admin: Gift Points</h1>
+  <div id="adminDisplay"></div>
+
+  <label>Target Username</label>
+  <input id="target" placeholder="username">
+
+  <label>Amount to Gift</label>
+  <input id="amount" placeholder="e.g. 500">
+
+  <button onclick="giftPoints()">Gift Points</button>
+
+  <div id="resultBox">Waiting...</div>
+
+  <button onclick="goBack()">Back to Admin Dashboard</button>
+
+  <div id="toast"></div>
+
+  <script src="api.js"></script>
+
+  <script>
+    const admin = sessionStorage.getItem("twitch_username");
+    document.getElementById("adminDisplay").textContent =
+      admin ? "Logged in as Admin: " + admin : "Not logged in";
+
+    function toast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.style.opacity = 1;
+      setTimeout(() => t.style.opacity = 0, 2500);
+    }
+
+    async function giftPoints() {
+      const target = document.getElementById("target").value.trim();
+      const amount = Number(document.getElementById("amount").value.trim());
+      const box = document.getElementById("resultBox");
+
+      if (!target || !amount || isNaN(amount)) {
+        box.textContent = "Missing or invalid target/amount.";
+        return;
+      }
+
+      try {
+        const result = await api.admin.giftPoints(admin, target, amount);
+
+        if (!result.success) {
+          box.textContent = "Error: " + (result.message || "Unknown error");
+          toast("Gift failed");
+          return;
+        }
+
+        box.textContent =
+          `Gift Successful!\n\n` +
+          `Admin: ${admin}\n` +
+          `Target: ${target}\n` +
+          `Amount: ${amount}\n\n` +
+          result.message;
+
+        toast("Gift successful");
+
+      } catch (err) {
+        box.textContent = "Network error: " + err.message;
+        toast("Network error");
+      }
+    }
+
+    function goBack() {
+      window.location.href = "admin-dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
