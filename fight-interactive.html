@@ -633,7 +633,112 @@
     /* Modifier container */
     .modifier-box {
       margin-top:16px;
-    }  
+    }
+    /* Modal backdrop */
+    .item-modal {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.65);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+      transition:0.2s;
+    }
+  
+    .item-modal.hidden {
+      opacity:0;
+      pointer-events:none;
+    }
+  
+    /* Modal window */
+    .item-modal-content {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:10px;
+      padding:20px;
+      width:420px;
+      max-height:80vh;
+      overflow-y:auto;
+      animation:popIn 0.25s ease-out;
+    }
+  
+    @keyframes popIn {
+      from { transform:scale(0.85); opacity:0; }
+      to   { transform:scale(1); opacity:1; }
+    }
+  
+    .item-entry {
+      background:#1a1d24;
+      border:1px solid #333;
+      border-radius:6px;
+      padding:12px;
+      margin:10px 0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      transition:0.15s;
+    }
+  
+    .item-entry:hover {
+      background:#222832;
+    }
+  
+    .item-info {
+      max-width:70%;
+    }
+  
+    .item-name {
+      font-weight:600;
+      font-size:15px;
+    }
+  
+    .item-desc {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
+  
+    .item-qty {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
+  
+    .item-actions button {
+      padding:6px 10px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      font-size:12px;
+    }
+  
+    .item-actions button:hover {
+      background:#222832;
+    }
+  
+    /* Rarity colors */
+    .rarity-common { 
+      color:#bfbfbf; 
+    }
+    .rarity-uncommon { 
+      color:#7fff7f; 
+    }
+    .rarity-rare { 
+      color:#7fcfff; 
+    }
+    .rarity-epic { 
+      color:#c77fff; 
+    }
+    .rarity-legendary { 
+      color:#ffbf5f; 
+    }
+
   </style>
 </head>
 <body>
@@ -663,7 +768,8 @@
 
     <button onclick="openAbilityMenu()">Use Ability</button>
     <button onclick="useUltimate()">Use Ultimate</button>
-
+    
+    <button class="btn" onclick="openItemModal()">Use Item</button>
     <button onclick="openSwapMenu()">Swap Equipment</button>
   </div>
 
@@ -714,6 +820,19 @@
       <div id="swapItemList" style="margin-top:12px;"></div>
 
       <button class="close-btn" onclick="closeSwapMenu()">Close</button>
+    </div>
+  </div>
+
+  <!-- ============================
+       IN-COMBAT ITEM MODAL
+  ============================= -->
+  <div id="itemModal" class="item-modal hidden">
+    <div class="item-modal-content">
+      <h2>Use Item</h2>
+  
+      <div id="itemList">Loading...</div>
+  
+      <button class="btn close-btn" onclick="closeItemModal()">Close</button>
     </div>
   </div>
 
@@ -1307,6 +1426,100 @@
         .replace(/_/g, " ")
         .replace(/\b\w/g, (c) => c.toUpperCase());
     }
+
+    /* ============================================================
+       OPEN / CLOSE MODAL
+    ============================================================ */
+  
+    function openItemModal() {
+      const modal = document.getElementById("itemModal");
+      modal.classList.remove("hidden");
+      loadCombatItems();
+    }
+  
+    function closeItemModal() {
+      const modal = document.getElementById("itemModal");
+      modal.classList.add("hidden");
+    }
+  
+    /* ============================================================
+       LOAD USABLE ITEMS DURING COMBAT
+    ============================================================ */
+  
+    async function loadCombatItems() {
+      const list = document.getElementById("itemList");
+      list.textContent = "Loading...";
+  
+      try {
+        const player = await api.getPlayer(username);
+        const usable = (player.inventory || []).filter(i => i.type === "consumable");
+  
+        if (!usable.length) {
+          list.innerHTML = "<div>No usable items.</div>";
+          return;
+        }
+  
+        list.innerHTML = usable.map(item => {
+          const rarityClass = "rarity-" + (item.rarity || "common").toLowerCase();
+          return `
+            <div class="item-entry">
+              <div class="item-info">
+                <div class="item-name ${rarityClass}">${item.name}</div>
+                <div class="item-desc">${item.description || item.meta?.description || ""}</div>
+                <div class="item-qty">x${item.quantity}</div>
+              </div>
+              <div class="item-actions">
+                <button onclick="useCombatItem('${item.id}')">Use</button>
+              </div>
+            </div>
+          `;
+        }).join("");
+  
+      } catch (err) {
+        list.textContent = "Error loading items: " + err.message;
+      }
+    }
+  
+    /* ============================================================
+       USE ITEM DURING COMBAT
+    ============================================================ */
+  
+    async function useCombatItem(itemId) {
+      try {
+        const result = await api.useItemInCombat(username, itemId);
+  
+        // Add to combat log
+        addCombatLogEntry(`Used ${result.itemName || "item"} → ${result.effect || "Effect applied"}`);
+  
+        // Update UI (HP, MP, buffs, etc.)
+        await refreshCombatUI();
+  
+        closeItemModal();
+  
+      } catch (err) {
+        alert("Error using item: " + err.message);
+      }
+    }
+  
+    /* ============================================================
+       HOOK INTO YOUR EXISTING COMBAT UI
+    ============================================================ */
+  
+    function addCombatLogEntry(text) {
+      const logBox = document.getElementById("combatLog");
+      if (logBox) {
+        logBox.innerHTML += `<div>${text}</div>`;
+        logBox.scrollTop = logBox.scrollHeight;
+      }
+    }
+  
+    async function refreshCombatUI() {
+      // You already have a function that refreshes HP/MP/Status/etc.
+      if (typeof loadCombatState === "function") {
+        await loadCombatState();
+      }
+    }
+
   </script>
 </body>
 </html>
