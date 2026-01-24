@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – World Map Editor</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+      max-width:1100px;
+      margin:auto;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #adminDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .layout {
+      display:grid;
+      grid-template-columns: 2fr 3fr;
+      gap:20px;
+    }
+
+    .section {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:20px;
+    }
+
+    .section h2 {
+      margin-top:0;
+      color:#9af7ff;
+      font-size:18px;
+    }
+
+    .region-list {
+      max-height:70vh;
+      overflow-y:auto;
+    }
+
+    .region-card {
+      padding:10px;
+      margin:6px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      cursor:pointer;
+      font-size:14px;
+    }
+
+    .region-card.active {
+      border-color:#7fffd4;
+      box-shadow:0 0 0 1px #7fffd4;
+    }
+
+    .region-card:hover {
+      background:#222832;
+    }
+
+    .pill {
+      display:inline-block;
+      padding:2px 6px;
+      border-radius:999px;
+      background:#151822;
+      border:1px solid #333;
+      font-size:11px;
+      margin-right:4px;
+      margin-top:4px;
+    }
+
+    input, textarea, select, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px;
+      border-radius:4px;
+      font-size:14px;
+    }
+
+    textarea {
+      resize:vertical;
+      min-height:80px;
+    }
+
+    button {
+      cursor:pointer;
+    }
+
+    button:hover {
+      background:#222832;
+    }
+
+    .field-row {
+      margin-bottom:10px;
+      font-size:14px;
+    }
+
+    .field-row label {
+      display:block;
+      margin-bottom:4px;
+      opacity:0.9;
+    }
+
+    .inline-row {
+      display:flex;
+      gap:10px;
+    }
+
+    .inline-row > * {
+      flex:1;
+    }
+
+    #statusMessage {
+      margin-top:8px;
+      font-size:13px;
+      opacity:0.85;
+    }
+
+    .btn-nav {
+      margin-top:16px;
+      padding:8px 12px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .btn-nav:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>World Map Editor</h1>
+  <div id="adminDisplay"></div>
+
+  <div class="layout">
+    <div class="section">
+      <h2>Regions</h2>
+      <div id="regionList" class="region-list">Loading regions...</div>
+    </div>
+
+    <div class="section">
+      <h2>Region Details</h2>
+      <div id="regionDetails">Select a region to edit.</div>
+      <div id="statusMessage"></div>
+    </div>
+  </div>
+
+  <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
+
+  <script>
+    const admin = sessionStorage.getItem("twitch_username");
+    document.getElementById("adminDisplay").textContent =
+      admin ? "Admin: " + admin : "Not logged in";
+
+    let regions = [];
+    let selectedKey = null;
+
+    async function loadMap() {
+      const listEl = document.getElementById("regionList");
+      listEl.textContent = "Loading regions...";
+
+      try {
+        const res = await fetch("/api/admin/world/map", { cache:"no-store" });
+        if (!res.ok) {
+          listEl.textContent = "Failed to load regions.";
+          return;
+        }
+
+        const data = await res.json();
+        regions = data.regions || [];
+        renderRegionList();
+      } catch (err) {
+        listEl.textContent = "Network error: " + err.message;
+      }
+    }
+
+    function renderRegionList() {
+      const listEl = document.getElementById("regionList");
+
+      if (!regions.length) {
+        listEl.innerHTML = "<div>No regions defined.</div>";
+        return;
+      }
+
+      listEl.innerHTML = regions.map(r => `
+        <div class="region-card ${r.key === selectedKey ? "active" : ""}"
+             onclick="selectRegion('${r.key}')">
+          <strong>${format(r.key)}</strong><br>
+          <span class="pill">${format(r.biome || "Unknown Biome")}</span>
+          <span class="pill">Lvl ${r.minLevel ?? "?"}–${r.maxLevel ?? "?"}</span>
+          <span class="pill">${format(r.difficulty || "Normal")}</span>
+        </div>
+      `).join("");
+    }
+
+    function selectRegion(key) {
+      selectedKey = key;
+      renderRegionList();
+
+      const region = regions.find(r => r.key === key);
+      if (!region) {
+        document.getElementById("regionDetails").textContent = "Region not found.";
+        return;
+      }
+
+      renderRegionDetails(region);
+    }
+
+    function renderRegionDetails(r) {
+      const details = document.getElementById("regionDetails");
+
+      details.innerHTML = `
+        <div class="field-row">
+          <label>Region Key</label>
+          <input id="regionKey" value="${r.key}" disabled>
+        </div>
+
+        <div class="field-row">
+          <label>Display Name</label>
+          <input id="regionName" value="${r.name || format(r.key)}">
+        </div>
+
+        <div class="field-row inline-row">
+          <div>
+            <label>Biome</label>
+            <input id="regionBiome" value="${r.biome || ""}" placeholder="e.g. FOREST, DESERT">
+          </div>
+          <div>
+            <label>Difficulty</label>
+            <select id="regionDifficulty">
+              ${difficultyOptions(r.difficulty)}
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row inline-row">
+          <div>
+            <label>Min Level</label>
+            <input id="regionMinLevel" type="number" value="${r.minLevel ?? 1}">
+          </div>
+          <div>
+            <label>Max Level</label>
+            <input id="regionMaxLevel" type="number" value="${r.maxLevel ?? 100}">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <label>Flavor Text</label>
+          <textarea id="regionFlavor" placeholder="Short description shown on world map.">${r.flavorText || ""}</textarea>
+        </div>
+
+        <div class="field-row">
+          <label>Encounter Tags (comma-separated)</label>
+          <input id="regionTags" value="${(r.tags || []).join(", ")}" placeholder="e.g. goblin, undead, bandit">
+        </div>
+
+        <div class="field-row">
+          <label>Weather Pattern (optional)</label>
+          <input id="regionWeather" value="${r.weatherPattern || ""}" placeholder="e.g. STORMY, CLEAR, FOGGY">
+        </div>
+
+        <button onclick="saveRegion()">Save Region</button>
+      `;
+    }
+
+    function difficultyOptions(selected) {
+      const options = ["EASY", "NORMAL", "HARD", "BRUTAL"];
+      return options.map(o => `
+        <option value="${o}" ${o === (selected || "NORMAL") ? "selected" : ""}>
+          ${format(o)}
+        </option>
+      `).join("");
+    }
+
+    async function saveRegion() {
+      if (!selectedKey) return;
+
+      const payload = {
+        admin,
+        key: document.getElementById("regionKey").value,
+        name: document.getElementById("regionName").value.trim(),
+        biome: document.getElementById("regionBiome").value.trim(),
+        difficulty: document.getElementById("regionDifficulty").value,
+        minLevel: Number(document.getElementById("regionMinLevel").value),
+        maxLevel: Number(document.getElementById("regionMaxLevel").value),
+        flavorText: document.getElementById("regionFlavor").value.trim(),
+        tags: document.getElementById("regionTags").value
+          .split(",")
+          .map(t => t.trim())
+          .filter(Boolean),
+        weatherPattern: document.getElementById("regionWeather").value.trim()
+      };
+
+      const status = document.getElementById("statusMessage");
+      status.textContent = "Saving...";
+
+      try {
+        const res = await fetch("/api/admin/world/map/update", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body:JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        status.textContent = data.message || "Region saved.";
+
+        const idx = regions.findIndex(r => r.key === payload.key);
+        if (idx !== -1) {
+          regions[idx] = { ...regions[idx], ...payload };
+          renderRegionList();
+        }
+      } catch (err) {
+        status.textContent = "Error saving region: " + err.message;
+      }
+    }
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g," ")
+        .replace(/\b\w/g,c=>c.toUpperCase());
+    }
+
+    function goAdmin() {
+      window.location.href = "admin-dashboard.html";
+    }
+
+    loadMap();
+  </script>
+
+</body>
+</html>
