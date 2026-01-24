@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Action Console</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .section {
+      margin-top:24px;
+      padding:16px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+    }
+
+    .section h2 {
+      margin-top:0;
+      font-size:18px;
+      color:#9af7ff;
+    }
+
+    input, select, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px;
+      border-radius:4px;
+      margin-top:6px;
+      font-size:14px;
+    }
+
+    button {
+      cursor:pointer;
+    }
+
+    button:hover {
+      background:#222832;
+    }
+
+    #output {
+      margin-top:20px;
+      white-space:pre-wrap;
+      background:#000;
+      padding:15px;
+      border-radius:6px;
+      border:1px solid #333;
+      font-family:monospace;
+      font-size:14px;
+      max-height:60vh;
+      overflow-y:auto;
+    }
+
+    .log-entry {
+      margin-bottom:12px;
+      padding-bottom:12px;
+      border-bottom:1px solid #333;
+    }
+
+    .log-time {
+      opacity:0.6;
+      font-size:12px;
+      margin-bottom:4px;
+    }
+
+    .error {
+      color:#ff6b6b;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Action Console</h1>
+  <div id="usernameDisplay"></div>
+
+  <!-- ============================
+       DIAGNOSTICS
+  ============================= -->
+  <div class="section">
+    <h2>Diagnostics</h2>
+
+    <button onclick="pingBackend()">Ping Backend</button>
+    <button onclick="loadPlayer()">Load Player</button>
+    <button onclick="clearOutput()">Clear Output</button>
+  </div>
+
+  <!-- ============================
+       COMBAT TEST
+  ============================= -->
+  <div class="section">
+    <h2>Combat Test</h2>
+
+    <label>Region:</label><br>
+    <input id="combatRegion" placeholder="e.g. VERDANT_WILDS">
+
+    <br><br>
+
+    <label>Manual Enemy Override (optional):</label><br>
+    <input id="combatEnemy" placeholder="e.g. goblin, boss">
+
+    <br><br>
+
+    <button onclick="runCombat()">Run Combat</button>
+  </div>
+
+  <!-- ============================
+       INVENTORY TEST
+  ============================= -->
+  <div class="section">
+    <h2>Inventory Actions</h2>
+
+    <label>Item ID:</label><br>
+    <input id="itemId" placeholder="item id">
+
+    <br><br>
+
+    <button onclick="useItem()">Use Item</button>
+    <button onclick="equipItem()">Equip Item</button>
+    <button onclick="unequipSlot()">Unequip Slot</button>
+
+    <br><br>
+
+    <label>Slot (for unequip):</label><br>
+    <input id="slotName" placeholder="e.g. weapon">
+  </div>
+
+  <!-- ============================
+       SPECIAL ACTIONS
+  ============================= -->
+  <div class="section">
+    <h2>Special Actions</h2>
+
+    <button onclick="callMystery()">Mystery</button>
+    <button onclick="callInspire()">Inspire</button>
+    <button onclick="callBuff()">Buff</button>
+    <button onclick="callLevelUp()">Level Up</button>
+  </div>
+
+  <!-- ============================
+       OUTPUT
+  ============================= -->
+  <div id="output">Waiting...</div>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    /* ============================================================
+       OUTPUT HANDLING
+    ============================================================ */
+
+    function logOutput(data, isError = false) {
+      const out = document.getElementById("output");
+
+      const entry = document.createElement("div");
+      entry.className = "log-entry";
+
+      const time = document.createElement("div");
+      time.className = "log-time";
+      time.textContent = new Date().toLocaleTimeString();
+
+      const content = document.createElement("div");
+      content.className = isError ? "error" : "";
+      content.textContent =
+        typeof data === "string" ? data : JSON.stringify(data, null, 2);
+
+      entry.appendChild(time);
+      entry.appendChild(content);
+
+      out.appendChild(entry);
+      out.scrollTop = out.scrollHeight;
+    }
+
+    function clearOutput() {
+      document.getElementById("output").textContent = "";
+    }
+
+    /* ============================================================
+       DIAGNOSTICS
+    ============================================================ */
+
+    async function pingBackend() {
+      try {
+        const res = await api.ping();
+        logOutput(res);
+      } catch (err) {
+        logOutput("Ping failed: " + err.message, true);
+      }
+    }
+
+    async function loadPlayer() {
+      try {
+        const player = await api.getPlayer(username);
+        logOutput(player);
+      } catch (err) {
+        logOutput("Load failed: " + err.message, true);
+      }
+    }
+
+    /* ============================================================
+       COMBAT
+    ============================================================ */
+
+    async function runCombat() {
+      const region = document.getElementById("combatRegion").value || "VERDANT_WILDS";
+      const manualEnemy = document.getElementById("combatEnemy").value || null;
+
+      try {
+        const result = await api.runCombat(username, region, manualEnemy);
+        logOutput(result);
+      } catch (err) {
+        logOutput("Combat error: " + err.message, true);
+      }
+    }
+
+    /* ============================================================
+       INVENTORY
+    ============================================================ */
+
+    async function useItem() {
+      const itemId = document.getElementById("itemId").value;
+      try {
+        const result = await api.useItem(username, itemId);
+        logOutput(result);
+      } catch (err) {
+        logOutput("Use item error: " + err.message, true);
+      }
+    }
+
+    async function equipItem() {
+      const itemId = document.getElementById("itemId").value;
+      try {
+        const result = await api.equipItem(username, itemId);
+        logOutput(result);
+      } catch (err) {
+        logOutput("Equip error: " + err.message, true);
+      }
+    }
+
+    async function unequipSlot() {
+      const slot = document.getElementById("slotName").value;
+      try {
+        const result = await api.unequipItem(username, slot);
+        logOutput(result);
+      } catch (err) {
+        logOutput("Unequip error: " + err.message, true);
+      }
+    }
+
+    /* ============================================================
+       SPECIAL ACTIONS
+    ============================================================ */
+
+    async function callMystery() {
+      try {
+        logOutput(await api.mystery(username));
+      } catch (err) {
+        logOutput("Mystery error: " + err.message, true);
+      }
+    }
+
+    async function callInspire() {
+      try {
+        logOutput(await api.inspire(username));
+      } catch (err) {
+        logOutput("Inspire error: " + err.message, true);
+      }
+    }
+
+    async function callBuff() {
+      try {
+        logOutput(await api.buff(username));
+      } catch (err) {
+        logOutput("Buff error: " + err.message, true);
+      }
+    }
+
+    async function callLevelUp() {
+      try {
+        logOutput(await api.levelUp(username));
+      } catch (err) {
+        logOutput("Level up error: " + err.message, true);
+      }
+    }
+  </script>
+
+</body>
+</html>
