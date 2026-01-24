@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>World Map</title>
+
+  <style>
+    body {
+      background: #0d0f14;
+      color: #e8e8e8;
+      font-family: system-ui, sans-serif;
+      padding: 24px;
+    }
+
+    h1 {
+      color: #7fffd4;
+      margin-bottom: 4px;
+    }
+
+    #usernameDisplay {
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    .region-card {
+      background: #11141c;
+      border: 1px solid #262a36;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+
+    .region-card h2 {
+      margin-top: 0;
+      color: #9af7ff;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
+      border-bottom: 1px solid #1c1f28;
+      font-size: 14px;
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .event {
+      margin-top: 6px;
+      padding: 6px;
+      background: #1a1d24;
+      border-radius: 4px;
+      border: 1px solid #333;
+      font-size: 13px;
+    }
+
+    .btn {
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #1a1d24;
+      color: #eee;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #222832;
+    }
+
+    .btn.disabled {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .section {
+      margin-top: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>World Map</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="mapContainer">Loading world...</div>
+
+  <button class="btn" onclick="goToCharacter()">Character</button>
+  <button class="btn" onclick="goToInventory()">Inventory</button>
+  <button class="btn" onclick="goToBestiary()">Bestiary</button>
+
+  <!-- Load shared modules -->
+  <script src="api.js"></script>
+  <script src="world-data.js"></script>
+  <script src="encounters.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    const userId = sessionStorage.getItem("twitch_user_id");
+
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    // Load player data from sessionStorage
+    let player = JSON.parse(sessionStorage.getItem("player_data") || "{}");
+    let playerLevel = Number(player.level || 1);
+
+    async function loadWorld() {
+      renderWorld(WORLD_DATA);
+    }
+
+    function renderWorld(world) {
+      const container = document.getElementById("mapContainer");
+      const out = [];
+
+      for (const region of world.regions) {
+        const minLevel = region.minLevel ?? 1;
+        const maxLevel = region.maxLevel ?? 999;
+
+        const locked = playerLevel < minLevel || playerLevel > maxLevel;
+
+        out.push(`
+          <div class="region-card">
+            <h2>${format(region.key)}</h2>
+
+            <div class="stat-row"><span>Weather</span><span>${format(region.weather)}</span></div>
+            <div class="stat-row"><span>Danger</span><span>${region.danger}</span></div>
+            <div class="stat-row"><span>Blessing</span><span>${region.blessing}</span></div>
+
+            <div class="stat-row">
+              <span>World Boss</span>
+              <span>${region.worldBoss?.alive ? "Active" : "Defeated"}</span>
+            </div>
+
+            <div class="stat-row">
+              <span>Level Range</span>
+              <span>${minLevel} - ${maxLevel}</span>
+            </div>
+
+            <div class="section">
+              <strong>Events:</strong>
+              ${
+                region.events.length === 0
+                  ? "<div class='event'>None</div>"
+                  : region.events
+                      .map(e => `<div class="event">${format(e)}</div>`)
+                      .join("")
+              }
+            </div>
+
+            <button class="btn ${locked ? "disabled" : ""}"
+              onclick="enterRegion('${region.key}', ${locked})">
+              ${
+                locked
+                  ? `Locked (Requires Lv ${minLevel})`
+                  : "Enter Region"
+              }
+            </button>
+          </div>
+        `);
+      }
+
+      container.innerHTML = out.join("");
+    }
+
+    async function enterRegion(regionKey, locked) {
+      if (locked) return;
+
+      // Resolve encounter client-side
+      const encounter = resolveEncounter(regionKey, player);
+
+      // Store encounter for fight page
+      sessionStorage.setItem("current_encounter", JSON.stringify(encounter));
+
+      // Redirect to fight page
+      window.location.href = "fight-interactive.html";
+    }
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function goToCharacter() {
+      window.location.href = "character.html";
+    }
+
+    function goToInventory() {
+      window.location.href = "inventory.html";
+    }
+
+    function goToBestiary() {
+      window.location.href = "bestiary.html";
+    }
+
+    loadWorld();
+  </script>
+
+</body>
+</html>
