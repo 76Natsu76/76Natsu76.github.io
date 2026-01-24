@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Shop Pool Editor</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #adminDisplay {
+      opacity:0.8;
+      margin-bottom:20px;
+    }
+
+    .item-card {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:20px;
+    }
+
+    .item-card h2 {
+      margin-top:0;
+      color:#9af7ff;
+    }
+
+    .row {
+      display:flex;
+      gap:12px;
+      margin-bottom:8px;
+    }
+
+    input, select {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:6px;
+      border-radius:4px;
+      font-size:14px;
+      width:100%;
+    }
+
+    .btn {
+      margin-top:12px;
+      padding:8px 12px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+
+    .delete-btn {
+      background:#3a0f0f;
+      border-color:#662222;
+    }
+
+    .delete-btn:hover {
+      background:#5a1a1a;
+    }
+
+    #addForm {
+      margin-top:30px;
+      padding:16px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Shop Pool Editor</h1>
+  <div id="adminDisplay"></div>
+
+  <div id="poolContainer">Loading...</div>
+
+  <div id="addForm">
+    <h2>Add New Item</h2>
+
+    <div class="row">
+      <input id="newName" placeholder="Item Name">
+      <select id="newRarity">
+        <option value="common">Common</option>
+        <option value="rare">Rare</option>
+        <option value="very">Very</option>
+        <option value="ultra">Ultra</option>
+        <option value="ridiculous">Ridiculous</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <input id="newMinQty" type="number" placeholder="Min Qty">
+      <input id="newMaxQty" type="number" placeholder="Max Qty">
+    </div>
+
+    <div class="row">
+      <input id="newMinPrice" type="number" placeholder="Min Price">
+      <input id="newMaxPrice" type="number" placeholder="Max Price">
+    </div>
+
+    <button class="btn" onclick="addItem()">Add Item</button>
+  </div>
+
+  <button class="btn" onclick="goBack()">Back to Admin Dashboard</button>
+
+  <script src="api.js"></script>
+
+  <script>
+    const admin = sessionStorage.getItem("twitch_username");
+    document.getElementById("adminDisplay").textContent =
+      admin ? "Admin: " + admin : "Not logged in";
+
+    loadPool();
+
+    /* ============================================================
+       LOAD POOL
+       ============================================================ */
+
+    async function loadPool() {
+      const container = document.getElementById("poolContainer");
+      container.textContent = "Loading...";
+
+      try {
+        const pool = await api.getShopPool();
+        renderPool(pool);
+      } catch (err) {
+        container.textContent = "Failed to load pool: " + err.message;
+      }
+    }
+
+    /* ============================================================
+       RENDER POOL
+       ============================================================ */
+
+    function renderPool(pool) {
+      const out = [];
+
+      for (const item of pool) {
+        out.push(`
+          <div class="item-card">
+            <h2>${item.name}</h2>
+
+            <div class="row">
+              <input id="name-${item.id}" value="${item.name}">
+              <select id="rarity-${item.id}">
+                ${rarityOptions(item.rarity)}
+              </select>
+            </div>
+
+            <div class="row">
+              <input id="minQty-${item.id}" type="number" value="${item.minQty}">
+              <input id="maxQty-${item.id}" type="number" value="${item.maxQty}">
+            </div>
+
+            <div class="row">
+              <input id="minPrice-${item.id}" type="number" value="${item.minPrice}">
+              <input id="maxPrice-${item.id}" type="number" value="${item.maxPrice}">
+            </div>
+
+            <button class="btn" onclick="saveItem('${item.id}')">Save</button>
+            <button class="btn delete-btn" onclick="deleteItem('${item.id}')">Delete</button>
+          </div>
+        `);
+      }
+
+      document.getElementById("poolContainer").innerHTML = out.join("");
+    }
+
+    function rarityOptions(selected) {
+      const rarities = ["common", "rare", "very", "ultra", "ridiculous"];
+      return rarities
+        .map(r => `<option value="${r}" ${r === selected ? "selected" : ""}>${format(r)}</option>`)
+        .join("");
+    }
+
+    /* ============================================================
+       SAVE ITEM
+       ============================================================ */
+
+    async function saveItem(id) {
+      const payload = {
+        id,
+        name: document.getElementById(`name-${id}`).value,
+        rarity: document.getElementById(`rarity-${id}`).value,
+        minQty: Number(document.getElementById(`minQty-${id}`).value),
+        maxQty: Number(document.getElementById(`maxQty-${id}`).value),
+        minPrice: Number(document.getElementById(`minPrice-${id}`).value),
+        maxPrice: Number(document.getElementById(`maxPrice-${id}`).value)
+      };
+
+      try {
+        const result = await api.updateShopPoolItem(payload);
+        alert(result.message || "Updated.");
+        loadPool();
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    }
+
+    /* ============================================================
+       DELETE ITEM
+       ============================================================ */
+
+    async function deleteItem(id) {
+      try {
+        const result = await api.deleteShopPoolItem(id);
+        alert(result.message || "Deleted.");
+        loadPool();
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    }
+
+    /* ============================================================
+       ADD ITEM
+       ============================================================ */
+
+    async function addItem() {
+      const payload = {
+        name: document.getElementById("newName").value,
+        rarity: document.getElementById("newRarity").value,
+        minQty: Number(document.getElementById("newMinQty").value),
+        maxQty: Number(document.getElementById("newMaxQty").value),
+        minPrice: Number(document.getElementById("newMinPrice").value),
+        maxPrice: Number(document.getElementById("newMaxPrice").value)
+      };
+
+      try {
+        const result = await api.addShopPoolItem(payload);
+        alert(result.message || "Added.");
+        loadPool();
+      } catch (err) {
+        alert("Error: " + err.message);
+      }
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function goBack() {
+      window.location.href = "admin-dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
