@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Profession</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:20px;
+    }
+
+    #currentProfession {
+      margin-bottom:20px;
+      font-size:16px;
+    }
+
+    .profession-card {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:20px;
+      transition:0.2s;
+    }
+
+    .profession-card:hover {
+      background:#1a1d24;
+    }
+
+    .profession-card.disabled {
+      opacity:0.4;
+      pointer-events:none;
+    }
+
+    .profession-card h2 {
+      margin-top:0;
+      color:#9af7ff;
+    }
+
+    .bonus-row {
+      font-size:14px;
+      margin:4px 0;
+    }
+
+    .starter-item {
+      font-size:13px;
+      opacity:0.85;
+      margin-left:12px;
+    }
+
+    .btn {
+      margin-top:12px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Choose Your Profession</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="currentProfession"></div>
+
+  <div id="professionContainer">Loading...</div>
+
+  <button class="btn" onclick="goToCharacter()">Back to Character</button>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    let player = null;
+
+    loadPage();
+
+    /* ============================================================
+       LOAD PLAYER + PROFESSIONS
+       ============================================================ */
+
+    async function loadPage() {
+      const container = document.getElementById("professionContainer");
+
+      if (!username) {
+        container.textContent = "Error: No Twitch username found.";
+        return;
+      }
+
+      try {
+        player = await api.getPlayer(username);
+
+        document.getElementById("currentProfession").innerHTML = `
+          <strong>Current Profession:</strong> ${format(player.profession)}
+          <br>
+          <strong>Level:</strong> ${player.level}
+        `;
+
+        const professions = await api.getProfessionList();
+        renderProfessions(professions);
+
+      } catch (err) {
+        container.textContent = "Error loading data: " + err.message;
+      }
+    }
+
+    /* ============================================================
+       RENDER PROFESSION CARDS
+       ============================================================ */
+
+    function renderProfessions(list) {
+      const container = document.getElementById("professionContainer");
+      const out = [];
+
+      const canChoose =
+        player.level >= 10 &&
+        (player.profession === "NONE" || player.profession === null);
+
+      for (const prof of list) {
+        const disabled = !canChoose;
+
+        out.push(`
+          <div class="profession-card ${disabled ? "disabled" : ""}">
+            <h2>${format(prof.key)}</h2>
+            <div>${prof.description}</div>
+
+            <h3 style="margin-top:12px;">Bonuses</h3>
+            ${Object.entries(prof.bonuses)
+              .map(([k, v]) => `<div class="bonus-row">${format(k)}: +${v}</div>`)
+              .join("")}
+
+            <h3 style="margin-top:12px;">Starter Kit</h3>
+            ${prof.starterKit.items
+              .map(i => `<div class="starter-item">• ${i.name} (x${i.quantity})</div>`)
+              .join("")}
+
+            <button class="btn"
+              onclick="chooseProfession('${prof.key}')"
+              ${disabled ? "disabled" : ""}>
+              Choose ${format(prof.key)}
+            </button>
+          </div>
+        `);
+      }
+
+      container.innerHTML = out.join("");
+    }
+
+    /* ============================================================
+       CHOOSE PROFESSION
+       ============================================================ */
+
+    async function chooseProfession(key) {
+      try {
+        const result = await api.chooseProfession(username, key);
+        alert(result.message || "Profession selected.");
+        loadPage();
+      } catch (err) {
+        alert("Error selecting profession: " + err.message);
+      }
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function goToCharacter() {
+      window.location.href = "character.html";
+    }
+  </script>
+
+</body>
+</html>
