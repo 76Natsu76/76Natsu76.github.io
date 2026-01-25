@@ -85,7 +85,6 @@
       background:#222832;
     }
 
-    /* Tooltip */
     .tooltip {
       display:none;
       position:absolute;
@@ -104,7 +103,6 @@
       display:block;
     }
 
-    /* Rarity Colors */
     .rarity-common { color:#bfbfbf; }
     .rarity-uncommon { color:#7fff7f; }
     .rarity-rare { color:#7fcfff; }
@@ -156,13 +154,12 @@
     /* ============================================================
        LOAD SHOP
        ============================================================ */
-
     async function loadShop() {
       const container = document.getElementById("shopContainer");
       container.textContent = "Loading...";
 
       try {
-        const data = await api.getDailyShop(username);
+        const data = await api.dailyShop.get(username);
         renderShop(data);
       } catch (err) {
         container.textContent = "Error loading daily shop: " + err.message;
@@ -172,14 +169,12 @@
     /* ============================================================
        RENDER SHOP
        ============================================================ */
-
     function renderShop(data) {
       const container = document.getElementById("shopContainer");
       const currencyDisplay = document.getElementById("currencyDisplay");
 
-      currencyDisplay.textContent = `Your Gold: ${data.currency}`;
+      currencyDisplay.textContent = `Your Gold: ${data.gold}`;
 
-      // Timer
       const expiresAt = new Date(data.expiresAt);
       startTimer(expiresAt);
 
@@ -217,10 +212,9 @@
     /* ============================================================
        BUY ITEM
        ============================================================ */
-
     async function buyItem(itemId) {
       try {
-        const result = await api.buyDailyShopItem(username, itemId);
+        const result = await api.dailyShop.buy(username, itemId);
         alert(result.message || "Purchase complete.");
         loadShop();
       } catch (err) {
@@ -231,7 +225,6 @@
     /* ============================================================
        TIMER
        ============================================================ */
-
     function startTimer(expiresAt) {
       if (timerInterval) clearInterval(timerInterval);
 
@@ -257,7 +250,6 @@
     /* ============================================================
        HELPERS
        ============================================================ */
-
     function formatBonuses(b) {
       return Object.entries(b)
         .map(([k, v]) => `${format(k)}: +${v}`)
