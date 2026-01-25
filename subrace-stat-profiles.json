@@ -1184,4 +1184,142 @@
       "description": "A crystalline construct that channels magical energy through refracted light."
     }
   },
+
+  "plantfolk": {
+
+    "treant": {
+      "growth": { "hp": 1.3, "atk": 1.1, "def": 1.4, "speed": 0.8, "mana": 1.0 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "Ancient treefolk with immense durability and deep forest magic."
+    },
+
+    "bloomling": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "nature": 0.2, "light": 0.1 },
+      "description": "Small floral beings who channel radiant pollen and healing energy."
+    },
+
+    "thornkin": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.1, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": { "poison": 0.3 },
+      "description": "Spiny plantfolk whose bodies bristle with toxic thorns."
+    },
+
+    "fungal_warden": {
+      "growth": { "hp": 1.2, "atk": 1.0, "def": 1.2, "speed": 0.9, "mana": 1.2 },
+      "elementAffinity": { "decay": 0.3 },
+      "description": "Mycelial guardians who spread spores and decay‑infused magic."
+    },
+
+    "vinecaller": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.0, "mana": 1.3 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "Flexible plantfolk who command living vines and entangling roots."
+    }
+  },
+
+  "slimeborn": {
+
+    "basic_slime": {
+      "growth": { "hp": 1.2, "atk": 1.0, "def": 0.8, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A simple amorphous slime with surprising resilience and adaptability."
+    },
+
+    "acid_slime": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 0.8, "speed": 1.1, "mana": 1.0 },
+      "elementAffinity": { "poison": 0.3 },
+      "description": "A corrosive slime that dissolves armor and flesh with acidic secretions."
+    },
+
+    "ember_slime": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 0.8, "speed": 1.1, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "A molten slime infused with burning embers and volatile heat."
+    },
+
+    "frost_slime": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 0.9, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "A chilled slime that slows foes with freezing gel."
+    },
+
+    "arcane_slime": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 0.9, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "A magically‑charged slime that warps its form with arcane energy."
+    },
+
+    "mini_slime": {
+      "growth": { "hp": 0.8, "atk": 0.9, "def": 0.8, "speed": 1.3, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A tiny, fast slime often used as a summon or companion creature."
+    }
+  },
+
+  "insectoid": {
+
+    "ant_warrior": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.1, "speed": 1.1, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.1 },
+      "description": "Disciplined insectoid soldiers with strong teamwork instincts."
+    },
+
+    "beetle_guard": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.3, "speed": 0.9, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.2 },
+      "description": "Heavily armored insectoids with thick carapaces and powerful mandibles."
+    },
+
+    "moth_mystic": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.1 },
+      "description": "Ethereal insectoids who channel shimmering dust and lunar magic."
+    },
+
+    "locust_raider": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.3, "mana": 0.9 },
+      "elementAffinity": { "wind": 0.2 },
+      "description": "Fast, ravenous insectoids known for devastating swarm tactics."
+    },
+
+    "mantis_blade": {
+      "growth": { "hp": 1.0, "atk": 1.4, "def": 1.0, "speed": 1.3, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Predatory insectoids with razor‑sharp forelimbs and lightning reflexes."
+    }
+  },
+
+  "arachnid": {
+
+    "spiderling": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": { "poison": 0.2 },
+      "description": "Small but venomous arachnids that hunt in skittering packs."
+    },
+
+    "webspinner": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.1, "mana": 1.1 },
+      "elementAffinity": { "poison": 0.2 },
+      "description": "Web‑weaving arachnids that immobilize prey with sticky silk."
+    },
+
+    "scorpion": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 0.9 },
+      "elementAffinity": { "poison": 0.3 },
+      "description": "Armored desert arachnids with deadly stingers and crushing claws."
+    },
+
+    "shadow_arachnid": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.3, "mana": 1.1 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "Stealthy arachnids that stalk prey from the darkness."
+    },
+
+    "widow_matron": {
+      "growth": { "hp": 1.2, "atk": 1.4, "def": 1.1, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "poison": 0.3 },
+      "description": "Powerful brood‑mothers whose venom and webs dominate entire nests."
+    }
+  },
 }
