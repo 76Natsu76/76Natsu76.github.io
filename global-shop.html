@@ -28,6 +28,34 @@
       color:#ffd27f;
     }
 
+    /* Inventory Panel */
+    .inventory-panel {
+      background:#14171f;
+      border:1px solid #333;
+      padding:16px;
+      border-radius:8px;
+      margin-bottom:20px;
+    }
+
+    .hidden { display:none; }
+
+    .inventory-item {
+      padding:8px;
+      margin:6px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+    }
+
+    .inventory-item-name { font-weight:600; }
+    .inventory-item-qty { opacity:0.8; font-size:13px; }
+
+    .inventory-compare {
+      border:1px solid #7fff7f;
+      box-shadow:0 0 8px #7fff7f55;
+    }
+
+    /* Shop Items */
     .item-card {
       padding:12px;
       margin:10px 0;
@@ -41,30 +69,11 @@
       transition:0.2s;
     }
 
-    .item-card:hover {
-      background:#222832;
-    }
+    .item-card:hover { background:#222832; }
 
-    .item-info {
-      max-width:70%;
-    }
-
-    .item-name {
-      font-weight:600;
-      font-size:15px;
-    }
-
-    .item-desc {
-      opacity:0.8;
-      font-size:13px;
-      margin-top:4px;
-    }
-
-    .item-price {
-      margin-top:6px;
-      font-size:14px;
-      color:#ffd27f;
-    }
+    .item-info { max-width:70%; }
+    .item-name { font-weight:600; font-size:15px; }
+    .item-price { margin-top:6px; font-size:14px; color:#ffd27f; }
 
     .item-actions button {
       padding:6px 10px;
@@ -76,9 +85,7 @@
       font-size:12px;
     }
 
-    .item-actions button:hover {
-      background:#222832;
-    }
+    .item-actions button:hover { background:#222832; }
 
     .tooltip {
       display:none;
@@ -94,15 +101,34 @@
       font-size:13px;
     }
 
-    .item-card:hover .tooltip {
-      display:block;
-    }
+    .item-card:hover .tooltip { display:block; }
 
+    /* Rarity Colors */
     .rarity-common { color:#bfbfbf; }
     .rarity-uncommon { color:#7fff7f; }
     .rarity-rare { color:#7fcfff; }
-    .rarity-epic { color:#c77fff; }
-    .rarity-legendary { color:#ffbf5f; }
+    .rarity-very { color:#c77fff; }
+    .rarity-ultra { color:#ffbf5f; }
+    .rarity-ridiculous { color:#ff4f4f; }
+
+    /* Glow Effects */
+    .glow-common { box-shadow:0 0 6px #bfbfbf55; }
+    .glow-uncommon { box-shadow:0 0 8px #7fff7f55; }
+    .glow-rare { box-shadow:0 0 10px #7fcfff55; }
+    .glow-very { box-shadow:0 0 12px #c77fff55; }
+    .glow-ultra { box-shadow:0 0 14px #ffbf5f55; }
+    .glow-ridiculous { box-shadow:0 0 16px #ff4f4f55; }
+
+    /* Subtle animation */
+    @keyframes rarityPulse {
+      0% { transform:scale(1); }
+      50% { transform:scale(1.02); }
+      100% { transform:scale(1); }
+    }
+
+    .rarity-animated {
+      animation: rarityPulse 2.5s infinite ease-in-out;
+    }
 
     .btn {
       margin-top:16px;
@@ -116,45 +142,24 @@
       text-align:center;
     }
 
-    .btn:hover {
-      background:#222832;
-    }
-    /* Rarity Colors */
-    .rarity-common { color:#bfbfbf; }
-    .rarity-uncommon { color:#7fff7f; }
-    .rarity-rare { color:#7fcfff; }
-    .rarity-very { color:#c77fff; }
-    .rarity-ultra { color:#ffbf5f; }
-    .rarity-ridiculous { color:#ff4f4f; }
-    
-    /* Glow Effects */
-    .glow-common { box-shadow:0 0 6px #bfbfbf55; }
-    .glow-uncommon { box-shadow:0 0 8px #7fff7f55; }
-    .glow-rare { box-shadow:0 0 10px #7fcfff55; }
-    .glow-very { box-shadow:0 0 12px #c77fff55; }
-    .glow-ultra { box-shadow:0 0 14px #ffbf5f55; }
-    .glow-ridiculous { box-shadow:0 0 16px #ff4f4f55; }
-    
-    /* Subtle animation */
-    @keyframes rarityPulse {
-      0% { transform:scale(1); }
-      50% { transform:scale(1.02); }
-      100% { transform:scale(1); }
-    }
-    
-    .rarity-animated {
-      animation: rarityPulse 2.5s infinite ease-in-out;
-    }
+    .btn:hover { background:#222832; }
   </style>
 </head>
 
 <body>
 
   <h1>Global Shop</h1>
-  <div id="globalShopTimer" style="margin-top:10px; opacity:0.8;"></div>
-  <div id="usernameDisplay"></div>
+  <div id="globalShopTimer" style="margin-bottom:16px; opacity:0.8;"></div>
 
+  <div id="usernameDisplay"></div>
   <button id="setTokenBtn" class="btn">Set GitHub Token</button>
+
+  <!-- Inventory Panel -->
+  <button id="toggleInventoryBtn" class="btn">Toggle Inventory</button>
+  <div id="inventoryPanel" class="inventory-panel hidden">
+    <h2>Your Inventory</h2>
+    <div id="inventoryList">Loading...</div>
+  </div>
 
   <div style="margin-top:12px;">
     Gold: <span id="globalShopGold">0</span>
@@ -174,16 +179,15 @@
 
     document.getElementById("setTokenBtn").onclick = promptForToken;
 
+    document.getElementById("toggleInventoryBtn").onclick = () => {
+      document.getElementById("inventoryPanel").classList.toggle("hidden");
+    };
+
     initGlobalShopUI();
     startShopCountdown("globalShopTimer");
 
-    function goToMap() {
-      window.location.href = "world-map.html";
-    }
-
-    function goToInventory() {
-      window.location.href = "inventory.html";
-    }
+    function goToMap() { window.location.href = "world-map.html"; }
+    function goToInventory() { window.location.href = "inventory.html"; }
   </script>
 
 </body>
