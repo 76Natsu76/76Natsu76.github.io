@@ -98,6 +98,53 @@ async function githubPutFile(path, contentText, message, sha) {
   return res.json();
 }
 
+// --------------------------------------------------
+// COUNTDOWN TO NEXT 3 AM EST
+// --------------------------------------------------
+export function startShopCountdown(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+
+  function getNext3AM_EST() {
+    const now = new Date();
+
+    // Convert to EST
+    const nowEST = new Date(
+      now.toLocaleString("en-US", { timeZone: "America/New_York" })
+    );
+
+    const next = new Date(nowEST);
+    next.setHours(3, 0, 0, 0);
+
+    // If it's already past 3 AM EST today → use tomorrow
+    if (nowEST >= next) {
+      next.setDate(next.getDate() + 1);
+    }
+
+    return next;
+  }
+
+  function update() {
+    const now = new Date();
+    const next = getNext3AM_EST();
+
+    const diff = next - now;
+    if (diff <= 0) {
+      el.textContent = "Refreshing soon...";
+      return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    el.textContent = `Refreshes in: ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+
 // -----------------------------
 // JSON LOAD/SAVE HELPERS
 // -----------------------------
