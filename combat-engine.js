@@ -72,7 +72,9 @@ class CombatEngine {
         cooldowns: [],
 
         equipment: p.equipment || {},
-        inventoryEquipment: p.inventoryEquipment || []
+        inventoryEquipment: p.inventoryEquipment || [],
+        // NEW: carry consumable inventory into combat state
+        inventory: p.inventory || []
       },
 
       enemy: {
@@ -232,6 +234,39 @@ class CombatEngine {
 
     this._notifyUpdate();
     this._persist();
+  }
+
+  // NEW: use consumable item during combat
+  async useItem(itemId) {
+    if (this._isOver()) return;
+    if (this.state.turn !== "PLAYER") return;
+
+    const p = this.state.player;
+    const inv = p.inventory || [];
+
+    const item = inv.find(
+      (i) => String(i.id) === String(itemId)
+    );
+    if (!item || item.type !== "consumable") {
+      this._log("That item cannot be used right now.");
+      this._notifyUpdate();
+      return;
+    }
+
+    this._applyItemEffect(item);
+
+    // Decrement quantity / remove
+    item.quantity = (item.quantity || 1) - 1;
+    if (item.quantity <= 0) {
+      p.inventory = inv.filter(
+        (i) => String(i.id) !== String(itemId)
+      );
+    }
+
+    this._persist();
+    this._notifyUpdate();
+
+    await this._afterPlayerAction();
   }
 
   /* =========================================
@@ -444,6 +479,40 @@ class CombatEngine {
     target.hp = Math.min(target.hpMax, target.hp + amount);
   }
 
+  // NEW: item effect resolver (kept generic but extensible)
+  _applyItemEffect(item) {
+    const meta = item.meta || {};
+    const type = (item.subtype || meta.subtype || "").toLowerCase();
+
+    // Default: healing potion style
+    let healAmount = 0;
+
+    if (typeof meta.healHP === "number") {
+      healAmount = meta.healHP;
+    } else if (typeof meta.healPct === "number") {
+      healAmount = Math.round(
+        (this.state.player.hpMax || 100) * meta.healPct
+      );
+    } else {
+      // fallback
+      healAmount = 30;
+    }
+
+    if (healAmount > 0) {
+      this._applyHealing("PLAYER", healAmount);
+      this._log(
+        `You use ${item.name} and recover ${healAmount} HP.`
+      );
+    } else {
+      this._log(`You use ${item.name}.`);
+    }
+
+    // Optional: ult gain from items
+    if (typeof meta.ultGain === "number") {
+      this._gainUlt("PLAYER", meta.ultGain);
+    }
+  }
+
   /* =========================================
    * EFFECTS (DOT / HOT)
    * =======================================*/
@@ -638,49 +707,6 @@ class CombatEngine {
     const hpPct = p.hp / p.hpMax;
     p.hpMax = hpBase;
     p.hp = Math.max(1, Math.round(p.hpMax * hpPct));
-  }
-
-  /* =========================================
-   * EXTERNAL PLAYER SYNC
-   * =======================================*/
-
-  applyExternalPlayerSnapshot(playerData) {
-    if (!playerData) return;
-
-    const p = this.state.player;
-
-    // HP / Max HP
-    const maxHP =
-      (playerData.derived && playerData.derived.maxHP) ||
-      playerData.hpMax ||
-      p.hpMax;
-
-    const currentHP =
-      playerData.hp != null
-        ? playerData.hp
-        : Math.min(p.hp, maxHP);
-
-    p.hpMax = maxHP;
-    p.hp = Math.max(0, Math.min(maxHP, currentHP));
-
-    // ATK / DEF (if present)
-    const atk =
-      (playerData.derived && playerData.derived.attack) ||
-      playerData.attack;
-    const def =
-      (playerData.derived && playerData.derived.defense) ||
-      playerData.defense;
-
-    if (atk != null) p.atk = atk;
-    if (def != null) p.def = def;
-
-    // Optionally sync equipment snapshot if you want it to stay aligned
-    if (playerData.equipment) {
-      p.equipment = playerData.equipment;
-    }
-
-    this._persist();
-    this._notifyUpdate();
   }
 
   /* =========================================
