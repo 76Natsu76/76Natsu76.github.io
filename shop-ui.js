@@ -6,9 +6,9 @@ import playersData from "./players.json" assert { type: "json" };
 import shopPool from "./shop-pool.json" assert { type: "json" };
 import itemsData from "./items.json" assert { type: "json" };
 
-// -----------------------------
+// --------------------------------------------------
 // CONFIG
-// -----------------------------
+// --------------------------------------------------
 const GITHUB_OWNER = "76Natsu76";
 const GITHUB_REPO = "76Natsu76.github.io";
 const GITHUB_BRANCH = "main";
@@ -17,10 +17,11 @@ const GITHUB_BRANCH = "main";
 const FILE_PLAYERS = "players.json";
 const FILE_GLOBAL_SHOP = "global-shop.json";
 const FILE_USER_SHOPS = "user-shops.json";
+const FILE_PURCHASES = "purchases.json";
 
-// -----------------------------
+// --------------------------------------------------
 // TOKEN HANDLING
-// -----------------------------
+// --------------------------------------------------
 export function getGithubToken() {
   return localStorage.getItem("githubToken") || "";
 }
@@ -33,40 +34,22 @@ export function clearGithubToken() {
   localStorage.removeItem("githubToken");
 }
 
-// Simple UI helpers (you can wire these to a modal)
 export function promptForToken() {
   const existing = getGithubToken();
   const token = window.prompt("Enter your GitHub Personal Access Token:", existing || "");
   if (token) setGithubToken(token);
 }
 
-
-async function logPurchase(entry) {
-  const { data: logs, sha } = await loadJsonFile("purchases.json", []);
-
-  logs.push(entry);
-
-  await saveJsonFile(
-    "purchases.json",
-    logs,
-    `Log purchase: ${entry.username} bought ${entry.qty}x ${entry.itemId}`,
-    sha
-  );
-}
-
-// -----------------------------
+// --------------------------------------------------
 // GITHUB API HELPERS
-// -----------------------------
+// --------------------------------------------------
 async function githubGetFile(path) {
   const url = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}?ref=${GITHUB_BRANCH}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`GitHub GET failed: ${res.status}`);
   const json = await res.json();
   const content = atob(json.content);
-  return {
-    sha: json.sha,
-    text: content
-  };
+  return { sha: json.sha, text: content };
 }
 
 async function githubPutFile(path, contentText, message, sha) {
@@ -100,55 +83,8 @@ async function githubPutFile(path, contentText, message, sha) {
 }
 
 // --------------------------------------------------
-// COUNTDOWN TO NEXT 3 AM EST
-// --------------------------------------------------
-export function startShopCountdown(elementId) {
-  const el = document.getElementById(elementId);
-  if (!el) return;
-
-  function getNext3AM_EST() {
-    const now = new Date();
-
-    // Convert to EST
-    const nowEST = new Date(
-      now.toLocaleString("en-US", { timeZone: "America/New_York" })
-    );
-
-    const next = new Date(nowEST);
-    next.setHours(3, 0, 0, 0);
-
-    // If it's already past 3 AM EST today → use tomorrow
-    if (nowEST >= next) {
-      next.setDate(next.getDate() + 1);
-    }
-
-    return next;
-  }
-
-  function update() {
-    const now = new Date();
-    const next = getNext3AM_EST();
-
-    const diff = next - now;
-    if (diff <= 0) {
-      el.textContent = "Refreshing soon...";
-      return;
-    }
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    el.textContent = `Refreshes in: ${hours}h ${minutes}m ${seconds}s`;
-  }
-
-  update();
-  setInterval(update, 1000);
-}
-
-// -----------------------------
 // JSON LOAD/SAVE HELPERS
-// -----------------------------
+// --------------------------------------------------
 async function loadJsonFile(path, fallback = {}) {
   try {
     const { text, sha } = await githubGetFile(path);
@@ -164,11 +100,10 @@ async function saveJsonFile(path, data, message, sha) {
   return githubPutFile(path, text, message, sha);
 }
 
-// -----------------------------
+// --------------------------------------------------
 // PLAYER HELPERS
-// -----------------------------
+// --------------------------------------------------
 function getPlayerFromLocalSession() {
-  // You already store twitch username in sessionStorage
   const username = sessionStorage.getItem("twitch_username");
   if (!username) return null;
   return username.toLowerCase();
@@ -182,11 +117,8 @@ async function loadPlayers() {
 function addItemToInventory(player, itemId, qty) {
   if (!player.inventory) player.inventory = [];
   const existing = player.inventory.find(i => i.id === itemId);
-  if (existing) {
-    existing.qty += qty;
-  } else {
-    player.inventory.push({ id: itemId, qty });
-  }
+  if (existing) existing.qty += qty;
+  else player.inventory.push({ id: itemId, qty });
 }
 
 function calculateMaxAffordable(player, entry) {
@@ -194,191 +126,110 @@ function calculateMaxAffordable(player, entry) {
   return Math.floor(gold / entry.price);
 }
 
-// -----------------------------
-// GLOBAL SHOP LOGIC
-// -----------------------------
-export async function initGlobalShopUI() {
-  const username = getPlayerFromLocalSession();
-  if (!username) {
-    alert("No Twitch user logged in.");
-    return;
-  }
-
-  // Load players
-  const { players, sha: playersSha } = await loadPlayers();
-  const player = players[username];
-  if (!player) {
-    alert("Player not found in players.json.");
-    return;
-  }
-
-  // Load global shop
-  const { data: globalShop, sha: shopSha } = await loadJsonFile(FILE_GLOBAL_SHOP, {
-    generatedAt: 0,
-    items: []
-  });
-
-  let shop = globalShop;
-
-  // Reset if needed
-  if (!shop.generatedAt || shouldResetShop(shop.generatedAt)) {
-    shop = generateGlobalShop();
-    await saveJsonFile(FILE_GLOBAL_SHOP, shop, "Auto-regenerate global shop", shopSha);
-  }
-
-  renderGlobalShop(shop, player, players, playersSha);
+// --------------------------------------------------
+// PURCHASE LOGGING
+// --------------------------------------------------
+async function logPurchase(entry) {
+  const { data: logs, sha } = await loadJsonFile(FILE_PURCHASES, []);
+  logs.push(entry);
+  await saveJsonFile(
+    FILE_PURCHASES,
+    logs,
+    `Log purchase: ${entry.username} bought ${entry.qty}x ${entry.itemId}`,
+    sha
+  );
 }
 
-function renderGlobalShop(shop, player, players, playersSha) {
-  const container = document.getElementById("globalShopContainer");
-  const goldSpan = document.getElementById("globalShopGold");
-  if (!container) return;
+// --------------------------------------------------
+// INVENTORY PANEL RENDERING
+// --------------------------------------------------
+function renderInventoryPanel(player) {
+  const panel = document.getElementById("inventoryList");
+  if (!panel) return;
 
-  container.innerHTML = "";
-  goldSpan && (goldSpan.textContent = player.gold ?? 0);
+  if (!player.inventory || player.inventory.length === 0) {
+    panel.innerHTML = "<div>No items in inventory.</div>";
+    return;
+  }
 
-  shop.items.forEach((entry, index) => {
-    const poolEntry = shopPool[entry.id];
-    const div = document.createElement("div");
-    div.className = "shop-item";
+  panel.innerHTML = player.inventory
+    .map(item => {
+      const info = itemsData[item.id] || {};
+      const rarity = info.rarity || "common";
 
-    const itemInfo = itemsData[entry.id] || {};
-    const name = itemInfo.name || entry.id;
-    const desc = itemInfo.description || "No description available.";
-
-    const rarity = entry.rarity || (poolEntry && poolEntry.rarity) || "unknown";
-
-    div.innerHTML = `
-      <div class="item-info">
-        <div class="item-name rarity-${rarity}">${name}</div>
-        <div class="item-price">Price: ${entry.price} gold</div>
-    
-        <div class="tooltip">
-          <strong>${name}</strong><br>
-          <span class="rarity-${rarity}">Rarity: ${rarity}</span><br><br>
-          ${desc}
+      return `
+        <div class="inventory-item rarity-${rarity}" data-itemid="${item.id}">
+          <div class="inventory-item-name">${info.name || item.id}</div>
+          <div class="inventory-item-qty">Qty: ${item.qty}</div>
         </div>
-      </div>
-    
-      <div class="item-actions">
-        <button class="btn buy1-btn">Buy 1</button>
-        <button class="btn buymax-btn">Buy Max</button>
-        <button class="btn buyx-btn">Buy X</button>
-      </div>
-    `;
-    div.classList.add(`glow-${rarity}`);
-    div.classList.add("rarity-animated");
-
-    const btn1 = div.querySelector(".buy1-btn");
-    const btnMax = div.querySelector(".buymax-btn");
-    const btnX = div.querySelector(".buyx-btn");
-    
-    btn1.onclick = () => handlePurchase("global", index, shop, player, players, playersSha);
-    btnMax.onclick = () => handlePurchase("global", index, shop, player, players, playersSha);
-    btnX.onclick = () => handlePurchase("global", index, shop, player, players, playersSha);
-
-    
-
-    container.appendChild(div);
-  });
+      `;
+    })
+    .join("");
 }
 
-// -----------------------------
-// USER DAILY SHOP LOGIC
-// -----------------------------
-export async function initUserShopUI() {
-  const username = getPlayerFromLocalSession();
-  if (!username) {
-    alert("No Twitch user logged in.");
-    return;
+// --------------------------------------------------
+// COUNTDOWN TO NEXT 3 AM EST
+// --------------------------------------------------
+export function startShopCountdown(elementId) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+
+  function getNext3AM_EST() {
+    const now = new Date();
+    const nowEST = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
+    const next = new Date(nowEST);
+    next.setHours(3, 0, 0, 0);
+    if (nowEST >= next) next.setDate(next.getDate() + 1);
+    return next;
   }
 
-  // Load players
-  const { players, sha: playersSha } = await loadPlayers();
-  const player = players[username];
-  if (!player) {
-    alert("Player not found in players.json.");
-    return;
+  function update() {
+    const now = new Date();
+    const next = getNext3AM_EST();
+    const diff = next - now;
+
+    if (diff <= 0) {
+      el.textContent = "Refreshing soon...";
+      return;
+    }
+
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+
+    el.textContent = `Refreshes in: ${h}h ${m}m ${s}s`;
   }
 
-  // Load user shops
-  const { data: userShops, sha: userShopsSha } = await loadJsonFile(FILE_USER_SHOPS, {});
-  let userShop = userShops[username];
-
-  if (!userShop || !userShop.generatedAt || shouldResetShop(userShop.generatedAt)) {
-    userShop = generateUserShop(username);
-    userShops[username] = userShop;
-    await saveJsonFile(FILE_USER_SHOPS, userShops, `Generate daily shop for ${username}`, userShopsSha);
-  }
-
-  renderUserShop(userShop, player, players, playersSha, userShops, userShopsSha);
+  update();
+  setInterval(update, 1000);
 }
 
-function renderUserShop(userShop, player, players, playersSha, userShops, userShopsSha) {
-  const container = document.getElementById("userShopContainer");
-  const goldSpan = document.getElementById("userShopGold");
-  if (!container) return;
-
-  container.innerHTML = "";
-  goldSpan && (goldSpan.textContent = player.gold ?? 0);
-
-  userShop.items.forEach((entry, index) => {
-    const poolEntry = shopPool[entry.id];
-    const div = document.createElement("div");
-    div.className = "shop-item";
-
-    const itemInfo = itemsData[entry.id] || {};
-    const name = itemInfo.name || entry.id;
-    const desc = itemInfo.description || "No description available.";
-
-    const rarity = entry.rarity || (poolEntry && poolEntry.rarity) || "unknown";
-
-    div.innerHTML = `
-      <div class="item-info">
-        <div class="item-name rarity-${rarity}">${name}</div>
-        <div class="item-price">Price: ${entry.price} gold</div>
-    
-        <div class="tooltip">
-          <strong>${name}</strong><br>
-          <span class="rarity-${rarity}">Rarity: ${rarity}</span><br><br>
-          ${desc}
-        </div>
-      </div>
-    
-      <div class="item-actions">
-        <button class="btn buy1-btn">Buy 1</button>
-        <button class="btn buymax-btn">Buy Max</button>
-        <button class="btn buyx-btn">Buy X</button>
-      </div>
-    `;
-    div.classList.add(`glow-${rarity}`);
-    div.classList.add("rarity-animated");
-
-    const btn1 = div.querySelector(".buy1-btn");
-    const btnMax = div.querySelector(".buymax-btn");
-    const btnX = div.querySelector(".buyx-btn");
-    
-    btn1.onclick = () => handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
-    btnMax.onclick = () => handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
-    btnX.onclick = () => handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
-
-
-    container.appendChild(div);
-  });
-}
-
-async function handlePurchase(shopType, index, shop, player, players, playersSha, userShops, userShopsSha) {
+// --------------------------------------------------
+// UNIVERSAL PURCHASE HANDLER
+// --------------------------------------------------
+async function handlePurchase(
+  shopType,
+  index,
+  shop,
+  player,
+  players,
+  playersSha,
+  userShops,
+  userShopsSha
+) {
   const entry = shop.items[index];
   if (!entry) return;
 
-  // Ask how many to buy
   const qtyOptions = {
     "1": 1,
     "max": calculateMaxAffordable(player, entry),
     "x": null
   };
 
-  let choice = prompt("Buy 1, max, or x?", "1").toLowerCase();
+  let choice = prompt("Buy 1, max, or x?", "1");
+  if (!choice) return;
+  choice = choice.toLowerCase();
+
   if (!qtyOptions.hasOwnProperty(choice)) {
     alert("Invalid choice.");
     return;
@@ -401,23 +252,15 @@ async function handlePurchase(shopType, index, shop, player, players, playersSha
   }
 
   const totalCost = qty * entry.price;
-
-  // Deduct gold
   player.gold -= totalCost;
 
-  // Add to inventory
   addItemToInventory(player, entry.id, qty);
 
-  // Reduce or remove shop stock
   entry.qty -= qty;
-  if (entry.qty <= 0) {
-    shop.items.splice(index, 1);
-  }
+  if (entry.qty <= 0) shop.items.splice(index, 1);
 
-  // Save players.json
   await saveJsonFile(FILE_PLAYERS, players, "Shop purchase", playersSha);
 
-  // Save shop file
   if (shopType === "global") {
     const { sha: shopSha } = await loadJsonFile(FILE_GLOBAL_SHOP, {});
     await saveJsonFile(FILE_GLOBAL_SHOP, shop, "Update global shop", shopSha);
@@ -426,7 +269,6 @@ async function handlePurchase(shopType, index, shop, player, players, playersSha
     await saveJsonFile(FILE_USER_SHOPS, userShops, "Update user shop", userShopsSha);
   }
 
-  // Log purchase
   await logPurchase({
     username: player.username,
     itemId: entry.id,
@@ -438,4 +280,183 @@ async function handlePurchase(shopType, index, shop, player, players, playersSha
   });
 
   alert(`Purchased ${qty}x ${entry.id} for ${totalCost} gold.`);
+}
+
+// --------------------------------------------------
+// GLOBAL SHOP
+// --------------------------------------------------
+export async function initGlobalShopUI() {
+  const username = getPlayerFromLocalSession();
+  if (!username) {
+    alert("No Twitch user logged in.");
+    return;
+  }
+
+  const { players, sha: playersSha } = await loadPlayers();
+  const player = players[username];
+  if (!player) {
+    alert("Player not found in players.json.");
+    return;
+  }
+
+  const { data: globalShop, sha: shopSha } = await loadJsonFile(FILE_GLOBAL_SHOP, {
+    generatedAt: 0,
+    items: []
+  });
+
+  let shop = globalShop;
+
+  if (!shop.generatedAt || shouldResetShop(shop.generatedAt)) {
+    shop = generateGlobalShop();
+    await saveJsonFile(FILE_GLOBAL_SHOP, shop, "Auto-regenerate global shop", shopSha);
+  }
+
+  renderGlobalShop(shop, player, players, playersSha);
+}
+
+function renderGlobalShop(shop, player, players, playersSha) {
+  const container = document.getElementById("globalShopContainer");
+  const goldSpan = document.getElementById("globalShopGold");
+  if (!container) return;
+
+  container.innerHTML = "";
+  goldSpan.textContent = player.gold ?? 0;
+
+  renderInventoryPanel(player);
+
+  shop.items.forEach((entry, index) => {
+    const info = itemsData[entry.id] || {};
+    const rarity = info.rarity || "common";
+
+    const div = document.createElement("div");
+    div.className = `item-card glow-${rarity} rarity-animated`;
+
+    div.innerHTML = `
+      <div class="item-info">
+        <div class="item-name rarity-${rarity}">${info.name || entry.id}</div>
+        <div class="item-price">Price: ${entry.price} gold</div>
+
+        <div class="tooltip">
+          <strong>${info.name || entry.id}</strong><br>
+          <span class="rarity-${rarity}">Rarity: ${rarity}</span><br><br>
+          ${info.description || "No description available."}
+        </div>
+      </div>
+
+      <div class="item-actions">
+        <button class="btn buy1-btn">Buy 1</button>
+        <button class="btn buymax-btn">Buy Max</button>
+        <button class="btn buyx-btn">Buy X</button>
+      </div>
+    `;
+
+    div.onmouseenter = () => {
+      const matches = document.querySelectorAll(`.inventory-item[data-itemid="${entry.id}"]`);
+      matches.forEach(m => m.classList.add("inventory-compare"));
+    };
+
+    div.onmouseleave = () => {
+      const matches = document.querySelectorAll(`.inventory-item[data-itemid="${entry.id}"]`);
+      matches.forEach(m => m.classList.remove("inventory-compare"));
+    };
+
+    div.querySelector(".buy1-btn").onclick = () =>
+      handlePurchase("global", index, shop, player, players, playersSha);
+
+    div.querySelector(".buymax-btn").onclick = () =>
+      handlePurchase("global", index, shop, player, players, playersSha);
+
+    div.querySelector(".buyx-btn").onclick = () =>
+      handlePurchase("global", index, shop, player, players, playersSha);
+
+    container.appendChild(div);
+  });
+}
+
+// --------------------------------------------------
+// USER DAILY SHOP
+// --------------------------------------------------
+export async function initUserShopUI() {
+  const username = getPlayerFromLocalSession();
+  if (!username) {
+    alert("No Twitch user logged in.");
+    return;
+  }
+
+  const { players, sha: playersSha } = await loadPlayers();
+  const player = players[username];
+  if (!player) {
+    alert("Player not found in players.json.");
+    return;
+  }
+
+  const { data: userShops, sha: userShopsSha } = await loadJsonFile(FILE_USER_SHOPS, {});
+  let userShop = userShops[username];
+
+  if (!userShop || !userShop.generatedAt || shouldResetShop(userShop.generatedAt)) {
+    userShop = generateUserShop(username);
+    userShops[username] = userShop;
+    await saveJsonFile(FILE_USER_SHOPS, userShops, `Generate daily shop for ${username}`, userShopsSha);
+  }
+
+  renderUserShop(userShop, player, players, playersSha, userShops, userShopsSha);
+}
+
+function renderUserShop(userShop, player, players, playersSha, userShops, userShopsSha) {
+  const container = document.getElementById("userShopContainer");
+  const goldSpan = document.getElementById("userShopGold");
+  if (!container) return;
+
+  container.innerHTML = "";
+  goldSpan.textContent = player.gold ?? 0;
+
+  renderInventoryPanel(player);
+
+  userShop.items.forEach((entry, index) => {
+    const info = itemsData[entry.id] || {};
+    const rarity = info.rarity || "common";
+
+    const div = document.createElement("div");
+    div.className = `item-card glow-${rarity} rarity-animated`;
+
+    div.innerHTML = `
+      <div class="item-info">
+        <div class="item-name rarity-${rarity}">${info.name || entry.id}</div>
+        <div class="item-price">Price: ${entry.price} gold</div>
+
+        <div class="tooltip">
+          <strong>${info.name || entry.id}</strong><br>
+          <span class="rarity-${rarity}">Rarity: ${rarity}</span><br><br>
+          ${info.description || "No description available."}
+        </div>
+      </div>
+
+      <div class="item-actions">
+        <button class="btn buy1-btn">Buy 1</button>
+        <button class="btn buymax-btn">Buy Max</button>
+        <button class="btn buyx-btn">Buy X</button>
+      </div>
+    `;
+
+    div.onmouseenter = () => {
+      const matches = document.querySelectorAll(`.inventory-item[data-itemid="${entry.id}"]`);
+      matches.forEach(m => m.classList.add("inventory-compare"));
+    };
+
+    div.onmouseleave = () => {
+      const matches = document.querySelectorAll(`.inventory-item[data-itemid="${entry.id}"]`);
+      matches.forEach(m => m.classList.remove("inventory-compare"));
+    };
+
+    div.querySelector(".buy1-btn").onclick = () =>
+      handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
+
+    div.querySelector(".buymax-btn").onclick = () =>
+      handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
+
+    div.querySelector(".buyx-btn").onclick = () =>
+      handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
+
+    container.appendChild(div);
+  });
 }
