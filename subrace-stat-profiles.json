@@ -1931,4 +1931,136 @@
       "description": "A celestial enforcer who delivers divine judgment with absolute precision."
     }
   },
+
+  "fiend": {
+
+    "hellspawn": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "fire": 0.2, "dark": 0.2 },
+      "description": "A pure infernal entity born from the deepest hellfire."
+    },
+
+    "pit_fiend": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.4, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "fire": 0.3, "dark": 0.1 },
+      "description": "A colossal fiend commanding legions of lesser demons."
+    },
+
+    "abyssal_overlord": {
+      "growth": { "hp": 1.6, "atk": 1.6, "def": 1.5, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "chaos": 0.2, "dark": 0.2 },
+      "description": "A ruler of the abyss whose presence warps reality and corrupts souls."
+    },
+
+    "infernal_reaper": {
+      "growth": { "hp": 1.3, "atk": 1.7, "def": 1.2, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "A swift fiendish executioner wielding cursed blades of shadow."
+    },
+
+    "soul_devourer": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.2, "mana": 1.6 },
+      "elementAffinity": { "void": 0.2, "dark": 0.2 },
+      "description": "A fiend that consumes souls to grow stronger, leaving only emptiness behind."
+    }
+  },
+
+  "primordial": {
+
+    "primordial_flame": {
+      "growth": { "hp": 1.7, "atk": 1.6, "def": 1.4, "speed": 1.2, "mana": 1.7 },
+      "elementAffinity": { "fire": 0.3, "chaos": 0.1 },
+      "description": "The original flame from which all fire magic descends."
+    },
+
+    "primordial_tide": {
+      "growth": { "hp": 1.8, "atk": 1.5, "def": 1.5, "speed": 1.1, "mana": 1.7 },
+      "elementAffinity": { "water": 0.3 },
+      "description": "A vast oceanic entity predating seas, storms, and life itself."
+    },
+
+    "primordial_stone": {
+      "growth": { "hp": 1.9, "atk": 1.5, "def": 1.7, "speed": 0.9, "mana": 1.5 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "A colossal being of raw stone and pressure, older than mountains."
+    },
+
+    "primordial_tempest": {
+      "growth": { "hp": 1.6, "atk": 1.6, "def": 1.4, "speed": 1.3, "mana": 1.7 },
+      "elementAffinity": { "lightning": 0.2, "wind": 0.2 },
+      "description": "The first storm, a swirling mass of lightning and chaos."
+    },
+
+    "primordial_void": {
+      "growth": { "hp": 1.7, "atk": 1.7, "def": 1.5, "speed": 1.3, "mana": 1.8 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A fragment of the nothingness that existed before creation."
+    }
+  },
+
+  "ethereal": {
+
+    "light_wisp": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.4, "mana": 1.5 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "A drifting mote of pure light, barely bound to physical reality."
+    },
+
+    "arcane_photon": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.0, "speed": 1.5, "mana": 1.6 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "A concentrated arcane particle that pulses with magical radiation."
+    },
+
+    "ether_serpent": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.3, "mana": 1.6 },
+      "elementAffinity": { "wind": 0.1, "arcane": 0.2 },
+      "description": "A serpentine being woven from pure ether and shimmering currents."
+    },
+
+    "prism_entity": {
+      "growth": { "hp": 1.2, "atk": 1.2, "def": 1.2, "speed": 1.3, "mana": 1.7 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.1 },
+      "description": "A refractive being that splits into multiple spectral forms."
+    },
+
+    "energy_ascendant": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.3, "speed": 1.4, "mana": 1.7 },
+      "elementAffinity": { "lightning": 0.2, "arcane": 0.2 },
+      "description": "A higher ethereal lifeform composed entirely of charged energy."
+    }
+  },
+
+  "titan": {
+
+    "world_titan": {
+      "growth": { "hp": 2.0, "atk": 1.7, "def": 1.8, "speed": 1.0, "mana": 1.6 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "A continent‑shaping titan whose footsteps carve valleys."
+    },
+
+    "sky_titan": {
+      "growth": { "hp": 1.8, "atk": 1.6, "def": 1.6, "speed": 1.3, "mana": 1.7 },
+      "elementAffinity": { "wind": 0.2, "lightning": 0.2 },
+      "description": "A towering titan who commands storms and the upper skies."
+    },
+
+    "flame_titan": {
+      "growth": { "hp": 1.7, "atk": 1.8, "def": 1.6, "speed": 1.2, "mana": 1.6 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "A volcanic titan whose body burns with primordial flame."
+    },
+
+    "tidal_titan": {
+      "growth": { "hp": 1.9, "atk": 1.6, "def": 1.7, "speed": 1.1, "mana": 1.7 },
+      "elementAffinity": { "water": 0.3 },
+      "description": "A sea‑shaping titan capable of summoning tsunamis with a gesture."
+    },
+
+    "cosmic_titan": {
+      "growth": { "hp": 1.8, "atk": 1.7, "def": 1.7, "speed": 1.2, "mana": 1.8 },
+      "elementAffinity": { "arcane": 0.2, "void": 0.2 },
+      "description": "A titan infused with stellar power, walking between worlds."
+    }
+  },
 }
