@@ -1625,6 +1625,236 @@
     "topCategory": "ritual",
     "subCategory": "anomalies",
     "group": "anomalies"
+  },
+
+  {
+    "id": "sunleaf",
+    "name": "Sunleaf",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["alchemy", "herb", "sun", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "herbs",
+    "group": "herbs"
+  },
+  {
+    "id": "nightshade",
+    "name": "Nightshade",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["alchemy", "herb", "poison", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "herbs",
+    "group": "herbs"
+  },
+
+  {
+    "id": "mana_extract",
+    "name": "Mana Extract",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["alchemy", "extract", "mana", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "extracts",
+    "group": "extracts"
+  },
+  {
+    "id": "vitality_extract",
+    "name": "Vitality Extract",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["alchemy", "extract", "vitality", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "extracts",
+    "group": "extracts"
+  },
+
+  {
+    "id": "flame_oil",
+    "name": "Flame Oil",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["alchemy", "oil", "fire", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "oils",
+    "group": "oils"
+  },
+  {
+    "id": "frost_oil",
+    "name": "Frost Oil",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["alchemy", "oil", "cold", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "oils",
+    "group": "oils"
+  },
+
+  {
+    "id": "healing_powder",
+    "name": "Healing Powder",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["alchemy", "powder", "healing", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "powders",
+    "group": "powders"
+  },
+  {
+    "id": "toxic_powder",
+    "name": "Toxic Powder",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["alchemy", "powder", "poison", "material"],
+    "topCategory": "alchemy",
+    "subCategory": "powders",
+    "group": "powders"
+  },
+
+  {
+    "id": "philosophers_spark",
+    "name": "Philosopher’s Spark",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["alchemy", "spark", "philosopher", "anomaly", "material", "magical"],
+    "topCategory": "alchemy",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "transmutation_core",
+    "name": "Transmutation Core",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["alchemy", "transmutation", "core", "anomaly", "material", "magical"],
+    "topCategory": "alchemy",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+
+  {
+    "id": "iron_ore",
+    "name": "Iron Ore",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["metal", "ore", "iron", "material"],
+    "topCategory": "metals",
+    "subCategory": "ores",
+    "group": "ores"
+  },
+  {
+    "id": "copper_ore",
+    "name": "Copper Ore",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["metal", "ore", "copper", "material"],
+    "topCategory": "metals",
+    "subCategory": "ores",
+    "group": "ores"
+  },
+
+  {
+    "id": "steel_ingot",
+    "name": "Steel Ingot",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["metal", "steel", "ingot", "refined", "material"],
+    "topCategory": "metals",
+    "subCategory": "refined",
+    "group": "refined"
+  },
+  {
+    "id": "silver_ingot",
+    "name": "Silver Ingot",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["metal", "silver", "ingot", "refined", "material"],
+    "topCategory": "metals",
+    "subCategory": "refined",
+    "group": "refined"
+  },
+
+  {
+    "id": "gold_ingot",
+    "name": "Gold Ingot",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["metal", "gold", "ingot", "refined", "material"],
+    "topCategory": "metals",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+  {
+    "id": "mithril_ore",
+    "name": "Mithril Ore",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["metal", "mithril", "ore", "material"],
+    "topCategory": "metals",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+
+  {
+    "id": "adamantite_bar",
+    "name": "Adamantite Bar",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["metal", "adamantite", "bar", "alloy", "material"],
+    "topCategory": "metals",
+    "subCategory": "alloys",
+    "group": "alloys"
+  },
+  {
+    "id": "starsteel_ingot",
+    "name": "Starsteel Ingot",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["metal", "starsteel", "ingot", "alloy", "cosmic", "material"],
+    "topCategory": "metals",
+    "subCategory": "alloys",
+    "group": "alloys"
+  },
+
+  {
+    "id": "void_forged_metal",
+    "name": "Void‑Forged Metal",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["metal", "void", "forged", "anomaly", "material", "magical"],
+    "topCategory": "metals",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "celestial_alloy",
+    "name": "Celestial Alloy",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["metal", "celestial", "alloy", "anomaly", "material", "magical"],
+    "topCategory": "metals",
+    "subCategory": "anomalies",
+    "group": "anomalies"
   }
 ]
 
