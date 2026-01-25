@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Mystery</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    .section {
+      margin-top:24px;
+      padding:16px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+    }
+
+    .section h2 {
+      margin-top:0;
+      font-size:18px;
+      color:#9af7ff;
+    }
+
+    .mystery-box {
+      margin-top:20px;
+      padding:20px;
+      background:#1a1d24;
+      border-radius:8px;
+      border:1px solid #333;
+      text-align:center;
+      cursor:pointer;
+      transition:0.2s;
+    }
+
+    .mystery-box:hover {
+      background:#222832;
+      transform:scale(1.02);
+    }
+
+    .result-box {
+      margin-top:20px;
+      padding:16px;
+      background:#000;
+      border-radius:6px;
+      border:1px solid #333;
+      font-family:monospace;
+      white-space:pre-wrap;
+      font-size:14px;
+    }
+
+    .btn {
+      margin-top:16px;
+      padding:8px 12px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+
+    /* rarity colors */
+    .rarity-common { color:#bfbfbf; }
+    .rarity-uncommon { color:#7fff7f; }
+    .rarity-rare { color:#7fcfff; }
+    .rarity-epic { color:#c77fff; }
+    .rarity-legendary { color:#ffbf5f; }
+
+    #flavor {
+      margin-top:10px;
+      opacity:0.8;
+      font-size:13px;
+      font-style:italic;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Mystery Box</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="mysteryContainer" class="section">
+    <h2>Open a Mystery Box</h2>
+
+    <div id="playerStats"></div>
+
+    <div class="mystery-box" onclick="openMystery()">
+      🎁 <strong>Open Mystery</strong><br>
+      <span id="flavor">“A shimmering box humming with unstable magic…”</span>
+    </div>
+
+    <div id="result" class="result-box" style="display:none;"></div>
+  </div>
+
+  <button class="btn" onclick="goToInventory()">Inventory</button>
+  <button class="btn" onclick="goToMap()">World Map</button>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    const PLAYER_API = "/api/player/get";
+    const MYSTERY_API = "/api/mystery";
+
+    async function loadPlayer() {
+      if (!username) {
+        document.getElementById("playerStats").textContent =
+          "Error: No Twitch username found.";
+        return;
+      }
+
+      try {
+        const res = await fetch(PLAYER_API + "?username=" + encodeURIComponent(username), {
+          cache:"no-store"
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          document.getElementById("playerStats").textContent =
+            data.message || "Failed to load player.";
+          return;
+        }
+
+        const p = data.player;
+
+        document.getElementById("playerStats").innerHTML = `
+          <div><strong>Gold:</strong> ${p.gold}</div>
+          <div><strong>EXP:</strong> ${p.xp}</div>
+        `;
+      } catch (err) {
+        document.getElementById("playerStats").textContent =
+          "Network error: " + err.message;
+      }
+    }
+
+    async function openMystery() {
+      if (!username) return;
+
+      const resultBox = document.getElementById("result");
+      resultBox.style.display = "block";
+      resultBox.textContent = "Opening mystery...";
+
+      try {
+        const res = await fetch(MYSTERY_API, {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body:JSON.stringify({ username })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          resultBox.textContent = "Error: " + (data.message || "Unknown error");
+          return;
+        }
+
+        const gold = data.rewards?.gold ?? 0;
+        const xp = data.rewards?.xp ?? 0;
+
+        resultBox.textContent =
+          `Mystery Opened!\n\n` +
+          `Gold Gained: ${gold}\n` +
+          `EXP Gained:  ${xp}\n\n` +
+          (data.message || "");
+
+        loadPlayer();
+      } catch (err) {
+        resultBox.textContent = "Network error: " + err.message;
+      }
+    }
+
+    function goToInventory() {
+      window.location.href = "?page=inventory.html";
+    }
+
+    function goToMap() {
+      window.location.href = "?page=world-map.html";
+    }
+
+    loadPlayer();
+  </script>
+
+</body>
+</html>
