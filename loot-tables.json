@@ -1855,6 +1855,318 @@
     "topCategory": "metals",
     "subCategory": "anomalies",
     "group": "anomalies"
+  },
+
+  {
+    "id": "wildroot",
+    "name": "Wildroot",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["plant", "wild", "herb", "material"],
+    "topCategory": "plants",
+    "subCategory": "wild",
+    "group": "wild"
+  },
+  {
+    "id": "meadow_bloom",
+    "name": "Meadow Bloom",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["plant", "flower", "meadow", "material"],
+    "topCategory": "plants",
+    "subCategory": "wild",
+    "group": "wild"
+  },
+
+  {
+    "id": "mossleaf",
+    "name": "Mossleaf",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["plant", "herb", "forest", "material"],
+    "topCategory": "plants",
+    "subCategory": "forest",
+    "group": "forest"
+  },
+  {
+    "id": "shadecap",
+    "name": "Shadecap",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["plant", "mushroom", "shadow", "material"],
+    "topCategory": "plants",
+    "subCategory": "forest",
+    "group": "forest"
+  },
+
+  {
+    "id": "moonpetal",
+    "name": "Moonpetal",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["plant", "flower", "moon", "material"],
+    "topCategory": "plants",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+  {
+    "id": "starblossom",
+    "name": "Starblossom",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["plant", "flower", "star", "material"],
+    "topCategory": "plants",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+
+  {
+    "id": "arcane_fern",
+    "name": "Arcane Fern",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["plant", "arcane", "herb", "magical", "material"],
+    "topCategory": "plants",
+    "subCategory": "magical",
+    "group": "magical"
+  },
+  {
+    "id": "spirit_orchid",
+    "name": "Spirit Orchid",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["plant", "spirit", "flower", "magical", "material"],
+    "topCategory": "plants",
+    "subCategory": "magical",
+    "group": "magical"
+  },
+
+  {
+    "id": "eternal_bloom",
+    "name": "Eternal Bloom",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["plant", "eternal", "flower", "magical", "material"],
+    "topCategory": "plants",
+    "subCategory": "mythic",
+    "group": "mythic"
+  },
+
+  {
+    "id": "slime_gel",
+    "name": "Slime Gel",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["monster", "slime", "gel", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "generic",
+    "group": "generic"
+  },
+  {
+    "id": "chitin_fragment",
+    "name": "Chitin Fragment",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["monster", "chitin", "fragment", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "generic",
+    "group": "generic"
+  },
+
+  {
+    "id": "toxic_gland",
+    "name": "Toxic Gland",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["monster", "gland", "poison", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "organics",
+    "group": "organics"
+  },
+  {
+    "id": "venom_sac",
+    "name": "Venom Sac",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["monster", "venom", "sac", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "organics",
+    "group": "organics"
+  },
+
+  {
+    "id": "goblin_ear",
+    "name": "Goblin Ear",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["monster", "goblin", "trophy", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "trophies",
+    "group": "trophies"
+  },
+  {
+    "id": "ogre_tooth",
+    "name": "Ogre Tooth",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["monster", "ogre", "tooth", "trophy", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "trophies",
+    "group": "trophies"
+  },
+
+  {
+    "id": "spectral_residue",
+    "name": "Spectral Residue",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["monster", "spectral", "residue", "magical", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+  {
+    "id": "wraith_essence",
+    "name": "Wraith Essence",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["monster", "wraith", "essence", "magical", "material"],
+    "topCategory": "monsterDrops",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+
+  {
+    "id": "titan_core_fragment",
+    "name": "Titan Core Fragment",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["monster", "titan", "core", "fragment", "boss", "material", "magical"],
+    "topCategory": "monsterDrops",
+    "subCategory": "boss",
+    "group": "boss"
+  },
+
+  {
+    "id": "wood_plank",
+    "name": "Wood Plank",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["component", "wood", "material"],
+    "topCategory": "components",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+  {
+    "id": "cloth_scrap",
+    "name": "Cloth Scrap",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["component", "cloth", "material"],
+    "topCategory": "components",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+
+  {
+    "id": "leather_strip",
+    "name": "Leather Strip",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["component", "leather", "strip", "material"],
+    "topCategory": "components",
+    "subCategory": "refined",
+    "group": "refined"
+  },
+  {
+    "id": "thread_spool",
+    "name": "Thread Spool",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["component", "thread", "spool", "material"],
+    "topCategory": "components",
+    "subCategory": "refined",
+    "group": "refined"
+  },
+
+  {
+    "id": "gear_assembly",
+    "name": "Gear Assembly",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["component", "gear", "mechanical", "material"],
+    "topCategory": "components",
+    "subCategory": "mechanical",
+    "group": "mechanical"
+  },
+  {
+    "id": "spring_coil",
+    "name": "Spring Coil",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["component", "spring", "coil", "mechanical", "material"],
+    "topCategory": "components",
+    "subCategory": "mechanical",
+    "group": "mechanical"
+  },
+
+  {
+    "id": "reinforced_plate",
+    "name": "Reinforced Plate",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["component", "plate", "reinforced", "material"],
+    "topCategory": "components",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+  {
+    "id": "fine_mechanism",
+    "name": "Fine Mechanism",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["component", "mechanism", "fine", "material"],
+    "topCategory": "components",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+
+  {
+    "id": "universal_catalyst",
+    "name": "Universal Catalyst",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["component", "catalyst", "universal", "material", "magical"],
+    "topCategory": "components",
+    "subCategory": "catalysts",
+    "group": "catalysts"
   }
 ]
 
