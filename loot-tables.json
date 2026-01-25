@@ -1204,6 +1204,427 @@
     "topCategory": "holy",
     "subCategory": "anomalies",
     "group": "anomalies"
+  },
+
+  {
+    "id": "demonic_essence",
+    "name": "Demonic Essence",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["demonic", "essence", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+  {
+    "id": "infernal_essence",
+    "name": "Infernal Essence",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["demonic", "infernal", "essence", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+  {
+    "id": "hellfire_essence",
+    "name": "Hellfire Essence",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["demonic", "hellfire", "fire", "essence", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+
+  {
+    "id": "hellfire_shard",
+    "name": "Hellfire Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["demonic", "hellfire", "fire", "shard", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "infernal_shard",
+    "name": "Infernal Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["demonic", "infernal", "shard", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "demonic_shard",
+    "name": "Demonic Shard",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["demonic", "shard", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+
+  {
+    "id": "infernal_core",
+    "name": "Infernal Core",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["demonic", "infernal", "core", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "hellheart_core",
+    "name": "Hellheart Core",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["demonic", "hellfire", "fire", "core", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+
+  {
+    "id": "archfiend_residue",
+    "name": "Archfiend Residue",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["demonic", "archfiend", "residue", "anomaly", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "hellforged_relic",
+    "name": "Hellforged Relic",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["demonic", "infernal", "relic", "anomaly", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "abyssal_crown_fragment",
+    "name": "Abyssal Crown Fragment",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["demonic", "abyssal", "crown", "fragment", "anomaly", "material", "magical"],
+    "topCategory": "demonic",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+
+  {
+    "id": "arcane_dust",
+    "name": "Arcane Dust",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["magical", "arcane", "dust", "material"],
+    "topCategory": "magical",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+  {
+    "id": "enchanted_powder",
+    "name": "Enchanted Powder",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["magical", "enchanted", "powder", "material"],
+    "topCategory": "magical",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+  {
+    "id": "spellpowder",
+    "name": "Spellpowder",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["magical", "spell", "powder", "material"],
+    "topCategory": "magical",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+  {
+    "id": "mystic_dust",
+    "name": "Mystic Dust",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["magical", "mystic", "dust", "material"],
+    "topCategory": "magical",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+
+  {
+    "id": "mana_crystal",
+    "name": "Mana Crystal",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["magical", "mana", "crystal", "material"],
+    "topCategory": "magical",
+    "subCategory": "crystals",
+    "group": "crystals"
+  },
+  {
+    "id": "arcane_crystal",
+    "name": "Arcane Crystal",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["magical", "arcane", "crystal", "material"],
+    "topCategory": "magical",
+    "subCategory": "crystals",
+    "group": "crystals"
+  },
+  {
+    "id": "spellbound_crystal",
+    "name": "Spellbound Crystal",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["magical", "spellbound", "crystal", "material"],
+    "topCategory": "magical",
+    "subCategory": "crystals",
+    "group": "crystals"
+  },
+
+  {
+    "id": "spellthread",
+    "name": "Spellthread",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["magical", "spell", "thread", "material"],
+    "topCategory": "magical",
+    "subCategory": "threads",
+    "group": "threads"
+  },
+  {
+    "id": "enchanted_thread",
+    "name": "Enchanted Thread",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["magical", "enchanted", "thread", "material"],
+    "topCategory": "magical",
+    "subCategory": "threads",
+    "group": "threads"
+  },
+  {
+    "id": "arcane_weave",
+    "name": "Arcane Weave",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["magical", "arcane", "weave", "material"],
+    "topCategory": "magical",
+    "subCategory": "threads",
+    "group": "threads"
+  },
+
+  {
+    "id": "arcane_essence",
+    "name": "Arcane Essence",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["magical", "arcane", "essence", "material"],
+    "topCategory": "magical",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+  {
+    "id": "mana_essence",
+    "name": "Mana Essence",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["magical", "mana", "essence", "material"],
+    "topCategory": "magical",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+  {
+    "id": "mystic_essence",
+    "name": "Mystic Essence",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["magical", "mystic", "essence", "material"],
+    "topCategory": "magical",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+
+  {
+    "id": "spellrift_fragment",
+    "name": "Spellrift Fragment",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["magical", "spell", "rift", "fragment", "anomaly", "material"],
+    "topCategory": "magical",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "arcane_singularity",
+    "name": "Arcane Singularity",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["magical", "arcane", "singularity", "anomaly", "material"],
+    "topCategory": "magical",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "mana_star_conduit",
+    "name": "Mana-Star Conduit",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["magical", "mana", "star", "conduit", "anomaly", "material"],
+    "topCategory": "magical",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+
+  {
+    "id": "runic_tablet",
+    "name": "Runic Tablet",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["ritual", "runic", "symbol", "stone", "material"],
+    "topCategory": "ritual",
+    "subCategory": "symbols",
+    "group": "symbols"
+  },
+  {
+    "id": "sigil_of_binding",
+    "name": "Sigil of Binding",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["ritual", "sigil", "binding", "symbol", "material", "magical"],
+    "topCategory": "ritual",
+    "subCategory": "symbols",
+    "group": "symbols"
+  },
+
+  {
+    "id": "sacred_incense",
+    "name": "Sacred Incense",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["ritual", "incense", "sacred", "material"],
+    "topCategory": "ritual",
+    "subCategory": "incense",
+    "group": "incense"
+  },
+  {
+    "id": "abyssal_incense",
+    "name": "Abyssal Incense",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["ritual", "incense", "abyssal", "material", "magical"],
+    "topCategory": "ritual",
+    "subCategory": "incense",
+    "group": "incense"
+  },
+
+  {
+    "id": "ritual_catalyst",
+    "name": "Ritual Catalyst",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["ritual", "catalyst", "material"],
+    "topCategory": "ritual",
+    "subCategory": "catalysts",
+    "group": "catalysts"
+  },
+  {
+    "id": "eldritch_catalyst",
+    "name": "Eldritch Catalyst",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["ritual", "catalyst", "eldritch", "material", "magical"],
+    "topCategory": "ritual",
+    "subCategory": "catalysts",
+    "group": "catalysts"
+  },
+
+  {
+    "id": "crystal_focus",
+    "name": "Crystal Focus",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["ritual", "focus", "crystal", "material", "magical"],
+    "topCategory": "ritual",
+    "subCategory": "foci",
+    "group": "foci"
+  },
+  {
+    "id": "astral_focus",
+    "name": "Astral Focus",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["ritual", "focus", "astral", "material", "magical"],
+    "topCategory": "ritual",
+    "subCategory": "foci",
+    "group": "foci"
+  },
+
+  {
+    "id": "rift_born_sigil",
+    "name": "Rift‑Born Sigil",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["ritual", "sigil", "rift", "anomaly", "material", "magical"],
+    "topCategory": "ritual",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "eternal_candle",
+    "name": "Eternal Candle",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["ritual", "candle", "eternal", "anomaly", "material", "magical"],
+    "topCategory": "ritual",
+    "subCategory": "anomalies",
+    "group": "anomalies"
   }
 ]
 
