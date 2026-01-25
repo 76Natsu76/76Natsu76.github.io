@@ -1,0 +1,53 @@
+{
+  "humanoid": {
+    "key": "humanoid",
+    "baseHP": 100,
+    "baseATK": 10,
+    "baseDEF": 8,
+    "elementAffinity": {},
+    "behavior": "balanced",
+    "flavor": "Standard humanoid foes with varied tactics.",
+    "familyModifiers": {
+      "atkMult": 1.0,
+      "defMult": 1.0,
+      "notes": "Adaptable and balanced with no inherent strengths or weaknesses."
+    }
+  },
+
+  "beast": {
+    "key": "beast",
+    "baseHP": 120,
+    "baseATK": 12,
+    "baseDEF": 6,
+    "elementAffinity": { "nature": 0.10 },
+    "behavior": "aggressive",
+    "flavor": "Instinct-driven creatures with feral strength.",
+    "familyModifiers": {
+      "atkMult": 1.10,
+      "defMult": 1.0,
+      "speedBias": 0.05,
+      "notes": "Savage and instinctive, beasts strike quickly and hard."
+    }
+  },
+
+  "undead": {
+    "key": "undead",
+    "baseHP": 110,
+    "baseATK": 9,
+    "baseDEF": 10,
+    "elementAffinity": {
+      "holy": 0.20,
+      "poison": -0.20,
+      "rot": -0.20
+    },
+    "behavior": "relentless",
+    "flavor": "Creatures animated by dark magic.",
+    "familyModifiers": {
+      "atkMult": 1.0,
+      "defMult": 1.10,
+      "statusEffectChanceMult": 1.15,
+      "specialRules": { "decayTouch": true },
+      "notes": "Resilient and rot‑infused, with strong debuff potential."
+    }
+  }
+}
