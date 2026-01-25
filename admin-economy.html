@@ -221,6 +221,52 @@
       window.location.href = "admin-dashboard.html";
     }
 
+    async function giftGold() {
+      const target = document.getElementById("targetUser").value.trim();
+      const amount = Number(document.getElementById("goldAmount").value);
+      const status = document.getElementById("statusMessage");
+    
+      const res = await fetch("/api/admin/gold/gift", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ admin, target, amount })
+      });
+    
+      const data = await res.json();
+      status.textContent = data.message || "Gold gifted.";
+    }
+    
+    async function giftExp() {
+      const target = document.getElementById("targetUser").value.trim();
+      const amount = Number(document.getElementById("expAmount").value);
+      const status = document.getElementById("statusMessage");
+    
+      const res = await fetch("/api/admin/exp/gift", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ admin, target, amount })
+      });
+    
+      const data = await res.json();
+      status.textContent = data.message || "EXP gifted.";
+    }
+    
+    async function grantItem() {
+      const target = document.getElementById("targetUser").value.trim();
+      const itemKey = document.getElementById("itemKey").value.trim();
+      const quantity = Number(document.getElementById("itemQty").value);
+      const status = document.getElementById("statusMessage");
+    
+      const res = await fetch("/api/admin/items/grant", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body:JSON.stringify({ admin, target, itemKey, quantity })
+      });
+    
+      const data = await res.json();
+      status.textContent = data.message || "Item granted.";
+    }
+
     loadEconomy();
   </script>
 
