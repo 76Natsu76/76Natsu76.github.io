@@ -915,4 +915,67 @@
 
   },
 
+  "titanborn": {
+
+    "titanblooded": {
+      "growth": { "hp": 1.5, "atk": 1.3, "def": 1.3, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "earth": 0.2, "lightning": 0.1 },
+      "description": "Mortals infused with ancient titan essence, towering in strength and resilience."
+    },
+
+    "colossus": {
+      "growth": { "hp": 1.6, "atk": 1.4, "def": 1.4, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "Massive titanborn giants whose sheer size and power dominate the battlefield."
+    },
+
+    "ruinshaper": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "arcane": 0.2, "earth": 0.1 },
+      "description": "Arcane‑empowered titanborn who sculpt destruction through raw primordial magic."
+    },
+
+    "storm_titan": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.2, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "lightning": 0.3, "wind": 0.1 },
+      "description": "Titans born of thunderous skies, wielding storm energy with overwhelming force."
+    },
+
+    "stone_titan": {
+      "growth": { "hp": 1.6, "atk": 1.2, "def": 1.5, "speed": 0.8, "mana": 1.0 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "Ancient stone‑forged titans whose bodies resemble living mountains."
+    },
+
+    "ember_titan": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.2, "speed": 1.0, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "Titans born from volcanic flame, radiating intense heat and destructive power."
+    },
+
+    "frost_titan": {
+      "growth": { "hp": 1.4, "atk": 1.2, "def": 1.3, "speed": 0.9, "mana": 1.2 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "Glacial titans who command the cold and wield frost‑laden strength."
+    },
+
+    "astral_titan": {
+      "growth": { "hp": 1.3, "atk": 1.1, "def": 1.2, "speed": 1.0, "mana": 1.5 },
+      "elementAffinity": { "arcane": 0.3, "void": 0.1 },
+      "description": "Cosmic titans infused with astral energy, bending space and starlight."
+    },
+
+    "chaos_titan": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.1, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "Unstable titans born of raw chaos, unleashing unpredictable destructive power."
+    },
+
+    "primordial_titan": {
+      "growth": { "hp": 1.5, "atk": 1.3, "def": 1.4, "speed": 0.9, "mana": 1.3 },
+      "elementAffinity": { "earth": 0.1, "fire": 0.1, "water": 0.1, "wind": 0.1 },
+      "description": "Ancient titans embodying the four primal elements in perfect balance."
+    }
+
+  },
 }
