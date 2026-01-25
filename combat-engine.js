@@ -641,6 +641,49 @@ class CombatEngine {
   }
 
   /* =========================================
+   * EXTERNAL PLAYER SYNC
+   * =======================================*/
+
+  applyExternalPlayerSnapshot(playerData) {
+    if (!playerData) return;
+
+    const p = this.state.player;
+
+    // HP / Max HP
+    const maxHP =
+      (playerData.derived && playerData.derived.maxHP) ||
+      playerData.hpMax ||
+      p.hpMax;
+
+    const currentHP =
+      playerData.hp != null
+        ? playerData.hp
+        : Math.min(p.hp, maxHP);
+
+    p.hpMax = maxHP;
+    p.hp = Math.max(0, Math.min(maxHP, currentHP));
+
+    // ATK / DEF (if present)
+    const atk =
+      (playerData.derived && playerData.derived.attack) ||
+      playerData.attack;
+    const def =
+      (playerData.derived && playerData.derived.defense) ||
+      playerData.defense;
+
+    if (atk != null) p.atk = atk;
+    if (def != null) p.def = def;
+
+    // Optionally sync equipment snapshot if you want it to stay aligned
+    if (playerData.equipment) {
+      p.equipment = playerData.equipment;
+    }
+
+    this._persist();
+    this._notifyUpdate();
+  }
+
+  /* =========================================
    * UTILITIES
    * =======================================*/
 
