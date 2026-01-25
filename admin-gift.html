@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Admin – Gift Gold</title>
+  <title>Admin – Gift Resources</title>
 
   <style>
     body {
@@ -80,16 +80,29 @@
 
 <body>
 
-  <h1>Admin: Gift Gold</h1>
+  <h1>Admin: Gift Resources</h1>
   <div id="adminDisplay"></div>
 
   <label>Target Username</label>
   <input id="target" placeholder="username">
 
-  <label>Amount to Gift</label>
-  <input id="amount" placeholder="e.g. 500">
+  <label>Gold Amount</label>
+  <input id="goldAmount" placeholder="e.g. 500">
 
   <button onclick="giftGold()">Gift Gold</button>
+
+  <label>EXP Amount</label>
+  <input id="expAmount" placeholder="e.g. 250">
+
+  <button onclick="giftExp()">Gift EXP</button>
+
+  <label>Item Key</label>
+  <input id="itemKey" placeholder="e.g. MYSTERY_BOX">
+
+  <label>Quantity</label>
+  <input id="itemQty" placeholder="1">
+
+  <button onclick="grantItem()">Grant Item</button>
 
   <div id="resultBox">Waiting...</div>
 
@@ -111,13 +124,19 @@
       setTimeout(() => t.style.opacity = 0, 2500);
     }
 
+    function showResult(text) {
+      document.getElementById("resultBox").textContent = text;
+    }
+
+    // ============================
+    // GOLD
+    // ============================
     async function giftGold() {
       const target = document.getElementById("target").value.trim();
-      const amount = Number(document.getElementById("amount").value.trim());
-      const box = document.getElementById("resultBox");
+      const amount = Number(document.getElementById("goldAmount").value.trim());
 
-      if (!target || !amount || isNaN(amount)) {
-        box.textContent = "Missing or invalid target/amount.";
+      if (!target || isNaN(amount)) {
+        showResult("Missing or invalid target/amount.");
         return;
       }
 
@@ -125,22 +144,96 @@
         const result = await api.admin.giftGold(admin, target, amount);
 
         if (!result.success) {
-          box.textContent = "Error: " + (result.message || "Unknown error");
+          showResult("Error: " + (result.message || "Unknown error"));
           toast("Gift failed");
           return;
         }
 
-        box.textContent =
-          `Gift Successful!\n\n` +
+        showResult(
+          `Gold Gift Successful!\n\n` +
           `Admin: ${admin}\n` +
           `Target: ${target}\n` +
-          `Amount: ${amount}\n\n` +
-          result.message;
+          `Gold Amount: ${amount}\n\n` +
+          result.message
+        );
 
-        toast("Gift successful");
-
+        toast("Gold gifted");
       } catch (err) {
-        box.textContent = "Network error: " + err.message;
+        showResult("Network error: " + err.message);
+        toast("Network error");
+      }
+    }
+
+    // ============================
+    // EXP
+    // ============================
+    async function giftExp() {
+      const target = document.getElementById("target").value.trim();
+      const amount = Number(document.getElementById("expAmount").value.trim());
+
+      if (!target || isNaN(amount)) {
+        showResult("Missing or invalid target/amount.");
+        return;
+      }
+
+      try {
+        const result = await api.admin.giftExp(admin, target, amount);
+
+        if (!result.success) {
+          showResult("Error: " + (result.message || "Unknown error"));
+          toast("Gift failed");
+          return;
+        }
+
+        showResult(
+          `EXP Gift Successful!\n\n` +
+          `Admin: ${admin}\n` +
+          `Target: ${target}\n` +
+          `EXP Amount: ${amount}\n\n` +
+          result.message
+        );
+
+        toast("EXP gifted");
+      } catch (err) {
+        showResult("Network error: " + err.message);
+        toast("Network error");
+      }
+    }
+
+    // ============================
+    // ITEMS
+    // ============================
+    async function grantItem() {
+      const target = document.getElementById("target").value.trim();
+      const itemKey = document.getElementById("itemKey").value.trim();
+      const quantity = Number(document.getElementById("itemQty").value.trim());
+
+      if (!target || !itemKey || isNaN(quantity)) {
+        showResult("Missing or invalid target/item/quantity.");
+        return;
+      }
+
+      try {
+        const result = await api.admin.grantItem(admin, target, itemKey, quantity);
+
+        if (!result.success) {
+          showResult("Error: " + (result.message || "Unknown error"));
+          toast("Grant failed");
+          return;
+        }
+
+        showResult(
+          `Item Granted!\n\n` +
+          `Admin: ${admin}\n` +
+          `Target: ${target}\n` +
+          `Item: ${itemKey}\n` +
+          `Quantity: ${quantity}\n\n` +
+          result.message
+        );
+
+        toast("Item granted");
+      } catch (err) {
+        showResult("Network error: " + err.message);
         toast("Network error");
       }
     }
