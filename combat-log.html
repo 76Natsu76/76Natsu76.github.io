@@ -97,7 +97,6 @@
     /* ============================================================
        LOAD LOGS
        ============================================================ */
-
     async function loadLogs() {
       const container = document.getElementById("logContainer");
 
@@ -119,7 +118,6 @@
     /* ============================================================
        RENDER LOGS
        ============================================================ */
-
     function renderLogs(logs) {
       const container = document.getElementById("logContainer");
 
@@ -131,16 +129,28 @@
       container.innerHTML = logs
         .map((log, index) => {
           const timestamp = new Date(log.timestamp).toLocaleString();
-          const title = `${format(log.region)} — ${format(log.enemyKey)} (${log.outcome})`;
+
+          const title = [
+            format(log.region),
+            log.biome ? `(${format(log.biome)})` : "",
+            "—",
+            format(log.enemyKey),
+            log.enemyVariant ? `(${format(log.enemyVariant)})` : "",
+            `— ${log.outcome}`
+          ].join(" ").replace(/\s+/g, " ");
+
+          const lootText =
+            log.rewards?.loot?.length
+              ? log.rewards.loot.map(l => `${l.quantity}x ${l.name}`).join(", ")
+              : "None";
 
           const body = [
             `Outcome: ${log.outcome}`,
             `Rounds: ${log.rounds}`,
-            `XP: ${log.rewards?.xp ?? 0}`,
-            `Gold: ${log.rewards?.gold ?? 0}`,
-            log.rewards?.loot?.length
-              ? `Loot: ${log.rewards.loot.map(l => `${l.quantity}x ${l.name}`).join(", ")}`
-              : `Loot: None`,
+            `Enemy Level: ${log.enemyLevel ?? "?"}`,
+            `XP Gained: ${log.rewards?.xp ?? 0}`,
+            `Gold Gained: ${log.rewards?.gold ?? 0}`,
+            `Loot: ${lootText}`,
             "",
             "=== Combat Log ===",
             ...log.log.map(formatEntry)
@@ -169,7 +179,6 @@
     /* ============================================================
        HELPERS
        ============================================================ */
-
     function toggleBody(i) {
       const el = document.getElementById(`body-${i}`);
       el.style.display = el.style.display === "block" ? "none" : "block";
@@ -180,11 +189,18 @@
 
       switch (entry.type) {
         case "attack":
-          return `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg`;
+          return `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg` +
+                 (entry.crit ? " (CRIT!)" : "");
+        case "block":
+          return `${entry.target} blocks ${entry.amount} damage`;
+        case "ability":
+          return `${entry.attacker} uses ${entry.abilityName} → ${entry.result}`;
         case "dot":
           return `${entry.effectKey} deals ${entry.amount} DOT`;
         case "hot":
           return `${entry.effectKey} heals ${entry.amount} HOT`;
+        case "status":
+          return `${entry.target} is affected by ${entry.status}`;
         case "expire":
           return `${entry.effectKey} expired`;
         default:
