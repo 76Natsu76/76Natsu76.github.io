@@ -1322,4 +1322,247 @@
       "description": "Powerful brood‑mothers whose venom and webs dominate entire nests."
     }
   },
+
+  "supernatural": {
+
+    "vampire": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.2, "mana": 1.2 },
+      "elementAffinity": { "dark": 0.3, "blood": 0.2 },
+      "description": "Cursed immortals who feed on life essence and wield shadowed power."
+    },
+
+    "werebeast": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.1, "speed": 1.2, "mana": 0.9 },
+      "elementAffinity": { "nature": 0.1, "chaos": 0.1 },
+      "description": "Shapeshifters driven by primal fury and lunar influence."
+    },
+
+    "soul_renderer": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "dark": 0.3, "void": 0.1 },
+      "description": "Eerie beings who tear at the soul directly with spectral claws."
+    },
+
+    "wightborn": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.1, "speed": 1.0, "mana": 1.1 },
+      "elementAffinity": { "dark": 0.2, "decay": 0.2 },
+      "description": "Cursed revenants animated by lingering hatred and necrotic force."
+    },
+
+    "hauntling": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "dark": 0.2, "arcane": 0.1 },
+      "description": "Small spectral beings that flicker between the living and the dead."
+    },
+
+    "bloodbound": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.1, "mana": 1.1 },
+      "elementAffinity": { "blood": 0.3 },
+      "description": "Mortals bound by blood pacts, gaining crimson magic and vitality theft."
+    }
+  },
+
+  "astralborn": {
+
+    "starchild": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.3, "mana": 1.5 },
+      "elementAffinity": { "arcane": 0.2, "light": 0.2 },
+      "description": "Cosmic‑touched beings born under rare celestial convergences."
+    },
+
+    "sun_child": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.1, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "light": 0.3, "fire": 0.1 },
+      "description": "Radiant astralborn infused with solar brilliance and celestial fire."
+    },
+
+    "moonborn": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2, "ice": 0.1 },
+      "description": "Lunar‑aligned astralborn who channel moonlight and subtle arcane tides."
+    },
+
+    "cosmic_echo": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.4, "mana": 1.5 },
+      "elementAffinity": { "arcane": 0.3, "void": 0.1 },
+      "description": "Temporal anomalies shaped into living beings by cosmic resonance."
+    },
+
+    "astral_walker": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.4, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2, "wind": 0.1 },
+      "description": "Planar travelers who slip between realms with ease."
+    },
+
+    "starforged": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.1, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.2 },
+      "description": "Astralborn shaped by stellar fire and cosmic pressure."
+    }
+  },
+
+  "chaosborn": {
+
+    "chaosling": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 0.9, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "Unstable beings of pure chaos, shifting unpredictably in form and power."
+    },
+
+    "entropy_shard": {
+      "growth": { "hp": 0.9, "atk": 1.4, "def": 0.9, "speed": 1.4, "mana": 1.3 },
+      "elementAffinity": { "chaos": 0.3, "void": 0.1 },
+      "description": "Fragments of entropy given life, unraveling order wherever they move."
+    },
+
+    "mutant_spawn": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "Chaotically mutated beings with unpredictable physical adaptations."
+    },
+
+    "warp_stalker": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "chaos": 0.2 },
+      "description": "Chaosborn hunters who flicker through warped space to strike prey."
+    },
+
+    "fractal_beast": {
+      "growth": { "hp": 1.1, "atk": 1.4, "def": 1.0, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "Creatures whose bodies repeat in impossible fractal patterns."
+    }
+  },
+
+  "aberration": {
+
+    "mind_flayer": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.0, "speed": 1.1, "mana": 1.5 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "Psionic aberrations that dominate minds and feed on neural essence."
+    },
+
+    "barathu": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "wind": 0.1, "psychic": 0.2 },
+      "description": "Floating gas‑sac aberrations that reshape their bodies at will."
+    },
+
+    "gibbering_mass": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.0, "speed": 0.9, "mana": 1.2 },
+      "elementAffinity": { "chaos": 0.2 },
+      "description": "A writhing cluster of mouths and eyes that babbles maddening nonsense."
+    },
+
+    "aberrant_stalker": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.3, "mana": 1.1 },
+      "elementAffinity": { "dark": 0.1 },
+      "description": "A warped predator that hunts with impossible angles and silent steps."
+    },
+
+    "void_mutant": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "void": 0.2 },
+      "description": "A creature twisted by void exposure, its form shifting unpredictably."
+    }
+  },
+
+  "eldritch": {
+
+    "cthulhian_spawn": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 1.5 },
+      "elementAffinity": { "void": 0.2, "psychic": 0.2 },
+      "description": "A tentacled horror born from deep cosmic nightmares."
+    },
+
+    "yog_fragment": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.0, "speed": 1.2, "mana": 1.6 },
+      "elementAffinity": { "arcane": 0.2, "void": 0.2 },
+      "description": "A shard of an incomprehensible cosmic entity, warping reality around it."
+    },
+
+    "eldritch_abomination": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.3, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "chaos": 0.2, "void": 0.1 },
+      "description": "A colossal horror whose form defies logic and sanity."
+    },
+
+    "whispering_one": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.3, "mana": 1.5 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A subtle eldritch being that erodes minds with whispered truths."
+    },
+
+    "star_marrow": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2, "light": 0.1 },
+      "description": "A radiant yet horrifying entity formed from stellar bone and cosmic fire."
+    }
+  },
+
+  "lich": {
+
+    "arcane_lich": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 1.6 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "A lich who mastered pure arcane magic, wielding devastating spells."
+    },
+
+    "frost_lich": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.2, "speed": 1.0, "mana": 1.5 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "A lich whose soul is bound to eternal winter and chilling sorcery."
+    },
+
+    "void_lich": {
+      "growth": { "hp": 0.9, "atk": 1.4, "def": 1.1, "speed": 1.1, "mana": 1.6 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A lich who embraced the void, warping space and draining life."
+    },
+
+    "necrotic_lich": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 1.5 },
+      "elementAffinity": { "dark": 0.3, "decay": 0.1 },
+      "description": "A lich steeped in necrotic magic, commanding death with absolute mastery."
+    },
+
+    "storm_lich": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.1, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "lightning": 0.3 },
+      "description": "A lich who channels storm energy through its immortal phylactery."
+    }
+  },
+
+  "mimic": {
+
+    "chest_mimic": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A classic mimic disguised as a treasure chest, waiting to ambush prey."
+    },
+
+    "weapon_mimic": {
+      "growth": { "hp": 1.1, "atk": 1.4, "def": 1.1, "speed": 1.1, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A mimic that imitates weapons, striking when wielded or approached."
+    },
+
+    "furniture_mimic": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.3, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A bulky mimic that disguises itself as tables, chairs, or cabinets."
+    },
+
+    "door_mimic": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A mimic that blocks passageways, attacking anyone who tries to pass."
+    },
+
+    "eldritch_mimic": {
+      "growth": { "hp": 1.1, "atk": 1.4, "def": 1.1, "speed": 1.2, "mana": 1.2 },
+      "elementAffinity": { "void": 0.2, "chaos": 0.1 },
+      "description": "A mimic corrupted by cosmic influence, warping its form unpredictably."
+    }
+  },
 }
