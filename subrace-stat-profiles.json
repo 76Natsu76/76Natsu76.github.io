@@ -2329,4 +2329,169 @@
       "description": "A cosmic surveillance construct that records the evolution of universes."
     }
   },
+
+  "metaphysical_phenomenon": {
+
+    "living_storm": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.3, "speed": 1.7, "mana": 1.8 },
+      "elementAffinity": { "lightning": 0.3, "wind": 0.2 },
+      "description": "A sentient tempest that roams the skies, striking with conscious fury."
+    },
+
+    "spell_echo": {
+      "growth": { "hp": 1.2, "atk": 1.4, "def": 1.1, "speed": 1.6, "mana": 1.9 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "A spell cast so powerfully that it gained self‑awareness."
+    },
+
+    "emotion_wraith": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.7, "mana": 1.8 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A metaphysical being formed from a single overwhelming emotion."
+    },
+
+    "concept_beast": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.5, "mana": 1.7 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A creature representing an abstract idea, such as hunger or inevitability."
+    },
+
+    "living_shadow": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.2, "speed": 1.6, "mana": 1.7 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "A shadow that detached from its owner and became a predator."
+    }
+  },
+
+  "parasite": {
+
+    "mind_leech": {
+      "growth": { "hp": 0.9, "atk": 1.3, "def": 0.9, "speed": 1.5, "mana": 1.6 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A parasitic entity that burrows into the mind and feeds on thoughts."
+    },
+
+    "soul_binder": {
+      "growth": { "hp": 1.0, "atk": 1.4, "def": 1.0, "speed": 1.4, "mana": 1.7 },
+      "elementAffinity": { "dark": 0.2, "void": 0.1 },
+      "description": "A parasite that attaches to the soul, draining spiritual energy."
+    },
+
+    "symbiotic_worm": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.1, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": {},
+      "description": "A wormlike creature that enhances its host in exchange for sustenance."
+    },
+
+    "void_tick": {
+      "growth": { "hp": 1.0, "atk": 1.5, "def": 1.0, "speed": 1.4, "mana": 1.6 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A parasitic void creature that drains dimensional stability."
+    },
+
+    "eldritch_symbiote": {
+      "growth": { "hp": 1.2, "atk": 1.4, "def": 1.1, "speed": 1.5, "mana": 1.7 },
+      "elementAffinity": { "chaos": 0.2, "void": 0.1 },
+      "description": "A symbiote that mutates its host with eldritch influence."
+    }
+  },
+
+  "cosmic_fauna": {
+
+    "star_whale": {
+      "growth": { "hp": 1.8, "atk": 1.4, "def": 1.6, "speed": 1.2, "mana": 1.7 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.1 },
+      "description": "A massive creature that swims through the vacuum of space."
+    },
+
+    "void_ray": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.6, "mana": 1.6 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A manta‑like creature that glides through the void between stars."
+    },
+
+    "nebula_serpent": {
+      "growth": { "hp": 1.7, "atk": 1.6, "def": 1.5, "speed": 1.4, "mana": 1.8 },
+      "elementAffinity": { "arcane": 0.2, "void": 0.1 },
+      "description": "A colossal serpent formed from swirling nebula gases."
+    },
+
+    "solar_beetle": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.3, "speed": 1.5, "mana": 1.5 },
+      "elementAffinity": { "fire": 0.2, "light": 0.1 },
+      "description": "A beetle that feeds on solar radiation and emits blinding flashes."
+    },
+
+    "galactic_jelly": {
+      "growth": { "hp": 1.5, "atk": 1.3, "def": 1.4, "speed": 1.3, "mana": 1.7 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A floating jellyfish‑like creature drifting through cosmic currents."
+    }
+  },
+
+  "mythic_undead": {
+
+    "death_titan": {
+      "growth": { "hp": 1.9, "atk": 1.8, "def": 1.7, "speed": 1.2, "mana": 1.8 },
+      "elementAffinity": { "dark": 0.3, "decay": 0.2 },
+      "description": "A colossal undead titan animated by pure necrotic force."
+    },
+
+    "soul_revenant": {
+      "growth": { "hp": 1.4, "atk": 1.6, "def": 1.4, "speed": 1.5, "mana": 1.7 },
+      "elementAffinity": { "dark": 0.2, "void": 0.1 },
+      "description": "A revenant whose soul refuses to rest, fueled by eternal vengeance."
+    },
+
+    "eternal_pharaoh": {
+      "growth": { "hp": 1.6, "atk": 1.5, "def": 1.6, "speed": 1.3, "mana": 1.8 },
+      "elementAffinity": { "arcane": 0.2, "dark": 0.1 },
+      "description": "An undead ruler preserved by ancient magic and divine curses."
+    },
+
+    "bone_colossus": {
+      "growth": { "hp": 1.8, "atk": 1.7, "def": 1.6, "speed": 1.1, "mana": 1.6 },
+      "elementAffinity": { "decay": 0.3 },
+      "description": "A towering construct of fused bones animated by necromantic power."
+    },
+
+    "spectral_emperor": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.5, "speed": 1.4, "mana": 1.9 },
+      "elementAffinity": { "arcane": 0.2, "dark": 0.2 },
+      "description": "A ghostly monarch ruling an empire of the dead."
+    }
+  },
+
+  "hivemind": {
+
+    "swarm_intellect": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.3, "speed": 1.6, "mana": 1.6 },
+      "elementAffinity": {},
+      "description": "A collective consciousness formed from thousands of small creatures."
+    },
+
+    "neural_cluster": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.2, "speed": 1.5, "mana": 1.8 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A psychic network linking multiple hosts into a single mind."
+    },
+
+    "void_hive": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.4, "speed": 1.5, "mana": 1.7 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A hivemind born from void‑touched organisms acting as one entity."
+    },
+
+    "eldritch_swarm": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.4, "speed": 1.6, "mana": 1.8 },
+      "elementAffinity": { "chaos": 0.2, "void": 0.1 },
+      "description": "A swarm of creatures sharing a single eldritch consciousness."
+    },
+
+    "queen_core": {
+      "growth": { "hp": 1.6, "atk": 1.5, "def": 1.6, "speed": 1.4, "mana": 1.7 },
+      "elementAffinity": {},
+      "description": "The central mind of a massive hive, controlling countless drones."
+    }
+  },
 }
