@@ -1,0 +1,481 @@
+{
+  "humanoid": {
+
+    "occultborn": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 0.9, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "dark": 0.2, "arcane": 0.1 },
+      "description": "Mortals touched by forbidden knowledge, gaining dark and arcane attunement."
+    },
+
+    "monastic": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": { "light": 0.1 },
+      "description": "Disciplined ascetics who refine body and spirit through rigorous training."
+    },
+
+    "duelist": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Agile fighters specializing in precision strikes and swift footwork."
+    },
+
+    "banditfolk": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 0.9, "speed": 1.1, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Rough survivalists who rely on cunning, speed, and opportunistic strikes."
+    },
+
+    "spirit_medium": {
+      "growth": { "hp": 0.9, "atk": 0.9, "def": 0.9, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2, "dark": 0.1 },
+      "description": "Humans attuned to the spirit realm, channeling ethereal energies."
+    },
+
+    "tribalborn": {
+      "growth": { "hp": 1.1, "atk": 1.1, "def": 1.0, "speed": 1.0, "mana": 0.8 },
+      "elementAffinity": { "nature": 0.1 },
+      "description": "Members of ancient tribes with strong physical instincts and natural resilience."
+    },
+
+    "holyborn": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.1, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "holy": 0.3 },
+      "description": "Blessed mortals infused with divine radiance and protective magic."
+    },
+
+    "trainee": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A novice adventurer with balanced potential and no specialized growth."
+    },
+
+    "thief": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.3, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Quick‑handed rogues who excel at speed, stealth, and opportunistic strikes."
+    },
+
+    "rogue": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Shadowy assassins who rely on agility and lethal precision."
+    },
+
+    "bozo": {
+      "growth": { "hp": 0.9, "atk": 0.9, "def": 0.9, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": { "chaos": 0.2 },
+      "description": "Chaotic tricksters whose unpredictable nature warps their combat style."
+    },
+
+    "corrupted": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 0.9, "speed": 1.1, "mana": 1.1 },
+      "elementAffinity": { "dark": 0.2, "poison": 0.2 },
+      "description": "Humanoids twisted by dark influence, gaining toxic and shadowy power."
+    },
+
+    "rot": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.0, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "decay": 0.3 },
+      "description": "Mortals infected with necrotic decay, gaining resilience and rot‑based magic."
+    },
+
+    "trickster": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.3, "mana": 1.1 },
+      "elementAffinity": { "illusion": 0.2 },
+      "description": "Mischievous illusionists who manipulate perception and misdirection."
+    },
+
+    "void": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "Humanoids partially consumed by void energy, gaining unstable power."
+    },
+
+    "apocalypse": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "chaos": 0.3, "dark": 0.2 },
+      "description": "Harbingers of ruin empowered by chaotic and destructive forces."
+    },
+
+    "adept": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "Novice spellcasters with growing arcane potential."
+    },
+
+    "acolyte": {
+      "growth": { "hp": 1.0, "atk": 0.9, "def": 1.1, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "holy": 0.2 },
+      "description": "Devout initiates who channel holy magic through faith and discipline."
+    },
+
+    "cleric": {
+      "growth": { "hp": 1.1, "atk": 0.9, "def": 1.1, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "holy": 0.3 },
+      "description": "Holy spellcasters specializing in healing and protective magic."
+    },
+
+    "guardian": {
+      "growth": { "hp": 1.2, "atk": 1.0, "def": 1.2, "speed": 0.9, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Stalwart defenders who excel at protection and physical resilience."
+    },
+
+    "warrior": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.1, "speed": 0.9, "mana": 0.8 },
+      "elementAffinity": {},
+      "description": "Versatile melee fighters with strong physical growth."
+    },
+
+    "ranger": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.2, "mana": 0.9 },
+      "elementAffinity": { "nature": 0.1 },
+      "description": "Skilled hunters who blend agility with natural attunement."
+    },
+
+    "assassin": {
+      "growth": { "hp": 0.9, "atk": 1.3, "def": 0.9, "speed": 1.3, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Deadly killers who rely on speed, stealth, and lethal precision."
+    },
+
+    "necromancer": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "dark": 0.2, "poison": 0.2 },
+      "description": "Masters of death magic who command decay and the undead."
+    },
+
+    "witch": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "dark": 0.2 },
+      "description": "Coven‑trained casters who wield curses and forbidden magic."
+    },
+
+    "warlock": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.0, "mana": 1.3 },
+      "elementAffinity": { "dark": 0.2, "void": 0.2 },
+      "description": "Pact‑bound casters who draw power from eldritch patrons."
+    },
+
+    "mage": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "Arcane scholars who specialize in ranged magical combat."
+    },
+
+    "healer": {
+      "growth": { "hp": 1.0, "atk": 0.9, "def": 1.0, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "holy": 0.3 },
+      "description": "Support casters who excel at healing and restorative magic."
+    },
+
+    "shaman": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "lightning": 0.2, "nature": 0.2 },
+      "description": "Spiritual casters who channel elemental forces and ancestral spirits."
+    },
+
+    "druid": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.0, "mana": 1.3 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "Nature‑bound casters who command flora, fauna, and primal magic."
+    }
+
+  },
+
+  {
+  "elf": {
+
+    "high_elf": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "Noble elves with strong arcane lineage and exceptional magical aptitude."
+    },
+
+    "wood_elf": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "Forest‑dwelling elves attuned to nature, archery, and agile combat."
+    },
+
+    "shadow_elf": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 1.1 },
+      "elementAffinity": { "dark": 0.2 },
+      "description": "Elves who embraced the shadows, gaining stealth and dark affinity."
+    },
+
+    "sun_elf": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "light": 0.2 },
+      "description": "Radiant elves empowered by sunlight and celestial magic."
+    },
+
+    "moon_elf": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": { "arcane": 0.2, "ice": 0.1 },
+      "description": "Mystic elves who draw power from moonlight and subtle arcane forces."
+    },
+
+    "storm_elf": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "lightning": 0.2, "wind": 0.1 },
+      "description": "Swift elves infused with storm energy, excelling in speed and agility."
+    },
+
+    "ember_elf": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 0.9, "speed": 1.1, "mana": 1.0 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "Fiery elves who channel flame and aggressive elemental magic."
+    },
+
+    "frost_elf": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 1.0, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "Cold‑attuned elves who wield frost magic with precision and control."
+    },
+
+    "thorn_elf": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": { "nature": 0.3, "poison": 0.1 },
+      "description": "Elves bonded with thorned flora, gaining resilience and toxic magic."
+    },
+
+    "astral_elf": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.3, "void": 0.1 },
+      "description": "Cosmic‑touched elves who manipulate astral currents and temporal magic."
+    }
+
+  },
+
+  {
+  "dwarf": {
+
+    "stone_dwarf": {
+      "growth": { "hp": 1.2, "atk": 1.0, "def": 1.3, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "Stout dwarves with bodies hardened like stone, excelling in physical defense."
+    },
+
+    "ember_dwarf": {
+      "growth": { "hp": 1.1, "atk": 1.1, "def": 1.1, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "Fire‑touched dwarves who channel volcanic heat into their strikes."
+    },
+
+    "iron_dwarf": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.3, "speed": 0.8, "mana": 0.8 },
+      "elementAffinity": { "metal": 0.3 },
+      "description": "Dwarves with iron‑like skin and unmatched resilience in battle."
+    },
+
+    "deep_dwarf": {
+      "growth": { "hp": 1.3, "atk": 1.0, "def": 1.2, "speed": 0.7, "mana": 1.0 },
+      "elementAffinity": { "earth": 0.2, "dark": 0.1 },
+      "description": "Dwarves adapted to the deep caverns, gaining darkvision and earth affinity."
+    },
+
+    "runeborn_dwarf": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 0.9, "mana": 1.2 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "Arcane‑inscribed dwarves who channel runic magic through their bodies."
+    },
+
+    "forge_dwarf": {
+      "growth": { "hp": 1.2, "atk": 1.2, "def": 1.1, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "fire": 0.1, "metal": 0.2 },
+      "description": "Master smiths whose bodies resonate with the heat and rhythm of the forge."
+    },
+
+    "frost_dwarf": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.2, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "ice": 0.2 },
+      "description": "Cold‑adapted dwarves who thrive in frozen climates and wield frost magic."
+    },
+
+    "mountain_dwarf": {
+      "growth": { "hp": 1.3, "atk": 1.1, "def": 1.2, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.2 },
+      "description": "Traditional dwarves of the high peaks, known for strength and endurance."
+    }
+
+  },
+
+  {
+  "orc": {
+
+    "bloodfury_orc": {
+      "growth": { "hp": 1.2, "atk": 1.4, "def": 1.0, "speed": 1.0, "mana": 0.7 },
+      "elementAffinity": { "fire": 0.1, "chaos": 0.1 },
+      "description": "Savage orcs driven by bloodlust, gaining explosive offensive growth."
+    },
+
+    "ironhide_orc": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 0.9, "mana": 0.7 },
+      "elementAffinity": { "earth": 0.1 },
+      "description": "Thick‑skinned orcs with exceptional durability and defensive instincts."
+    },
+
+    "ember_orc": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.0, "mana": 0.8 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "Orcs infused with volcanic flame, channeling fiery aggression."
+    },
+
+    "storm_orc": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.0, "speed": 1.2, "mana": 0.9 },
+      "elementAffinity": { "lightning": 0.2 },
+      "description": "Orcs empowered by storm energy, gaining speed and shock‑based power."
+    },
+
+    "bonecrusher_orc": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.1, "speed": 0.9, "mana": 0.7 },
+      "elementAffinity": {},
+      "description": "Massive orcs who specialize in brute force and overwhelming physical might."
+    },
+
+    "ashen_orc": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.0, "speed": 1.0, "mana": 0.9 },
+      "elementAffinity": { "fire": 0.1, "dark": 0.1 },
+      "description": "Orcs touched by dark flame, blending aggression with shadowy power."
+    },
+
+    "warborn_orc": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 1.0, "mana": 0.8 },
+      "elementAffinity": {},
+      "description": "Elite orcs bred for war, excelling in raw strength and battlefield endurance."
+    },
+
+    "berserk_orc": {
+      "growth": { "hp": 1.1, "atk": 1.4, "def": 1.0, "speed": 1.1, "mana": 0.7 },
+      "elementAffinity": { "chaos": 0.2 },
+      "description": "Frenzied orcs who fight in a trance of rage, gaining chaotic power."
+    }
+
+  },
+
+  {
+  "goblinoid": {
+
+    "goblin": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.3, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "Small, fast, and cunning goblinoids known for opportunistic tactics."
+    },
+
+    "hobgoblin": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.1, "speed": 1.0, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "Disciplined goblinoids with stronger martial training and battlefield presence."
+    },
+
+    "bugbear": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 1.0, "mana": 0.8 },
+      "elementAffinity": {},
+      "description": "Large, brutish goblinoids who excel in ambushes and raw physical power."
+    },
+
+    "shadow_goblin": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.4, "mana": 1.0 },
+      "elementAffinity": { "dark": 0.2 },
+      "description": "Stealth‑focused goblins who thrive in darkness and shadow magic."
+    },
+
+    "poison_goblin": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.3, "mana": 1.0 },
+      "elementAffinity": { "poison": 0.3 },
+      "description": "Toxic goblins who coat their weapons in venom and wield poisonous magic."
+    },
+
+    "tinker_goblin": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 0.9, "speed": 1.2, "mana": 1.1 },
+      "elementAffinity": { "metal": 0.1 },
+      "description": "Inventive goblins who craft gadgets, traps, and unstable contraptions."
+    },
+
+    "feral_goblin": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.0, "speed": 1.2, "mana": 0.9 },
+      "elementAffinity": { "nature": 0.1 },
+      "description": "Wild goblins with sharpened instincts and feral combat styles."
+    },
+
+    "smoke_goblin": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "chaos": 0.1 },
+      "description": "Elusive goblins who use smoke, confusion, and chaotic tricks in battle."
+    }
+
+  },
+
+  {
+  "beastkin": {
+
+    "catkin": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.4, "mana": 1.0 },
+      "elementAffinity": { "nature": 0.1 },
+      "description": "Agile feline beastkin with exceptional reflexes and swift movement."
+    },
+
+    "wolfkin": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.0, "speed": 1.2, "mana": 0.9 },
+      "elementAffinity": { "nature": 0.1 },
+      "description": "Pack‑minded hunters with strong instincts and fierce physical power."
+    },
+
+    "dogkin": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.0, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "Loyal and energetic beastkin known for agility and balanced growth."
+    },
+
+    "tigerkin": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.3, "mana": 0.9 },
+      "elementAffinity": { "nature": 0.1 },
+      "description": "Powerful striped hunters with explosive strength and predatory instincts."
+    },
+
+    "boarkin": {
+      "growth": { "hp": 1.2, "atk": 1.2, "def": 1.1, "speed": 0.9, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.1 },
+      "description": "Sturdy boar‑like beastkin with strong physical resilience and charging power."
+    },
+
+    "foxkin": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "illusion": 0.1 },
+      "description": "Clever and elusive fox‑folk who blend agility with trickery."
+    },
+
+    "bearkin": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.1 },
+      "description": "Massive beastkin with overwhelming strength and natural toughness."
+    },
+
+    "hawkkin": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.5, "mana": 1.0 },
+      "elementAffinity": { "wind": 0.2 },
+      "description": "Aerial beastkin with unmatched speed and sharp precision."
+    },
+
+    "serpentkin": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 1.0 },
+      "elementAffinity": { "poison": 0.3 },
+      "description": "Slithering beastkin who wield venom and swift, unpredictable strikes."
+    },
+
+    "stagkin": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": { "nature": 0.2 },
+      "description": "Graceful forest beastkin with strong natural attunement and agility."
+    }
+
+  },
+
+  
+}
+}
+}
+}
+}
+}
