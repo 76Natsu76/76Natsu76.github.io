@@ -1,0 +1,106 @@
+{
+  "exp_buff": {
+    "id": "exp_buff",
+    "minPrice": 7600,
+    "maxPrice": 16200,
+    "minQty": 1,
+    "maxQty": 3,
+    "rarity": "very"
+  },
+  "leveler": {
+    "id": "leveler",
+    "minPrice": 20000,
+    "maxPrice": 60000,
+    "minQty": 1,
+    "maxQty": 2,
+    "rarity": "ultra"
+  },
+  "mystery_box": {
+    "id": "mystery_box",
+    "minPrice": 76,
+    "maxPrice": 7676,
+    "minQty": 1,
+    "maxQty": 1,
+    "rarity": "very"
+  },
+  "instant_escape": {
+    "id": "instant_escape",
+    "minPrice": 42000,
+    "maxPrice": 212000,
+    "minQty": 1,
+    "maxQty": 1,
+    "rarity": "ridiculous"
+  },
+  "regen_charm": {
+    "id": "regen_charm",
+    "minPrice": 500,
+    "maxPrice": 5000,
+    "minQty": 1,
+    "maxQty": 10,
+    "rarity": "common"
+  },
+  "low_hp_potion": {
+    "id": "low_hp_potion",
+    "minPrice": 10,
+    "maxPrice": 100,
+    "minQty": 1,
+    "maxQty": 10,
+    "rarity": "common"
+  },
+  "mid_hp_potion": {
+    "id": "mid_hp_potion",
+    "minPrice": 90,
+    "maxPrice": 500,
+    "minQty": 1,
+    "maxQty": 5,
+    "rarity": "rare"
+  },
+  "high_hp_potion": {
+    "id": "high_hp_potion",
+    "minPrice": 450,
+    "maxPrice": 20000,
+    "minQty": 1,
+    "maxQty": 3,
+    "rarity": "ultra"
+  },
+  "ultra_hp_potion": {
+    "id": "ultra_hp_potion",
+    "minPrice": 18000,
+    "maxPrice": 100000,
+    "minQty": 1,
+    "maxQty": 1,
+    "rarity": "ridiculous"
+  },
+  "low_mp_potion": {
+    "id": "low_mp_potion",
+    "minPrice": 10,
+    "maxPrice": 100,
+    "minQty": 1,
+    "maxQty": 10,
+    "rarity": "common"
+  },
+  "mid_mp_potion": {
+    "id": "mid_mp_potion",
+    "minPrice": 90,
+    "maxPrice": 500,
+    "minQty": 1,
+    "maxQty": 5,
+    "rarity": "rare"
+  },
+  "high_mp_potion": {
+    "id": "high_mp_potion",
+    "minPrice": 450,
+    "maxPrice": 20000,
+    "minQty": 1,
+    "maxQty": 3,
+    "rarity": "ultra"
+  },
+  "ultra_mp_potion": {
+    "id": "ultra_mp_potion",
+    "minPrice": 18000,
+    "maxPrice": 100000,
+    "minQty": 1,
+    "maxQty": 1,
+    "rarity": "ridiculous"
+  }
+}
