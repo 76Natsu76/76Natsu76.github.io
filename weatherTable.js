@@ -6,7 +6,7 @@
 // Regions reference these keys to determine their weather pools.
 // ============================================================
 
-var weatherTable = {
+export const weatherTable = {
   clear: {
     key: "clear",
     name: "Clear Skies",
