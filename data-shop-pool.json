@@ -10,7 +10,7 @@
   "leveler": {
     "id": "leveler",
     "minPrice": 20000,
-    "maxPrice": 60000,
+    "maxPrice": 600000,
     "minQty": 1,
     "maxQty": 2,
     "rarity": "ultra"
@@ -20,12 +20,12 @@
     "minPrice": 76,
     "maxPrice": 7676,
     "minQty": 1,
-    "maxQty": 1,
+    "maxQty": 3,
     "rarity": "very"
   },
   "instant_escape": {
     "id": "instant_escape",
-    "minPrice": 42000,
+    "minPrice": 5000,
     "maxPrice": 212000,
     "minQty": 1,
     "maxQty": 1,
@@ -33,7 +33,7 @@
   },
   "regen_charm": {
     "id": "regen_charm",
-    "minPrice": 500,
+    "minPrice": 100,
     "maxPrice": 5000,
     "minQty": 1,
     "maxQty": 10,
@@ -65,7 +65,7 @@
   },
   "ultra_hp_potion": {
     "id": "ultra_hp_potion",
-    "minPrice": 18000,
+    "minPrice": 1800,
     "maxPrice": 100000,
     "minQty": 1,
     "maxQty": 1,
@@ -97,7 +97,7 @@
   },
   "ultra_mp_potion": {
     "id": "ultra_mp_potion",
-    "minPrice": 18000,
+    "minPrice": 1800,
     "maxPrice": 100000,
     "minQty": 1,
     "maxQty": 1,
