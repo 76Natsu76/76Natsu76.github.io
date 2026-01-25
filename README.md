@@ -2,8 +2,6 @@
 
 
 subrace list:
-
-				part 1
 humanoid
 elf
 dwarf
