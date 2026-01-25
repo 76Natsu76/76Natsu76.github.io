@@ -1,0 +1,464 @@
+{
+  "giant_boar": {
+    "guaranteed": [
+      "gold_pouch_small",
+      "beast_core",
+      "forest_pelt"
+    ],
+    "rare": [
+      { "item": "boar_tusk", "chance": 0.20 },
+      { "item": "wildheart_resin", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "primal_beast_essence", "chance": 0.02 }
+    ],
+    "mythic": []
+  },
+
+  "centaur_lancer": {
+    "guaranteed": [
+      "gold_pouch_small",
+      "warrior_core",
+      "plains_hide"
+    ],
+    "rare": [
+      { "item": "centaur_lance_fragment", "chance": 0.18 },
+      { "item": "sunsteel_shard", "chance": 0.08 }
+    ],
+    "ultraRare": [
+      { "item": "ancient_warlord_essence", "chance": 0.015 }
+    ],
+    "mythic": []
+  },
+
+  "minotaur": {
+    "guaranteed": [
+      "gold_pouch_medium",
+      "earth_core",
+      "cavern_stoneplate"
+    ],
+    "rare": [
+      { "item": "minotaur_horn", "chance": 0.22 },
+      { "item": "deepstone_fragment", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "labyrinth_heart", "chance": 0.02 }
+    ],
+    "mythic": []
+  },
+
+  "necromancer_adept": {
+    "guaranteed": [
+      "gold_pouch_medium",
+      "dark_core",
+      "ruined_scroll"
+    ],
+    "rare": [
+      { "item": "necrotic_shard", "chance": 0.20 },
+      { "item": "soul_dust", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "essence_of_undeath", "chance": 0.015 }
+    ],
+    "mythic": []
+  },
+
+  "banshee": {
+    "guaranteed": [
+      "gold_pouch_medium",
+      "spirit_core",
+      "swamp_mist_cloth"
+    ],
+    "rare": [
+      { "item": "banshee_wail_fragment", "chance": 0.18 },
+      { "item": "ectoplasm_glob", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "soul_echo", "chance": 0.015 }
+    ],
+    "mythic": []
+  },
+
+  "serpent_guardian": {
+    "guaranteed": [
+      "gold_pouch_medium",
+      "poison_core",
+      "desert_scale"
+    ],
+    "rare": [
+      { "item": "venom_gland", "chance": 0.20 },
+      { "item": "sandfang_shard", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "serpent_soulstone", "chance": 0.015 }
+    ],
+    "mythic": []
+  },
+
+  "hellhound": {
+    "guaranteed": [
+      "gold_pouch_medium",
+      "fire_core",
+      "charred_hide"
+    ],
+    "rare": [
+      { "item": "hellfire_ember", "chance": 0.18 },
+      { "item": "infernal_fang", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "emberheart_core", "chance": 0.015 }
+    ],
+    "mythic": []
+  },
+
+  "frost_wyrm": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "ice_core",
+      "frostscale_plate"
+    ],
+    "rare": [
+      { "item": "wyrm_frostscale", "chance": 0.20 },
+      { "item": "frozen_heart", "chance": 0.08 }
+    ],
+    "ultraRare": [
+      { "item": "essence_of_winter", "chance": 0.01 }
+    ],
+    "mythic": []
+  },
+
+  "glacier_titan": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "ice_core",
+      "glacier_fragment"
+    ],
+    "rare": [
+      { "item": "titan_iceplate", "chance": 0.18 },
+      { "item": "permafrost_crystal", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "eternal_frost_essence", "chance": 0.008 }
+    ],
+    "mythic": []
+  },
+
+  "storm_drake": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "lightning_core",
+      "stormscale"
+    ],
+    "rare": [
+      { "item": "drake_wing_fragment", "chance": 0.20 },
+      { "item": "tempest_crystal", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "stormheart", "chance": 0.01 }
+    ],
+    "mythic": []
+  },
+
+  "thunder_colossus": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "lightning_core",
+      "charged_stone"
+    ],
+    "rare": [
+      { "item": "colossus_plate", "chance": 0.18 },
+      { "item": "thunder_essence", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "storm_titan_core", "chance": 0.008 }
+    ],
+    "mythic": []
+  },
+
+  "void_reaver": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "void_core",
+      "shattered_reality_shard"
+    ],
+    "rare": [
+      { "item": "reaver_claw", "chance": 0.20 },
+      { "item": "void_residue", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "essence_of_nothing", "chance": 0.01 }
+    ],
+    "mythic": []
+  },
+
+  "abyss_watcher": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "void_core",
+      "abyssal_cloth"
+    ],
+    "rare": [
+      { "item": "watcher_blade_fragment", "chance": 0.18 },
+      { "item": "shadow_ink", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "abyssal_eye", "chance": 0.008 }
+    ],
+    "mythic": []
+  },
+
+  "void_monarch": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "void_core",
+      "monarch_crown_fragment"
+    ],
+    "rare": [
+      { "item": "void_sigil", "chance": 0.20 },
+      { "item": "monarch_ichor", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "void_singularity", "chance": 0.005 }
+    ],
+    "mythic": [
+      { "item": "crown_of_oblivion", "chance": 0.002 }
+    ]
+  },
+
+  "celestial_guardian": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "holy_core",
+      "radiant_plate"
+    ],
+    "rare": [
+      { "item": "guardian_feather", "chance": 0.20 },
+      { "item": "lightshard", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "essence_of_divinity", "chance": 0.01 }
+    ],
+    "mythic": []
+  },
+
+  "celestial_archon": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "holy_core",
+      "archon_fragment"
+    ],
+    "rare": [
+      { "item": "stellar_dust", "chance": 0.18 },
+      { "item": "radiant_core", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "astral_tear", "chance": 0.008 }
+    ],
+    "mythic": []
+  },
+
+  "celestial_radiant_tyrant": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "holy_core",
+      "tyrant_sunplate"
+    ],
+    "rare": [
+      { "item": "solar_fragment", "chance": 0.20 },
+      { "item": "radiant_ember", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "sunheart", "chance": 0.006 }
+    ],
+    "mythic": [
+      { "item": "crown_of_radiance", "chance": 0.002 }
+    ]
+  },
+
+  "nature_guardian": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "nature_core",
+      "ancient_bark"
+    ],
+    "rare": [
+      { "item": "guardian_sap", "chance": 0.20 },
+      { "item": "verdant_shard", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "essence_of_growth", "chance": 0.008 }
+    ],
+    "mythic": []
+  },
+
+  "verdant_colossus": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "nature_core",
+      "colossus_vineplate"
+    ],
+    "rare": [
+      { "item": "giant_vine", "chance": 0.18 },
+      { "item": "primordial_leaf", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "heart_of_the_grove", "chance": 0.006 }
+    ],
+    "mythic": []
+  },
+
+  "primordial_wyrm": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "arcane_core",
+      "wyrm_barkscale"
+    ],
+    "rare": [
+      { "item": "primordial_scale", "chance": 0.20 },
+      { "item": "arcane_sap", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "wyrm_essence", "chance": 0.005 }
+    ],
+    "mythic": [
+      { "item": "ancient_worldroot", "chance": 0.002 }
+    ]
+  },
+
+  "void_leviathan": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "void_core",
+      "leviathan_scale"
+    ],
+    "rare": [
+      { "item": "abyssal_fin", "chance": 0.20 },
+      { "item": "void_marrow", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "leviathan_heart", "chance": 0.006 }
+    ],
+    "mythic": []
+  },
+
+  "null_eater_sovereignling": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "void_core",
+      "sovereignling_cloth"
+    ],
+    "rare": [
+      { "item": "null_fragment", "chance": 0.18 },
+      { "item": "void_ink", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "essence_of_null", "chance": 0.005 }
+    ],
+    "mythic": []
+  },
+
+  "shadow_colossus": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "dark_core",
+      "shadow_plate"
+    ],
+    "rare": [
+      { "item": "colossus_shadow", "chance": 0.20 },
+      { "item": "umbra_crystal", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "shadowheart", "chance": 0.005 }
+    ],
+    "mythic": [
+      { "item": "crown_of_shadows", "chance": 0.002 }
+    ]
+  },
+
+  "divine_sentinel": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "holy_core",
+      "sentinel_plate"
+    ],
+    "rare": [
+      { "item": "divine_fragment", "chance": 0.18 },
+      { "item": "holy_ink", "chance": 0.10 }
+    ],
+    "ultraRare": [
+      { "item": "essence_of_judgment", "chance": 0.006 }
+    ],
+    "mythic": []
+  },
+
+  "halo_crest_archsentinel": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "holy_core",
+      "halo_fragment"
+    ],
+    "rare": [
+      { "item": "radiant_shard", "chance": 0.20 },
+      { "item": "archsentinel_plate", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "halo_core", "chance": 0.005 }
+    ],
+    "mythic": []
+  },
+
+  "divine_forged_paragon": {
+    "guaranteed": [
+      "gold_pouch_large",
+      "holy_core",
+      "paragon_plate"
+    ],
+    "rare": [
+      { "item": "divine_alloy", "chance": 0.20 },
+      { "item": "holy_sigil", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "paragon_heart", "chance": 0.005 }
+    ],
+    "mythic": [
+      { "item": "divine_crown_fragment", "chance": 0.002 }
+    ]
+  },
+
+  "apocalypse_crowned_worldrender": {
+    "guaranteed": [
+      "gold_pouch_massive",
+      "void_core",
+      "earth_core",
+      "worldrender_plate"
+    ],
+    "rare": [
+      { "item": "apocalypse_fragment", "chance": 0.20 },
+      { "item": "voidstone", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "cataclysm_heart", "chance": 0.004 }
+    ],
+    "mythic": [
+      { "item": "worldbreaker_core", "chance": 0.001 }
+    ]
+  },
+
+  "astral_sovereign": {
+    "guaranteed": [
+      "gold_pouch_massive",
+      "arcane_core",
+      "astral_plate"
+    ],
+    "rare": [
+      { "item": "astral_fragment", "chance": 0.20 },
+      { "item": "cosmic_dust", "chance": 0.12 }
+    ],
+    "ultraRare": [
+      { "item": "starheart", "chance": 0.004 }
+    ],
+    "mythic": [
+      { "item": "astral_crown", "chance": 0.001 }
+    ]
+  }
+}
