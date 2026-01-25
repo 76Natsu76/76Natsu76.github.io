@@ -1,5 +1,12 @@
 // world-tick.js
 
+/*
+ * IDEA - SEASONS WILL EXIST
+ * 1 SEASON LASTS 1 WEEK IRL
+ * A YEAR IN GAME IS 1 MONTH IRL
+ * week 1 = spring || week 2 = summer || week 3 = fall || week 4 = winter
+ */
+
 import { REGION_BIOMES, getWeatherDefinition } from "./world-simulation.js";
 
 const BIOME_WEATHER_POOLS = {
