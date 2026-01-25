@@ -2167,6 +2167,422 @@
     "topCategory": "components",
     "subCategory": "catalysts",
     "group": "catalysts"
+  },
+
+  {
+    "id": "raw_meat",
+    "name": "Raw Meat",
+    "rarity": "common",
+    "tier": 1,
+    "type": "ingredient",
+    "tags": ["cooking", "meat", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "basics",
+    "group": "basics"
+  },
+  {
+    "id": "fresh_herbs",
+    "name": "Fresh Herbs",
+    "rarity": "common",
+    "tier": 1,
+    "type": "ingredient",
+    "tags": ["cooking", "herb", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "basics",
+    "group": "basics"
+  },
+
+  {
+    "id": "sunroot",
+    "name": "Sunroot",
+    "rarity": "common",
+    "tier": 1,
+    "type": "ingredient",
+    "tags": ["cooking", "vegetable", "root", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "vegetables",
+    "group": "vegetables"
+  },
+  {
+    "id": "glowcap_mushroom",
+    "name": "Glowcap Mushroom",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "ingredient",
+    "tags": ["cooking", "mushroom", "glow", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "vegetables",
+    "group": "vegetables"
+  },
+
+  {
+    "id": "berry_cluster",
+    "name": "Berry Cluster",
+    "rarity": "common",
+    "tier": 1,
+    "type": "ingredient",
+    "tags": ["cooking", "fruit", "berry", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "fruits",
+    "group": "fruits"
+  },
+  {
+    "id": "moonfruit",
+    "name": "Moonfruit",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "ingredient",
+    "tags": ["cooking", "fruit", "moon", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "fruits",
+    "group": "fruits"
+  },
+
+  {
+    "id": "ember_pepper",
+    "name": "Ember Pepper",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "ingredient",
+    "tags": ["cooking", "fire", "pepper", "magical", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "magical",
+    "group": "magical"
+  },
+  {
+    "id": "frostberry",
+    "name": "Frostberry",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "ingredient",
+    "tags": ["cooking", "cold", "berry", "magical", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "magical",
+    "group": "magical"
+  },
+
+  {
+    "id": "eternal_nectar",
+    "name": "Eternal Nectar",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "ingredient",
+    "tags": ["cooking", "nectar", "eternal", "magical", "ingredient"],
+    "topCategory": "cooking",
+    "subCategory": "mythic",
+    "group": "mythic"
+  },
+
+  {
+    "id": "river_trout",
+    "name": "River Trout",
+    "rarity": "common",
+    "tier": 1,
+    "type": "ingredient",
+    "tags": ["fishing", "fish", "ingredient"],
+    "topCategory": "fishing",
+    "subCategory": "fish",
+    "group": "fish"
+  },
+  {
+    "id": "deepwater_carp",
+    "name": "Deepwater Carp",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "ingredient",
+    "tags": ["fishing", "fish", "deepwater", "ingredient"],
+    "topCategory": "fishing",
+    "subCategory": "fish",
+    "group": "fish"
+  },
+
+  {
+    "id": "moonlit_koi",
+    "name": "Moonlit Koi",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "ingredient",
+    "tags": ["fishing", "fish", "koi", "moon", "ingredient"],
+    "topCategory": "fishing",
+    "subCategory": "rareFish",
+    "group": "rareFish"
+  },
+  {
+    "id": "stormfin_eel",
+    "name": "Stormfin Eel",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "ingredient",
+    "tags": ["fishing", "fish", "eel", "storm", "ingredient"],
+    "topCategory": "fishing",
+    "subCategory": "rareFish",
+    "group": "rareFish"
+  },
+
+  {
+    "id": "fish_oil",
+    "name": "Fish Oil",
+    "rarity": "common",
+    "tier": 1,
+    "type": "ingredient",
+    "tags": ["fishing", "oil", "ingredient"],
+    "topCategory": "fishing",
+    "subCategory": "materials",
+    "group": "materials"
+  },
+  {
+    "id": "pearl_fragment",
+    "name": "Pearl Fragment",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["fishing", "pearl", "fragment", "material"],
+    "topCategory": "fishing",
+    "subCategory": "materials",
+    "group": "materials"
+  },
+
+  {
+    "id": "abyssal_scale",
+    "name": "Abyssal Scale",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["fishing", "abyssal", "scale", "magical", "material"],
+    "topCategory": "fishing",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+
+  {
+    "id": "metal_bolt",
+    "name": "Metal Bolt",
+    "rarity": "common",
+    "tier": 1,
+    "type": "component",
+    "tags": ["engineering", "bolt", "metal", "component"],
+    "topCategory": "engineering",
+    "subCategory": "basics",
+    "group": "basics"
+  },
+  {
+    "id": "copper_wire",
+    "name": "Copper Wire",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "component",
+    "tags": ["engineering", "wire", "copper", "component"],
+    "topCategory": "engineering",
+    "subCategory": "basics",
+    "group": "basics"
+  },
+
+  {
+    "id": "clockwork_gear",
+    "name": "Clockwork Gear",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "component",
+    "tags": ["engineering", "gear", "clockwork", "component"],
+    "topCategory": "engineering",
+    "subCategory": "mechanisms",
+    "group": "mechanisms"
+  },
+  {
+    "id": "precision_spring",
+    "name": "Precision Spring",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "component",
+    "tags": ["engineering", "spring", "precision", "component"],
+    "topCategory": "engineering",
+    "subCategory": "mechanisms",
+    "group": "mechanisms"
+  },
+
+  {
+    "id": "arcane_capacitor",
+    "name": "Arcane Capacitor",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "component",
+    "tags": ["engineering", "arcane", "capacitor", "component", "magical"],
+    "topCategory": "engineering",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+  {
+    "id": "steam_core",
+    "name": "Steam Core",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "component",
+    "tags": ["engineering", "steam", "core", "component"],
+    "topCategory": "engineering",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+
+  {
+    "id": "temporal_gear",
+    "name": "Temporal Gear",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "component",
+    "tags": ["engineering", "temporal", "gear", "anomaly", "component", "magical"],
+    "topCategory": "engineering",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+
+  {
+    "id": "quartz_shard",
+    "name": "Quartz Shard",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["gem", "quartz", "shard", "material"],
+    "topCategory": "gems",
+    "subCategory": "common",
+    "group": "common"
+  },
+  {
+    "id": "agate_stone",
+    "name": "Agate Stone",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["gem", "agate", "stone", "material"],
+    "topCategory": "gems",
+    "subCategory": "common",
+    "group": "common"
+  },
+
+  {
+    "id": "ruby_fragment",
+    "name": "Ruby Fragment",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["gem", "ruby", "fragment", "material"],
+    "topCategory": "gems",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+  {
+    "id": "sapphire_chip",
+    "name": "Sapphire Chip",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["gem", "sapphire", "chip", "material"],
+    "topCategory": "gems",
+    "subCategory": "rare",
+    "group": "rare"
+  },
+
+  {
+    "id": "emerald_core",
+    "name": "Emerald Core",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["gem", "emerald", "core", "material"],
+    "topCategory": "gems",
+    "subCategory": "epic",
+    "group": "epic"
+  },
+  {
+    "id": "topaz_heart",
+    "name": "Topaz Heart",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["gem", "topaz", "heart", "material"],
+    "topCategory": "gems",
+    "subCategory": "epic",
+    "group": "epic"
+  },
+
+  {
+    "id": "star_diamond",
+    "name": "Star Diamond",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["gem", "diamond", "star", "material", "magical"],
+    "topCategory": "gems",
+    "subCategory": "mythic",
+    "group": "mythic"
+  },
+
+  {
+    "id": "linen_cloth",
+    "name": "Linen Cloth",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["cloth", "material"],
+    "topCategory": "craftingMaterials",
+    "subCategory": "cloth",
+    "group": "cloth"
+  },
+  {
+    "id": "silk_weave",
+    "name": "Silk Weave",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["cloth", "silk", "weave", "material"],
+    "topCategory": "craftingMaterials",
+    "subCategory": "cloth",
+    "group": "cloth"
+  },
+
+  {
+    "id": "tanned_leather",
+    "name": "Tanned Leather",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["leather", "tanned", "material"],
+    "topCategory": "craftingMaterials",
+    "subCategory": "leather",
+    "group": "leather"
+  },
+  {
+    "id": "hardened_leather",
+    "name": "Hardened Leather",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["leather", "hardened", "material"],
+    "topCategory": "craftingMaterials",
+    "subCategory": "leather",
+    "group": "leather"
+  },
+
+  {
+    "id": "cloth_bolt",
+    "name": "Cloth Bolt",
+    "rarity": "common",
+    "tier": 1,
+    "type": "material",
+    "tags": ["cloth", "bolt", "material"],
+    "topCategory": "craftingMaterials",
+    "subCategory": "bolts",
+    "group": "bolts"
+  },
+  {
+    "id": "enchanted_bolt",
+    "name": "Enchanted Bolt",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["cloth", "enchanted", "bolt", "magical", "material"],
+    "topCategory": "craftingMaterials",
+    "subCategory": "bolts",
+    "group": "bolts"
   }
 ]
 
