@@ -183,7 +183,6 @@
 
   },
 
-  {
   "elf": {
 
     "high_elf": {
@@ -248,7 +247,6 @@
 
   },
 
-  {
   "dwarf": {
 
     "stone_dwarf": {
@@ -301,7 +299,6 @@
 
   },
 
-  {
   "orc": {
 
     "bloodfury_orc": {
@@ -354,7 +351,6 @@
 
   },
 
-  {
   "goblinoid": {
 
     "goblin": {
@@ -407,7 +403,6 @@
 
   },
 
-  {
   "beastkin": {
 
     "catkin": {
@@ -472,10 +467,133 @@
 
   },
 
+  "draconian": {
+
+    "fire_draconian": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 1.0, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "Draconians infused with blazing flame, excelling in fiery offense and resilience."
+    },
+
+    "frost_draconian": {
+      "growth": { "hp": 1.1, "atk": 1.1, "def": 1.2, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "Cold‑blooded draconians who wield frost magic and possess hardened scales."
+    },
+
+    "storm_draconian": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.0, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "lightning": 0.3, "wind": 0.1 },
+      "description": "Lightning‑charged draconians with incredible speed and storm‑born power."
+    },
+
+    "crystal_draconian": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.3, "speed": 1.0, "mana": 1.3 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "Arcane‑infused draconians whose crystalline scales channel pure magical energy."
+    },
+
+    "earth_draconian": {
+      "growth": { "hp": 1.3, "atk": 1.1, "def": 1.3, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "Massive draconians with stone‑like scales and unmatched physical durability."
+    },
+
+    "ember_draconian": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.1, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.2, "ash": 0.1 },
+      "description": "Ash‑touched draconians who wield smoldering flame and volcanic heat."
+    },
+
+    "void_draconian": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "void": 0.3, "dark": 0.1 },
+      "description": "Warped draconians touched by the void, gaining unstable but potent magic."
+    },
+
+    "stormscale_draconian": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.1, "speed": 1.2, "mana": 1.1 },
+      "elementAffinity": { "lightning": 0.2 },
+      "description": "Draconians with electrically charged scales that crackle with storm energy."
+    },
+
+    "sun_draconian": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.1, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "Radiant draconians empowered by solar energy and celestial flame."
+    },
+
+    "shadow_draconian": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "Stealthy draconians who manipulate shadow and strike with lethal precision."
+    }
+
+  },
+
+  "undead": {
+
+    "skeleton": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.0, "mana": 0.9 },
+      "elementAffinity": { "dark": 0.2 },
+      "description": "Reanimated bone warriors with steady physical growth and dark attunement."
+    },
+
+    "ghoul": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.0, "speed": 1.0, "mana": 0.8 },
+      "elementAffinity": { "poison": 0.2, "dark": 0.1 },
+      "description": "Ferocious undead driven by hunger, gaining toxic and darkened power."
+    },
+
+    "wraith": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.8, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": { "dark": 0.3, "arcane": 0.1 },
+      "description": "Spectral undead who drift through shadows and wield potent dark magic."
+    },
+
+    "banshee": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.8, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "dark": 0.3, "sound": 0.2 },
+      "description": "Wailing spirits whose haunting cries channel destructive spectral energy."
+    },
+
+    "death_knight": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "dark": 0.2, "frost": 0.1 },
+      "description": "Armored undead champions empowered by necrotic and frost‑tinged magic."
+    },
+
+    "mummy": {
+      "growth": { "hp": 1.2, "atk": 1.0, "def": 1.2, "speed": 0.8, "mana": 1.0 },
+      "elementAffinity": { "decay": 0.3 },
+      "description": "Ancient preserved undead wrapped in cursed bindings and desert magic."
+    },
+
+    "shade": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.8, "speed": 1.4, "mana": 1.2 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "Shadow‑formed undead who strike swiftly from darkness."
+    },
+
+    "lichling": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.0, "mana": 1.5 },
+      "elementAffinity": { "dark": 0.2, "arcane": 0.2 },
+      "description": "Lesser liches who wield potent necromantic and arcane magic."
+    },
+
+    "bone_horror": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.1, "speed": 0.8, "mana": 0.8 },
+      "elementAffinity": { "dark": 0.2 },
+      "description": "Twisted amalgamations of bone animated by powerful necrotic energy."
+    },
+
+    "spiritbound": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 0.9, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "arcane": 0.1, "dark": 0.2 },
+      "description": "Undead whose souls remain partially tethered to the mortal realm."
+    }
+
+  },
+
   
-}
-}
-}
-}
-}
 }
