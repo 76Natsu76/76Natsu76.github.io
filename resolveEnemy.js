@@ -1,4 +1,17 @@
-function resolveEnemy(raw, regionData, tier) {
+// resolveEnemy.js
+
+import { REGION_MODIFIERS } from "./world-simulation.js";
+import { PROFESSION_STAT_MODIFIERS } from "./profession-stat-modifiers.js";
+import { TAG_MODIFIERS, applyTagModifiers } from "./tag-modifiers.js";
+import { ELEMENT_MATRIX, applyElementalDamage } from "./element-helpers.js";
+import { RARITY_MULTIPLIERS } from "./rarity-multipliers.js";
+import { ENEMY_FAMILIES } from "./enemy-families.js";
+import { ENEMY_VARIANTS } from "./enemy-variants.js";
+import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
+import { ENEMY_ULTIMATES } from "./enemy-ultimates.js";
+import { chooseBossActionV3, chooseEnemyActionV3 } from "./enemy-ai.js";
+
+export function resolveEnemy(raw, regionKey, tier) {
   const familyId = raw.family || "unknown";
   const family = ENEMY_FAMILIES[familyId] || {};
   const famMods = family.familyModifiers || {};
@@ -9,8 +22,13 @@ function resolveEnemy(raw, regionData, tier) {
   const v = variant ? ENEMY_VARIANTS[variant] : null;
   const prof = raw.profession || null;
   const profStats = prof && PROFESSION_STAT_MODIFIERS[prof] ? PROFESSION_STAT_MODIFIERS[prof] : {};
-  const region = raw.region || null;
-  const regionMods = region && REGION_MODIFIERS[region] ? REGION_MODIFIERS[region] : {};
+  const regionMods = REGION_MODIFIERS[regionKey] || {
+    hpMult: 1,
+    atkMult: 1,
+    defMult: 1,
+    speedMult: 1,
+    elementAffinity: {}
+  };
   const level = raw.level || 1;
 
   let hpMax = raw.baseHP || 1;
@@ -41,14 +59,11 @@ function resolveEnemy(raw, regionData, tier) {
   if (regionMods.defMult) def = Math.floor(def * regionMods.defMult);
   if (regionMods.speedMult) speed = Math.floor(speed * regionMods.speedMult);
 
-  if (tags.includes("elite")) { hpMax = Math.floor(hpMax * 1.25); atk = Math.floor(atk * 1.15); def = Math.floor(def * 1.15); }
-  if (tags.includes("miniboss")) { hpMax = Math.floor(hpMax * 1.5); atk = Math.floor(atk * 1.25); def = Math.floor(def * 1.25); }
-  if (tags.includes("boss")) { hpMax = Math.floor(hpMax * 2); atk = Math.floor(atk * 1.5); def = Math.floor(def * 1.5); }
-  if (tags.includes("armored")) def = Math.floor(def * 1.3);
-  if (tags.includes("flying")) speed = Math.floor(speed * 1.3);
-  if (tags.includes("spectral")) def = Math.floor(def * 0.7);
-  if (tags.includes("giant")) hpMax = Math.floor(hpMax * 1.4);
-  if (tags.includes("swarm")) atk = Math.floor(atk * 0.8);
+  const tagged = applyTagModifiers({ hpMax, atk, def, speed }, tags);
+  hpMax = tagged.hpMax;
+  atk = tagged.atk;
+  def = tagged.def;
+  speed = tagged.speed;
 
   hpMax = Math.floor(hpMax * (1 + level * 0.08));
   atk = Math.floor(atk * (1 + level * 0.06));
@@ -68,7 +83,7 @@ function resolveEnemy(raw, regionData, tier) {
     key: raw.key || raw.name,
     name: raw.name || raw.key,
     family: familyId,
-    region,
+    region: regionKey || raw.region || null,
     tier,
     rarity,
     profession: prof,
@@ -97,7 +112,7 @@ function resolveEnemy(raw, regionData, tier) {
       playerCCsApplied: 0
     },
     lootContext: {
-      region,
+      region: regionKey || raw.region || null,
       rarity,
       family: familyId,
       profession: prof,
