@@ -152,7 +152,10 @@
   </div>
 
   <script type="module">
-    import { initUserShopUI, promptForToken } from "./shop-ui.js";
+    import { initUserShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
+
+    initUserShopUI();
+    startShopCountdown("dailyShopTimer");
 
     const username = sessionStorage.getItem("twitch_username");
     document.getElementById("usernameDisplay").textContent =
