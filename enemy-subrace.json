@@ -1,0 +1,1010 @@
+{
+  "abyss_forged_harrower": {
+    "subrace": "abyssal_brute",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Abyss‑forged harrower fits abyssal_brute; warrior matches brutal melee archetype"
+  },
+  "abyss_forged_wraithknight": {
+    "subrace": "wraith",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Abyss‑forged spectral knight fits wraith; warrior role matches armored undead"
+  },
+  "abyss_gnawed_shadehound": {
+    "subrace": "shadehound",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Shadehound variant corrupted by abyss; warrior fits feral melee archetype"
+  },
+  "abyssal_bonecarver": {
+    "subrace": "abyssal_brute",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Abyssal bone‑carving brute fits abyssal_brute; warrior role matches"
+  },
+  "abyssal_brute": {
+    "subrace": "abyssal_brute",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Direct match to abyssal_brute subrace"
+  },
+  "abyssal_crown_devourer": {
+    "subrace": "abyssal_brute",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Abyssal crown‑devouring monstrosity fits abyssal_brute; warrior matches brutal melee"
+  },
+  "aether_crowned_hexbinder": {
+    "subrace": "astral_entity",
+    "profession": "warlock",
+    "element": "arcane",
+    "notes": "Aether‑crowned hex mage aligns with astral_entity; warlock fits hexbinding magic"
+  },
+  "alpha_mastiff": {
+    "subrace": "dogkin",
+    "profession": "warrior",
+    "element": "normal",
+    "notes": "Large canine → dogkin; alpha implies warrior role"
+  },
+  "ancient_bark_titan": {
+    "subrace": "verdant_colossus",
+    "profession": "guardian",
+    "element": "nature",
+    "notes": "Ancient bark‑covered titan fits verdant_colossus; guardian role matches"
+  },
+  "angel": {
+    "subrace": "seraph",
+    "profession": "guardian",
+    "element": "light",
+    "notes": "Angel aligns with seraph; guardian role fits holy protector archetype"
+  },
+  "arc_bound_sentinel": {
+    "subrace": "sentinel",
+    "profession": "guardian",
+    "element": "arcane",
+    "notes": "Arc‑bound construct directly aligns with sentinel; arcane guardian archetype"
+  },
+  "arcane_bloom_student": {
+    "subrace": "fae",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Arcane‑bloom student fits fae; caster matches magical botanical studies"
+  },
+  "arcane_chimera": {
+    "subrace": "chimera",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Arcane variant of chimera; caster role fits magical hybrid"
+  },
+  "arcane_phoenix": {
+    "subrace": "phoenix",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Arcane variant of phoenix; caster role fits magical rebirth archetype"
+  },
+  "arcane_pulse_serpent": {
+    "subrace": "arcane_serpent",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Arcane serpent variant; caster fits magical pulse attacks"
+  },
+  "archer_rogue": {
+    "subrace": "catkin",
+    "profession": "rogue",
+    "element": "normal",
+    "notes": "Agile archer archetype fits catkin mobility; rogue from name"
+  },
+  "ash_marked": {
+    "subrace": "fiery",
+    "profession": "warrior",
+    "element": "fire",
+    "notes": "Ash‑marked variant; fiery theme"
+  },
+  "assassin_shade": {
+    "subrace": "shadehound",
+    "profession": "assassin",
+    "element": "dark",
+    "notes": "Shadow assassin archetype aligns with shadehound subrace"
+  },
+  "astral_chimera": {
+    "subrace": "chimera",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Astral variant of chimera; chimera subrace; arcane element fits astral magic"
+  },
+  "astral_sovereign": {
+    "subrace": "astral_entity",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Astral sovereign aligns with astral_entity; caster fits cosmic magic"
+  },
+  "astral_thread_weaver": {
+    "subrace": "astral_entity",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Astral weaving magic fits astral_entity; caster role matches arcane manipulation"
+  },
+  "astral_veined_oracle": {
+    "subrace": "astral_entity",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Astral‑veined oracle aligns with astral_entity; caster fits prophetic magic"
+  },
+  "bandit": {
+    "subrace": "banditfolk",
+    "profession": "rogue",
+    "element": "none",
+    "notes": "Human bandit archetype"
+  },
+  "bandit_captain": {
+    "subrace": "banditfolk",
+    "profession": "warrior",
+    "element": "none",
+    "notes": "Leader of bandits"
+  },
+  "banished_hex_caller": {
+    "subrace": "occultborn",
+    "profession": "warlock",
+    "element": "dark",
+    "notes": "Banished hex‑slinger; occultborn fits cursed caster archetype"
+  },
+  "barbarian": {
+    "subrace": "tribalborn",
+    "profession": "warrior",
+    "element": "none",
+    "notes": "Savage tribal warrior"
+  },
+  "banshee": {
+    "subrace": "banshee",
+    "profession": "caster",
+    "element": "dark",
+    "notes": "Direct match to banshee subrace; caster inferred from spectral abilities"
+  },
+  "bloom_crowned_archdruid": {
+    "subrace": "druidling",
+    "profession": "druid",
+    "element": "nature",
+    "notes": "Bloom‑crowned archdruid fits druidling; druid role explicit"
+  },
+  "bramble_hide_ravager": {
+    "subrace": "grove_warden",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Bramble‑armored beast fits grove_warden; ravager implies warrior"
+  },
+  "cataclysmic_strike": {
+    "subrace": "boss",
+    "profession": "warrior",
+    "element": "normal",
+    "notes": "Boss ultimate"
+  },
+  "centaur_lancer": {
+    "subrace": "centaur",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Mounted lancer fits centaur perfectly"
+  },
+  "chaos_spiral_sovereign": {
+    "subrace": "astral_entity",
+    "profession": "caster",
+    "element": "chaos",
+    "notes": "Chaos‑spiral cosmic sovereign fits astral_entity; caster matches chaotic magic"
+  },
+  "chaos_wyrm": {
+    "subrace": "wyrm",
+    "profession": "caster",
+    "element": "chaos",
+    "notes": "Wyrm subrace; chaos theme implies unstable magic; caster role fits"
+  },
+  "chrono_fractured_adept": {
+    "subrace": "astral_entity",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Chrono‑fractured time mage aligns with astral_entity; caster fits time magic"
+  },
+  "chrono_shattered_warden": {
+    "subrace": "astral_entity",
+    "profession": "guardian",
+    "element": "arcane",
+    "notes": "Chrono‑shattered time guardian aligns with astral_entity; guardian fits temporal defense"
+  },
+  "corrosive_slime": {
+    "subrace": "corrosive_slime",
+    "profession": "mage",
+    "element": "acid",
+    "notes": "Direct match to corrosive_slime subrace; acid from spreadsheet"
+  },
+  "cosmic_crowned_terminarch": {
+    "subrace": "astral_entity",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Cosmic terminarch aligns with astral_entity; caster fits cosmic annihilation magic"
+  },
+  "cult_novice": {
+    "subrace": "occultborn",
+    "profession": "warlock",
+    "element": "dark",
+    "notes": "Entry‑level cultist"
+  },
+  "deepstone_foreman": {
+    "subrace": "mountain_dwarf",
+    "profession": "miner",
+    "element": "earth",
+    "notes": "Foreman of stone/earth → dwarven miner archetype"
+  },
+  "demigod": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Demigod aligns closest with celestial seraphic lineage; caster fits divine magic"
+  },
+  "demon": {
+    "subrace": "lesser_demon",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Generic demon → lesser_demon as closest canonical subrace"
+  },
+  "demon_knight": {
+    "subrace": "abyssal_brute",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Demonic knight aligns with abyssal_brute; warrior role fits armored melee demon"
+  },
+  "dire_wolf": {
+    "subrace": "wolfkin",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Dire wolf → stronger wolfkin variant; nature element fits"
+  },
+  "divine_forged_paragon": {
+    "subrace": "seraph",
+    "profession": "guardian",
+    "element": "light",
+    "notes": "Divine‑forged paragon fits seraph; guardian matches exalted protector archetype"
+  },
+  "divine_sentinel": {
+    "subrace": "seraph",
+    "profession": "guardian",
+    "element": "light",
+    "notes": "Divine guardian aligns with seraph; guardian role fits holy protector archetype"
+  },
+  "divine_touched_arbiter": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Divine‑touched arbiter aligns with seraph; caster fits holy judgment magic"
+  },
+  "dogkin": {
+    "subrace": "dogkin",
+    "profession": "warrior",
+    "element": "normal",
+    "notes": "Generic dogkin"
+  },
+  "druid_of_storms": {
+    "subrace": "druidling",
+    "profession": "druid",
+    "element": "storm",
+    "notes": "Storm‑aligned druid → druidling subrace with storm element"
+  },
+  "elder_thorn_reaver": {
+    "subrace": "thornborn",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Elder thorn‑covered reaver fits thornborn; warrior role matches savage melee"
+  },
+  "elemental": {
+    "subrace": "elemental",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Generic elemental"
+  },
+  "eternal_light_sovereign": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Eternal sovereign of light aligns with seraph; caster fits radiant mastery"
+  },
+  "eternal_rift_warden": {
+    "subrace": "voidborn",
+    "profession": "guardian",
+    "element": "void",
+    "notes": "Eternal rift guardian aligns with voidborn; guardian role fits dimensional protector"
+  },
+  "ethereal_tidecaller": {
+    "subrace": "tidecaller",
+    "profession": "caster",
+    "element": "water",
+    "notes": "Ethereal + tidecaller theme aligns with water‑element caster"
+  },
+  "feral_tracker": {
+    "subrace": "dogkin",
+    "profession": "hunter",
+    "element": "earth",
+    "notes": "Tracker → canine hunter; earth from spreadsheet"
+  },
+  "fire_dragon": {
+    "subrace": "dragon",
+    "profession": "warrior",
+    "element": "fire",
+    "notes": "Fire‑aligned dragon; dragon subrace fits; warrior role matches melee/breath hybrid"
+  },
+  "fire_elemental": {
+    "subrace": "fire_elemental",
+    "profession": "caster",
+    "element": "fire",
+    "notes": "Direct elemental subtype"
+  },
+  "funny_sthreeven_man": {
+    "subrace": "chaosling",
+    "profession": "trickster",
+    "element": "chaos",
+    "notes": "Chaotic anomaly"
+  },
+  "ghoul": {
+    "subrace": "ghoul",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Direct match to ghoul subrace; melee undead behavior"
+  },
+  "giant_boar": {
+    "subrace": "boarkin",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Boar → boarkin subrace; warrior inferred from charging melee behavior"
+  },
+  "giant_rat": {
+    "subrace": "ratkin",
+    "profession": "rogue",
+    "element": "poison",
+    "notes": "Ratkin variant; rogue fits skittering ambush behavior"
+  },
+  "giant_spider": {
+    "subrace": "arachnid",
+    "profession": "rogue",
+    "element": "poison",
+    "notes": "Spider fits arachnid; rogue matches ambush predator"
+  },
+  "glacier_titan": {
+    "subrace": "frost_titan",
+    "profession": "guardian",
+    "element": "ice",
+    "notes": "Glacier theme aligns with frost_titan; guardian role fits colossal ice entity"
+  },
+  "goblin": {
+    "subrace": "goblin",
+    "profession": "warrior",
+    "element": "normal",
+    "notes": "Direct match to goblin subrace; warrior from spreadsheet"
+  },
+  "grand_occultist": {
+    "subrace": "occultborn",
+    "profession": "warlock",
+    "element": "dark",
+    "notes": "High‑ranking occult mage"
+  },
+  "grimhollow_reaperling": {
+    "subrace": "wraith",
+    "profession": "rogue",
+    "element": "dark",
+    "notes": "Reaperling fits wraith‑like undead; rogue fits small, swift reaper archetype"
+  },
+  "grove_heart_oracle": {
+    "subrace": "grove_warden",
+    "profession": "caster",
+    "element": "nature",
+    "notes": "Grove‑heart oracle fits grove_warden; caster role matches nature prophecy"
+  },
+  "grove_warden_shaman": {
+    "subrace": "grove_warden",
+    "profession": "shaman",
+    "element": "nature",
+    "notes": "Direct grove_warden identity; shaman role explicit"
+  },
+  "hellhound": {
+    "subrace": "hellhound",
+    "profession": "warrior",
+    "element": "fire",
+    "notes": "Direct match to hellhound subrace; fire element fits infernal beast"
+  },
+  "hobgoblin": {
+    "subrace": "hobgoblin",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Direct match to hobgoblin subrace; dark from spreadsheet"
+  },
+  "hollowbone_stalker": {
+    "subrace": "skeleton",
+    "profession": "rogue",
+    "element": "dark",
+    "notes": "Hollowbone suggests skeletal; stalker implies rogue; dark element fits undead"
+  },
+  "hornet_swarm": {
+    "subrace": "swarmborn",
+    "profession": "warrior",
+    "element": "poison",
+    "notes": "Hive swarm fits swarmborn; warrior fits aggressive stinging mass"
+  },
+  "hydra": {
+    "subrace": "hydra",
+    "profession": "warrior",
+    "element": "water",
+    "notes": "Hydra subrace; warrior fits multi‑headed brute archetype"
+  },
+  "ice_dragon": {
+    "subrace": "dragon",
+    "profession": "caster",
+    "element": "ice",
+    "notes": "Ice dragon; dragon subrace; caster fits frost breath archetype"
+  },
+    "ice_elemental": {
+    "subrace": "ice_elemental",
+    "profession": "caster",
+    "element": "ice",
+    "notes": "Frost elemental subtype"
+  },
+  "imp_warlock": {
+    "subrace": "lesser_demon",
+    "profession": "warlock",
+    "element": "dark",
+    "notes": "Imp fits lesser_demon; warlock from name; dark element matches infernal magic"
+  },
+  "infernal_archlord": {
+    "subrace": "abyssal_brute",
+    "profession": "warlock",
+    "element": "fire",
+    "notes": "Infernal overlord fits abyssal_brute; fire element matches infernal theme"
+  },
+  "iron_colossus": {
+    "subrace": "iron_colossus",
+    "profession": "guardian",
+    "element": "metal",
+    "notes": "Direct match to iron_colossus subrace"
+  },
+  "kobold": {
+    "subrace": "kobold",
+    "profession": "warrior",
+    "element": "earth",
+    "notes": "Direct match to kobold subrace; earth from spreadsheet"
+  },
+  "light_dragon": {
+    "subrace": "dragon",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Light‑aligned dragon; dragon subrace; caster fits radiant breath archetype"
+  },
+  "light_forged_crusader": {
+    "subrace": "seraph",
+    "profession": "warrior",
+    "element": "light",
+    "notes": "Holy crusader forged of light aligns with seraph; warrior role fits"
+  },
+  "lightning_dragon": {
+    "subrace": "dragon",
+    "profession": "caster",
+    "element": "storm",
+    "notes": "Lightning → storm element; dragon subrace; caster fits storm breath archetype"
+  },
+  "lightning_elemental": {
+    "subrace": "lightning_elemental",
+    "profession": "caster",
+    "element": "storm",
+    "notes": "Storm‑aligned elemental"
+  },
+  "luminous_ascendant": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Luminous ascendant fits seraph; caster role matches radiant ascension magic"
+  },
+  "mana_crested_riftlord": {
+    "subrace": "voidborn",
+    "profession": "caster",
+    "element": "void",
+    "notes": "Riftlord strongly implies voidborn; mana‑crested suggests arcane‑void caster"
+  },
+  "mana_starved_riftspawn": {
+    "subrace": "voidborn",
+    "profession": "warrior",
+    "element": "void",
+    "notes": "Riftspawn implies voidborn; mana‑starved suggests feral void warrior"
+  },
+  "magma_serpent": {
+    "subrace": "lava_serpent",
+    "profession": "warrior",
+    "element": "fire",
+    "notes": "Molten serpent; warrior fits aggressive melee lunges"
+  },
+  "metal_golem": {
+    "subrace": "iron_colossus",
+    "profession": "guardian",
+    "element": "metal",
+    "notes": "Metal golem → construct; iron_colossus is closest canonical subrace"
+  },
+  "minotaur": {
+    "subrace": "minotaur",
+    "profession": "warrior",
+    "element": "earth",
+    "notes": "Classic minotaur brute"
+  },
+  "monk_disciple": {
+    "subrace": "monastic",
+    "profession": "monk",
+    "element": "none",
+    "notes": "Human monastic trainee"
+  },
+  "molten_behemoth": {
+    "subrace": "lava_behemoth",
+    "profession": "warrior",
+    "element": "fire",
+    "notes": "Molten/lava theme aligns with lava_behemoth; warrior role fits destructive brute"
+  },
+  "nature_colossus": {
+    "subrace": "verdant_colossus",
+    "profession": "guardian",
+    "element": "nature",
+    "notes": "Nature‑aligned giant matches verdant_colossus; guardian role fits"
+  },
+  "nature_guardian": {
+    "subrace": "grove_warden",
+    "profession": "guardian",
+    "element": "nature",
+    "notes": "Nature guardian aligns with grove_warden plant‑guardian archetype"
+  },
+  "necromancer_adept": {
+    "subrace": "occultborn",
+    "profession": "necromancer",
+    "element": "dark",
+    "notes": "Occultborn necromancer"
+  },
+  "nullborn_ravager": {
+    "subrace": "voidborn",
+    "profession": "warrior",
+    "element": "void",
+    "notes": "Nullborn = voidborn; ravager implies warrior; void element fits perfectly"
+  },
+  "nullborn_rift_prophet": {
+    "subrace": "voidborn",
+    "profession": "caster",
+    "element": "void",
+    "notes": "Nullborn prophet aligns with voidborn; caster fits prophetic void magic"
+  },
+  "null_crowned_riftbeast": {
+    "subrace": "voidborn",
+    "profession": "warrior",
+    "element": "void",
+    "notes": "Null‑crowned rift creature aligns with voidborn; warrior fits feral void beast"
+  },
+  "null_eater_sovereignling": {
+    "subrace": "voidborn",
+    "profession": "caster",
+    "element": "void",
+    "notes": "Null‑eater implies voidborn; sovereignling suggests elevated void caster"
+  },
+  "null_eclipse_archfiend": {
+    "subrace": "voidborn",
+    "profession": "warlock",
+    "element": "void",
+    "notes": "Null‑eclipse archfiend aligns with voidborn; warlock fits void‑fiend magic"
+  },
+  "obsidian_world_breaker": {
+    "subrace": "worldrender",
+    "profession": "warrior",
+    "element": "earth",
+    "notes": "Obsidian world‑breaking titan fits worldrender; warrior role matches destructive force"
+  },
+  "orc": {
+    "subrace": "blood_orc",
+    "profession": "warrior",
+    "element": "normal",
+    "notes": "Generic orc → blood_orc as closest canonical subrace"
+  },
+  "orebreaker": {
+    "subrace": "mountain_dwarf",
+    "profession": "miner",
+    "element": "earth",
+    "notes": "Orebreaker implies dwarven miner archetype; earth element fits mining theme"
+  },
+  "paladin_initiate": {
+    "subrace": "holyborn",
+    "profession": "paladin",
+    "element": "light",
+    "notes": "Holyborn paladin trainee"
+  },
+  "plague_slime": {
+    "subrace": "poison_slime",
+    "profession": "mage",
+    "element": "poison",
+    "notes": "Poison‑infused slime variant"
+  },
+  "plink": {
+    "subrace": "chaosling",
+    "profession": "trickster",
+    "element": "chaos",
+    "notes": "Unpredictable chaos creature"
+  },
+  "plink_of_the_seventh_dimension": {
+    "subrace": "chaosling",
+    "profession": "trickster",
+    "element": "chaos",
+    "notes": "Unpredictable chaos creature, but multidimensional"
+  },
+  "poison_elemental": {
+    "subrace": "poison_elemental",
+    "profession": "warlock",
+    "element": "poison",
+    "notes": "Toxic magical entity"
+  },
+  "primordial_wyrm": {
+    "subrace": "wyrm",
+    "profession": "caster",
+    "element": "earth",
+    "notes": "Primordial theme suggests ancient earth magic; wyrm subrace fits"
+  },
+  "primeval_hornbeast": {
+    "subrace": "beastkin",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Primeval horned beast; beastkin is closest; warrior fits feral melee archetype"
+  },
+  "primeval_rootshaper": {
+    "subrace": "grove_warden",
+    "profession": "caster",
+    "element": "nature",
+    "notes": "Root‑shaping ancient druid fits grove_warden; caster role matches nature shaping"
+  },
+  "radiant_choir_seraphling": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Radiant choir seraphling fits seraph; caster role matches holy song magic"
+  },
+  "radiant_dawnstrider": {
+    "subrace": "seraph",
+    "profession": "warrior",
+    "element": "light",
+    "notes": "Radiant dawn theme fits seraph; strider implies holy warrior"
+  },
+  "ranger_scout": {
+    "subrace": "rangerborn",
+    "profession": "ranger",
+    "element": "nature",
+    "notes": "Human ranger archetype"
+  },
+  "rift_wrought_golem": {
+    "subrace": "iron_colossus",
+    "profession": "guardian",
+    "element": "void",
+    "notes": "Golem shaped by rifts; iron_colossus is closest construct; void element fits"
+  },
+  "root_bound_sentinel": {
+    "subrace": "grove_warden",
+    "profession": "guardian",
+    "element": "nature",
+    "notes": "Root‑bound guardian aligns with grove_warden; guardian role fits plant defender"
+  },
+  "rot_swollen": {
+    "subrace": "poisonous",
+    "profession": "warrior",
+    "element": "poison",
+    "notes": "Rot‑swollen variant; poison theme"
+  },
+  "royal_slime": {
+    "subrace": "royal_slime",
+    "profession": "mage",
+    "element": "poison",
+    "notes": "Direct match to royal_slime subrace; poison from spreadsheet"
+  },
+  "satyr_trickster": {
+    "subrace": "satyr",
+    "profession": "rogue",
+    "element": "nature",
+    "notes": "Satyr subrace; trickster implies rogue profession"
+  },
+  "seraphic_acolyte": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Seraphic acolyte aligns with seraph; caster fits holy apprentice archetype"
+  },
+  "seraphic_dawn_warden": {
+    "subrace": "seraph",
+    "profession": "guardian",
+    "element": "light",
+    "notes": "Seraphic dawn warden fits seraph; guardian role matches holy protector"
+  },
+  "serpent_guardian": {
+    "subrace": "serpentkin",
+    "profession": "guardian",
+    "element": "nature",
+    "notes": "Serpent guardian fits serpentkin; guardian role matches protective stance"
+  },
+  "shadow_colossus": {
+    "subrace": "shadow_titan",
+    "profession": "guardian",
+    "element": "dark",
+    "notes": "Shadow‑aligned giant; shadow_titan is the closest canonical subrace"
+  },
+  "shadow_marked_outrider": {
+    "subrace": "shadehound",
+    "profession": "rogue",
+    "element": "dark",
+    "notes": "Shadow‑marked theme aligns with shadehound; outrider implies rogue mobility"
+  },
+  "shadow_step_initiate": {
+    "subrace": "shadehound",
+    "profession": "rogue",
+    "element": "dark",
+    "notes": "Shadow‑step theme aligns with shadehound; rogue inferred from stealth archetype"
+  },
+  "shaman_of_thorns": {
+    "subrace": "thornborn",
+    "profession": "shaman",
+    "element": "nature",
+    "notes": "Thorn‑themed caster aligns perfectly with thornborn subrace"
+  },
+  "sigil_binder": {
+    "subrace": "occultborn",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Arcane ritualist"
+  },
+  "skeleton": {
+    "subrace": "skeleton",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Direct match to skeleton subrace; warrior from spreadsheet"
+  },
+  "skeleton_archer": {
+    "subrace": "skeleton",
+    "profession": "archer",
+    "element": "dark",
+    "notes": "Skeleton subrace; archer from name; dark element"
+  },
+  "slime": {
+    "subrace": "slime",
+    "profession": "warrior",
+    "element": "water",
+    "notes": "Baseline slime; warrior fits simple melee pseudopod attacks"
+  },
+  "soul_husk_devourer": {
+    "subrace": "voidborn",
+    "profession": "warrior",
+    "element": "void",
+    "notes": "Soul‑devouring void creature fits voidborn; warrior role matches feral devourer"
+  },
+  "spirit_channeler": {
+    "subrace": "spirit_medium",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Medium who channels spirits"
+  },
+  "spell_eater_homunculus": {
+    "subrace": "homunculus",
+    "profession": "warlock",
+    "element": "arcane",
+    "notes": "Spell‑eating construct aligns with homunculus; warlock fits magic‑draining archetype"
+  },
+  "spell_riven_archonling": {
+    "subrace": "astral_entity",
+    "profession": "caster",
+    "element": "arcane",
+    "notes": "Spell‑riven archonling fits astral_entity; caster role matches arcane mastery"
+  },
+  "spellforged_myrmidon": {
+    "subrace": "sentinel",
+    "profession": "warrior",
+    "element": "arcane",
+    "notes": "Spellforged construct aligns with sentinel; myrmidon implies arcane warrior"
+  },
+  "sticky_slime": {
+    "subrace": "sticky_slime",
+    "profession": "mage",
+    "element": "poison",
+    "notes": "Direct match to sticky_slime subrace"
+  },
+  "storm_crowned_tempestling": {
+    "subrace": "storm_elf",
+    "profession": "caster",
+    "element": "storm",
+    "notes": "Storm‑crowned theme aligns with storm_elf; caster role fits tempest archetype"
+  },
+  "storm_drake": {
+    "subrace": "drake",
+    "profession": "warrior",
+    "element": "storm",
+    "notes": "Drake subrace; storm theme gives lightning/storm element"
+  },
+  "storm_sovereign": {
+    "subrace": "storm_titan",
+    "profession": "caster",
+    "element": "storm",
+    "notes": "Sovereign storm entity aligns with storm_titan; caster fits tempest mastery"
+  },
+  "storm_titan": {
+    "subrace": "storm_titan",
+    "profession": "guardian",
+    "element": "storm",
+    "notes": "Direct match to storm_titan subrace"
+  },
+  "stray_hound": {
+    "subrace": "dogkin",
+    "profession": "warrior",
+    "element": "normal",
+    "notes": "Hound → dogkin; warrior inferred from melee beast behavior"
+  },
+  "sun_blessed_herald": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Sun‑blessed herald aligns with seraph; caster fits radiant messenger archetype"
+  },
+  "sunflare_archon": {
+    "subrace": "seraph",
+    "profession": "caster",
+    "element": "light",
+    "notes": "Sunflare archon aligns with seraph; caster fits radiant archon magic"
+  },
+  "sylvan_apex_behemoth": {
+    "subrace": "verdant_colossus",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Apex sylvan behemoth fits verdant_colossus; warrior matches colossal predator"
+  },
+  "sylvan_mooncaller": {
+    "subrace": "fae",
+    "profession": "caster",
+    "element": "nature",
+    "notes": "Sylvan moon‑calling fae fits fae subrace; caster role matches lunar nature magic"
+  },
+  "tide_forged_leviathan": {
+    "subrace": "leviathan",
+    "profession": "warrior",
+    "element": "water",
+    "notes": "Tide‑forged sea titan fits leviathan; warrior matches aquatic brute archetype"
+  },
+  "tiger_warrior": {
+    "subrace": "tigerkin",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Tiger → tigerkin subrace; warrior from name"
+  },
+  "tiny_slime": {
+    "subrace": "tiny_slime",
+    "profession": "mage",
+    "element": "poison",
+    "notes": "Direct match to tiny_slime subrace; slime profession inferred from type"
+  },
+  "titan_blooded_ruinshaper": {
+    "subrace": "worldrender",
+    "profession": "caster",
+    "element": "earth",
+    "notes": "Titan‑blooded ruin mage fits worldrender; caster matches earth‑shaping magic"
+  },
+  "titan_of_ruin": {
+    "subrace": "titan",
+    "profession": "warrior",
+    "element": "void-earth",
+    "notes": "Titan of Destruction, song of the Void God"
+  },
+  "tunnel_delver": {
+    "subrace": "mountain_dwarf",
+    "profession": "miner",
+    "element": "earth",
+    "notes": "Delver/miner strongly aligns with dwarven subrace; earth from spreadsheet"
+  },
+  "umbral_rift_howler": {
+    "subrace": "shadehound",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Umbral rift‑tainted beast fits shadehound; warrior fits feral howler archetype"
+  },
+  "umbral_skitterfiend": {
+    "subrace": "shadehound",
+    "profession": "rogue",
+    "element": "dark",
+    "notes": "Umbral + skittering predator aligns with shadehound; rogue fits ambush behavior"
+  },
+  "undead": {
+    "subrace": "undead",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Generic undead archetype"
+  },
+  "void_god": {
+    "subrace": "voidborn",
+    "profession": "caster",
+    "element": "void",
+    "notes": "Void deity aligns with voidborn; caster fits cosmic void magic"
+  },
+  "void_leviathan": {
+    "subrace": "voidborn",
+    "profession": "warrior",
+    "element": "void",
+    "notes": "Massive void entity; voidborn is canonical subrace"
+  },
+  "void_monarch": {
+    "subrace": "voidborn",
+    "profession": "caster",
+    "element": "void",
+    "notes": "Void monarch fits voidborn perfectly; caster role matches void magic"
+  },
+  "void_reaver": {
+    "subrace": "voidborn",
+    "profession": "warrior",
+    "element": "void",
+    "notes": "Void‑aligned melee entity; voidborn is the canonical subrace"
+  },
+  "void_sundered_reaver": {
+    "subrace": "voidborn",
+    "profession": "warrior",
+    "element": "void",
+    "notes": "Void‑sundered reaver fits voidborn; warrior matches aggressive void melee"
+  },
+  "warlock_cultist": {
+    "subrace": "occultborn",
+    "profession": "warlock",
+    "element": "dark",
+    "notes": "Occultborn warlock"
+  },
+  "warpbound_soulrender": {
+    "subrace": "voidborn",
+    "profession": "warlock",
+    "element": "void",
+    "notes": "Warped soul‑eating entity aligns with voidborn; warlock fits soul magic"
+  },
+  "warped_soulrender": {
+    "subrace": "voidborn",
+    "profession": "warlock",
+    "element": "void",
+    "notes": "Warped soul‑eating entity aligns with voidborn; warlock fits soul magic"
+  },
+  "water_dragon": {
+    "subrace": "dragon",
+    "profession": "caster",
+    "element": "water",
+    "notes": "Water dragons often lean caster; dragon subrace; water element from theme"
+  },
+  "water_elemental": {
+    "subrace": "water_elemental",
+    "profession": "caster",
+    "element": "water",
+    "notes": "Direct elemental subtype"
+  },
+  "wind_dragon": {
+    "subrace": "dragon",
+    "profession": "warrior",
+    "element": "wind",
+    "notes": "Wind/air dragon; dragon subrace; warrior fits agile aerial combat"
+  },
+  "wind_elemental": {
+    "subrace": "wind_elemental",
+    "profession": "rogue",
+    "element": "wind",
+    "notes": "Wind elementals are swift and evasive"
+  },
+  "witch_apprentice": {
+    "subrace": "occultborn",
+    "profession": "caster",
+    "element": "dark",
+    "notes": "Occultborn witch"
+  },
+  "wolf": {
+    "subrace": "wolfkin",
+    "profession": "warrior",
+    "element": "nature",
+    "notes": "Wolf → beastfolk canine; warrior inferred from melee predator behavior"
+  },
+  "world_titan": {
+    "subrace": "worldrender",
+    "profession": "guardian",
+    "element": "earth",
+    "notes": "World‑shaping titan aligns with worldrender; guardian fits colossal defender"
+  },
+  "zombie": {
+    "subrace": "zombie",
+    "profession": "warrior",
+    "element": "dark",
+    "notes": "Direct match to zombie subrace; warrior inferred from melee undead behavior"
+  }
+}
