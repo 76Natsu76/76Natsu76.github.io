@@ -1,0 +1,272 @@
+{
+  // ============================================================
+  // RACE DEFINITIONS (Jan 2026)
+  // ------------------------------------------------------------
+  // These define:
+  // - Race identity & description
+  // - Base stat multipliers
+  // - Elemental affinities
+  // - Allowed / restricted weapon tags
+  // - Notes for subrace groupings
+  // ============================================================
+
+  "humanoid": {
+    "name": "Humanoid",
+    "description": "Mortals of flesh and blood, adaptable and diverse.",
+    "baseModifiers": { "hpMult": 1.0, "manaMult": 1.0 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["light", "medium", "heavy", "ranged", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Now includes human‑derived subraces: occultborn, monastic, duelist, etc."
+  },
+
+  "elf": {
+    "name": "Elf",
+    "description": "Graceful and magically attuned, but physically frail.",
+    "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
+    "elementAffinity": { "nature": 0.1, "arcane": 0.1 },
+    "weaponTagsAllowed": ["light", "ranged", "magic"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Strong synergy with mage, ranger, druid, monk."
+  },
+
+  "dwarf": {
+    "name": "Dwarf",
+    "description": "Sturdy and resilient, with strong physical defenses.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 0.9, "manaMult": 0.9 },
+    "elementAffinity": { "earth": 0.1, "fire": 0.05 },
+    "weaponTagsAllowed": ["medium", "heavy", "shield"],
+    "weaponTagsRestricted": ["light", "magic_focus"],
+    "notes": "Excellent for tank professions."
+  },
+
+  "orc": {
+    "name": "Orc",
+    "description": "Powerful and aggressive warriors with low magical aptitude.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.15, "defMult": 1.0, "speedMult": 1.0, "manaMult": 0.7 },
+    "elementAffinity": { "fire": 0.05 },
+    "weaponTagsAllowed": ["medium", "heavy"],
+    "weaponTagsRestricted": ["magic_focus"],
+    "notes": "High synergy with warrior, berserker, barbarian."
+  },
+
+  "goblinoid": {
+    "name": "Goblinoid",
+    "description": "Cunning, fast, and opportunistic, but physically weak.",
+    "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.15, "manaMult": 1.0 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["light", "ranged"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Great synergy with thief, assassin, ranger."
+  },
+
+  "beastkin": {
+    "name": "Beastkin",
+    "description": "Humanoids with animal lineage, agile and instinctive.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.05, "defMult": 0.95, "speedMult": 1.1, "manaMult": 0.9 },
+    "elementAffinity": { "nature": 0.1 },
+    "weaponTagsAllowed": ["light", "ranged", "claws", "fangs"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Catkin, Dogkin, Wolfkin, Tigerkin, Boarkin, etc."
+  },
+
+  "draconian": {
+    "name": "Draconian",
+    "description": "Scaled humanoids with elemental dragon ancestry.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.05, "speedMult": 1.0, "manaMult": 1.1 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["medium", "heavy", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Subraces: fire, frost, storm, crystal, etc."
+  },
+
+  "undead": {
+    "name": "Undead",
+    "description": "Reanimated beings sustained by necrotic energy.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.0, "speedMult": 0.95, "manaMult": 1.0 },
+    "elementAffinity": { "dark": 0.2, "holy": -0.2 },
+    "weaponTagsAllowed": ["light", "medium", "cursed", "ritual"],
+    "weaponTagsRestricted": [],
+    "notes": "Skeleton, Ghoul, Wraith, Banshee."
+  },
+
+  "demonborn": {
+    "name": "Demonborn",
+    "description": "Infernal beings of fire and shadow.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.0 },
+    "elementAffinity": { "fire": 0.2, "dark": 0.2, "holy": -0.2 },
+    "weaponTagsAllowed": ["medium", "heavy", "cursed", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Succubus, Demon Knight, Abyssal Brute."
+  },
+
+  "voidborn": {
+    "name": "Voidborn",
+    "description": "Warped entities touched by the void.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
+    "elementAffinity": { "void": 0.3, "arcane": -0.1 },
+    "weaponTagsAllowed": ["cursed", "void", "magic"],
+    "weaponTagsRestricted": ["holy"],
+    "notes": "Void Reaver, Nullborn Ravager, Shadehound."
+  },
+
+  "celestialborn": {
+    "name": "Celestialborn",
+    "description": "Beings of radiant divine essence.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 1.0, "manaMult": 1.2 },
+    "elementAffinity": { "holy": 0.3, "dark": -0.2 },
+    "weaponTagsAllowed": ["light", "magic", "holy"],
+    "weaponTagsRestricted": ["cursed"],
+    "notes": "Seraph, Archon, Herald."
+  },
+
+  "spiritborn": {
+    "name": "Spiritborn",
+    "description": "Ethereal beings partially detached from the physical world.",
+    "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.8, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": { "arcane": 0.1, "dark": 0.1 },
+    "weaponTagsAllowed": ["magic", "ritual"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Banshee, Wraith, Tidecaller."
+  },
+
+  "fae": {
+    "name": "Fae",
+    "description": "Nature‑aligned tricksters with magical affinity.",
+    "baseModifiers": { "hpMult": 0.95, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.15, "manaMult": 1.2 },
+    "elementAffinity": { "nature": 0.2 },
+    "weaponTagsAllowed": ["light", "magic"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Satyrs, sylvan spirits, druidic creatures."
+  },
+
+  "slimeborn": {
+    "name": "Slimeborn",
+    "description": "Amorphous beings with high resilience but awkward form.",
+    "baseModifiers": { "hpMult": 1.3, "atkMult": 0.9, "defMult": 1.0, "speedMult": 0.8, "manaMult": 1.0 },
+    "elementAffinity": { "poison": 0.2, "acid": 0.2 },
+    "weaponTagsAllowed": ["improvised", "ooze_form"],
+    "weaponTagsRestricted": ["heavy", "ranged"],
+    "notes": "Tiny Slime, Sticky Slime, Royal Slime."
+  },
+
+  "plantfolk": {
+    "name": "Plantfolk",
+    "description": "Living plant creatures with natural resilience.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 0.9, "defMult": 1.1, "speedMult": 0.8, "manaMult": 1.0 },
+    "elementAffinity": { "nature": 0.3, "earth": 0.1 },
+    "weaponTagsAllowed": ["natural", "staff", "magic"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Treants, Thornborn, Rootbound."
+  },
+
+  "construct": {
+    "name": "Construct",
+    "description": "Artificial beings of metal, stone, or arcane design.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 1.2, "speedMult": 0.8, "manaMult": 0.5 },
+    "elementAffinity": { "lightning": -0.2, "poison": 0.5 },
+    "weaponTagsAllowed": ["heavy", "shield", "integrated"],
+    "weaponTagsRestricted": ["magic_focus"],
+    "notes": "Golems, Sentinels, Spellforged."
+  },
+
+  "chimera": {
+    "name": "Chimera",
+    "description": "Hybrid magical beasts with unpredictable traits.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.1 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Arcane Chimera, Astral Chimera."
+  },
+
+  "astralborn": {
+    "name": "Astralborn",
+    "description": "Beings infused with cosmic or temporal energy.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": { "arcane": 0.3 },
+    "weaponTagsAllowed": ["magic", "focus"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Astral‑Thread Weaver, Chrono‑Fractured Adept."
+  },
+
+  "elementalborn": {
+    "name": "Elementalborn",
+    "description": "Mortals infused with elemental essence.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus", "light"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Fireborn, Iceborn, Stormborn, etc."
+  },
+
+  "elemental": {
+    "name": "Elemental",
+    "description": "A being composed entirely of primal or altered elemental forces.",
+    "baseModifiers": { "hpMult": 1.0, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus", "light"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Unified race for all elemental subraces."
+  },
+
+  "godspawn": {
+    "name": "Godspawn",
+    "description": "Beings of divine, cosmic, or primordial origin whose essence transcends mortal limits.",
+    "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.3, "speedMult": 1.1, "manaMult": 1.4 },
+    "elementAffinity": { "holy": 0.3, "arcane": 0.2, "void": 0.1 },
+    "weaponTagsAllowed": ["holy", "magic", "colossal", "cosmic"],
+    "weaponTagsRestricted": [],
+    "notes": "Includes Demigod, God, Void God, Eternal Wyrm, Celestial Radiant‑Tyrant, Apocalypse‑Crowned Worldrender."
+  },
+
+  "chaosborn": {
+    "name": "Chaosborn",
+    "description": "Unstable beings shaped by chaotic essence.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.1 },
+    "elementAffinity": { "chaos": 0.3 },
+    "weaponTagsAllowed": ["chaos", "magic", "light"],
+    "weaponTagsRestricted": [],
+    "notes": "Includes Sthreeven’s Chaotic Doppelcat, Chaos Wyrm, Funny Sthreeven Man."
+  },
+
+  "colossus": {
+    "name": "Colossus",
+    "description": "Towering beings of immense size and overwhelming power.",
+    "baseModifiers": { "hpMult": 1.5, "atkMult": 1.3, "defMult": 1.4, "speedMult": 0.6, "manaMult": 0.8 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["colossal"],
+    "weaponTagsRestricted": ["light", "ranged"],
+    "notes": "Includes Thunder Colossus, Iron Colossus, Shadow Colossus."
+  },
+
+  "titanborn": {
+    "name": "Titanborn",
+    "description": "Primordial giants forged from elemental or cosmic forces.",
+    "baseModifiers": { "hpMult": 1.4, "atkMult": 1.2, "defMult": 1.3, "speedMult": 0.7, "manaMult": 1.0 },
+    "elementAffinity": { "earth": 0.2, "storm": 0.1 },
+    "weaponTagsAllowed": ["heavy", "colossal"],
+    "weaponTagsRestricted": ["light"],
+    "notes": "Includes Glacier Titan, Storm Titan, Verdant Colossus."
+  },
+
+  "dragon": {
+    "name": "Dragon",
+    "description": "True dragons — apex predators with elemental breath and ancient power.",
+    "baseModifiers": { "hpMult": 1.3, "atkMult": 1.3, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "breath", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Includes Fire Dragon, Ice Dragon, Storm Drake, Crystal Dragon, Chaos Wyrm, Primordial Wyrm."
+  },
+
+  "unique": {
+    "name": "Unique",
+    "description": "Singular beings that defy all known biological categories.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.0 },
+    "elementAffinity": { "chaos": 0.1, "arcane": 0.1 },
+    "weaponTagsAllowed": ["any"],
+    "weaponTagsRestricted": [],
+    "notes": "Includes Plink, Plink of the Seventh Dimension, Funny Sthreeven Man, Sthreeven’s Chaotic Doppelcat."
+  }
+}
