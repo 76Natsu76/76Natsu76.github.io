@@ -1,0 +1,64 @@
+{
+  "aggressive": {
+    "description": "Prefers high‑damage attacks and relentless pressure.",
+    "behavior": {
+      "basicChance": 0.6,
+      "specialChance": 0.3,
+      "defendChance": 0.1
+    }
+  },
+
+  "defensive": {
+    "description": "Focuses on survival, mitigation, and counterattacks.",
+    "behavior": {
+      "basicChance": 0.4,
+      "specialChance": 0.2,
+      "defendChance": 0.4
+    }
+  },
+
+  "balanced": {
+    "description": "A flexible mix of offense and defense.",
+    "behavior": {
+      "basicChance": 0.5,
+      "specialChance": 0.3,
+      "defendChance": 0.2
+    }
+  },
+
+  "reckless": {
+    "description": "High‑risk, high‑reward attackers who rarely defend.",
+    "behavior": {
+      "basicChance": 0.55,
+      "specialChance": 0.4,
+      "defendChance": 0.05
+    }
+  },
+
+  "caster": {
+    "description": "Prefers spells and abilities over physical attacks.",
+    "behavior": {
+      "basicChance": 0.3,
+      "specialChance": 0.6,
+      "defendChance": 0.1
+    }
+  },
+
+  "support": {
+    "description": "Uses buffs, heals, and utility abilities frequently.",
+    "behavior": {
+      "basicChance": 0.3,
+      "specialChance": 0.5,
+      "defendChance": 0.2
+    }
+  },
+
+  "chaotic": {
+    "description": "Unpredictable behavior with wildly shifting priorities.",
+    "behavior": {
+      "basicChance": 0.33,
+      "specialChance": 0.33,
+      "defendChance": 0.34
+    }
+  }
+}
