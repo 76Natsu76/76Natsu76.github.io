@@ -1,7 +1,7 @@
 # 76Natsu76.github.io
 
 
-subrace list:
+race list:
 humanoid
 elf
 dwarf
