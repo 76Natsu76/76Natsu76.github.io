@@ -38,12 +38,12 @@
 
     .region-row {
       display:grid;
-      grid-template-columns: 1.5fr 0.7fr 0.7fr 1.2fr 0.8fr;
+      grid-template-columns: 1.4fr 0.7fr 0.7fr 0.8fr 0.8fr 1fr 1fr;
       gap:8px;
       padding:8px 0;
       border-bottom:1px solid #1c1f28;
       align-items:center;
-      font-size:14px;
+      font-size:13px;
     }
 
     .region-row.header {
@@ -109,6 +109,9 @@
     document.getElementById("adminDisplay").textContent =
       admin ? "Admin: " + admin : "Not logged in";
 
+    /* ============================================================
+       LOAD REGIONS
+       ============================================================ */
     async function loadRegions() {
       const container = document.getElementById("regionsContainer");
       container.textContent = "Loading regions...";
@@ -127,6 +130,9 @@
       }
     }
 
+    /* ============================================================
+       RENDER REGIONS
+       ============================================================ */
     function renderRegions(list) {
       const container = document.getElementById("regionsContainer");
 
@@ -141,9 +147,11 @@
         <div class="region-row header">
           <div>Region</div>
           <div>Enabled</div>
-          <div>Danger Mult.</div>
-          <div>Encounter Boost</div>
-          <div>Save</div>
+          <div>Danger</div>
+          <div>Boost</div>
+          <div>Weather</div>
+          <div>Blessing</div>
+          <div>Actions</div>
         </div>
       `);
 
@@ -151,20 +159,33 @@
         rows.push(`
           <div class="region-row">
             <div>${format(r.key)}</div>
+
             <div>
               <select id="enabled-${r.key}">
                 <option value="true" ${r.enabled ? "selected" : ""}>Enabled</option>
                 <option value="false" ${!r.enabled ? "selected" : ""}>Disabled</option>
               </select>
             </div>
+
             <div>
               <input id="danger-${r.key}" type="number" step="0.1" value="${r.dangerMultiplier ?? 1}">
             </div>
+
             <div>
               <input id="boost-${r.key}" type="number" step="0.1" value="${r.encounterBoost ?? 0}">
             </div>
+
+            <div>
+              <input id="weather-${r.key}" placeholder="auto or WEATHER_KEY" value="${r.weatherOverride ?? ""}">
+            </div>
+
+            <div>
+              <input id="bless-${r.key}" placeholder="auto or BLESSING_KEY" value="${r.blessingOverride ?? ""}">
+            </div>
+
             <div>
               <button onclick="saveRegion('${r.key}')">Save</button>
+              <button onclick="refreshRegion('${r.key}')">Refresh</button>
             </div>
           </div>
         `);
@@ -173,17 +194,24 @@
       container.innerHTML = rows.join("");
     }
 
+    /* ============================================================
+       SAVE REGION
+       ============================================================ */
     async function saveRegion(key) {
       const enabled = document.getElementById(`enabled-${key}`).value === "true";
       const danger = Number(document.getElementById(`danger-${key}`).value);
       const boost = Number(document.getElementById(`boost-${key}`).value);
+      const weather = document.getElementById(`weather-${key}`).value.trim() || null;
+      const blessing = document.getElementById(`bless-${key}`).value.trim() || null;
 
       const payload = {
         admin,
         key,
         enabled,
         dangerMultiplier: danger,
-        encounterBoost: boost
+        encounterBoost: boost,
+        weatherOverride: weather === "" ? null : weather,
+        blessingOverride: blessing === "" ? null : blessing
       };
 
       try {
@@ -202,6 +230,31 @@
       }
     }
 
+    /* ============================================================
+       FORCE REFRESH
+       ============================================================ */
+    async function refreshRegion(key) {
+      const payload = { admin, key };
+
+      try {
+        const res = await fetch("/api/admin/regions/refresh", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body:JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        document.getElementById("statusMessage").textContent =
+          data.message || "Region refreshed.";
+      } catch (err) {
+        document.getElementById("statusMessage").textContent =
+          "Error refreshing region: " + err.message;
+      }
+    }
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
