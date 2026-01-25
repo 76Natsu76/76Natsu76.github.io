@@ -98,10 +98,10 @@
       <input id="newName" placeholder="Item Name">
       <select id="newRarity">
         <option value="common">Common</option>
+        <option value="uncommon">Uncommon</option>
         <option value="rare">Rare</option>
-        <option value="very">Very</option>
-        <option value="ultra">Ultra</option>
-        <option value="ridiculous">Ridiculous</option>
+        <option value="epic">Epic</option>
+        <option value="legendary">Legendary</option>
       </select>
     </div>
 
@@ -111,8 +111,8 @@
     </div>
 
     <div class="row">
-      <input id="newMinPrice" type="number" placeholder="Min Price">
-      <input id="newMaxPrice" type="number" placeholder="Max Price">
+      <input id="newMinPrice" type="number" placeholder="Min Gold Price">
+      <input id="newMaxPrice" type="number" placeholder="Max Gold Price">
     </div>
 
     <button class="btn" onclick="addItem()">Add Item</button>
@@ -138,7 +138,7 @@
       container.textContent = "Loading...";
 
       try {
-        const pool = await api.getShopPool();
+        const pool = await api.ShopPool().getAll();
         renderPool(pool);
       } catch (err) {
         container.textContent = "Failed to load pool: " + err.message;
@@ -184,7 +184,7 @@
     }
 
     function rarityOptions(selected) {
-      const rarities = ["common", "rare", "very", "ultra", "ridiculous"];
+      const rarities = ["common", "uncommon", "rare", "epic", "legendary"];
       return rarities
         .map(r => `<option value="${r}" ${r === selected ? "selected" : ""}>${format(r)}</option>`)
         .join("");
@@ -206,7 +206,7 @@
       };
 
       try {
-        const result = await api.updateShopPoolItem(payload);
+        const result = await api.shopPool.update(payload);
         alert(result.message || "Updated.");
         loadPool();
       } catch (err) {
@@ -220,7 +220,7 @@
 
     async function deleteItem(id) {
       try {
-        const result = await api.deleteShopPoolItem(id);
+        const result = await api.shopPool.delete(id);
         alert(result.message || "Deleted.");
         loadPool();
       } catch (err) {
@@ -243,7 +243,7 @@
       };
 
       try {
-        const result = await api.addShopPoolItem(payload);
+        const result = await api.shopPool.add(payload);
         alert(result.message || "Added.");
         loadPool();
       } catch (err) {
