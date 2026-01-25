@@ -1799,4 +1799,136 @@
       "description": "Timeless wyrms that transcend mortality, bending reality with their presence."
     }
   },
+
+  "spirit": {
+
+    "elemental_ghost": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 0.9, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.1, "wind": 0.1 },
+      "description": "A drifting elemental echo formed from residual magical energy."
+    },
+
+    "forest_wisp": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.4, "mana": 1.3 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "A faint green spirit that guides or misleads travelers in ancient woods."
+    },
+
+    "ancestral_shade": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A lingering echo of a long‑dead soul, bound to a place or memory."
+    },
+
+    "ember_spiritling": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "A tiny flame‑spirit that flickers with unstable heat."
+    },
+
+    "tidal_phantom": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "water": 0.3 },
+      "description": "A ghostly wave‑spirit that ebbs and flows with the tides."
+    }
+  },
+
+  "mythic_beast": {
+
+    "phoenix": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.3, "mana": 1.5 },
+      "elementAffinity": { "fire": 0.3, "light": 0.1 },
+      "description": "A radiant firebird that resurrects from its own ashes."
+    },
+
+    "griffin": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.2, "speed": 1.4, "mana": 1.0 },
+      "elementAffinity": { "wind": 0.2 },
+      "description": "A majestic hybrid of lion and eagle, ruling the skies with ferocity."
+    },
+
+    "leviathan": {
+      "growth": { "hp": 1.6, "atk": 1.4, "def": 1.5, "speed": 1.0, "mana": 1.3 },
+      "elementAffinity": { "water": 0.3 },
+      "description": "A colossal sea serpent capable of summoning tidal cataclysms."
+    },
+
+    "chimera_prime": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.2, "mana": 1.1 },
+      "elementAffinity": {},
+      "description": "The original chimera, a mythic fusion of multiple apex predators."
+    },
+
+    "pegasus": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.5, "mana": 1.2 },
+      "elementAffinity": { "light": 0.2 },
+      "description": "A winged celestial horse that soars with divine grace."
+    }
+  },
+
+  "divinity": {
+
+    "demigod": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.3, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.1 },
+      "description": "A mortal born from divine lineage, wielding immense innate power."
+    },
+
+    "godspawn": {
+      "growth": { "hp": 1.5, "atk": 1.5, "def": 1.4, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "light": 0.2, "fire": 0.1, "arcane": 0.1 },
+      "description": "A being directly shaped by a deity, carrying fragments of divine essence."
+    },
+
+    "oracle_chosen": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.2, "speed": 1.3, "mana": 1.6 },
+      "elementAffinity": { "arcane": 0.2, "light": 0.1 },
+      "description": "A mortal elevated by prophecy, guided by divine visions."
+    },
+
+    "avatar_fragment": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.3, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.2 },
+      "description": "A partial manifestation of a deity’s will, bound to a mortal vessel."
+    },
+
+    "fallen_demigod": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "dark": 0.2 },
+      "description": "A divine‑blooded being corrupted or exiled from celestial grace."
+    }
+  },
+
+  "celestial": {
+
+    "angelic_guardian": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.4, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "A radiant guardian forged from divine light and unwavering purpose."
+    },
+
+    "seraphic_host": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.4, "speed": 1.3, "mana": 1.5 },
+      "elementAffinity": { "holy": 0.3, "light": 0.1 },
+      "description": "A multi‑winged celestial whose presence purifies the battlefield."
+    },
+
+    "arch_celestial": {
+      "growth": { "hp": 1.5, "atk": 1.4, "def": 1.5, "speed": 1.2, "mana": 1.6 },
+      "elementAffinity": { "holy": 0.3, "arcane": 0.1 },
+      "description": "A high-ranking celestial commander who channels divine authority."
+    },
+
+    "dawn_avatar": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.3, "speed": 1.3, "mana": 1.6 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "A manifestation of dawn’s radiance, bringing renewal and illumination."
+    },
+
+    "judicator": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.4, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "holy": 0.2, "light": 0.1 },
+      "description": "A celestial enforcer who delivers divine judgment with absolute precision."
+    }
+  },
 }
