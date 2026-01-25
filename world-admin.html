@@ -128,6 +128,13 @@
     <button onclick="reloadWorld()">Reload World</button>
     <button onclick="advanceDay()">Advance Day</button>
     <button onclick="tickWorld()">Force Tick</button>
+    <button onclick="forceWeather()">Force Weather Roll</button>
+    <button onclick="forceEvent()">Force Event Roll</button>
+    <button onclick="resetPressure()">Reset Encounter Pressure</button>
+    <button onclick="clearEvents()">Clear Events</button>
+    <button onclick="clearModifiers()">Clear Modifiers</button>
+    <button onclick="resetCrisis()">Reset Crisis</button>
+    <button onclick="setSeasonPrompt()">Set Season</button>
   </div>
 
   <div class="section">
@@ -174,33 +181,34 @@
         return;
       }
 
-      const day = world.day ?? "?";
-      const season = world.season ?? "Unknown";
-      const weather = world.weather ?? "Unknown";
-      const activeEvents = world.activeEvents || [];
-      const globalModifiers = world.globalModifiers || [];
-
       const rows = [];
-      rows.push(row("Day", day));
-      rows.push(row("Season", format(season)));
-      rows.push(row("Weather", format(weather)));
+      rows.push(row("Day", world.day ?? "?"));
+      rows.push(row("Time", world.time ?? "Unknown"));
+      rows.push(row("Season", format(world.season ?? "Unknown")));
+      rows.push(row("Weather", format(world.weather ?? "Unknown")));
+      rows.push(row("Tick Count", world.tickCount ?? 0));
       rows.push(row("Regions Active", (world.regions || []).length));
+      rows.push(row("Encounter Pressure", world.encounterPressure ?? 0));
+      rows.push(row("Crisis Active", world.crisisActive ? "Yes" : "No"));
+      if (world.crisisKey) rows.push(row("Crisis Key", format(world.crisisKey)));
 
       overview.innerHTML = `
         ${rows.join("")}
+
         <div style="margin-top:10px;">
           <strong>Active Events:</strong><br>
           ${
-            activeEvents.length
-              ? activeEvents.map(e => `<span class="tag">${format(e)}</span>`).join("")
+            world.activeEvents?.length
+              ? world.activeEvents.map(e => `<span class="tag">${format(e)}</span>`).join("")
               : "<span style='opacity:0.7;'>None</span>"
           }
         </div>
+
         <div style="margin-top:10px;">
           <strong>Global Modifiers:</strong><br>
           ${
-            globalModifiers.length
-              ? globalModifiers.map(m => `<span class="tag">${format(m)}</span>`).join("")
+            world.globalModifiers?.length
+              ? world.globalModifiers.map(m => `<span class="tag">${format(m)}</span>`).join("")
               : "<span style='opacity:0.7;'>None</span>"
           }
         </div>
@@ -218,18 +226,9 @@
       `;
     }
 
-    async function reloadWorld() {
-      await postWorldAction("/api/admin/world/reload", { admin }, "World reloaded.");
-    }
-
-    async function advanceDay() {
-      await postWorldAction("/api/admin/world/advance-day", { admin }, "Day advanced.");
-    }
-
-    async function tickWorld() {
-      await postWorldAction("/api/admin/world/tick", { admin }, "World tick executed.");
-    }
-
+    /* ============================
+       WORLD ACTION HELPERS
+       ============================ */
     async function postWorldAction(url, payload, fallbackMessage) {
       const status = document.getElementById("statusMessage");
       status.textContent = "Working...";
@@ -247,6 +246,25 @@
       } catch (err) {
         status.textContent = "Error: " + err.message;
       }
+    }
+
+    /* ============================
+       ACTION BUTTONS
+       ============================ */
+    function reloadWorld() { postWorldAction("/api/admin/world/reload", { admin }, "World reloaded."); }
+    function advanceDay() { postWorldAction("/api/admin/world/advance-day", { admin }, "Day advanced."); }
+    function tickWorld() { postWorldAction("/api/admin/world/tick", { admin }, "Tick executed."); }
+    function forceWeather() { postWorldAction("/api/admin/world/force-weather", { admin }, "Weather rolled."); }
+    function forceEvent() { postWorldAction("/api/admin/world/force-event", { admin }, "Event rolled."); }
+    function resetPressure() { postWorldAction("/api/admin/world/reset-pressure", { admin }, "Pressure reset."); }
+    function clearEvents() { postWorldAction("/api/admin/world/clear-events", { admin }, "Events cleared."); }
+    function clearModifiers() { postWorldAction("/api/admin/world/clear-modifiers", { admin }, "Modifiers cleared."); }
+    function resetCrisis() { postWorldAction("/api/admin/world/reset-crisis", { admin }, "Crisis reset."); }
+
+    function setSeasonPrompt() {
+      const season = prompt("Enter season key (SPRING, SUMMER, AUTUMN, WINTER):");
+      if (!season) return;
+      postWorldAction("/api/admin/world/set-season", { admin, season }, "Season updated.");
     }
 
     function format(str) {
