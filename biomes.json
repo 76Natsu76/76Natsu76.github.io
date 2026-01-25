@@ -1,0 +1,383 @@
+{
+  "forest": {
+    "name": "Forest",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "deep-forest": {
+    "name": "Deep Forest",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "wild-forest": {
+    "name": "Wild Forest",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "ancient-forest": {
+    "name": "Ancient Forest",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "eldergrove-depths": {
+    "name": "Eldergrove Depths",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "elderwood-heart": {
+    "name": "Elderwood Heart",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "primeval-overgrowth": {
+    "name": "Primeval Overgrowth",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "plains": {
+    "name": "Plains",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "open-steppe": {
+    "name": "Open Steppe",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "plateau": {
+    "name": "Plateau",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "swamp": {
+    "name": "Swamp",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "drowned-marsh": {
+    "name": "Drowned Marsh",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "whispering-marsh": {
+    "name": "Whispering Marsh",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "desert": {
+    "name": "Desert",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "sunscorched-dunes": {
+    "name": "Sunscorched Dunes",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "shattered-desert": {
+    "name": "Shattered Desert",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "void-wastes": {
+    "name": "Void Wastes",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "tundra": {
+    "name": "Tundra",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "frozen-expanse": {
+    "name": "Frozen Expanse",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "crystalline-tundra": {
+    "name": "Crystalline Tundra",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "highlands": {
+    "name": "Highlands",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "storm-highlands": {
+    "name": "Storm Highlands",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "mountain-peak": {
+    "name": "Mountain Peak",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "mountain": {
+    "name": "Mountain",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "volcano": {
+    "name": "Volcano",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "molten-crest": {
+    "name": "Molten Crest",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "magma": {
+    "name": "Magma Fields",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "cave": {
+    "name": "Cave",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "crystal-cave": {
+    "name": "Crystal Cave",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "prism-caverns": {
+    "name": "Prism Caverns",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "underdeep": {
+    "name": "Underdeep",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "subterranean": {
+    "name": "Subterranean",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "deep-caverns": {
+    "name": "Deep Caverns",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "ruins": {
+    "name": "Ruins",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "forgotten-ruins": {
+    "name": "Forgotten Ruins",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "ruined-kingdom": {
+    "name": "Ruined Kingdom",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "coastal": {
+    "name": "Coastal",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "arcane": {
+    "name": "Arcane",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "arcane-rift": {
+    "name": "Arcane Rift",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "corrupted": {
+    "name": "Corrupted Lands",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "void": {
+    "name": "Voidlands",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "void-realm": {
+    "name": "Void Realm",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "astral-plane": {
+    "name": "Astral Plane",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "astral-nexus": {
+    "name": "Astral Nexus",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+
+  "abyss": {
+    "name": "Abyss",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  },
+  "abyssal-deep": {
+    "name": "Abyssal Deep",
+    "flavor": [],
+    "encounterWeights": {},
+    "hazards": [],
+    "weatherPool": [],
+    "combatModifiers": {}
+  }
+}
