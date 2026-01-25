@@ -119,6 +119,32 @@
     .btn:hover {
       background:#222832;
     }
+    /* Rarity Colors */
+    .rarity-common { color:#bfbfbf; }
+    .rarity-uncommon { color:#7fff7f; }
+    .rarity-rare { color:#7fcfff; }
+    .rarity-very { color:#c77fff; }
+    .rarity-ultra { color:#ffbf5f; }
+    .rarity-ridiculous { color:#ff4f4f; }
+    
+    /* Glow Effects */
+    .glow-common { box-shadow:0 0 6px #bfbfbf55; }
+    .glow-uncommon { box-shadow:0 0 8px #7fff7f55; }
+    .glow-rare { box-shadow:0 0 10px #7fcfff55; }
+    .glow-very { box-shadow:0 0 12px #c77fff55; }
+    .glow-ultra { box-shadow:0 0 14px #ffbf5f55; }
+    .glow-ridiculous { box-shadow:0 0 16px #ff4f4f55; }
+    
+    /* Subtle animation */
+    @keyframes rarityPulse {
+      0% { transform:scale(1); }
+      50% { transform:scale(1.02); }
+      100% { transform:scale(1); }
+    }
+    
+    .rarity-animated {
+      animation: rarityPulse 2.5s infinite ease-in-out;
+    }
   </style>
 </head>
 
