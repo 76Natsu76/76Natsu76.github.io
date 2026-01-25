@@ -1,0 +1,388 @@
+{
+  "forest-edge": {
+    "tier1": ["humanoid", "beast", "slimeborn"],
+    "tier2": ["beastkin", "plantfolk"],
+    "tier3": [],
+    "boss": []
+  },
+  "deep-forest": {
+    "tier2": ["beast", "plantfolk", "fae"],
+    "tier3": ["spirit", "mythic_beast"],
+    "tier4": [],
+    "boss": []
+  },
+  "plains-field": {
+    "tier1": ["humanoid", "beast"],
+    "tier2": ["beastkin", "dragonkin"],
+    "tier3": [],
+    "boss": []
+  },
+  "swamp-marsh": {
+    "tier2": ["undead", "beast", "slimeborn"],
+    "tier3": ["amorphous", "parasite"],
+    "tier4": [],
+    "boss": []
+  },
+  "crystal-pass": {
+    "tier2": ["construct", "elementalborn"],
+    "tier3": ["dragonkin", "astralborn"],
+    "tier4": [],
+    "boss": []
+  },
+  "cave-entrance": {
+    "tier1": ["beast", "slimeborn", "insectoids"],
+    "tier2": ["arachnids", "undead"],
+    "tier3": [],
+    "boss": []
+  },
+  "ruins-outskirts": {
+    "tier1": ["humanoid", "beast"],
+    "tier2": ["undead", "construct"],
+    "tier3": ["spirit"],
+    "boss": []
+  },
+  "desert-dunes": {
+    "tier2": ["beast", "humanoid", "elementalborn"],
+    "tier3": ["dragonkin", "undead"],
+    "tier4": [],
+    "boss": []
+  },
+  "highland-cliffs": {
+    "tier2": ["beast", "giantkin"],
+    "tier3": ["dragonkin", "titanborn"],
+    "tier4": [],
+    "boss": []
+  },
+  "volcano-rim": {
+    "tier3": ["elementalborn", "demonborn"],
+    "tier4": ["dragon", "construct"],
+    "tier5": [],
+    "boss": []
+  },
+  "tundra-wastes": {
+    "tier2": ["beast", "elementalborn"],
+    "tier3": ["giantkin", "mythic_beast"],
+    "tier4": [],
+    "boss": []
+  },
+  "mountain-peak": {
+    "tier3": ["dragon", "giantkin"],
+    "tier4": ["titanborn", "elementalborn"],
+    "tier5": [],
+    "boss": []
+  },
+  "void-realm": {
+    "tier4": ["voidborn", "eldritch", "aberration"],
+    "tier5": ["anomaly", "outer_god"],
+    "tier6": ["paradox_god"],
+    "boss": ["outer_god", "paradox_god"]
+  },
+  "astral-plane": {
+    "tier4": ["astralborn", "planar_entity", "cosmic_fauna"],
+    "tier5": ["outer_god", "metaphysical_phenomenon"],
+    "tier6": [],
+    "boss": ["outer_god"]
+  },
+  "abyss-gate": {
+    "tier4": ["fiend", "demonborn"],
+    "tier5": ["eldritch", "voidborn"],
+    "tier6": [],
+    "boss": ["fiend"]
+  },
+  "spirit-kingdom": {
+    "tier3": ["spirit", "spiritborn"],
+    "tier4": ["mythic_undead", "divinity"],
+    "tier5": ["planar_entity"],
+    "boss": ["divinity"]
+  },
+  "outcast-island": {
+    "tier2": ["humanoid", "beast"],
+    "tier3": ["undead", "demonborn"],
+    "tier4": ["anomaly"],
+    "boss": []
+  },
+  "trainers-city": {
+    "tier1": ["humanoid"],
+    "tier2": ["humanoid", "beast"],
+    "tier3": ["construct"],
+    "boss": []
+  },
+  "titanfall": {
+    "tier4": ["titanborn", "giantkin"],
+    "tier5": ["titan", "primordial"],
+    "tier6": [],
+    "boss": ["titan"]
+  },
+
+  "verdant-woods": {
+    "tier1": ["beast", "plantfolk", "humanoid"],
+    "tier2": ["fae", "slimeborn"],
+    "tier3": ["mythic_beast"],
+    "boss": ["dragonkin"]
+  },
+  "frostlands": {
+    "tier2": ["beast", "elementalborn"],
+    "tier3": ["giantkin", "mythic_beast"],
+    "tier4": ["titanborn"],
+    "boss": []
+  },
+  "volcanic-wastes": {
+    "tier3": ["elementalborn", "demonborn"],
+    "tier4": ["dragon", "construct"],
+    "tier5": ["primordial"],
+    "boss": []
+  },
+  "azure-coast": {
+    "tier1": ["beast", "slimeborn"],
+    "tier2": ["humanoid", "cosmic_fauna"],
+    "tier3": [],
+    "boss": []
+  },
+  "sunspire-highlands": {
+    "tier3": ["giantkin", "dragonkin"],
+    "tier4": ["titanborn"],
+    "boss": []
+  },
+  "void-spire": {
+    "tier4": ["voidborn", "eldritch"],
+    "tier5": ["anomaly", "outer_god"],
+    "tier6": [],
+    "boss": ["outer_god"]
+  },
+  "crystal-caverns": {
+    "tier2": ["construct", "elementalborn"],
+    "tier3": ["astralborn", "aberration"],
+    "tier4": [],
+    "boss": []
+  },
+  "highlands-of-thorne": {
+    "tier3": ["giantkin", "beast"],
+    "tier4": ["dragon"],
+    "boss": []
+  },
+  "shattered-desert": {
+    "tier3": ["elementalborn", "construct"],
+    "tier4": ["primordial", "dragon"],
+    "boss": []
+  },
+  "abyssal-scar": {
+    "tier4": ["fiend", "demonborn"],
+    "tier5": ["eldritch", "voidborn"],
+    "boss": []
+  },
+  "arcane-riftlands": {
+    "tier4": ["astralborn", "elementalborn", "eldritch"],
+    "tier5": ["anomaly", "planar_entity"],
+    "boss": []
+  },
+  "primordial-grove": {
+    "tier3": ["mythic_beast", "plantfolk"],
+    "tier4": ["primordial", "titanborn"],
+    "tier5": [],
+    "boss": []
+  },
+  "celestial-expanse": {
+    "tier4": ["celestial", "divinity"],
+    "tier5": ["planar_entity", "paragon"],
+    "tier6": [],
+    "boss": ["divinity"]
+  },
+  "eternal-citadel": {
+    "tier4": ["construct", "celestial"],
+    "tier5": ["paragon", "legendary_boss_template"],
+    "tier6": [],
+    "boss": ["paragon"]
+  },
+  "worldbreaker-horizon": {
+    "tier5": ["outer_god", "titan"],
+    "tier6": ["paradox_god"],
+    "tier7": ["multiversal_paragon"],
+    "boss": ["multiversal_paragon"]
+  },
+  "astral-nexus": {
+    "tier5": ["astralborn", "planar_entity"],
+    "tier6": ["outer_god", "meta_entity"],
+    "tier7": ["multiversal_paragon"],
+    "boss": ["outer_god", "multiversal_paragon"]
+  },
+  "deep-caverns": {
+    "tier3": ["aberration", "eldritch"],
+    "tier4": ["voidborn", "mythic_undead"],
+    "tier5": ["outer_god"],
+    "boss": []
+  },
+  "ruined-kingdom": {
+    "tier3": ["undead", "mythic_undead"],
+    "tier4": ["construct", "spirit"],
+    "tier5": ["paragon"],
+    "boss": []
+  },
+  "whispering-marsh": {
+    "tier2": ["undead", "spirit"],
+    "tier3": ["amorphous", "parasite"],
+    "tier4": [],
+    "boss": []
+  },
+  "stormbreaker-coast": {
+    "tier2": ["beast", "humanoid"],
+    "tier3": ["elementalborn", "cosmic_fauna"],
+    "tier4": [],
+    "boss": []
+  },
+  "emberforge-depths": {
+    "tier3": ["construct", "elementalborn"],
+    "tier4": ["demonborn", "dragon"],
+    "tier5": [],
+    "boss": []
+  },
+  "crystalline-tundra": {
+    "tier3": ["elementalborn", "construct"],
+    "tier4": ["dragon", "primordial"],
+    "tier5": [],
+    "boss": []
+  },
+  "abyssal-deep": {
+    "tier5": ["fiend", "outer_god"],
+    "tier6": ["paradox_god"],
+    "tier7": [],
+    "boss": ["outer_god", "paradox_god"]
+  },
+
+  "forest": {
+    "tier1": ["beast", "humanoid", "plantfolk"],
+    "tier2": ["fae", "slimeborn"],
+    "tier3": [],
+    "boss": []
+  },
+  "plains": {
+    "tier1": ["beast", "humanoid"],
+    "tier2": ["beastkin", "dragonkin"],
+    "tier3": [],
+    "boss": []
+  },
+  "cavern": {
+    "tier1": ["beast", "slimeborn"],
+    "tier2": ["insectoids", "arachnids", "undead"],
+    "tier3": [],
+    "boss": []
+  },
+  "ruins": {
+    "tier1": ["humanoid"],
+    "tier2": ["undead", "construct"],
+    "tier3": ["spirit"],
+    "boss": []
+  },
+  "swamp": {
+    "tier2": ["undead", "beast", "slimeborn"],
+    "tier3": ["amorphous", "parasite"],
+    "boss": []
+  },
+  "desert": {
+    "tier2": ["beast", "humanoid"],
+    "tier3": ["elementalborn", "dragonkin"],
+    "boss": []
+  },
+  "tundra": {
+    "tier2": ["beast", "elementalborn"],
+    "tier3": ["giantkin", "mythic_beast"],
+    "boss": []
+  },
+  "mountains": {
+    "tier2": ["beast", "giantkin"],
+    "tier3": ["dragonkin", "construct"],
+    "tier4": ["titanborn"],
+    "boss": []
+  },
+  "verdant-wildwood": {
+    "tier1": ["beast", "plantfolk"],
+    "tier2": ["fae", "slimeborn"],
+    "tier3": [],
+    "boss": []
+  },
+  "arcstone-enclave": {
+    "tier3": ["construct", "elementalborn"],
+    "tier4": ["astralborn"],
+    "boss": []
+  },
+  "emberfang-ridge": {
+    "tier3": ["demonborn", "elementalborn"],
+    "tier4": ["dragon"],
+    "boss": []
+  },
+  "void": {
+    "tier4": ["voidborn", "eldritch"],
+    "tier5": ["anomaly", "outer_god"],
+    "tier6": [],
+    "boss": []
+  },
+  "celestial": {
+    "tier4": ["celestial", "divinity"],
+    "tier5": ["paragon", "planar_entity"],
+    "tier6": [],
+    "boss": []
+  },
+  "arcane-rift": {
+    "tier4": ["astralborn", "elementalborn"],
+    "tier5": ["anomaly", "metaphysical_phenomenon"],
+    "boss": []
+  },
+  "stormforge-sanctum": {
+    "tier3": ["elementalborn", "giantkin"],
+    "tier4": ["titanborn"],
+    "tier5": [],
+    "boss": []
+  },
+  "molten-underdeep": {
+    "tier3": ["elementalborn", "construct"],
+    "tier4": ["demonborn", "dragon"],
+    "tier5": [],
+    "boss": []
+  },
+  "shadow-labyrinth": {
+    "tier4": ["eldritch", "aberration", "mythic_undead"],
+    "tier5": ["anomaly"],
+    "boss": []
+  },
+  "void-frontier": {
+    "tier4": ["voidborn", "eldritch"],
+    "tier5": ["outer_god", "anomaly"],
+    "tier6": [],
+    "boss": []
+  },
+  "radiant-ascension-spire": {
+    "tier5": ["celestial", "divinity"],
+    "tier6": ["paragon"],
+    "tier7": [],
+    "boss": ["paragon"]
+  },
+  "seraphic-crucible": {
+    "tier5": ["celestial", "divinity"],
+    "tier6": ["paragon"],
+    "tier7": [],
+    "boss": ["divinity"]
+  },
+  "elderwood-heart": {
+    "tier3": ["plantfolk", "spirit"],
+    "tier4": ["mythic_beast", "divine_beast"],
+    "tier5": [],
+    "boss": []
+  },
+  "primeval-overgrowth": {
+    "tier3": ["beast", "plantfolk"],
+    "tier4": ["primordial", "titanborn"],
+    "tier5": [],
+    "boss": []
+  },
+  "celestial-horizon": {
+    "tier5": ["celestial", "planar_entity"],
+    "tier6": ["paragon"],
+    "tier7": [],
+    "boss": []
+  },
+  "worlds-end-expanse": {
+    "tier5": ["outer_god", "titan"],
+    "tier6": ["paradox_god"],
+    "tier7": [],
+    "boss": []
+  }
+}
