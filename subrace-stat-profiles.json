@@ -594,6 +594,71 @@
     }
 
   },
+  
+  "demonborn": {
+
+    "succubus": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": { "dark": 0.2, "fire": 0.1 },
+      "description": "Seductive fiends who wield charm, shadow magic, and swift movement."
+    },
+
+    "demon_knight": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "fire": 0.2, "dark": 0.2 },
+      "description": "Armored infernal warriors empowered by flame and shadow."
+    },
+
+    "abyssal_brute": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.1, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "dark": 0.2, "chaos": 0.1 },
+      "description": "Massive demons of raw strength, born from the deepest abyss."
+    },
+
+    "hellfire_spawn": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.1, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "Infernal beings infused with pure hellfire, excelling in burning magic."
+    },
+
+    "shadowfiend": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "Swift and deadly demons who strike from the shadows."
+    },
+
+    "chaos_imp": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "Unpredictable imps whose chaotic magic warps the battlefield."
+    },
+
+    "infernal_magus": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 0.9, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "fire": 0.2, "dark": 0.2 },
+      "description": "Demonic spellcasters who channel infernal flames and shadow sorcery."
+    },
+
+    "ashen_demon": {
+      "growth": { "hp": 1.1, "atk": 1.2, "def": 1.0, "speed": 1.0, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.2, "ash": 0.1 },
+      "description": "Demons born from smoldering ash, wielding burning and choking magic."
+    },
+
+    "void_demon": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "void": 0.3, "dark": 0.1 },
+      "description": "Abyssal demons infused with void energy, gaining unstable destructive power."
+    },
+
+    "hellion": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "Savage infernal warriors who thrive in burning chaos and relentless combat."
+    }
+
+  },
 
   
+
 }
