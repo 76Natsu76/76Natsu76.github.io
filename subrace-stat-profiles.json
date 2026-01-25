@@ -2494,4 +2494,256 @@
       "description": "The central mind of a massive hive, controlling countless drones."
     }
   },
+
+  "living_location": {
+
+    "sentient_forest": {
+      "growth": { "hp": 2.0, "atk": 1.4, "def": 2.0, "speed": 0.5, "mana": 1.8 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "A vast forest whose trees, roots, and wildlife act as a single conscious entity."
+    },
+
+    "awakened_dungeon": {
+      "growth": { "hp": 2.2, "atk": 1.6, "def": 2.1, "speed": 0.4, "mana": 1.9 },
+      "elementAffinity": { "dark": 0.2, "arcane": 0.1 },
+      "description": "A dungeon that rearranges its rooms, traps, and monsters to hunt intruders."
+    },
+
+    "living_mountain": {
+      "growth": { "hp": 2.5, "atk": 1.7, "def": 2.3, "speed": 0.3, "mana": 1.7 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "A mountain that shifts its cliffs and valleys like muscles and bones."
+    },
+
+    "whispering_city": {
+      "growth": { "hp": 2.0, "atk": 1.5, "def": 2.0, "speed": 0.6, "mana": 2.0 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A haunted metropolis whose buildings whisper secrets and lure wanderers deeper."
+    },
+
+    "the_endless_corridor": {
+      "growth": { "hp": 2.1, "atk": 1.6, "def": 2.1, "speed": 0.7, "mana": 2.1 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A spatial anomaly that loops infinitely, devouring those who walk too far."
+    }
+  },
+
+  "artificial_life": {
+
+    "data_specter": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.7, "mana": 1.8 },
+      "elementAffinity": { "electric": 0.2, "arcane": 0.1 },
+      "description": "A ghost formed from corrupted data and abandoned code."
+    },
+
+    "algorithmic_entity": {
+      "growth": { "hp": 1.2, "atk": 1.4, "def": 1.1, "speed": 1.6, "mana": 1.9 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A being created entirely from self‑replicating magical algorithms."
+    },
+
+    "digital_phantom": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.0, "speed": 1.8, "mana": 1.7 },
+      "elementAffinity": { "electric": 0.3 },
+      "description": "A creature that exists only within digital realms, slipping into reality at will."
+    },
+
+    "synthetic_soul": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.4, "mana": 1.8 },
+      "elementAffinity": { "light": 0.1, "arcane": 0.1 },
+      "description": "A machine granted a soul through forbidden divine or arcane rituals."
+    },
+
+    "quantum_lifeform": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.7, "mana": 2.0 },
+      "elementAffinity": { "arcane": 0.2, "void": 0.1 },
+      "description": "A being that exists in multiple states simultaneously, collapsing only when observed."
+    }
+  },
+
+  "temporal_entity": {
+
+    "chronobeast": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.4, "speed": 1.8, "mana": 1.9 },
+      "elementAffinity": { "arcane": 0.2, "void": 0.1 },
+      "description": "A creature that moves faster than time itself, striking before it appears."
+    },
+
+    "time_lost_wanderer": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 1.5, "mana": 1.7 },
+      "elementAffinity": { "arcane": 0.1 },
+      "description": "A being displaced from its original timeline, forever drifting between eras."
+    },
+
+    "looped_entity": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.3, "speed": 1.6, "mana": 1.8 },
+      "elementAffinity": { "psychic": 0.1 },
+      "description": "A creature trapped in a repeating moment, growing stronger with each loop."
+    },
+
+    "temporal_phantom": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 1.9, "mana": 1.8 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A ghost formed from a timeline that no longer exists."
+    },
+
+    "future_shard": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.7, "mana": 2.0 },
+      "elementAffinity": { "lightning": 0.1, "arcane": 0.1 },
+      "description": "A fragment of a possible future given form in the present."
+    }
+  },
+
+  "divine_beast": {
+
+    "holy_stag": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.3, "speed": 1.5, "mana": 1.6 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "A radiant stag whose presence purifies corrupted lands."
+    },
+
+    "sun_lion": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.4, "speed": 1.4, "mana": 1.7 },
+      "elementAffinity": { "fire": 0.2, "light": 0.1 },
+      "description": "A lion blessed by the sun god, burning with divine fire."
+    },
+
+    "moon_wolf": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.3, "speed": 1.6, "mana": 1.7 },
+      "elementAffinity": { "ice": 0.1, "arcane": 0.1 },
+      "description": "A wolf touched by lunar magic, howling with arcane resonance."
+    },
+
+    "celestial_serpent": {
+      "growth": { "hp": 1.6, "atk": 1.5, "def": 1.5, "speed": 1.5, "mana": 1.8 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.2 },
+      "description": "A serpent born from the heavens, coiling through starlight."
+    },
+
+    "god_touched_bear": {
+      "growth": { "hp": 1.7, "atk": 1.7, "def": 1.6, "speed": 1.3, "mana": 1.6 },
+      "elementAffinity": { "earth": 0.2, "light": 0.1 },
+      "description": "A bear empowered by divine strength and unbreakable resolve."
+    }
+  },
+
+  "meta_entity": {
+
+    "the_observer": {
+      "growth": { "hp": 1.6, "atk": 1.4, "def": 1.5, "speed": 1.7, "mana": 2.0 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A being that perceives the world from outside its narrative frame."
+    },
+
+    "scriptbreaker": {
+      "growth": { "hp": 1.4, "atk": 1.6, "def": 1.3, "speed": 1.8, "mana": 2.1 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "A creature that rewrites events, ignoring cause and effect."
+    },
+
+    "fourthwall_phantom": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.9, "mana": 2.0 },
+      "elementAffinity": { "psychic": 0.2 },
+      "description": "A phantom that sees the audience and reacts to their presence."
+    },
+
+    "the_editor": {
+      "growth": { "hp": 1.5, "atk": 1.5, "def": 1.4, "speed": 1.6, "mana": 2.2 },
+      "elementAffinity": { "arcane": 0.1 },
+      "description": "A meta‑entity that trims, alters, or deletes events from existence."
+    }
+  },
+
+  "narrative_construct": {
+
+    "the_hero_that_never_was": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.6, "mana": 1.8 },
+      "elementAffinity": { "light": 0.1, "arcane": 0.1 },
+      "description": "A heroic archetype that manifested despite never having a real origin."
+    },
+
+    "living_trope": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.2, "speed": 1.7, "mana": 1.9 },
+      "elementAffinity": { "chaos": 0.2 },
+      "description": "A creature embodying a narrative cliché, aware of its own role."
+    },
+
+    "myth_manifest": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.4, "speed": 1.5, "mana": 1.8 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A legendary tale given physical form by collective belief."
+    },
+
+    "story_eater": {
+      "growth": { "hp": 1.6, "atk": 1.7, "def": 1.4, "speed": 1.6, "mana": 2.0 },
+      "elementAffinity": { "void": 0.2 },
+      "description": "A being that consumes narratives, erasing characters from memory."
+    }
+  },
+  
+  "emotional": {
+
+    "wrath_incarnate": {
+      "growth": { "hp": 1.5, "atk": 1.8, "def": 1.3, "speed": 1.7, "mana": 1.6 },
+      "elementAffinity": { "fire": 0.2, "chaos": 0.1 },
+      "description": "Pure rage given form, burning with endless fury."
+    },
+
+    "sorrow_wraith": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 1.6, "mana": 1.9 },
+      "elementAffinity": { "water": 0.1, "dark": 0.1 },
+      "description": "A melancholic spirit that drains hope from all who approach."
+    },
+
+    "joy_sprite": {
+      "growth": { "hp": 1.1, "atk": 1.1, "def": 1.1, "speed": 1.8, "mana": 1.8 },
+      "elementAffinity": { "light": 0.2 },
+      "description": "A radiant being of happiness that uplifts allies and confuses foes."
+    },
+
+    "fear_beast": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.8, "mana": 1.7 },
+      "elementAffinity": { "dark": 0.2 },
+      "description": "A creature born from primal terror, feeding on panic."
+    },
+
+    "serenity_angel": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.4, "speed": 1.5, "mana": 2.0 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.1 },
+      "description": "A peaceful emotional entity that calms storms and minds alike."
+    }
+  },
+
+  "paradox_god": {
+
+    "the_unbeginning": {
+      "growth": { "hp": 2.0, "atk": 1.8, "def": 1.8, "speed": 1.7, "mana": 2.2 },
+      "elementAffinity": { "void": 0.2, "arcane": 0.2 },
+      "description": "A god that existed before its own creation."
+    },
+
+    "the_twice_dead": {
+      "growth": { "hp": 1.9, "atk": 1.9, "def": 1.7, "speed": 1.6, "mana": 2.1 },
+      "elementAffinity": { "dark": 0.2, "decay": 0.1 },
+      "description": "A deity that died twice yet continues to exist."
+    },
+
+    "the_infinite_singularity": {
+      "growth": { "hp": 2.1, "atk": 2.0, "def": 2.0, "speed": 1.5, "mana": 2.3 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A being that contains all possible versions of itself simultaneously."
+    },
+
+    "the_answer_without_question": {
+      "growth": { "hp": 1.8, "atk": 1.7, "def": 1.7, "speed": 1.8, "mana": 2.2 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A paradoxical god whose existence implies a question that cannot be asked."
+    },
+
+    "the_mirror_of_truths": {
+      "growth": { "hp": 1.9, "atk": 1.8, "def": 1.8, "speed": 1.7, "mana": 2.1 },
+      "elementAffinity": { "light": 0.1, "void": 0.1 },
+      "description": "A deity that reflects all realities, including those that contradict each other."
+    }
+  },
 }
