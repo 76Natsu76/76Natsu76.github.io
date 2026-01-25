@@ -1,0 +1,5874 @@
+{
+  "goblin": {
+    "key": "goblin",
+    "name": "goblin",
+    "profession": "warrior",
+    "family": "humanoid",
+    "element": "normal",
+    "rarity": "common",
+    "level": 1,
+    "baseHP": 10,
+    "baseATK": 2,
+    "baseDEF": 1,
+    "lootTable": {
+      "gold": [
+        1,
+        3
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.01
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "tiny_slime": {
+    "key": "tiny_slime",
+    "name": "tiny_slime",
+    "profession": "slime",
+    "family": "slime",
+    "element": "poison",
+    "rarity": "common",
+    "level": 1,
+    "baseHP": 10,
+    "baseATK": 1,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        1,
+        3
+      ],
+      "items": [
+        {
+          "name": "Slime Gel",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "slime": {
+    "key": "slime",
+    "name": "slime",
+    "profession": "beast",
+    "family": "slime",
+    "element": "poison",
+    "rarity": "common",
+    "level": 2,
+    "baseHP": 11,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        1,
+        4
+      ],
+      "items": [
+        {
+          "name": "Slime Gel",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "giant rat": {
+    "key": "giant rat",
+    "name": "giant rat",
+    "profession": "beast",
+    "family": "beast",
+    "element": "nomal",
+    "rarity": "common",
+    "level": 2,
+    "baseHP": 11,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        1,
+        3
+      ],
+      "items": [
+        {
+          "name": "Rat Tail",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "stray_hound": {
+    "key": "stray_hound",
+    "name": "stray_hound",
+    "profession": "dog",
+    "family": "dog",
+    "element": "normal",
+    "rarity": "common",
+    "level": 2,
+    "baseHP": 11,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        1,
+        4
+      ],
+      "items": [
+        {
+          "name": "Dog Fur",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "sticky_slime": {
+    "key": "sticky_slime",
+    "name": "sticky_slime",
+    "profession": "slime",
+    "family": "slime",
+    "element": "poison",
+    "rarity": "common",
+    "level": 2,
+    "baseHP": 11,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        1,
+        4
+      ],
+      "items": [
+        {
+          "name": "Sticky Residue",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "bandit": {
+    "key": "bandit",
+    "name": "bandit",
+    "profession": "thief",
+    "family": "thief",
+    "element": "normal",
+    "rarity": "common",
+    "level": 3,
+    "baseHP": 12,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        2,
+        8
+      ],
+      "items": [
+        {
+          "name": "Dull Knife",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "feral_tracker": {
+    "key": "feral_tracker",
+    "name": "feral_tracker",
+    "profession": "dog",
+    "family": "dog",
+    "element": "earth",
+    "rarity": "common",
+    "level": 3,
+    "baseHP": 12,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        2,
+        6
+      ],
+      "items": [
+        {
+          "name": "Tracker Fang",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "cave_miner": {
+    "key": "cave_miner",
+    "name": "cave_miner",
+    "profession": "miner",
+    "family": "miner",
+    "element": "earth",
+    "rarity": "common",
+    "level": 3,
+    "baseHP": 12,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        2,
+        7
+      ],
+      "items": [
+        {
+          "name": "Iron Chunk",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "cult_novice": {
+    "key": "cult_novice",
+    "name": "cult_novice",
+    "profession": "ritualist",
+    "family": "ritualist",
+    "element": "dark",
+    "rarity": "common",
+    "level": 3,
+    "baseHP": 12,
+    "baseATK": 3,
+    "baseDEF": 2,
+    "lootTable": {
+      "gold": [
+        2,
+        6
+      ],
+      "items": [
+        {
+          "name": "Tattered Charm",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "wolf": {
+    "key": "wolf",
+    "name": "wolf",
+    "profession": "beast",
+    "family": "beast",
+    "element": "nature",
+    "rarity": "common",
+    "level": 4,
+    "baseHP": 13,
+    "baseATK": 4,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        1,
+        5
+      ],
+      "items": [
+        {
+          "name": "Wolf Pelt",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "corrosive_slime": {
+    "key": "corrosive_slime",
+    "name": "corrosive_slime",
+    "profession": "slime",
+    "family": "slime",
+    "element": "acid",
+    "rarity": "uncommon",
+    "level": 4,
+    "baseHP": 13,
+    "baseATK": 4,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        2,
+        6
+      ],
+      "items": [
+        {
+          "name": "Corrosive Sample",
+          "chance": 0.1
+        },
+        {
+          "name": "Slime Gel",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "tunnel_delver": {
+    "key": "tunnel_delver",
+    "name": "tunnel_delver",
+    "profession": "miner",
+    "family": "miner",
+    "element": "earth",
+    "rarity": "common",
+    "level": 4,
+    "baseHP": 13,
+    "baseATK": 4,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        3,
+        8
+      ],
+      "items": [
+        {
+          "name": "Stone Shard",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "sigil_binder": {
+    "key": "sigil_binder",
+    "name": "sigil_binder",
+    "profession": "ritualist",
+    "family": "ritualist",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 4,
+    "baseHP": 13,
+    "baseATK": 4,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        3,
+        8
+      ],
+      "items": [
+        {
+          "name": "Binding Sigil",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "hobgoblin": {
+    "key": "hobgoblin",
+    "name": "hobgoblin",
+    "profession": "warrior",
+    "family": "humanoid",
+    "element": "dark",
+    "rarity": "common",
+    "level": 5,
+    "baseHP": 14,
+    "baseATK": 4,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        3,
+        10
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.06
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.01
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "kobold": {
+    "key": "kobold",
+    "name": "kobold",
+    "profession": "warrior",
+    "family": "humanoid",
+    "element": "earth",
+    "rarity": "common",
+    "level": 5,
+    "baseHP": 14,
+    "baseATK": 4,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        2,
+        10
+      ],
+      "items": [
+        {
+          "name": "Kobold Tooth",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "alpha_mastiff": {
+    "key": "alpha_mastiff",
+    "name": "alpha_mastiff",
+    "profession": "dog",
+    "family": "dog",
+    "element": "normal",
+    "rarity": "uncommon",
+    "level": 5,
+    "baseHP": 14,
+    "baseATK": 4,
+    "baseDEF": 3,
+    "lootTable": {
+      "gold": [
+        4,
+        10
+      ],
+      "items": [
+        {
+          "name": "Mastiff Hide",
+          "chance": 0.08
+        },
+        {
+          "name": "Alpha Fang",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "skeleton": {
+    "key": "skeleton",
+    "name": "skeleton",
+    "profession": "warrior",
+    "family": "undead",
+    "element": "dark",
+    "rarity": "common",
+    "level": 6,
+    "baseHP": 15,
+    "baseATK": 5,
+    "baseDEF": 4,
+    "lootTable": {
+      "gold": [
+        3,
+        12
+      ],
+      "items": [
+        {
+          "name": "Bone Fragment",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "royal_slime": {
+    "key": "royal_slime",
+    "name": "royal_slime",
+    "profession": "slime",
+    "family": "slime",
+    "element": "poison",
+    "rarity": "rare",
+    "level": 6,
+    "baseHP": 15,
+    "baseATK": 5,
+    "baseDEF": 4,
+    "lootTable": {
+      "gold": [
+        5,
+        12
+      ],
+      "items": [
+        {
+          "name": "Royal Slime Core",
+          "chance": 0.15
+        },
+        {
+          "name": "Slime Gel",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "orebreaker": {
+    "key": "orebreaker",
+    "name": "orebreaker",
+    "profession": "miner",
+    "family": "miner",
+    "element": "earth",
+    "rarity": "uncommon",
+    "level": 6,
+    "baseHP": 15,
+    "baseATK": 5,
+    "baseDEF": 4,
+    "lootTable": {
+      "gold": [
+        5,
+        12
+      ],
+      "items": [
+        {
+          "name": "Heavy Ore",
+          "chance": 0.1
+        },
+        {
+          "name": "Iron Chunk",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "spirit_channeler": {
+    "key": "spirit_channeler",
+    "name": "spirit_channeler",
+    "profession": "ritualist",
+    "family": "ritualist",
+    "element": "arcane",
+    "rarity": "uncommon",
+    "level": 6,
+    "baseHP": 15,
+    "baseATK": 5,
+    "baseDEF": 4,
+    "lootTable": {
+      "gold": [
+        4,
+        10
+      ],
+      "items": [
+        {
+          "name": "Spirit Residue",
+          "chance": 0.1
+        },
+        {
+          "name": "Binding Sigil",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "archer rogue": {
+    "key": "archer rogue",
+    "name": "archer rogue",
+    "profession": "archer",
+    "family": "archer",
+    "element": "wind",
+    "rarity": "common",
+    "level": 7,
+    "baseHP": 16,
+    "baseATK": 5,
+    "baseDEF": 4,
+    "lootTable": {
+      "gold": [
+        4,
+        15
+      ],
+      "items": [
+        {
+          "name": "Short Bow",
+          "chance": 0.02
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "howling_warg": {
+    "key": "howling_warg",
+    "name": "howling_warg",
+    "profession": "dog",
+    "family": "beast",
+    "element": "dark",
+    "rarity": "rare",
+    "level": 7,
+    "baseHP": 16,
+    "baseATK": 5,
+    "baseDEF": 4,
+    "lootTable": {
+      "gold": [
+        6,
+        14
+      ],
+      "items": [
+        {
+          "name": "Warg Pelt",
+          "chance": 0.12
+        },
+        {
+          "name": "Howling Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "deepstone_foreman": {
+    "key": "deepstone_foreman",
+    "name": "deepstone_foreman",
+    "profession": "miner",
+    "family": "miner",
+    "element": "earth",
+    "rarity": "rare",
+    "level": 8,
+    "baseHP": 17,
+    "baseATK": 6,
+    "baseDEF": 5,
+    "lootTable": {
+      "gold": [
+        8,
+        18
+      ],
+      "items": [
+        {
+          "name": "Deepstone Core",
+          "chance": 0.15
+        },
+        {
+          "name": "Heavy Ore",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "grand_occultist": {
+    "key": "grand_occultist",
+    "name": "grand_occultist",
+    "profession": "ritualist",
+    "family": "ritualist",
+    "element": "dark",
+    "rarity": "rare",
+    "level": 8,
+    "baseHP": 17,
+    "baseATK": 6,
+    "baseDEF": 5,
+    "lootTable": {
+      "gold": [
+        8,
+        20
+      ],
+      "items": [
+        {
+          "name": "Occult Focus",
+          "chance": 0.18
+        },
+        {
+          "name": "Spirit Residue",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "orc": {
+    "key": "orc",
+    "name": "orc",
+    "profession": "warrior",
+    "family": "humanoid",
+    "element": "normal",
+    "rarity": "common",
+    "level": 10,
+    "baseHP": 20,
+    "baseATK": 7,
+    "baseDEF": 6,
+    "lootTable": {
+      "gold": [
+        10,
+        25
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.1
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "bandit captain": {
+    "key": "bandit captain",
+    "name": "bandit captain",
+    "profession": "warrior",
+    "family": "thief",
+    "element": "normal",
+    "rarity": "common",
+    "level": 12,
+    "baseHP": 23,
+    "baseATK": 8,
+    "baseDEF": 7,
+    "lootTable": {
+      "gold": [
+        10,
+        25
+      ],
+      "items": [
+        {
+          "name": "Steel Dagger",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "dire wolf": {
+    "key": "dire wolf",
+    "name": "dire wolf",
+    "profession": "beast",
+    "family": "beast",
+    "element": "nature",
+    "rarity": "common",
+    "level": 14,
+    "baseHP": 26,
+    "baseATK": 9,
+    "baseDEF": 8,
+    "lootTable": {
+      "gold": [
+        8,
+        20
+      ],
+      "items": [
+        {
+          "name": "Dire Pelt",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "skeleton archer": {
+    "key": "skeleton archer",
+    "name": "skeleton archer",
+    "profession": "archer",
+    "family": "archer",
+    "element": "dark",
+    "rarity": "common",
+    "level": 15,
+    "baseHP": 27,
+    "baseATK": 10,
+    "baseDEF": 9,
+    "lootTable": {
+      "gold": [
+        6,
+        18
+      ],
+      "items": [
+        {
+          "name": "Bone Arrow",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "zombie": {
+    "key": "zombie",
+    "name": "zombie",
+    "profession": "warrior",
+    "family": "undead",
+    "element": "poison",
+    "rarity": "common",
+    "level": 16,
+    "baseHP": 28,
+    "baseATK": 10,
+    "baseDEF": 9,
+    "lootTable": {
+      "gold": [
+        5,
+        15
+      ],
+      "items": [
+        {
+          "name": "Rotten Flesh",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "ghoul": {
+    "key": "ghoul",
+    "name": "ghoul",
+    "profession": "assassin",
+    "family": "undead",
+    "element": "dark",
+    "rarity": "common",
+    "level": 18,
+    "baseHP": 31,
+    "baseATK": 11,
+    "baseDEF": 10,
+    "lootTable": {
+      "gold": [
+        8,
+        22
+      ],
+      "items": [
+        {
+          "name": "Ghoul Claw",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "giant spider": {
+    "key": "giant spider",
+    "name": "giant spider",
+    "profession": "beast",
+    "family": "beast",
+    "element": "poison",
+    "rarity": "common",
+    "level": 20,
+    "baseHP": 34,
+    "baseATK": 12,
+    "baseDEF": 11,
+    "lootTable": {
+      "gold": [
+        10,
+        25
+      ],
+      "items": [
+        {
+          "name": "Spider Silk",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Sword-Novice Duelist": {
+    "key": "Sword-Novice Duelist",
+    "name": "Sword-Novice Duelist",
+    "profession": "trainee",
+    "family": "warrior",
+    "element": "normal",
+    "rarity": "common",
+    "level": 20,
+    "baseHP": 34,
+    "baseATK": 12,
+    "baseDEF": 11,
+    "lootTable": {
+      "gold": [
+        5,
+        10
+      ],
+      "items": []
+    },
+    "activeEffects": {}
+  },
+  "hornet swarm": {
+    "key": "hornet swarm",
+    "name": "hornet swarm",
+    "profession": "beast",
+    "family": "beast",
+    "element": "poison",
+    "rarity": "common",
+    "level": 22,
+    "baseHP": 37,
+    "baseATK": 13,
+    "baseDEF": 12,
+    "lootTable": {
+      "gold": [
+        8,
+        20
+      ],
+      "items": [
+        {
+          "name": "Stinger",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "barbarian": {
+    "key": "barbarian",
+    "name": "barbarian",
+    "profession": "berserker",
+    "family": "warrior",
+    "element": "earth",
+    "rarity": "common",
+    "level": 25,
+    "baseHP": 41,
+    "baseATK": 15,
+    "baseDEF": 14,
+    "lootTable": {
+      "gold": [
+        12,
+        30
+      ],
+      "items": [
+        {
+          "name": "Heavy Club",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Obsidian World‑Breaker": {
+    "key": "Obsidian World‑Breaker",
+    "name": "Obsidian World‑Breaker",
+    "profession": "apprentice",
+    "family": "titan",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 25,
+    "baseHP": 41,
+    "baseATK": 15,
+    "baseDEF": 14,
+    "lootTable": {
+      "gold": [
+        5,
+        10
+      ],
+      "items": []
+    },
+    "activeEffects": {}
+  },
+  "ranger scout": {
+    "key": "ranger scout",
+    "name": "ranger scout",
+    "profession": "ranger",
+    "family": "ranger",
+    "element": "wind",
+    "rarity": "common",
+    "level": 26,
+    "baseHP": 42,
+    "baseATK": 15,
+    "baseDEF": 14,
+    "lootTable": {
+      "gold": [
+        12,
+        28
+      ],
+      "items": [
+        {
+          "name": "Hunter Bow",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "monk disciple": {
+    "key": "monk disciple",
+    "name": "monk disciple",
+    "profession": "monk",
+    "family": "monk",
+    "element": "light",
+    "rarity": "common",
+    "level": 28,
+    "baseHP": 45,
+    "baseATK": 16,
+    "baseDEF": 15,
+    "lootTable": {
+      "gold": [
+        15,
+        35
+      ],
+      "items": [
+        {
+          "name": "Prayer Beads",
+          "chance": 0.02
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Shadow-Step Initiate": {
+    "key": "Shadow-Step Initiate",
+    "name": "Shadow-Step Initiate",
+    "profession": "trainee",
+    "family": "assassin",
+    "element": "dark",
+    "rarity": "common",
+    "level": 28,
+    "baseHP": 45,
+    "baseATK": 16,
+    "baseDEF": 15,
+    "lootTable": {
+      "gold": [
+        5,
+        10
+      ],
+      "items": []
+    },
+    "activeEffects": {}
+  },
+  "Arcane-Bloom Student": {
+    "key": "Arcane-Bloom Student",
+    "name": "Arcane-Bloom Student",
+    "profession": "apprentice",
+    "family": "arcane",
+    "element": "arcane-nature",
+    "rarity": "uncommon",
+    "level": 28,
+    "baseHP": 45,
+    "baseATK": 16,
+    "baseDEF": 15,
+    "lootTable": {
+      "gold": [
+        6,
+        12
+      ],
+      "items": [
+        {
+          "name": "Blooming Focus",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "witch apprentice": {
+    "key": "witch apprentice",
+    "name": "witch apprentice",
+    "profession": "witch",
+    "family": "witch",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 30,
+    "baseHP": 48,
+    "baseATK": 17,
+    "baseDEF": 16,
+    "lootTable": {
+      "gold": [
+        15,
+        40
+      ],
+      "items": [
+        {
+          "name": "Arcane Dust",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "necromancer adept": {
+    "key": "necromancer adept",
+    "name": "necromancer adept",
+    "profession": "necromancer",
+    "family": "necromancer",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 35,
+    "baseHP": 55,
+    "baseATK": 20,
+    "baseDEF": 19,
+    "lootTable": {
+      "gold": [
+        30,
+        60
+      ],
+      "items": [
+        {
+          "name": "Dark Tome",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "shaman of thorns": {
+    "key": "shaman of thorns",
+    "name": "shaman of thorns",
+    "profession": "shaman",
+    "family": "shaman",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 38,
+    "baseHP": 59,
+    "baseATK": 22,
+    "baseDEF": 20,
+    "lootTable": {
+      "gold": [
+        35,
+        70
+      ],
+      "items": [
+        {
+          "name": "Nature Charm",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "druid of storms": {
+    "key": "druid of storms",
+    "name": "druid of storms",
+    "profession": "druid",
+    "family": "druid",
+    "element": "wind-lightning",
+    "rarity": "elite",
+    "level": 40,
+    "baseHP": 62,
+    "baseATK": 23,
+    "baseDEF": 21,
+    "lootTable": {
+      "gold": [
+        40,
+        80
+      ],
+      "items": [
+        {
+          "name": "Storm Leaf",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "warlock cultist": {
+    "key": "warlock cultist",
+    "name": "warlock cultist",
+    "profession": "warlock",
+    "family": "warlock",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 42,
+    "baseHP": 65,
+    "baseATK": 24,
+    "baseDEF": 22,
+    "lootTable": {
+      "gold": [
+        45,
+        90
+      ],
+      "items": [
+        {
+          "name": "Cursed Orb",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "paladin initiate": {
+    "key": "paladin initiate",
+    "name": "paladin initiate",
+    "profession": "paladin",
+    "family": "paladin",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 45,
+    "baseHP": 69,
+    "baseATK": 26,
+    "baseDEF": 24,
+    "lootTable": {
+      "gold": [
+        50,
+        100
+      ],
+      "items": [
+        {
+          "name": "Holy Fragment",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "assassin shade": {
+    "key": "assassin shade",
+    "name": "assassin shade",
+    "profession": "assassin",
+    "family": "assassin",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 48,
+    "baseHP": 73,
+    "baseATK": 27,
+    "baseDEF": 25,
+    "lootTable": {
+      "gold": [
+        55,
+        110
+      ],
+      "items": [
+        {
+          "name": "Shadow Knife",
+          "chance": 0.02
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "terror knight": {
+    "key": "terror knight",
+    "name": "terror knight",
+    "profession": "guardian",
+    "family": "warrior",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 50,
+    "baseHP": 76,
+    "baseATK": 29,
+    "baseDEF": 27,
+    "lootTable": {
+      "gold": [
+        47,
+        135
+      ],
+      "items": [
+        {
+          "name": "Iron Sword",
+          "chance": 0.1
+        },
+        {
+          "name": "Dark Matter",
+          "chance": 0.001
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "minotaur": {
+    "key": "minotaur",
+    "name": "minotaur",
+    "profession": "warrior",
+    "family": "beast",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 50,
+    "baseHP": 76,
+    "baseATK": 29,
+    "baseDEF": 27,
+    "lootTable": {
+      "gold": [
+        60,
+        120
+      ],
+      "items": [
+        {
+          "name": "Minotaur Horn",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "centaur lancer": {
+    "key": "centaur lancer",
+    "name": "centaur lancer",
+    "profession": "warrior",
+    "family": "beast",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 52,
+    "baseHP": 80,
+    "baseATK": 30,
+    "baseDEF": 25,
+    "lootTable": {
+      "gold": [
+        65,
+        130
+      ],
+      "items": [
+        {
+          "name": "Centaur Spear",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "satyr trickster": {
+    "key": "satyr trickster",
+    "name": "satyr trickster",
+    "profession": "thief",
+    "family": "trickster",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 55,
+    "baseHP": 84,
+    "baseATK": 32,
+    "baseDEF": 27,
+    "lootTable": {
+      "gold": [
+        70,
+        140
+      ],
+      "items": [
+        {
+          "name": "Satyr Flute",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "giant boar": {
+    "key": "giant boar",
+    "name": "giant boar",
+    "profession": "beast",
+    "family": "beast",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 58,
+    "baseHP": 88,
+    "baseATK": 34,
+    "baseDEF": 29,
+    "lootTable": {
+      "gold": [
+        75,
+        150
+      ],
+      "items": [
+        {
+          "name": "Boar Tusk",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "tiger warrior": {
+    "key": "tiger warrior",
+    "name": "tiger warrior",
+    "profession": "beast",
+    "family": "beast",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 60,
+    "baseHP": 91,
+    "baseATK": 35,
+    "baseDEF": 30,
+    "lootTable": {
+      "gold": [
+        80,
+        160
+      ],
+      "items": [
+        {
+          "name": "Tiger Fang",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "serpent guardian": {
+    "key": "serpent guardian",
+    "name": "serpent guardian",
+    "profession": "beast",
+    "family": "beast",
+    "element": "poison",
+    "rarity": "elite",
+    "level": 62,
+    "baseHP": 94,
+    "baseATK": 36,
+    "baseDEF": 31,
+    "lootTable": {
+      "gold": [
+        85,
+        170
+      ],
+      "items": [
+        {
+          "name": "Serpent Scale",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "banshee": {
+    "key": "banshee",
+    "name": "banshee",
+    "profession": "mage",
+    "family": "spirit",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 65,
+    "baseHP": 98,
+    "baseATK": 38,
+    "baseDEF": 33,
+    "lootTable": {
+      "gold": [
+        90,
+        180
+      ],
+      "items": [
+        {
+          "name": "Wailing Essence",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "wraith": {
+    "key": "wraith",
+    "name": "wraith",
+    "profession": "mage",
+    "family": "undead",
+    "element": "void",
+    "rarity": "elite",
+    "level": 68,
+    "baseHP": 102,
+    "baseATK": 40,
+    "baseDEF": 35,
+    "lootTable": {
+      "gold": [
+        95,
+        190
+      ],
+      "items": [
+        {
+          "name": "Void Whisper",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "fire elemental": {
+    "key": "fire elemental",
+    "name": "fire elemental",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "fire",
+    "rarity": "elite",
+    "level": 70,
+    "baseHP": 105,
+    "baseATK": 41,
+    "baseDEF": 36,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Fire Core",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "water elemental": {
+    "key": "water elemental",
+    "name": "water elemental",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "water",
+    "rarity": "elite",
+    "level": 72,
+    "baseHP": 108,
+    "baseATK": 42,
+    "baseDEF": 37,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Water Core",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "earth elemental": {
+    "key": "earth elemental",
+    "name": "earth elemental",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 74,
+    "baseHP": 111,
+    "baseATK": 43,
+    "baseDEF": 38,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Earth Core",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "wind elemental": {
+    "key": "wind elemental",
+    "name": "wind elemental",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "wind",
+    "rarity": "elite",
+    "level": 76,
+    "baseHP": 114,
+    "baseATK": 44,
+    "baseDEF": 39,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Wind Core",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "treant": {
+    "key": "treant",
+    "name": "treant",
+    "profession": "plant",
+    "family": "plant",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 76,
+    "baseHP": 114,
+    "baseATK": 44,
+    "baseDEF": 39,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Stick",
+          "chance": 0.998
+        },
+        {
+          "name": "Holy Sticalibur",
+          "chance": 0.002
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "lightning elemental": {
+    "key": "lightning elemental",
+    "name": "lightning elemental",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "lightning",
+    "rarity": "elite",
+    "level": 78,
+    "baseHP": 117,
+    "baseATK": 45,
+    "baseDEF": 40,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Lightning Core",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "ice elemental": {
+    "key": "ice elemental",
+    "name": "ice elemental",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "ice",
+    "rarity": "elite",
+    "level": 80,
+    "baseHP": 120,
+    "baseATK": 46,
+    "baseDEF": 41,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Ice Core",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "poison elemental": {
+    "key": "poison elemental",
+    "name": "poison elemental",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "poison",
+    "rarity": "elite",
+    "level": 82,
+    "baseHP": 123,
+    "baseATK": 47,
+    "baseDEF": 42,
+    "lootTable": {
+      "gold": [
+        100,
+        200
+      ],
+      "items": [
+        {
+          "name": "Poison Core",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "arcane sentinel": {
+    "key": "arcane sentinel",
+    "name": "arcane sentinel",
+    "profession": "mage",
+    "family": "elemental",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 85,
+    "baseHP": 128,
+    "baseATK": 49,
+    "baseDEF": 44,
+    "lootTable": {
+      "gold": [
+        140,
+        280
+      ],
+      "items": [
+        {
+          "name": "Arcane Shard",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "metal golem": {
+    "key": "metal golem",
+    "name": "metal golem",
+    "profession": "guardian",
+    "family": "construct",
+    "element": "metal",
+    "rarity": "elite",
+    "level": 88,
+    "baseHP": 133,
+    "baseATK": 51,
+    "baseDEF": 46,
+    "lootTable": {
+      "gold": [
+        150,
+        300
+      ],
+      "items": [
+        {
+          "name": "Metal Chunk",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "nature guardian": {
+    "key": "nature guardian",
+    "name": "nature guardian",
+    "profession": "druid",
+    "family": "plant",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 90,
+    "baseHP": 136,
+    "baseATK": 52,
+    "baseDEF": 47,
+    "lootTable": {
+      "gold": [
+        150,
+        300
+      ],
+      "items": [
+        {
+          "name": "Nature Heart",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Storm-Crowned Tempestling": {
+    "key": "Storm-Crowned Tempestling",
+    "name": "Storm-Crowned Tempestling",
+    "profession": "elemental",
+    "family": "elemental",
+    "element": "lightning",
+    "rarity": "uncommon",
+    "level": 90,
+    "baseHP": 136,
+    "baseATK": 52,
+    "baseDEF": 47,
+    "lootTable": {
+      "gold": [
+        20,
+        40
+      ],
+      "items": [
+        {
+          "name": "Tempest Spark",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "lesser demon": {
+    "key": "lesser demon",
+    "name": "lesser demon",
+    "profession": "warlock",
+    "family": "demon",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 95,
+    "baseHP": 143,
+    "baseATK": 55,
+    "baseDEF": 50,
+    "lootTable": {
+      "gold": [
+        200,
+        350
+      ],
+      "items": [
+        {
+          "name": "Demon Horn",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Storm-Crowned Tempestling_Rare": {
+    "key": "Storm-Crowned Tempestling_Rare",
+    "name": "Storm-Crowned Tempestling_Rare",
+    "profession": "elemental",
+    "family": "elemental",
+    "element": "lightning",
+    "rarity": "rare",
+    "level": 95,
+    "baseHP": 143,
+    "baseATK": 55,
+    "baseDEF": 50,
+    "lootTable": {
+      "gold": [
+        18,
+        32
+      ],
+      "items": [
+        {
+          "name": "Tempest Core",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "hellhound": {
+    "key": "hellhound",
+    "name": "hellhound",
+    "profession": "beast",
+    "family": "demon",
+    "element": "fire",
+    "rarity": "elite",
+    "level": 98,
+    "baseHP": 147,
+    "baseATK": 57,
+    "baseDEF": 52,
+    "lootTable": {
+      "gold": [
+        200,
+        360
+      ],
+      "items": [
+        {
+          "name": "Hellhound Fang",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "hydra": {
+    "key": "hydra",
+    "name": "hydra",
+    "profession": "beast",
+    "family": "beast",
+    "element": "combo",
+    "rarity": "elite",
+    "level": 100,
+    "baseHP": 150,
+    "baseATK": 58,
+    "baseDEF": 53,
+    "lootTable": {
+      "gold": [
+        76,
+        150
+      ],
+      "items": [
+        {
+          "name": "Steel Sword",
+          "chance": 0.05
+        },
+        {
+          "name": "Water Essence",
+          "chance": 0.01
+        },
+        {
+          "name": "Air Sword",
+          "chance": 0.01
+        },
+        {
+          "name": "Earth Essence",
+          "chance": 0.01
+        },
+        {
+          "name": "Fire Essence",
+          "chance": 0.01
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "imp warlock": {
+    "key": "imp warlock",
+    "name": "imp warlock",
+    "profession": "warlock",
+    "family": "demon",
+    "element": "fire-dark",
+    "rarity": "elite",
+    "level": 100,
+    "baseHP": 150,
+    "baseATK": 58,
+    "baseDEF": 53,
+    "lootTable": {
+      "gold": [
+        210,
+        380
+      ],
+      "items": [
+        {
+          "name": "Imp Ember",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "demon knight": {
+    "key": "demon knight",
+    "name": "demon knight",
+    "profession": "warrior",
+    "family": "demon",
+    "element": "dark",
+    "rarity": "boss",
+    "level": 110,
+    "baseHP": 164,
+    "baseATK": 64,
+    "baseDEF": 59,
+    "lootTable": {
+      "gold": [
+        300,
+        500
+      ],
+      "items": [
+        {
+          "name": "Demon Blade",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "succubus": {
+    "key": "succubus",
+    "name": "succubus",
+    "profession": "assassin",
+    "family": "demon",
+    "element": "dark",
+    "rarity": "boss",
+    "level": 115,
+    "baseHP": 171,
+    "baseATK": 67,
+    "baseDEF": 62,
+    "lootTable": {
+      "gold": [
+        320,
+        520
+      ],
+      "items": [
+        {
+          "name": "Charm of Desire",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "abyssal brute": {
+    "key": "abyssal brute",
+    "name": "abyssal brute",
+    "profession": "berserker",
+    "family": "demon",
+    "element": "void",
+    "rarity": "boss",
+    "level": 120,
+    "baseHP": 178,
+    "baseATK": 70,
+    "baseDEF": 65,
+    "lootTable": {
+      "gold": [
+        350,
+        550
+      ],
+      "items": [
+        {
+          "name": "Abyss Fragment",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Ethereal Tidecaller": {
+    "key": "Ethereal Tidecaller",
+    "name": "Ethereal Tidecaller",
+    "profession": "mage",
+    "family": "spirit",
+    "element": "water",
+    "rarity": "elite",
+    "level": 120,
+    "baseHP": 178,
+    "baseATK": 70,
+    "baseDEF": 65,
+    "lootTable": {
+      "gold": [
+        40,
+        70
+      ],
+      "items": [
+        {
+          "name": "Tidecaller Orb",
+          "chance": 0.12
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "young dragon": {
+    "key": "young dragon",
+    "name": "young dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "fire",
+    "rarity": "boss",
+    "level": 130,
+    "baseHP": 193,
+    "baseATK": 76,
+    "baseDEF": 71,
+    "lootTable": {
+      "gold": [
+        400,
+        600
+      ],
+      "items": [
+        {
+          "name": "Young Scale",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "frost wyrm": {
+    "key": "frost wyrm",
+    "name": "frost wyrm",
+    "profession": "mage",
+    "family": "dragon",
+    "element": "ice",
+    "rarity": "boss",
+    "level": 135,
+    "baseHP": 200,
+    "baseATK": 79,
+    "baseDEF": 74,
+    "lootTable": {
+      "gold": [
+        420,
+        620
+      ],
+      "items": [
+        {
+          "name": "Frost Scale",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "storm drake": {
+    "key": "storm drake",
+    "name": "storm drake",
+    "profession": "mage",
+    "family": "dragon",
+    "element": "wind-lightning",
+    "rarity": "boss",
+    "level": 140,
+    "baseHP": 207,
+    "baseATK": 82,
+    "baseDEF": 77,
+    "lootTable": {
+      "gold": [
+        450,
+        650
+      ],
+      "items": [
+        {
+          "name": "Storm Scale",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Frost-Veil Apparition": {
+    "key": "Frost-Veil Apparition",
+    "name": "Frost-Veil Apparition",
+    "profession": "spirit",
+    "family": "spirit",
+    "element": "ice",
+    "rarity": "elite",
+    "level": 140,
+    "baseHP": 207,
+    "baseATK": 82,
+    "baseDEF": 77,
+    "lootTable": {
+      "gold": [
+        50,
+        80
+      ],
+      "items": [
+        {
+          "name": "Frozen Whisper",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "magma serpent": {
+    "key": "magma serpent",
+    "name": "magma serpent",
+    "profession": "mage",
+    "family": "beast",
+    "element": "fire-earth",
+    "rarity": "boss",
+    "level": 145,
+    "baseHP": 214,
+    "baseATK": 85,
+    "baseDEF": 80,
+    "lootTable": {
+      "gold": [
+        480,
+        680
+      ],
+      "items": [
+        {
+          "name": "Magma Scale",
+          "chance": 0.04
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "crystal dragon": {
+    "key": "crystal dragon",
+    "name": "crystal dragon",
+    "profession": "mage",
+    "family": "dragon",
+    "element": "arcane",
+    "rarity": "boss",
+    "level": 150,
+    "baseHP": 221,
+    "baseATK": 88,
+    "baseDEF": 83,
+    "lootTable": {
+      "gold": [
+        500,
+        700
+      ],
+      "items": [
+        {
+          "name": "Crystal Heart",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "void reaver": {
+    "key": "void reaver",
+    "name": "void reaver",
+    "profession": "assassin",
+    "family": "void",
+    "element": "void",
+    "rarity": "mythical",
+    "level": 160,
+    "baseHP": 236,
+    "baseATK": 95,
+    "baseDEF": 90,
+    "lootTable": {
+      "gold": [
+        700,
+        1200
+      ],
+      "items": [
+        {
+          "name": "Void Fragment",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Toxic Mire-Stalker": {
+    "key": "Toxic Mire-Stalker",
+    "name": "Toxic Mire-Stalker",
+    "profession": "beast",
+    "family": "beast",
+    "element": "poison",
+    "rarity": "elite",
+    "level": 160,
+    "baseHP": 236,
+    "baseATK": 95,
+    "baseDEF": 90,
+    "lootTable": {
+      "gold": [
+        60,
+        90
+      ],
+      "items": [
+        {
+          "name": "Toxic Fang",
+          "chance": 0.14
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "celestial guardian": {
+    "key": "celestial guardian",
+    "name": "celestial guardian",
+    "profession": "paladin",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "mythical",
+    "level": 170,
+    "baseHP": 251,
+    "baseATK": 102,
+    "baseDEF": 96,
+    "lootTable": {
+      "gold": [
+        750,
+        1300
+      ],
+      "items": [
+        {
+          "name": "Celestial Feather",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "funny sthreeven man": {
+    "key": "funny sthreeven man",
+    "name": "funny sthreeven man",
+    "profession": "assassin",
+    "family": "humanoid",
+    "element": "void",
+    "rarity": "mythical",
+    "level": 176,
+    "baseHP": 259,
+    "baseATK": 106,
+    "baseDEF": 100,
+    "lootTable": {
+      "gold": [
+        700,
+        1200
+      ],
+      "items": [
+        {
+          "name": "Transcension Tally",
+          "chance": 0.000003
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "arcane chimera": {
+    "key": "arcane chimera",
+    "name": "arcane chimera",
+    "profession": "mage",
+    "family": "beast",
+    "element": "arcane-nature",
+    "rarity": "mythical",
+    "level": 180,
+    "baseHP": 265,
+    "baseATK": 109,
+    "baseDEF": 103,
+    "lootTable": {
+      "gold": [
+        800,
+        1400
+      ],
+      "items": [
+        {
+          "name": "Chimera Core",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Shadow-Marked Outrider": {
+    "key": "Shadow-Marked Outrider",
+    "name": "Shadow-Marked Outrider",
+    "profession": "assassin",
+    "family": "assassin",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 180,
+    "baseHP": 265,
+    "baseATK": 109,
+    "baseDEF": 103,
+    "lootTable": {
+      "gold": [
+        70,
+        110
+      ],
+      "items": [
+        {
+          "name": "Shadowbrand Knife",
+          "chance": 0.11
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "infernal juggernaut": {
+    "key": "infernal juggernaut",
+    "name": "infernal juggernaut",
+    "profession": "berserker",
+    "family": "demon",
+    "element": "fire-dark",
+    "rarity": "mythical",
+    "level": 190,
+    "baseHP": 280,
+    "baseATK": 116,
+    "baseDEF": 109,
+    "lootTable": {
+      "gold": [
+        850,
+        1500
+      ],
+      "items": [
+        {
+          "name": "Infernal Plate",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "thunder colossus": {
+    "key": "thunder colossus",
+    "name": "thunder colossus",
+    "profession": "guardian",
+    "family": "colossus",
+    "element": "lightning",
+    "rarity": "mythical",
+    "level": 200,
+    "baseHP": 295,
+    "baseATK": 123,
+    "baseDEF": 115,
+    "lootTable": {
+      "gold": [
+        900,
+        1600
+      ],
+      "items": [
+        {
+          "name": "Thunder Core",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Banished Hex-Caller": {
+    "key": "Banished Hex-Caller",
+    "name": "Banished Hex-Caller",
+    "profession": "warlock",
+    "family": "ritualist",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 200,
+    "baseHP": 295,
+    "baseATK": 123,
+    "baseDEF": 115,
+    "lootTable": {
+      "gold": [
+        80,
+        120
+      ],
+      "items": [
+        {
+          "name": "Hexbinder Charm",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "glacier titan": {
+    "key": "glacier titan",
+    "name": "glacier titan",
+    "profession": "guardian",
+    "family": "titan",
+    "element": "ice",
+    "rarity": "mythical",
+    "level": 210,
+    "baseHP": 310,
+    "baseATK": 130,
+    "baseDEF": 121,
+    "lootTable": {
+      "gold": [
+        950,
+        1700
+      ],
+      "items": [
+        {
+          "name": "Glacier Heart",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "molten behemoth": {
+    "key": "molten behemoth",
+    "name": "molten behemoth",
+    "profession": "berserker",
+    "family": "colossus",
+    "element": "fire-earth",
+    "rarity": "mythical",
+    "level": 220,
+    "baseHP": 325,
+    "baseATK": 137,
+    "baseDEF": 127,
+    "lootTable": {
+      "gold": [
+        1000,
+        1800
+      ],
+      "items": [
+        {
+          "name": "Molten Plate",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Storm Sovereign": {
+    "key": "Storm Sovereign",
+    "name": "Storm Sovereign",
+    "profession": "mage",
+    "family": "titan",
+    "element": "wind-lightning",
+    "rarity": "mythical",
+    "level": 230,
+    "baseHP": 340,
+    "baseATK": 144,
+    "baseDEF": 133,
+    "lootTable": {
+      "gold": [
+        1050,
+        1900
+      ],
+      "items": [
+        {
+          "name": "Storm Crown",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "nature colossus": {
+    "key": "nature colossus",
+    "name": "nature colossus",
+    "profession": "druid",
+    "family": "colossus",
+    "element": "nature",
+    "rarity": "mythical",
+    "level": 240,
+    "baseHP": 355,
+    "baseATK": 151,
+    "baseDEF": 139,
+    "lootTable": {
+      "gold": [
+        1100,
+        2000
+      ],
+      "items": [
+        {
+          "name": "Nature Core",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "death knight": {
+    "key": "death knight",
+    "name": "death knight",
+    "profession": "warrior",
+    "family": "undead",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 250,
+    "baseHP": 370,
+    "baseATK": 158,
+    "baseDEF": 145,
+    "lootTable": {
+      "gold": [
+        100,
+        150
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.1
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.05
+        },
+        {
+          "name": "Dark Essence",
+          "chance": 0.01
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "void leviathan": {
+    "key": "void leviathan",
+    "name": "void leviathan",
+    "profession": "beast",
+    "family": "void",
+    "element": "void",
+    "rarity": "mythical",
+    "level": 250,
+    "baseHP": 370,
+    "baseATK": 158,
+    "baseDEF": 145,
+    "lootTable": {
+      "gold": [
+        1200,
+        2200
+      ],
+      "items": [
+        {
+          "name": "Void Scale",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "abyss watcher": {
+    "key": "abyss watcher",
+    "name": "abyss watcher",
+    "profession": "assassin",
+    "family": "void",
+    "element": "void-dark",
+    "rarity": "mythical",
+    "level": 260,
+    "baseHP": 385,
+    "baseATK": 165,
+    "baseDEF": 151,
+    "lootTable": {
+      "gold": [
+        1250,
+        2300
+      ],
+      "items": [
+        {
+          "name": "Abyss Eye",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "celestial herald": {
+    "key": "celestial herald",
+    "name": "celestial herald",
+    "profession": "paladin",
+    "family": "celestial",
+    "element": "holy-light",
+    "rarity": "mythical",
+    "level": 270,
+    "baseHP": 400,
+    "baseATK": 172,
+    "baseDEF": 157,
+    "lootTable": {
+      "gold": [
+        1300,
+        2400
+      ],
+      "items": [
+        {
+          "name": "Herald Feather",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "arcane phoenix": {
+    "key": "arcane phoenix",
+    "name": "arcane phoenix",
+    "profession": "mage",
+    "family": "arcane",
+    "element": "arcane-fire",
+    "rarity": "mythical",
+    "level": 280,
+    "baseHP": 415,
+    "baseATK": 179,
+    "baseDEF": 163,
+    "lootTable": {
+      "gold": [
+        1350,
+        2500
+      ],
+      "items": [
+        {
+          "name": "Phoenix Ember",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "iron colossus": {
+    "key": "iron colossus",
+    "name": "iron colossus",
+    "profession": "guardian",
+    "family": "colossus",
+    "element": "metal",
+    "rarity": "mythical",
+    "level": 290,
+    "baseHP": 430,
+    "baseATK": 186,
+    "baseDEF": 169,
+    "lootTable": {
+      "gold": [
+        1400,
+        2600
+      ],
+      "items": [
+        {
+          "name": "Iron Core",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "fire dragon": {
+    "key": "fire dragon",
+    "name": "fire dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "fire",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Fire Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "earth dragon": {
+    "key": "earth dragon",
+    "name": "earth dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "earth",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Earth Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "water dragon": {
+    "key": "water dragon",
+    "name": "water dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "water",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Water Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "wind dragon": {
+    "key": "wind dragon",
+    "name": "wind dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "wind",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Wind Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "lightning dragon": {
+    "key": "lightning dragon",
+    "name": "lightning dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "lightning",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Lightning Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "dark dragon": {
+    "key": "dark dragon",
+    "name": "dark dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "dark",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Dark Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "light dragon": {
+    "key": "light dragon",
+    "name": "light dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "light",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Light Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "ice dragon": {
+    "key": "ice dragon",
+    "name": "ice dragon",
+    "profession": "beast",
+    "family": "dragon",
+    "element": "ice",
+    "rarity": "boss",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        500,
+        750
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.08
+        },
+        {
+          "name": "Ice Essence",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "chaos wyrm": {
+    "key": "chaos wyrm",
+    "name": "chaos wyrm",
+    "profession": "mage",
+    "family": "dragon",
+    "element": "void-fire",
+    "rarity": "mythical",
+    "level": 300,
+    "baseHP": 445,
+    "baseATK": 193,
+    "baseDEF": 175,
+    "lootTable": {
+      "gold": [
+        1500,
+        2800
+      ],
+      "items": [
+        {
+          "name": "Chaos Scale",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "astral chimera": {
+    "key": "astral chimera",
+    "name": "astral chimera",
+    "profession": "mage",
+    "family": "beast",
+    "element": "arcane-wind",
+    "rarity": "mythical",
+    "level": 320,
+    "baseHP": 474,
+    "baseATK": 207,
+    "baseDEF": 188,
+    "lootTable": {
+      "gold": [
+        1600,
+        3000
+      ],
+      "items": [
+        {
+          "name": "Astral Core",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "titan of ruin": {
+    "key": "titan of ruin",
+    "name": "titan of ruin",
+    "profession": "warrior",
+    "family": "titan",
+    "element": "void-earth",
+    "rarity": "mythical",
+    "level": 340,
+    "baseHP": 503,
+    "baseATK": 221,
+    "baseDEF": 201,
+    "lootTable": {
+      "gold": [
+        1700,
+        3200
+      ],
+      "items": [
+        {
+          "name": "Ruin Fragment",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "divine sentinel": {
+    "key": "divine sentinel",
+    "name": "divine sentinel",
+    "profession": "paladin",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "mythical",
+    "level": 360,
+    "baseHP": 532,
+    "baseATK": 235,
+    "baseDEF": 214,
+    "lootTable": {
+      "gold": [
+        1800,
+        3400
+      ],
+      "items": [
+        {
+          "name": "Divine Shard",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "shadow colossus": {
+    "key": "shadow colossus",
+    "name": "shadow colossus",
+    "profession": "guardian",
+    "family": "colossus",
+    "element": "dark",
+    "rarity": "mythical",
+    "level": 380,
+    "baseHP": 561,
+    "baseATK": 249,
+    "baseDEF": 227,
+    "lootTable": {
+      "gold": [
+        1900,
+        3600
+      ],
+      "items": [
+        {
+          "name": "Shadow Core",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "primordial wyrm": {
+    "key": "primordial wyrm",
+    "name": "primordial wyrm",
+    "profession": "mage",
+    "family": "dragon",
+    "element": "arcane-nature",
+    "rarity": "mythical",
+    "level": 400,
+    "baseHP": 590,
+    "baseATK": 263,
+    "baseDEF": 240,
+    "lootTable": {
+      "gold": [
+        2000,
+        3800
+      ],
+      "items": [
+        {
+          "name": "Primordial Scale",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "storm titan": {
+    "key": "storm titan",
+    "name": "storm titan",
+    "profession": "guardian",
+    "family": "titan",
+    "element": "wind-lightning",
+    "rarity": "mythical",
+    "level": 420,
+    "baseHP": 619,
+    "baseATK": 277,
+    "baseDEF": 253,
+    "lootTable": {
+      "gold": [
+        2100,
+        4000
+      ],
+      "items": [
+        {
+          "name": "Storm Titan Core",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "infernal archlord": {
+    "key": "infernal archlord",
+    "name": "infernal archlord",
+    "profession": "warlock",
+    "family": "demon",
+    "element": "fire-dark",
+    "rarity": "mythical",
+    "level": 450,
+    "baseHP": 661,
+    "baseATK": 297,
+    "baseDEF": 271,
+    "lootTable": {
+      "gold": [
+        2300,
+        4300
+      ],
+      "items": [
+        {
+          "name": "Infernal Crest",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "celestial archon": {
+    "key": "celestial archon",
+    "name": "celestial archon",
+    "profession": "cleric",
+    "family": "celestial",
+    "element": "holy-light",
+    "rarity": "mythical",
+    "level": 480,
+    "baseHP": 703,
+    "baseATK": 317,
+    "baseDEF": 289,
+    "lootTable": {
+      "gold": [
+        2500,
+        4600
+      ],
+      "items": [
+        {
+          "name": "Archon Halo",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "void monarch": {
+    "key": "void monarch",
+    "name": "void monarch",
+    "profession": "mage",
+    "family": "void",
+    "element": "void",
+    "rarity": "mythical",
+    "level": 500,
+    "baseHP": 732,
+    "baseATK": 331,
+    "baseDEF": 302,
+    "lootTable": {
+      "gold": [
+        2700,
+        5000
+      ],
+      "items": [
+        {
+          "name": "Void Crown",
+          "chance": 0.03
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "world titan": {
+    "key": "world titan",
+    "name": "world titan",
+    "profession": "guardian",
+    "family": "titan",
+    "element": "earth",
+    "rarity": "final",
+    "level": 600,
+    "baseHP": 865,
+    "baseATK": 395,
+    "baseDEF": 360,
+    "lootTable": {
+      "gold": [
+        3500,
+        7000
+      ],
+      "items": [
+        {
+          "name": "Titan Heart",
+          "chance": 0.02
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "demon": {
+    "key": "demon",
+    "name": "demon",
+    "profession": "mage",
+    "family": "demon",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 666,
+    "baseHP": 951,
+    "baseATK": 437,
+    "baseDEF": 398,
+    "lootTable": {
+      "gold": [
+        350,
+        666
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.1
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.05
+        },
+        {
+          "name": "Dark Essence",
+          "chance": 0.01
+        },
+        {
+          "name": "Dark Orb",
+          "chance": 0.01
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "astral sovereign": {
+    "key": "astral sovereign",
+    "name": "astral sovereign",
+    "profession": "mage",
+    "family": "celestial",
+    "element": "arcane",
+    "rarity": "final",
+    "level": 700,
+    "baseHP": 1000,
+    "baseATK": 460,
+    "baseDEF": 420,
+    "lootTable": {
+      "gold": [
+        4000,
+        8000
+      ],
+      "items": [
+        {
+          "name": "Astral Crown",
+          "chance": 0.02
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "eternal wyrm": {
+    "key": "eternal wyrm",
+    "name": "eternal wyrm",
+    "profession": "mage",
+    "family": "dragon",
+    "element": "arcane-void",
+    "rarity": "final",
+    "level": 800,
+    "baseHP": 1130,
+    "baseATK": 520,
+    "baseDEF": 475,
+    "lootTable": {
+      "gold": [
+        4500,
+        9000
+      ],
+      "items": [
+        {
+          "name": "Eternal Scale",
+          "chance": 0.02
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "celestial seraph": {
+    "key": "celestial seraph",
+    "name": "celestial seraph",
+    "profession": "cleric",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "final",
+    "level": 900,
+    "baseHP": 1260,
+    "baseATK": 580,
+    "baseDEF": 530,
+    "lootTable": {
+      "gold": [
+        5000,
+        10000
+      ],
+      "items": [
+        {
+          "name": "Seraph Feather",
+          "chance": 0.02
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "angel": {
+    "key": "angel",
+    "name": "angel",
+    "profession": "cleric",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "mythical",
+    "level": 1000,
+    "baseHP": 1400,
+    "baseATK": 640,
+    "baseDEF": 585,
+    "lootTable": {
+      "gold": [
+        260,
+        777
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.3
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.1
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.05
+        },
+        {
+          "name": "Light Essence",
+          "chance": 0.01
+        },
+        {
+          "name": "Light Orb",
+          "chance": 0.01
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "plink": {
+    "key": "plink",
+    "name": "plink",
+    "profession": "cat",
+    "family": "arcane",
+    "element": "void-dark",
+    "rarity": "mythical",
+    "level": 1000,
+    "baseHP": 1400,
+    "baseATK": 640,
+    "baseDEF": 585,
+    "lootTable": {
+      "gold": [
+        9999,
+        29999
+      ],
+      "items": [
+        {
+          "name": "Transcension Tally",
+          "chance": 0.0003
+        },
+        {
+          "name": "Cat Fur",
+          "chance": 0.96
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "umbral skitterfiend": {
+    "key": "umbral skitterfiend",
+    "name": "umbral skitterfiend",
+    "profession": "assassin",
+    "family": "demon",
+    "element": "dark",
+    "rarity": "common",
+    "level": 1000,
+    "baseHP": 1400,
+    "baseATK": 640,
+    "baseDEF": 585,
+    "lootTable": {
+      "gold": [
+        120,
+        220
+      ],
+      "items": [
+        {
+          "name": "Tattered Shadow Cloth",
+          "chance": 0.18
+        },
+        {
+          "name": "Dull Fang Dagger",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Hollowbone Stalker": {
+    "key": "Hollowbone Stalker",
+    "name": "Hollowbone Stalker",
+    "profession": "thief",
+    "family": "void",
+    "element": "void",
+    "rarity": "common",
+    "level": 1050,
+    "baseHP": 1470,
+    "baseATK": 675,
+    "baseDEF": 615,
+    "lootTable": {
+      "gold": [
+        130,
+        230
+      ],
+      "items": [
+        {
+          "name": "Splintered Void Bone",
+          "chance": 0.2
+        },
+        {
+          "name": "Shade-Touched Knife",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Abyss-Gnawed Shadehound": {
+    "key": "Abyss-Gnawed Shadehound",
+    "name": "Abyss-Gnawed Shadehound",
+    "profession": "beast",
+    "family": "demon",
+    "element": "dark",
+    "rarity": "common",
+    "level": 1100,
+    "baseHP": 1540,
+    "baseATK": 710,
+    "baseDEF": 645,
+    "lootTable": {
+      "gold": [
+        140,
+        250
+      ],
+      "items": [
+        {
+          "name": "Abyssal Fur Tuft",
+          "chance": 0.22
+        },
+        {
+          "name": "Gnawed Shadow Collar",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Nullborn Ravager": {
+    "key": "Nullborn Ravager",
+    "name": "Nullborn Ravager",
+    "profession": "warrior",
+    "family": "void",
+    "element": "void",
+    "rarity": "elite",
+    "level": 1200,
+    "baseHP": 1680,
+    "baseATK": 780,
+    "baseDEF": 705,
+    "lootTable": {
+      "gold": [
+        220,
+        360
+      ],
+      "items": [
+        {
+          "name": "Nullborn Shard",
+          "chance": 0.22
+        },
+        {
+          "name": "Ravager Greatblade",
+          "chance": 0.05
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Runespun Aetherling": {
+    "key": "Runespun Aetherling",
+    "name": "Runespun Aetherling",
+    "profession": "mage",
+    "family": "arcane",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 1200,
+    "baseHP": 1680,
+    "baseATK": 780,
+    "baseDEF": 705,
+    "lootTable": {
+      "gold": [
+        180,
+        300
+      ],
+      "items": [
+        {
+          "name": "Runespun Thread",
+          "chance": 0.2
+        },
+        {
+          "name": "Aetherling Spark",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Eclipse-Marked Assassin": {
+    "key": "Eclipse-Marked Assassin",
+    "name": "Eclipse-Marked Assassin",
+    "profession": "assassin",
+    "family": "humanoid",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 1300,
+    "baseHP": 1820,
+    "baseATK": 850,
+    "baseDEF": 765,
+    "lootTable": {
+      "gold": [
+        210,
+        340
+      ],
+      "items": [
+        {
+          "name": "Eclipse Sigil",
+          "chance": 0.2
+        },
+        {
+          "name": "Assassin’s Shadow Veil",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Spellforged Myrmidon": {
+    "key": "Spellforged Myrmidon",
+    "name": "Spellforged Myrmidon",
+    "profession": "guardian",
+    "family": "humanoid",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 1300,
+    "baseHP": 1820,
+    "baseATK": 850,
+    "baseDEF": 765,
+    "lootTable": {
+      "gold": [
+        260,
+        430
+      ],
+      "items": [
+        {
+          "name": "Spellforged Plate Scrap",
+          "chance": 0.23
+        },
+        {
+          "name": "Myrmidon Core",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Astral-Thread Weaver": {
+    "key": "Astral-Thread Weaver",
+    "name": "Astral-Thread Weaver",
+    "profession": "witch",
+    "family": "beast",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 1350,
+    "baseHP": 1890,
+    "baseATK": 885,
+    "baseDEF": 795,
+    "lootTable": {
+      "gold": [
+        190,
+        310
+      ],
+      "items": [
+        {
+          "name": "Astral Thread Spool",
+          "chance": 0.21
+        },
+        {
+          "name": "Weaver’s Needle",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Warped Soulrender": {
+    "key": "Warped Soulrender",
+    "name": "Warped Soulrender",
+    "profession": "warlock",
+    "family": "void",
+    "element": "void",
+    "rarity": "elite",
+    "level": 1400,
+    "baseHP": 1960,
+    "baseATK": 920,
+    "baseDEF": 825,
+    "lootTable": {
+      "gold": [
+        230,
+        380
+      ],
+      "items": [
+        {
+          "name": "Warped Soul Fragment",
+          "chance": 0.24
+        },
+        {
+          "name": "Soulrender Grimoire",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Mana-Starved Riftspawn": {
+    "key": "Mana-Starved Riftspawn",
+    "name": "Mana-Starved Riftspawn",
+    "profession": "beast",
+    "family": "void",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 1400,
+    "baseHP": 1960,
+    "baseATK": 920,
+    "baseDEF": 825,
+    "lootTable": {
+      "gold": [
+        200,
+        320
+      ],
+      "items": [
+        {
+          "name": "Riftspawn Ichor",
+          "chance": 0.22
+        },
+        {
+          "name": "Mana-Starved Husk",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Grimhollow Reaperling": {
+    "key": "Grimhollow Reaperling",
+    "name": "Grimhollow Reaperling",
+    "profession": "assassin",
+    "family": "demon",
+    "element": "shadow",
+    "rarity": "common",
+    "level": 1500,
+    "baseHP": 2100,
+    "baseATK": 990,
+    "baseDEF": 885,
+    "lootTable": {
+      "gold": [
+        160,
+        260
+      ],
+      "items": [
+        {
+          "name": "Grimhollow Dust",
+          "chance": 0.2
+        },
+        {
+          "name": "Reaperling Claw",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Arc-Bound Sentinel": {
+    "key": "Arc-Bound Sentinel",
+    "name": "Arc-Bound Sentinel",
+    "profession": "guardian",
+    "family": "celestial",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 1500,
+    "baseHP": 2100,
+    "baseATK": 990,
+    "baseDEF": 885,
+    "lootTable": {
+      "gold": [
+        270,
+        450
+      ],
+      "items": [
+        {
+          "name": "Arc-Bound Sigil",
+          "chance": 0.24
+        },
+        {
+          "name": "Sentinel Armguard",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Radiant Dawnstrider": {
+    "key": "Radiant Dawnstrider",
+    "name": "Radiant Dawnstrider",
+    "profession": "paladin",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "common",
+    "level": 1500,
+    "baseHP": 2100,
+    "baseATK": 990,
+    "baseDEF": 885,
+    "lootTable": {
+      "gold": [
+        190,
+        310
+      ],
+      "items": [
+        {
+          "name": "Dawnstrider Emblem",
+          "chance": 0.2
+        },
+        {
+          "name": "Radiant Sash",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Halo-Crowned Squire": {
+    "key": "Halo-Crowned Squire",
+    "name": "Halo-Crowned Squire",
+    "profession": "warrior",
+    "family": "humanoid",
+    "element": "light",
+    "rarity": "common",
+    "level": 1550,
+    "baseHP": 2170,
+    "baseATK": 1025,
+    "baseDEF": 915,
+    "lootTable": {
+      "gold": [
+        195,
+        320
+      ],
+      "items": [
+        {
+          "name": "Halo-Crowned Badge",
+          "chance": 0.2
+        },
+        {
+          "name": "Squire’s Sunsteel",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Abyssal Bonecarver": {
+    "key": "Abyssal Bonecarver",
+    "name": "Abyssal Bonecarver",
+    "profession": "warrior",
+    "family": "undead",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 1600,
+    "baseHP": 2240,
+    "baseATK": 1060,
+    "baseDEF": 945,
+    "lootTable": {
+      "gold": [
+        240,
+        390
+      ],
+      "items": [
+        {
+          "name": "Bonecarver Chisel",
+          "chance": 0.22
+        },
+        {
+          "name": "Abyssal Plate Shard",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Chrono-Fractured Adept": {
+    "key": "Chrono-Fractured Adept",
+    "name": "Chrono-Fractured Adept",
+    "profession": "mage",
+    "family": "arcane",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 1600,
+    "baseHP": 2240,
+    "baseATK": 1060,
+    "baseDEF": 945,
+    "lootTable": {
+      "gold": [
+        280,
+        470
+      ],
+      "items": [
+        {
+          "name": "Chrono-Fractured Shard",
+          "chance": 0.25
+        },
+        {
+          "name": "Adept’s Timeworn Tome",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Seraphic Acolyte": {
+    "key": "Seraphic Acolyte",
+    "name": "Seraphic Acolyte",
+    "profession": "cleric",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 1600,
+    "baseHP": 2240,
+    "baseATK": 1060,
+    "baseDEF": 945,
+    "lootTable": {
+      "gold": [
+        260,
+        430
+      ],
+      "items": [
+        {
+          "name": "Seraphic Feather",
+          "chance": 0.24
+        },
+        {
+          "name": "Acolyte’s Prayerbook",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Night-Torn Specterblade": {
+    "key": "Night-Torn Specterblade",
+    "name": "Night-Torn Specterblade",
+    "profession": "assassin",
+    "family": "void",
+    "element": "void",
+    "rarity": "elite",
+    "level": 1650,
+    "baseHP": 2310,
+    "baseATK": 1095,
+    "baseDEF": 975,
+    "lootTable": {
+      "gold": [
+        250,
+        410
+      ],
+      "items": [
+        {
+          "name": "Night-Torn Cloak Scrap",
+          "chance": 0.23
+        },
+        {
+          "name": "Specterblade Edge",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Spell-Eater Homunculus": {
+    "key": "Spell-Eater Homunculus",
+    "name": "Spell-Eater Homunculus",
+    "profession": "mage",
+    "family": "arcane",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 1650,
+    "baseHP": 2310,
+    "baseATK": 1095,
+    "baseDEF": 975,
+    "lootTable": {
+      "gold": [
+        200,
+        330
+      ],
+      "items": [
+        {
+          "name": "Spell-Eater Dust",
+          "chance": 0.22
+        },
+        {
+          "name": "Homunculus Core",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Soul-Husk Devourer": {
+    "key": "Soul-Husk Devourer",
+    "name": "Soul-Husk Devourer",
+    "profession": "beast",
+    "family": "assassin",
+    "element": "dark",
+    "rarity": "elite",
+    "level": 1700,
+    "baseHP": 2380,
+    "baseATK": 1130,
+    "baseDEF": 1005,
+    "lootTable": {
+      "gold": [
+        260,
+        430
+      ],
+      "items": [
+        {
+          "name": "Soul-Husk Core",
+          "chance": 0.24
+        },
+        {
+          "name": "Devourer Maw Fragment",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Rift-Wrought Golem": {
+    "key": "Rift-Wrought Golem",
+    "name": "Rift-Wrought Golem",
+    "profession": "guardian",
+    "family": "construct",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 1700,
+    "baseHP": 2380,
+    "baseATK": 1130,
+    "baseDEF": 1005,
+    "lootTable": {
+      "gold": [
+        290,
+        490
+      ],
+      "items": [
+        {
+          "name": "Rift-Wrought Plating",
+          "chance": 0.25
+        },
+        {
+          "name": "Golem Heartstone",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Light-Forged Crusader": {
+    "key": "Light-Forged Crusader",
+    "name": "Light-Forged Crusader",
+    "profession": "paladin",
+    "family": "arcane",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 1700,
+    "baseHP": 2380,
+    "baseATK": 1130,
+    "baseDEF": 1005,
+    "lootTable": {
+      "gold": [
+        270,
+        450
+      ],
+      "items": [
+        {
+          "name": "Light-Forged Ingot",
+          "chance": 0.25
+        },
+        {
+          "name": "Crusader’s Sunblade",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Umbral Rift Howler": {
+    "key": "Umbral Rift Howler",
+    "name": "Umbral Rift Howler",
+    "profession": "beast",
+    "family": "void",
+    "element": "void",
+    "rarity": "common",
+    "level": 1750,
+    "baseHP": 2450,
+    "baseATK": 1165,
+    "baseDEF": 1035,
+    "lootTable": {
+      "gold": [
+        170,
+        280
+      ],
+      "items": [
+        {
+          "name": "Umbral Howl Echo",
+          "chance": 0.2
+        },
+        {
+          "name": "Riftfur Pelt",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Sun-Blessed Herald": {
+    "key": "Sun-Blessed Herald",
+    "name": "Sun-Blessed Herald",
+    "profession": "cleric",
+    "family": "beast",
+    "element": "light",
+    "rarity": "common",
+    "level": 1750,
+    "baseHP": 2450,
+    "baseATK": 1165,
+    "baseDEF": 1035,
+    "lootTable": {
+      "gold": [
+        200,
+        330
+      ],
+      "items": [
+        {
+          "name": "Sun-Blessed Charm",
+          "chance": 0.22
+        },
+        {
+          "name": "Herald’s Radiant Cloak",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Abyss-Forged Wraithknight": {
+    "key": "Abyss-Forged Wraithknight",
+    "name": "Abyss-Forged Wraithknight",
+    "profession": "guardian",
+    "family": "construct",
+    "element": "void",
+    "rarity": "boss",
+    "level": 1800,
+    "baseHP": 2520,
+    "baseATK": 1200,
+    "baseDEF": 1065,
+    "lootTable": {
+      "gold": [
+        400,
+        650
+      ],
+      "items": [
+        {
+          "name": "Abyss-Forged Crest",
+          "chance": 0.28
+        },
+        {
+          "name": "Wraithknight Greatsword",
+          "chance": 0.09
+        },
+        {
+          "name": "Voidsteel Plate",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Aether-Crowned Hexbinder": {
+    "key": "Aether-Crowned Hexbinder",
+    "name": "Aether-Crowned Hexbinder",
+    "profession": "witch",
+    "family": "celestial",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 1800,
+    "baseHP": 2520,
+    "baseATK": 1200,
+    "baseDEF": 1065,
+    "lootTable": {
+      "gold": [
+        300,
+        510
+      ],
+      "items": [
+        {
+          "name": "Aether-Crowned Circlet",
+          "chance": 0.26
+        },
+        {
+          "name": "Hexbinder Focus",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Celestial Spearwarden": {
+    "key": "Celestial Spearwarden",
+    "name": "Celestial Spearwarden",
+    "profession": "guardian",
+    "family": "humanoid",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 1800,
+    "baseHP": 2520,
+    "baseATK": 1200,
+    "baseDEF": 1065,
+    "lootTable": {
+      "gold": [
+        280,
+        470
+      ],
+      "items": [
+        {
+          "name": "Celestial Spear Tip",
+          "chance": 0.25
+        },
+        {
+          "name": "Spearwarden Shield",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Verdant Fangprowler": {
+    "key": "Verdant Fangprowler",
+    "name": "Verdant Fangprowler",
+    "profession": "beast",
+    "family": "undead",
+    "element": "nature",
+    "rarity": "common",
+    "level": 1800,
+    "baseHP": 2520,
+    "baseATK": 1200,
+    "baseDEF": 1065,
+    "lootTable": {
+      "gold": [
+        210,
+        340
+      ],
+      "items": [
+        {
+          "name": "Verdant Fang",
+          "chance": 0.22
+        },
+        {
+          "name": "Fangprowler Hide",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Hate-Crowned Dreadmonger": {
+    "key": "Hate-Crowned Dreadmonger",
+    "name": "Hate-Crowned Dreadmonger",
+    "profession": "warlock",
+    "family": "arcane",
+    "element": "shadow",
+    "rarity": "elite",
+    "level": 1850,
+    "baseHP": 2590,
+    "baseATK": 1235,
+    "baseDEF": 1095,
+    "lootTable": {
+      "gold": [
+        280,
+        460
+      ],
+      "items": [
+        {
+          "name": "Dreadmonger Brand",
+          "chance": 0.24
+        },
+        {
+          "name": "Hate-Crowned Hood",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Arcane Pulse Serpent": {
+    "key": "Arcane Pulse Serpent",
+    "name": "Arcane Pulse Serpent",
+    "profession": "beast",
+    "family": "undead",
+    "element": "arcane",
+    "rarity": "common",
+    "level": 1850,
+    "baseHP": 2590,
+    "baseATK": 1235,
+    "baseDEF": 1095,
+    "lootTable": {
+      "gold": [
+        210,
+        340
+      ],
+      "items": [
+        {
+          "name": "Arcane Pulse Scale",
+          "chance": 0.22
+        },
+        {
+          "name": "Serpent’s Aether Fang",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Root-Bound Sentinel": {
+    "key": "Root-Bound Sentinel",
+    "name": "Root-Bound Sentinel",
+    "profession": "guardian",
+    "family": "construct",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 1850,
+    "baseHP": 2590,
+    "baseATK": 1235,
+    "baseDEF": 1095,
+    "lootTable": {
+      "gold": [
+        280,
+        470
+      ],
+      "items": [
+        {
+          "name": "Root-Bound Bark",
+          "chance": 0.25
+        },
+        {
+          "name": "Sentinel’s Stoneplate",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Null-Eater Sovereignling": {
+    "key": "Null-Eater Sovereignling",
+    "name": "Null-Eater Sovereignling",
+    "profession": "assassin",
+    "family": "celestial",
+    "element": "void",
+    "rarity": "elite",
+    "level": 1900,
+    "baseHP": 2660,
+    "baseATK": 1270,
+    "baseDEF": 1125,
+    "lootTable": {
+      "gold": [
+        290,
+        480
+      ],
+      "items": [
+        {
+          "name": "Null-Eater Fang",
+          "chance": 0.25
+        },
+        {
+          "name": "Sovereignling Signet",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Spell-Riven Archonling": {
+    "key": "Spell-Riven Archonling",
+    "name": "Spell-Riven Archonling",
+    "profession": "mage",
+    "family": "void",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 1900,
+    "baseHP": 2660,
+    "baseATK": 1270,
+    "baseDEF": 1125,
+    "lootTable": {
+      "gold": [
+        320,
+        540
+      ],
+      "items": [
+        {
+          "name": "Archonling Crest",
+          "chance": 0.27
+        },
+        {
+          "name": "Spell-Riven Staff",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Aurora-Winged Protector": {
+    "key": "Aurora-Winged Protector",
+    "name": "Aurora-Winged Protector",
+    "profession": "paladin",
+    "family": "beast",
+    "element": "light",
+    "rarity": "elite",
+    "level": 1900,
+    "baseHP": 2660,
+    "baseATK": 1270,
+    "baseDEF": 1125,
+    "lootTable": {
+      "gold": [
+        290,
+        490
+      ],
+      "items": [
+        {
+          "name": "Aurora Wing Pinion",
+          "chance": 0.26
+        },
+        {
+          "name": "Protector’s Aegis",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Thorn-Crowned Druidling": {
+    "key": "Thorn-Crowned Druidling",
+    "name": "Thorn-Crowned Druidling",
+    "profession": "druid",
+    "family": "arcane",
+    "element": "nature",
+    "rarity": "common",
+    "level": 1900,
+    "baseHP": 2660,
+    "baseATK": 1270,
+    "baseDEF": 1125,
+    "lootTable": {
+      "gold": [
+        220,
+        360
+      ],
+      "items": [
+        {
+          "name": "Thorn-Crowned Sprig",
+          "chance": 0.23
+        },
+        {
+          "name": "Druidling Charm",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Mana-Crested Riftlord": {
+    "key": "Mana-Crested Riftlord",
+    "name": "Mana-Crested Riftlord",
+    "profession": "mage",
+    "family": "celestial",
+    "element": "arcane",
+    "rarity": "boss",
+    "level": 2000,
+    "baseHP": 2800,
+    "baseATK": 1340,
+    "baseDEF": 1185,
+    "lootTable": {
+      "gold": [
+        450,
+        720
+      ],
+      "items": [
+        {
+          "name": "Mana-Crested Diadem",
+          "chance": 0.3
+        },
+        {
+          "name": "Riftlord’s Grimoire",
+          "chance": 0.1
+        },
+        {
+          "name": "Aetherstorm Relic",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Divine-Touched Arbiter": {
+    "key": "Divine-Touched Arbiter",
+    "name": "Divine-Touched Arbiter",
+    "profession": "cleric",
+    "family": "arcane",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 2000,
+    "baseHP": 2800,
+    "baseATK": 1340,
+    "baseDEF": 1185,
+    "lootTable": {
+      "gold": [
+        300,
+        510
+      ],
+      "items": [
+        {
+          "name": "Divine-Touched Icon",
+          "chance": 0.27
+        },
+        {
+          "name": "Arbiter’s Judgement Rod",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Bramble-Hide Ravager": {
+    "key": "Bramble-Hide Ravager",
+    "name": "Bramble-Hide Ravager",
+    "profession": "beast",
+    "family": "plant",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 2000,
+    "baseHP": 2800,
+    "baseATK": 1340,
+    "baseDEF": 1185,
+    "lootTable": {
+      "gold": [
+        290,
+        480
+      ],
+      "items": [
+        {
+          "name": "Bramble-Hide Pelt",
+          "chance": 0.25
+        },
+        {
+          "name": "Ravager Horn",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Astral-Veined Oracle": {
+    "key": "Astral-Veined Oracle",
+    "name": "Astral-Veined Oracle",
+    "profession": "cleric",
+    "family": "void",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 2100,
+    "baseHP": 2940,
+    "baseATK": 1410,
+    "baseDEF": 1245,
+    "lootTable": {
+      "gold": [
+        340,
+        580
+      ],
+      "items": [
+        {
+          "name": "Astral-Veined Relic",
+          "chance": 0.27
+        },
+        {
+          "name": "Oracle’s Star Chart",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Luminous Ascendant": {
+    "key": "Luminous Ascendant",
+    "name": "Luminous Ascendant",
+    "profession": "mage",
+    "family": "arcane",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 2100,
+    "baseHP": 2940,
+    "baseATK": 1410,
+    "baseDEF": 1245,
+    "lootTable": {
+      "gold": [
+        320,
+        540
+      ],
+      "items": [
+        {
+          "name": "Luminous Ember",
+          "chance": 0.28
+        },
+        {
+          "name": "Ascendant’s Halo",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Grove-Warden Shaman": {
+    "key": "Grove-Warden Shaman",
+    "name": "Grove-Warden Shaman",
+    "profession": "shaman",
+    "family": "celestial",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 2100,
+    "baseHP": 2940,
+    "baseATK": 1410,
+    "baseDEF": 1245,
+    "lootTable": {
+      "gold": [
+        300,
+        500
+      ],
+      "items": [
+        {
+          "name": "Grove-Warden Fetish",
+          "chance": 0.26
+        },
+        {
+          "name": "Shaman’s Totem",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Chrono-Shattered Warden": {
+    "key": "Chrono-Shattered Warden",
+    "name": "Chrono-Shattered Warden",
+    "profession": "guardian",
+    "family": "plant",
+    "element": "arcane",
+    "rarity": "elite",
+    "level": 2200,
+    "baseHP": 3080,
+    "baseATK": 1480,
+    "baseDEF": 1305,
+    "lootTable": {
+      "gold": [
+        350,
+        600
+      ],
+      "items": [
+        {
+          "name": "Chrono-Shattered Core",
+          "chance": 0.28
+        },
+        {
+          "name": "Warden’s Timeplate",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Solar-Crested Justicar": {
+    "key": "Solar-Crested Justicar",
+    "name": "Solar-Crested Justicar",
+    "profession": "paladin",
+    "family": "arcane",
+    "element": "holy",
+    "rarity": "boss",
+    "level": 2200,
+    "baseHP": 3080,
+    "baseATK": 1480,
+    "baseDEF": 1305,
+    "lootTable": {
+      "gold": [
+        480,
+        760
+      ],
+      "items": [
+        {
+          "name": "Solar-Crested Standard",
+          "chance": 0.3
+        },
+        {
+          "name": "Justicar’s Greatshield",
+          "chance": 0.1
+        },
+        {
+          "name": "Sunheart Relic",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Ancient Bark-Titan": {
+    "key": "Ancient Bark-Titan",
+    "name": "Ancient Bark-Titan",
+    "profession": "guardian",
+    "family": "celestial",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 2200,
+    "baseHP": 3080,
+    "baseATK": 1480,
+    "baseDEF": 1305,
+    "lootTable": {
+      "gold": [
+        320,
+        520
+      ],
+      "items": [
+        {
+          "name": "Ancient Bark Core",
+          "chance": 0.27
+        },
+        {
+          "name": "Bark-Titan Fragment",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Heaven-Bound Exemplar": {
+    "key": "Heaven-Bound Exemplar",
+    "name": "Heaven-Bound Exemplar",
+    "profession": "cleric",
+    "family": "plant",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 2300,
+    "baseHP": 3220,
+    "baseATK": 1550,
+    "baseDEF": 1365,
+    "lootTable": {
+      "gold": [
+        340,
+        580
+      ],
+      "items": [
+        {
+          "name": "Heaven-Bound Seal",
+          "chance": 0.27
+        },
+        {
+          "name": "Exemplar’s Radiant Greaves",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Sylvan Mooncaller": {
+    "key": "Sylvan Mooncaller",
+    "name": "Sylvan Mooncaller",
+    "profession": "druid",
+    "family": "titan",
+    "element": "nature",
+    "rarity": "common",
+    "level": 2300,
+    "baseHP": 3220,
+    "baseATK": 1550,
+    "baseDEF": 1365,
+    "lootTable": {
+      "gold": [
+        230,
+        380
+      ],
+      "items": [
+        {
+          "name": "Mooncaller Blossom",
+          "chance": 0.23
+        },
+        {
+          "name": "Sylvan Charm",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Radiant Choir Seraphling": {
+    "key": "Radiant Choir Seraphling",
+    "name": "Radiant Choir Seraphling",
+    "profession": "cleric",
+    "family": "celestial",
+    "element": "light",
+    "rarity": "common",
+    "level": 2400,
+    "baseHP": 3360,
+    "baseATK": 1620,
+    "baseDEF": 1425,
+    "lootTable": {
+      "gold": [
+        210,
+        340
+      ],
+      "items": [
+        {
+          "name": "Choir’s Hymn Scroll",
+          "chance": 0.22
+        },
+        {
+          "name": "Seraphling Feather",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Primeval Hornbeast": {
+    "key": "Primeval Hornbeast",
+    "name": "Primeval Hornbeast",
+    "profession": "beast",
+    "family": "plant",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 2400,
+    "baseHP": 3360,
+    "baseATK": 1620,
+    "baseDEF": 1425,
+    "lootTable": {
+      "gold": [
+        340,
+        560
+      ],
+      "items": [
+        {
+          "name": "Hornbeast Tusk",
+          "chance": 0.27
+        },
+        {
+          "name": "Primeval Hoofplate",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Sunflare Archon": {
+    "key": "Sunflare Archon",
+    "name": "Sunflare Archon",
+    "profession": "guardian",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 2500,
+    "baseHP": 3500,
+    "baseATK": 1690,
+    "baseDEF": 1485,
+    "lootTable": {
+      "gold": [
+        360,
+        600
+      ],
+      "items": [
+        {
+          "name": "Sunflare Crest",
+          "chance": 0.28
+        },
+        {
+          "name": "Archon’s Solar Mace",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Grove-Heart Oracle": {
+    "key": "Grove-Heart Oracle",
+    "name": "Grove-Heart Oracle",
+    "profession": "cleric",
+    "family": "plant",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 2500,
+    "baseHP": 3500,
+    "baseATK": 1690,
+    "baseDEF": 1485,
+    "lootTable": {
+      "gold": [
+        350,
+        580
+      ],
+      "items": [
+        {
+          "name": "Grove-Heart Seed",
+          "chance": 0.28
+        },
+        {
+          "name": "Oracle’s Verdant Staff",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Celestial Dawn Sovereign": {
+    "key": "Celestial Dawn Sovereign",
+    "name": "Celestial Dawn Sovereign",
+    "profession": "paladin",
+    "family": "colossus",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 2600,
+    "baseHP": 3640,
+    "baseATK": 1760,
+    "baseDEF": 1545,
+    "lootTable": {
+      "gold": [
+        370,
+        620
+      ],
+      "items": [
+        {
+          "name": "Dawn Sovereign Sigil",
+          "chance": 0.29
+        },
+        {
+          "name": "Celestial Crown Fragment",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Elder Thorn-Reaver": {
+    "key": "Elder Thorn-Reaver",
+    "name": "Elder Thorn-Reaver",
+    "profession": "warrior",
+    "family": "druid",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 2600,
+    "baseHP": 3640,
+    "baseATK": 1760,
+    "baseDEF": 1545,
+    "lootTable": {
+      "gold": [
+        360,
+        600
+      ],
+      "items": [
+        {
+          "name": "Thorn-Reaver Spine",
+          "chance": 0.28
+        },
+        {
+          "name": "Elder’s Natureblade",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Verdant Colossus": {
+    "key": "Verdant Colossus",
+    "name": "Verdant Colossus",
+    "profession": "guardian",
+    "family": "titan",
+    "element": "nature",
+    "rarity": "boss",
+    "level": 2700,
+    "baseHP": 3780,
+    "baseATK": 1830,
+    "baseDEF": 1605,
+    "lootTable": {
+      "gold": [
+        520,
+        820
+      ],
+      "items": [
+        {
+          "name": "Verdant Colossus Core",
+          "chance": 0.31
+        },
+        {
+          "name": "Colossus Barkplate",
+          "chance": 0.11
+        },
+        {
+          "name": "Primordial Grove Relic",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Bloom-Crowned Archdruid": {
+    "key": "Bloom-Crowned Archdruid",
+    "name": "Bloom-Crowned Archdruid",
+    "profession": "druid",
+    "family": "plant",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 2800,
+    "baseHP": 3920,
+    "baseATK": 1900,
+    "baseDEF": 1665,
+    "lootTable": {
+      "gold": [
+        380,
+        620
+      ],
+      "items": [
+        {
+          "name": "Bloom-Crowned Circlet",
+          "chance": 0.29
+        },
+        {
+          "name": "Archdruid’s Staff",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Primeval Rootshaper": {
+    "key": "Primeval Rootshaper",
+    "name": "Primeval Rootshaper",
+    "profession": "mage",
+    "family": "demigod",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 2900,
+    "baseHP": 4060,
+    "baseATK": 1970,
+    "baseDEF": 1725,
+    "lootTable": {
+      "gold": [
+        390,
+        640
+      ],
+      "items": [
+        {
+          "name": "Rootshaper Stone",
+          "chance": 0.29
+        },
+        {
+          "name": "Primeval Earthfocus",
+          "chance": 0.09
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "demigod": {
+    "key": "demigod",
+    "name": "demigod",
+    "profession": "thief",
+    "family": "beast",
+    "element": "light",
+    "rarity": "boss",
+    "level": 3000,
+    "baseHP": 4200,
+    "baseATK": 2040,
+    "baseDEF": 1785,
+    "lootTable": {
+      "gold": [
+        3200,
+        10000
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.1
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.15
+        },
+        {
+          "name": "Steel Sword",
+          "chance": 0.25
+        },
+        {
+          "name": "Light Essence",
+          "chance": 0.1
+        },
+        {
+          "name": "Light Orb",
+          "chance": 0.1
+        },
+        {
+          "name": "Light Matter",
+          "chance": 0.2
+        },
+        {
+          "name": "Transcension Tally",
+          "chance": 0.0001
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Sylvan Apex Behemoth": {
+    "key": "Sylvan Apex Behemoth",
+    "name": "Sylvan Apex Behemoth",
+    "profession": "beast",
+    "family": "colossus",
+    "element": "nature",
+    "rarity": "elite",
+    "level": 3000,
+    "baseHP": 4200,
+    "baseATK": 2040,
+    "baseDEF": 1785,
+    "lootTable": {
+      "gold": [
+        400,
+        660
+      ],
+      "items": [
+        {
+          "name": "Sylvan Apex Fang",
+          "chance": 0.3
+        },
+        {
+          "name": "Behemoth Hide",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Sky-Piercer Colossus": {
+    "key": "Sky-Piercer Colossus",
+    "name": "Sky-Piercer Colossus",
+    "profession": "titan",
+    "family": "beast",
+    "element": "wind",
+    "rarity": "elite",
+    "level": 3200,
+    "baseHP": 4480,
+    "baseATK": 2180,
+    "baseDEF": 1905,
+    "lootTable": {
+      "gold": [
+        800,
+        1200
+      ],
+      "items": [
+        {
+          "name": "Sky-Piercer Core",
+          "chance": 0.12
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Tide-Forged Leviathan": {
+    "key": "Tide-Forged Leviathan",
+    "name": "Tide-Forged Leviathan",
+    "profession": "titan",
+    "family": "titan",
+    "element": "water",
+    "rarity": "elite",
+    "level": 3300,
+    "baseHP": 4620,
+    "baseATK": 2250,
+    "baseDEF": 1965,
+    "lootTable": {
+      "gold": [
+        850,
+        1300
+      ],
+      "items": [
+        {
+          "name": "Leviathan Scale",
+          "chance": 0.11
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Obsidian World-Breaker": {
+    "key": "Obsidian World-Breaker",
+    "name": "Obsidian World-Breaker",
+    "profession": "titan",
+    "family": "titan",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 3500,
+    "baseHP": 4900,
+    "baseATK": 2390,
+    "baseDEF": 2085,
+    "lootTable": {
+      "gold": [
+        900,
+        1400
+      ],
+      "items": [
+        {
+          "name": "Obsidian Heart",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Null-Crowned Riftbeast": {
+    "key": "Null-Crowned Riftbeast",
+    "name": "Null-Crowned Riftbeast",
+    "profession": "beast",
+    "family": "void",
+    "element": "void",
+    "rarity": "elite",
+    "level": 4000,
+    "baseHP": 5600,
+    "baseATK": 2730,
+    "baseDEF": 2385,
+    "lootTable": {
+      "gold": [
+        420,
+        700
+      ],
+      "items": [
+        {
+          "name": "Null-Crowned Horn",
+          "chance": 0.3
+        },
+        {
+          "name": "Riftbeast Hide",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Abyss-Forged Harrower": {
+    "key": "Abyss-Forged Harrower",
+    "name": "Abyss-Forged Harrower",
+    "profession": "warrior",
+    "family": "beast",
+    "element": "void",
+    "rarity": "elite",
+    "level": 4200,
+    "baseHP": 5880,
+    "baseATK": 2870,
+    "baseDEF": 2505,
+    "lootTable": {
+      "gold": [
+        440,
+        720
+      ],
+      "items": [
+        {
+          "name": "Abyss-Forged Brand",
+          "chance": 0.3
+        },
+        {
+          "name": "Harrower Greatsword",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Eldritch Maw-Tyrant": {
+    "key": "Eldritch Maw-Tyrant",
+    "name": "Eldritch Maw-Tyrant",
+    "profession": "beast",
+    "family": "void",
+    "element": "chaos",
+    "rarity": "elite",
+    "level": 4400,
+    "baseHP": 6160,
+    "baseATK": 3010,
+    "baseDEF": 2625,
+    "lootTable": {
+      "gold": [
+        460,
+        740
+      ],
+      "items": [
+        {
+          "name": "Eldritch Maw Core",
+          "chance": 0.31
+        },
+        {
+          "name": "Tyrant’s Spine",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Void-Sundered Reaver": {
+    "key": "Void-Sundered Reaver",
+    "name": "Void-Sundered Reaver",
+    "profession": "assassin",
+    "family": "void",
+    "element": "void",
+    "rarity": "elite",
+    "level": 4600,
+    "baseHP": 6440,
+    "baseATK": 3150,
+    "baseDEF": 2745,
+    "lootTable": {
+      "gold": [
+        480,
+        760
+      ],
+      "items": [
+        {
+          "name": "Void-Sundered Edge",
+          "chance": 0.31
+        },
+        {
+          "name": "Reaver’s Cloak",
+          "chance": 0.1
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Nullborn Rift-Prophet": {
+    "key": "Nullborn Rift-Prophet",
+    "name": "Nullborn Rift-Prophet",
+    "profession": "mage",
+    "family": "beast",
+    "element": "void",
+    "rarity": "elite",
+    "level": 4800,
+    "baseHP": 6720,
+    "baseATK": 3290,
+    "baseDEF": 2865,
+    "lootTable": {
+      "gold": [
+        500,
+        780
+      ],
+      "items": [
+        {
+          "name": "Rift-Prophet Eye",
+          "chance": 0.32
+        },
+        {
+          "name": "Nullborn Scripture",
+          "chance": 0.11
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Sthreeven's Chaotic Doppelcat": {
+    "key": "Sthreeven's Chaotic Doppelcat",
+    "name": "Sthreeven's Chaotic Doppelcat",
+    "profession": "cat",
+    "family": "void",
+    "element": "void-dark",
+    "rarity": "mythical",
+    "level": 5000,
+    "baseHP": 7000,
+    "baseATK": 3430,
+    "baseDEF": 2985,
+    "lootTable": {
+      "gold": [
+        50,
+        150
+      ],
+      "items": [
+        {
+          "name": "Chaotic Hairball",
+          "chance": 0.6
+        },
+        {
+          "name": "Sthreeven’s Signed Mug",
+          "chance": 0.12
+        },
+        {
+          "name": "Bugged Loot Token",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Abyssal Crown-Devourer": {
+    "key": "Abyssal Crown-Devourer",
+    "name": "Abyssal Crown-Devourer",
+    "profession": "warlock",
+    "family": "beast",
+    "element": "void",
+    "rarity": "boss",
+    "level": 5200,
+    "baseHP": 7280,
+    "baseATK": 3570,
+    "baseDEF": 3105,
+    "lootTable": {
+      "gold": [
+        520,
+        820
+      ],
+      "items": [
+        {
+          "name": "Crown-Devourer Fang",
+          "chance": 0.33
+        },
+        {
+          "name": "Abyssal Diadem Shard",
+          "chance": 0.12
+        },
+        {
+          "name": "Void Monarch’s Favor",
+          "chance": 0.06
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Eternal Rift-Warden": {
+    "key": "Eternal Rift-Warden",
+    "name": "Eternal Rift-Warden",
+    "profession": "guardian",
+    "family": "void",
+    "element": "void",
+    "rarity": "elite",
+    "level": 5400,
+    "baseHP": 7560,
+    "baseATK": 3710,
+    "baseDEF": 3225,
+    "lootTable": {
+      "gold": [
+        540,
+        840
+      ],
+      "items": [
+        {
+          "name": "Rift-Warden Crest",
+          "chance": 0.33
+        },
+        {
+          "name": "Eternal Voidplate",
+          "chance": 0.12
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Chaos-Spiral Sovereign": {
+    "key": "Chaos-Spiral Sovereign",
+    "name": "Chaos-Spiral Sovereign",
+    "profession": "mage",
+    "family": "beast",
+    "element": "chaos",
+    "rarity": "mythical",
+    "level": 5600,
+    "baseHP": 7840,
+    "baseATK": 3850,
+    "baseDEF": 3345,
+    "lootTable": {
+      "gold": [
+        580,
+        880
+      ],
+      "items": [
+        {
+          "name": "Chaos-Spiral Core",
+          "chance": 0.34
+        },
+        {
+          "name": "Sovereign’s Chaos Scepter",
+          "chance": 0.12
+        },
+        {
+          "name": "Fractured Reality Shard",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Null-Eclipse Archfiend": {
+    "key": "Null-Eclipse Archfiend",
+    "name": "Null-Eclipse Archfiend",
+    "profession": "warlock",
+    "family": "void",
+    "element": "void",
+    "rarity": "mythical",
+    "level": 6000,
+    "baseHP": 8400,
+    "baseATK": 4130,
+    "baseDEF": 3585,
+    "lootTable": {
+      "gold": [
+        620,
+        920
+      ],
+      "items": [
+        {
+          "name": "Null-Eclipse Sigil",
+          "chance": 0.35
+        },
+        {
+          "name": "Archfiend’s Voidblade",
+          "chance": 0.13
+        },
+        {
+          "name": "Eclipse Crown Fragment",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Divine-Forged Paragon": {
+    "key": "Divine-Forged Paragon",
+    "name": "Divine-Forged Paragon",
+    "profession": "paladin",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 6000,
+    "baseHP": 8400,
+    "baseATK": 4130,
+    "baseDEF": 3585,
+    "lootTable": {
+      "gold": [
+        520,
+        820
+      ],
+      "items": [
+        {
+          "name": "Divine-Forged Ingot",
+          "chance": 0.32
+        },
+        {
+          "name": "Paragon’s Sunblade",
+          "chance": 0.11
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Halo-Crested Archsentinel": {
+    "key": "Halo-Crested Archsentinel",
+    "name": "Halo-Crested Archsentinel",
+    "profession": "guardian",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 6500,
+    "baseHP": 9100,
+    "baseATK": 4470,
+    "baseDEF": 3885,
+    "lootTable": {
+      "gold": [
+        540,
+        840
+      ],
+      "items": [
+        {
+          "name": "Halo-Crested Emblem",
+          "chance": 0.33
+        },
+        {
+          "name": "Archsentinel Bulwark",
+          "chance": 0.11
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "devil": {
+    "key": "devil",
+    "name": "devil",
+    "profession": "mage",
+    "family": "demon",
+    "element": "evil",
+    "rarity": "mythical",
+    "level": 6666,
+    "baseHP": 9330,
+    "baseATK": 4580,
+    "baseDEF": 3980,
+    "lootTable": {
+      "gold": [
+        2000,
+        20000
+      ],
+      "items": [
+        {
+          "name": "Iron Sword",
+          "chance": 0.01
+        },
+        {
+          "name": "Transcension Tally",
+          "chance": 0.0001
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Seraphic Dawn-Warden": {
+    "key": "Seraphic Dawn-Warden",
+    "name": "Seraphic Dawn-Warden",
+    "profession": "cleric",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "elite",
+    "level": 7000,
+    "baseHP": 9800,
+    "baseATK": 4800,
+    "baseDEF": 4170,
+    "lootTable": {
+      "gold": [
+        560,
+        860
+      ],
+      "items": [
+        {
+          "name": "Seraphic Dawnfeather",
+          "chance": 0.34
+        },
+        {
+          "name": "Warden’s Radiant Staff",
+          "chance": 0.11
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Plink of the Seventh Dimension": {
+    "key": "Plink of the Seventh Dimension",
+    "name": "Plink of the Seventh Dimension",
+    "profession": "cat",
+    "family": "humanoid",
+    "element": "arcane-void",
+    "rarity": "mythical",
+    "level": 7000,
+    "baseHP": 9800,
+    "baseATK": 4800,
+    "baseDEF": 4170,
+    "lootTable": {
+      "gold": [
+        60,
+        200
+      ],
+      "items": [
+        {
+          "name": "Seventh-Dimensional Yarn",
+          "chance": 0.6
+        },
+        {
+          "name": "Plink’s Cosmic Collar",
+          "chance": 0.14
+        },
+        {
+          "name": "Glitched Reality Fragment",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Celestial Radiant-Tyrant": {
+    "key": "Celestial Radiant-Tyrant",
+    "name": "Celestial Radiant-Tyrant",
+    "profession": "paladin",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "boss",
+    "level": 7500,
+    "baseHP": 10500,
+    "baseATK": 5140,
+    "baseDEF": 4470,
+    "lootTable": {
+      "gold": [
+        600,
+        900
+      ],
+      "items": [
+        {
+          "name": "Radiant-Tyrant Crest",
+          "chance": 0.35
+        },
+        {
+          "name": "Celestial Tyrant Greatsword",
+          "chance": 0.13
+        },
+        {
+          "name": "Eternal Sun Relic",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Eternal Light-Sovereign": {
+    "key": "Eternal Light-Sovereign",
+    "name": "Eternal Light-Sovereign",
+    "profession": "cleric",
+    "family": "celestial",
+    "element": "holy",
+    "rarity": "mythical",
+    "level": 8000,
+    "baseHP": 11200,
+    "baseATK": 5480,
+    "baseDEF": 4770,
+    "lootTable": {
+      "gold": [
+        640,
+        940
+      ],
+      "items": [
+        {
+          "name": "Eternal Light Sigil",
+          "chance": 0.36
+        },
+        {
+          "name": "Sovereign’s Halo",
+          "chance": 0.13
+        },
+        {
+          "name": "Citadel Heartstone",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Titan-Blooded Ruinshaper": {
+    "key": "Titan-Blooded Ruinshaper",
+    "name": "Titan-Blooded Ruinshaper",
+    "profession": "guardian",
+    "family": "titan",
+    "element": "earth",
+    "rarity": "elite",
+    "level": 8200,
+    "baseHP": 11480,
+    "baseATK": 5610,
+    "baseDEF": 4880,
+    "lootTable": {
+      "gold": [
+        580,
+        900
+      ],
+      "items": [
+        {
+          "name": "Ruinshaper Core",
+          "chance": 0.35
+        },
+        {
+          "name": "Titan-Blooded Greaves",
+          "chance": 0.12
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Colossal Doom-Harbinger": {
+    "key": "Colossal Doom-Harbinger",
+    "name": "Colossal Doom-Harbinger",
+    "profession": "berserker",
+    "family": "titan",
+    "element": "fire-earth",
+    "rarity": "boss",
+    "level": 8800,
+    "baseHP": 12320,
+    "baseATK": 6020,
+    "baseDEF": 5230,
+    "lootTable": {
+      "gold": [
+        640,
+        960
+      ],
+      "items": [
+        {
+          "name": "Doom-Harbinger Horn",
+          "chance": 0.36
+        },
+        {
+          "name": "Colossal Warplate",
+          "chance": 0.13
+        },
+        {
+          "name": "Worldbreaker Ember",
+          "chance": 0.07
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Apocalypse-Crowned Worldrender": {
+    "key": "Apocalypse-Crowned Worldrender",
+    "name": "Apocalypse-Crowned Worldrender",
+    "profession": "guardian",
+    "family": "apocalypse",
+    "element": "void-earth",
+    "rarity": "final",
+    "level": 9500,
+    "baseHP": 13300,
+    "baseATK": 6500,
+    "baseDEF": 5650,
+    "lootTable": {
+      "gold": [
+        800,
+        1300
+      ],
+      "items": [
+        {
+          "name": "Apocalypse Crown Shard",
+          "chance": 0.38
+        },
+        {
+          "name": "Worldrender Colossus Heart",
+          "chance": 0.14
+        },
+        {
+          "name": "End of Days Relic",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "Cosmic-Crowned Terminarch": {
+    "key": "Cosmic-Crowned Terminarch",
+    "name": "Cosmic-Crowned Terminarch",
+    "profession": "mage",
+    "family": "apocalypse",
+    "element": "arcane-void",
+    "rarity": "final",
+    "level": 9900,
+    "baseHP": 13860,
+    "baseATK": 6770,
+    "baseDEF": 5880,
+    "lootTable": {
+      "gold": [
+        900,
+        1500
+      ],
+      "items": [
+        {
+          "name": "Cosmic Terminus Core",
+          "chance": 0.4
+        },
+        {
+          "name": "Terminarch’s Starblade",
+          "chance": 0.15
+        },
+        {
+          "name": "Nexus Singularity Shard",
+          "chance": 0.08
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "god": {
+    "key": "god",
+    "name": "god",
+    "profession": "null",
+    "family": "god",
+    "element": "holy",
+    "rarity": "final",
+    "level": 9999,
+    "baseHP": 14000,
+    "baseATK": 6860,
+    "baseDEF": 5950,
+    "lootTable": {
+      "gold": [
+        100000,
+        500000
+      ],
+      "items": [
+        {
+          "name": "Broken Sword",
+          "chance": 0.1
+        },
+        {
+          "name": "Iron Sword",
+          "chance": 0.07
+        },
+        {
+          "name": "Transcension Tally",
+          "chance": 0.2
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "void god": {
+    "key": "void god",
+    "name": "void god",
+    "profession": "mage",
+    "family": "void",
+    "element": "void",
+    "rarity": "final",
+    "level": 9999,
+    "baseHP": 14000,
+    "baseATK": 6860,
+    "baseDEF": 5950,
+    "lootTable": {
+      "gold": [
+        100000,
+        500000
+      ],
+      "items": [
+        {
+          "name": "Transcension Tally",
+          "chance": 0.2
+        }
+      ]
+    },
+    "activeEffects": {}
+  },
+  "uganda knuckles": {
+    "key": "uganda knuckles",
+    "name": "uganda knuckles",
+    "profession": "berserker",
+    "family": "beast",
+    "element": "water",
+    "rarity": "banana",
+    "level": 9000,
+    "baseHP": 12600,
+    "baseATK": 6350,
+    "baseDEF": 5400,
+    "lootTable": {
+      "gold": [
+        100000,
+        500000
+      ],
+      "items": [
+        {
+          "name": "Transcension Tally",
+          "chance": 0.76
+        },
+        {
+          "name": "Flag of Uganda",
+          "chance": 0.01
+        },
+        {
+          "name": "Stick",
+          "chance": 0.2
+        }
+      ]
+    },
+    "activeEffects": {}
+  }
+}
