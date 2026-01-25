@@ -113,6 +113,9 @@
   <h1>Player Tools</h1>
   <div id="adminDisplay"></div>
 
+  <!-- ============================
+       TARGET PLAYER
+       ============================ -->
   <div class="section">
     <h2>Target Player</h2>
 
@@ -125,6 +128,9 @@
     <div id="playerSummary">Waiting for player...</div>
   </div>
 
+  <!-- ============================
+       QUICK ACTIONS
+       ============================ -->
   <div class="section">
     <h2>Quick Actions</h2>
 
@@ -147,6 +153,9 @@
     </div>
   </div>
 
+  <!-- ============================
+       RESULT
+       ============================ -->
   <div class="section">
     <h2>Result</h2>
     <div id="resultBox">No actions yet.</div>
@@ -165,6 +174,9 @@
       return { username, twitchId };
     }
 
+    /* ============================================================
+       LOAD PLAYER SUMMARY
+       ============================================================ */
     async function loadPlayer() {
       const { username } = getTarget();
       const summaryEl = document.getElementById("playerSummary");
@@ -177,9 +189,10 @@
       summaryEl.textContent = "Loading player...";
 
       try {
-        const res = await fetch(`/api/admin/player/summary?username=${encodeURIComponent(username)}`, {
-          cache:"no-store"
-        });
+        const res = await fetch(
+          `/api/admin/player/summary?username=${encodeURIComponent(username)}`,
+          { cache:"no-store" }
+        );
 
         if (!res.ok) {
           summaryEl.textContent = "Failed to load player.";
@@ -193,14 +206,18 @@
         }
 
         const p = data.player;
+
         summaryEl.textContent =
           `${p.username} — Level ${p.level} ${format(p.profession)} | ` +
-          `Region: ${format(p.region)} | Points: ${p.points}`;
+          `Region: ${format(p.region)} | Gold: ${p.gold} | EXP: ${p.xp}`;
       } catch (err) {
         summaryEl.textContent = "Error: " + err.message;
       }
     }
 
+    /* ============================================================
+       RUN ADMIN ACTION
+       ============================================================ */
     async function runAction(action) {
       const { username, twitchId } = getTarget();
       const resultBox = document.getElementById("resultBox");
