@@ -742,841 +742,351 @@
   </style>
 </head>
 <body>
-  <h1>Combat</h1>
-  <div id="usernameDisplay"></div>
 
   <!-- ============================
-       ENEMY PANEL
-  ============================ -->
-  <div id="enemyPanel" class="panel">Loading enemy...</div>
+        HEADER / USER DISPLAY
+  ============================= -->
+  <div id="usernameDisplay" class="username-display"></div>
 
   <!-- ============================
-       PLAYER PANEL
-  ============================ -->
-  <div id="playerPanel" class="panel">Loading player...</div>
+        REGION SELECTOR + START
+  ============================= -->
+  <div class="fight-controls">
+    <label for="regionSelect">Region:</label>
+    <select id="regionSelect">
+      <option value="forest">Forest</option>
+      <option value="mountains">Mountains</option>
+      <option value="swamp">Swamp</option>
+      <option value="desert">Desert</option>
+    </select>
 
-  <!-- ============================
-       ACTION PANEL
-  ============================ -->
-  <div id="actionPanel" class="panel actions" style="display:none;">
-    <h2>Choose Your Action</h2>
-
-    <button onclick="inspectEnemy()">Inspect Enemy</button>
-    <button onclick="attemptFlee()">Flee</button>
-
-    <button class="primary" onclick="playerBasicAttack()">Basic Attack</button>
-
-    <button onclick="openAbilityMenu()">Use Ability</button>
-    <button onclick="useUltimate()">Use Ultimate</button>
-
-    <button class="btn" onclick="openItemModal()">Use Item</button>
-    <button onclick="openSwapMenu()">Swap Equipment</button>
+    <button id="startFightBtn" class="btn start-btn">Start Fight</button>
   </div>
-
+  
   <!-- ============================
-       COMBAT LOG
-  ============================ -->
-  <div id="log" class="panel">Waiting...</div>
-
-  <!-- ============================
-       REWARD PANEL
-  ============================ -->
-  <div id="rewardPanel" style="display:none;"></div>
-
-  <!-- ============================
-       ABILITY MENU MODAL
-  ============================ -->
-  <div id="abilityMenu" class="modal" style="display:none;">
-    <div class="modal-content">
-      <h2>Your Abilities</h2>
-
-      <div id="abilityList">Loading...</div>
-
-      <button class="close-btn" onclick="closeAbilityMenu()">Close</button>
+       PLAYER / ENEMY HUD
+  ============================= -->
+  <div id="combatHud" class="combat-hud">
+    <div id="playerPanel" class="hud-panel player-panel">
+      <div class="hud-header">
+        <span id="playerName" class="hud-name">Player</span>
+        <span id="playerLevel" class="hud-level">Lv 1</span>
+      </div>
+  
+      <div class="hud-bar hp-bar">
+        <div id="playerHpFill" class="bar-fill"></div>
+        <span id="playerHpText" class="bar-text">HP 0 / 0</span>
+      </div>
+  
+      <div class="hud-bar mana-bar">
+        <div id="playerManaFill" class="bar-fill"></div>
+        <span id="playerManaText" class="bar-text">MP 0 / 0</span>
+      </div>
+  
+      <div class="hud-bar ult-bar">
+        <div id="playerUltFill" class="bar-fill"></div>
+        <span id="playerUltText" class="bar-text">ULT 0%</span>
+      </div>
+    </div>
+  
+    <div id="enemyPanel" class="hud-panel enemy-panel">
+      <div class="hud-header">
+        <span id="enemyName" class="hud-name">Enemy</span>
+        <span id="enemyLevel" class="hud-level">Lv 1</span>
+      </div>
+  
+      <div class="hud-bar hp-bar">
+        <div id="enemyHpFill" class="bar-fill"></div>
+        <span id="enemyHpText" class="bar-text">HP 0 / 0</span>
+      </div>
+  
+      <div class="hud-bar mana-bar">
+        <div id="enemyManaFill" class="bar-fill"></div>
+        <span id="enemyManaText" class="bar-text">MP 0 / 0</span>
+      </div>
+  
+      <button id="inspectEnemyBtn" class="btn inspect-btn">Inspect</button>
     </div>
   </div>
 
   <!-- ============================
-       ENEMY INSPECTION MODAL
-  ============================ -->
-  <div id="inspectMenu" class="modal" style="display:none;">
-    <div class="modal-content">
-      <h2>Enemy Info</h2>
+        COMBAT LOG
+  ============================= -->
+  <div id="combatLog" class="combat-log"></div>
 
-      <div id="inspectContent">Loading...</div>
-
-      <button class="close-btn" onclick="closeInspectMenu()">Close</button>
-    </div>
+  <!-- ============================
+        ACTION PANEL (PLAYER TURN)
+  ============================= -->
+  <div id="actionPanel" class="action-panel" style="display:none;">
+    <button id="basicAttackBtn" class="btn action-btn">Basic Attack</button>
+    <button id="openAbilitiesBtn" class="btn action-btn"
+            onclick="document.getElementById('abilityPanel').style.display='block'">
+      Abilities
+    </button>
+    <button id="ultimateBtn" class="btn action-btn">Ultimate</button>
+    <button id="openItemBtn" class="btn action-btn"
+            onclick="document.getElementById('itemModal').style.display='block'">
+      Item
+    </button>
+    <button id="fleeBtn" class="btn action-btn">Flee</button>
+    <button id="autoBtn" class="btn action-btn">Auto</button>
   </div>
 
   <!-- ============================
-       EQUIPMENT SWAP MODAL
-  ============================ -->
-  <div id="swapMenu" class="modal" style="display:none;">
-    <div class="modal-content">
-      <h2>Swap Equipment</h2>
-
-      <div id="swapSlotList">Loading...</div>
-      <div id="swapItemList" style="margin-top:12px;"></div>
-
-      <button class="close-btn" onclick="closeSwapMenu()">Close</button>
-    </div>
+        ABILITY PANEL
+  ============================= -->
+  <div id="abilityPanel" class="ability-panel" style="display:none;">
+    <h3>Choose Ability</h3>
+    <div id="abilityList"></div>
+    <button class="btn close-btn"
+            onclick="document.getElementById('abilityPanel').style.display='none'">
+      Close
+    </button>
   </div>
 
   <!-- ============================
-       IN-COMBAT ITEM MODAL
+        ITEM MODAL
   ============================= -->
   <div id="itemModal" class="item-modal hidden">
     <div class="item-modal-content">
       <h2>Use Item</h2>
-
       <div id="itemList">Loading...</div>
-
-      <button class="btn close-btn" onclick="closeItemModal()">Close</button>
+      <button class="btn close-btn"
+              onclick="document.getElementById('itemModal').style.display='none'">
+        Close
+      </button>
     </div>
   </div>
 
-  <select id="regionSelect">
-    <option value="forest">Forest</option>
-    <option value="mountains">Mountains</option>
-    <option value="swamp">Swamp</option>
-    <option value="desert">Desert</option>
-  </select>
-  
-  <button id="startFightBtn">Start Fight</button>
-  
-  <div id="combatLog" style="
-    width: 100%;
-    height: 400px;
-    overflow-y: auto;
-    background: #111;
-    color: #0f0;
-    padding: 10px;
-    font-family: monospace;
-    border: 1px solid #333;
-  "></div>
-
   <!-- ============================
-       CINEMATIC INTRO
-  ============================ -->
+        CINEMATIC INTRO
+  ============================= -->
   <div id="cinematicIntro" class="cinematic-intro" style="display:none;">
     <div class="cinematic-content">
       <div id="cinematicPortrait" class="portrait-frame"></div>
-      <div id="cinematicName" style="margin-top:12px; font-size:24px;"></div>
+      <div id="cinematicName" class="cinematic-name"></div>
       <div class="vs-text">VS</div>
     </div>
   </div>
 
   <!-- ============================
-       RESUME PREVIOUS FIGHT MODAL
+        RESUME PREVIOUS FIGHT MODAL
   ============================= -->
   <div id="resumeModal" class="modal" style="display:none;">
     <div class="modal-content">
       <h2>Resume Previous Fight?</h2>
       <p>You have an unfinished battle. Would you like to continue it?</p>
 
-      <button class="close-btn" onclick="resumeFight()">Resume</button>
-      <button class="close-btn" onclick="startNewFight()">Start New Fight</button>
+      <button class="btn" onclick="resumeFight()">Resume</button>
+      <button class="btn" onclick="startNewFight()">Start New Fight</button>
     </div>
   </div>
 
   <!-- ============================
-      SCRIPTS
+        TURN-BASED COMBAT WIRING
   ============================= -->
-  <script src="combat-engine.js"></script>
-
-  <script>
-    /* ============================================================
-       INITIALIZATION
-       ============================================================ */
-
-    const username = sessionStorage.getItem("twitch_username");
-    document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
-    // Load player + encounter from sessionStorage
-    let player = JSON.parse(sessionStorage.getItem("player"));
-    let encounter = JSON.parse(sessionStorage.getItem("encounter"));
-    let combatState = null;
-
-    // If no encounter exists, redirect back to map
-    if (!encounter) {
-      document.getElementById("log").textContent =
-        "No encounter found. Returning to map...";
-      setTimeout(() => (window.location.href = "world-map.html"), 1200);
-    }
-
-    // Create combat engine
-    let engine = null;
-
-    /* ============================================================
-       START / RESUME COMBAT
-       ============================================================ */
-
-    function startCombat() {
-      document.getElementById("log").textContent = "Starting encounter...";
-
-      engine = new CombatEngine(player, encounter, {
-        onUpdate: updateUI,
-        onLog: addLog,
-        onEnd: endCombat
-      });
-
-      combatState = engine.getState();
-
-      renderPanels();
-      showCinematicIntro(combatState.enemy);
-
-      if (combatState.turn === "ENEMY") {
-        enemyTurn();
-      } else {
-        showActionPanel();
-      }
-    }
-
-    function resumeFight() {
-      engine = new CombatEngine(player, encounter, {
-        onUpdate: updateUI,
-        onLog: addLog,
-        onEnd: endCombat
-      });
-
-      combatState = engine.getState();
-      renderPanels();
-      document.getElementById("resumeModal").style.display = "none";
-
-      if (combatState.turn === "PLAYER") {
-        showActionPanel();
-      } else {
-        enemyTurn();
-      }
-    }
-
-    function startNewFight() {
-      document.getElementById("resumeModal").style.display = "none";
-      // Clear any previous saved combat
-      sessionStorage.removeItem("savedCombat");
-      startCombat();
-    }
-
-    // If a saved combat exists in sessionStorage
-    if (sessionStorage.getItem("savedCombat")) {
-      combatState = JSON.parse(sessionStorage.getItem("savedCombat"));
-      document.getElementById("resumeModal").style.display = "flex";
-    } else {
-      startCombat();
-    }
-
-    /* ============================================================
-       UI RENDERING
-       ============================================================ */
-
-    function renderPanels() {
-      renderEnemyPanel();
-      renderPlayerPanel();
-      renderLog();
-    }
-
-    function renderEnemyPanel() {
-      const e = combatState.enemy;
-      const container = document.getElementById("enemyPanel");
-      const previousHP = Number(container.getAttribute("data-prev-hp")) || e.hpMax;
-
-      let modifiersHTML = "";
-      if (e.modifiers?.length) {
-        modifiersHTML = `
-          <div class="modifier-box">
-            ${e.modifiers
-              .map(
-                (m) => `
-              <div class="modifier-row">
-                <img class="modifier-icon" src="${m.icon}">
-                <div class="modifier-label">${m.text}</div>
-              </div>
-            `
-              )
-              .join("")}
-          </div>
-        `;
-      }
-
-      container.innerHTML = `
-        <div class="portrait-frame portrait-${e.rarity.toLowerCase()}">
-          <img class="portrait-img" src="${e.portrait}">
-        </div>
-
-        <h2 style="text-align:center; margin-top:12px;">
-          ${format(e.name)} (Lv ${e.level})
-        </h2>
-
-        <div style="text-align:center;">
-          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(
-        e.rarity
-      )}</span>
-        </div>
-
-        <div class="hp-bar" id="enemyHPBar">
-          <div class="hp-fill" style="width:0%;"></div>
-        </div>
-
-        ${modifiersHTML}
-      `;
-
-      updateHPBar("enemyHPBar", previousHP, e.hp, e.hpMax);
-      container.setAttribute("data-prev-hp", e.hp);
-    }
-
-    function renderPlayerPanel() {
-      const p = combatState.player;
-      const container = document.getElementById("playerPanel");
-
-      const previousHP = Number(container.getAttribute("data-prev-hp")) || p.hpMax;
-      const previousUlt =
-        Number(container.getAttribute("data-prev-ult")) || p.ultCharge;
-
-      const abilityCooldowns = p.cooldowns
-        .map((c) => `${c.name}: ${c.remaining}`)
-        .join("<br>");
-
-      container.innerHTML = `
-        <h2>${format(p.name)} (Lv ${p.level})</h2>
-
-        <div>Ultimate: ${p.ultReady ? "READY" : p.ultCharge + "%"}</div>
-
-        <div class="ult-bar" id="ultBar">
-          <div class="ult-fill"></div>
-        </div>
-
-        <div class="hp-bar" id="playerHPBar">
-          <div class="hp-fill" style="width:0%;"></div>
-        </div>
-
-        <div style="margin-top:8px; font-size:13px; opacity:0.8;">
-          ${abilityCooldowns}
-        </div>
-      `;
-
-      updateHPBar("playerHPBar", previousHP, p.hp, p.hpMax);
-      updateUltimateBar("ultBar", previousUlt, p.ultCharge);
-
-      container.setAttribute("data-prev-hp", p.hp);
-      container.setAttribute("data-prev-ult", p.ultCharge);
-    }
-
-    function renderLog() {
-      document.getElementById("log").textContent =
-        combatState.log.map(formatLog).join("\n");
-
-      combatState.log.forEach((entry) => applyVFX(entry));
-    }
-
-    /* ============================================================
-       UI HELPERS
-       ============================================================ */
-
-    function updateUI(state) {
-      combatState = state;
-      renderPanels();
-    }
-
-    function addLog(text) {
-      const log = document.getElementById("log");
-      log.textContent += text + "\n";
-      log.scrollTop = log.scrollHeight;
-    }
-
-    function showActionPanel() {
-      document.getElementById("actionPanel").style.display = "block";
-    }
-
-    function hideActionPanel() {
-      document.getElementById("actionPanel").style.display = "none";
-    }
-
-    function updateHPBar(elementId, oldHP, newHP, maxHP) {
-      const pct = Math.max(0, (newHP / maxHP) * 100);
-      const bar = document.querySelector(`#${elementId} .hp-fill`);
-      if (!bar) return;
-
-      if (newHP < oldHP) bar.classList.add("damage-flash");
-      else if (newHP > oldHP) bar.classList.add("heal-flash");
-
-      bar.style.width = pct + "%";
-
-      setTimeout(() => {
-        bar.classList.remove("damage-flash");
-        bar.classList.remove("heal-flash");
-      }, 500);
-    }
-
-    function updateUltimateBar(elementId, oldCharge, newCharge) {
-      const bar = document.querySelector(`#${elementId} .ult-fill`);
-      if (!bar) return;
-
-      bar.style.width = newCharge + "%";
-
-      if (newCharge >= 100) bar.classList.add("ult-ready-glow");
-      else bar.classList.remove("ult-ready-glow");
-
-      if (newCharge < oldCharge) {
-        bar.classList.add("ult-pulse");
-        setTimeout(() => bar.classList.remove("ult-pulse"), 500);
-      }
-    }
-
-    /* ============================================================
-       PLAYER ACTIONS
-       ============================================================ */
-
-    async function playerBasicAttack() {
-      hideActionPanel();
-      addLog("\nPlayer acts...\n");
-      await engine.basicAttack();
-    }
-
-    async function useUltimate() {
-      hideActionPanel();
-      addLog("\nPlayer uses Ultimate...\n");
-      await engine.useUltimate();
-    }
-
-    async function attemptFlee() {
-      hideActionPanel();
-      addLog("\nPlayer attempts to flee...\n");
-      await engine.flee();
-    }
-
-    async function useAbility(key) {
-      closeAbilityMenu();
-      hideActionPanel();
-      addLog(`\nPlayer uses ${key}...\n`);
-      await engine.useAbility(key);
-    }
-
-    /* ============================================================
-       ENEMY TURN
-       ============================================================ */
-
-    async function enemyTurn() {
-      hideActionPanel();
-      addLog("\nEnemy acts...\n");
-      await engine.enemyTurn();
-      if (!combatState.outcome && combatState.turn === "PLAYER") {
-        showActionPanel();
-      }
-    }
-
-    /* ============================================================
-       END COMBAT
-       ============================================================ */
-
-    function endCombat(result) {
-      hideActionPanel();
-
-      const r = result || {};
-      const rewardPanel = document.getElementById("rewardPanel");
-
-      let lootHTML = "None";
-      if (r.loot) {
-        const rarityClass = "loot-" + r.loot.rarity.toLowerCase();
-        lootHTML = `
-          <div class="loot-card ${rarityClass}">
-            <strong>${r.loot.name}</strong><br>
-            <span>${r.loot.quantity}x — ${format(r.loot.rarity)}</span>
-          </div>
-        `;
-      }
-
-      const levelUpHTML = r.levelUp
-        ? `<div class="level-up">Level Up! You are now level ${r.newLevel}</div>`
-        : "";
-
-      rewardPanel.innerHTML = `
-        <div class="reward-box">
-          <h2>Rewards</h2>
-
-          <div>XP Gained: ${r.xp || 0}</div>
-
-          <div class="xp-bar">
-            <div class="xp-fill" id="xpFill"></div>
-          </div>
-
-          ${levelUpHTML}
-
-          <h3 style="margin-top:16px;">Loot</h3>
-          ${lootHTML}
-
-          <button class="reward-btn" onclick="goToMap()">Return to Map</button>
-          <button class="reward-btn" onclick="continueExploring()">Continue Exploring</button>
-        </div>
-      `;
-
-      rewardPanel.style.display = "block";
-
-      setTimeout(() => {
-        if (document.getElementById("xpFill")) {
-          document.getElementById("xpFill").style.width = (r.xpPercent || 0) + "%";
-        }
-      }, 50);
-    }
-
-    function goToMap() {
-      window.location.href = "world-map.html";
-    }
-
-    function continueExploring() {
-      const region = encounter.region;
-      window.location.href = `world-map.html?region=${region}`;
-    }
-
-    /* ============================================================
-       ABILITY MENU
-       ============================================================ */
-
-    function openAbilityMenu() {
-      loadAbilities();
-      document.getElementById("abilityMenu").style.display = "flex";
-    }
-
-    function closeAbilityMenu() {
-      document.getElementById("abilityMenu").style.display = "none";
-    }
-
-    function loadAbilities() {
-      const list = document.getElementById("abilityList");
-      const abilities = combatState.player.abilities;
-      const cooldowns = combatState.player.cooldowns;
-
-      list.innerHTML = abilities
-        .map((a) => {
-          const cd = cooldowns.find((c) => c.key === a.key);
-          const remaining = cd ? cd.remaining : 0;
-          const disabled = remaining > 0 ? "ability-disabled" : "";
-
-          return `
-            <div class="ability-card ${disabled}" onclick="useAbility('${a.key}')">
-              <img class="ability-icon" src="${a.icon}">
-              <div>
-                <strong>${a.name}</strong><br>
-                <span style="opacity:0.8;">${a.description}</span>
-              </div>
-              ${
-                remaining > 0
-                  ? `<div class="cooldown-overlay">${remaining}</div>`
-                  : ""
-              }
-            </div>
-          `;
-        })
-        .join("");
-    }
-
-    /* ============================================================
-       EQUIPMENT SWAP
-       ============================================================ */
-
-    function openSwapMenu() {
-      const p = combatState.player;
-      const slotList = document.getElementById("swapSlotList");
-      const itemList = document.getElementById("swapItemList");
-
-      itemList.innerHTML = "";
-
-      slotList.innerHTML = Object.entries(p.equipment)
-        .map(
-          ([slot, item]) => `
-          <div class="swap-slot" onclick="selectSwapSlot('${slot}')">
-            <strong>${format(slot)}</strong>: ${item ? item.name : "—"}
-          </div>
-        `
-        )
-        .join("");
-
-      document.getElementById("swapMenu").style.display = "flex";
-    }
-
-    function closeSwapMenu() {
-      document.getElementById("swapMenu").style.display = "none";
-    }
-
-    function selectSwapSlot(slot) {
-      const p = combatState.player;
-      const itemList = document.getElementById("swapItemList");
-
-      const items = p.inventoryEquipment || [];
-
-      if (!items.length) {
-        itemList.innerHTML = "<div>No equipment available.</div>";
-        return;
-      }
-
-      itemList.innerHTML = items
-        .map(
-          (i) => `
-          <div class="swap-item" onclick="confirmSwap('${slot}', '${i.id}')">
-            <strong>${i.name}</strong><br>
-            <span class="rarity-${i.rarity.toLowerCase()}">${format(
-            i.rarity
-          )}</span>
-          </div>
-        `
-        )
-        .join("");
-    }
-
-    async function confirmSwap(slot, itemId) {
-      closeSwapMenu();
-      await engine.swapEquipment(slot, itemId);
-    }
-
-    /* ============================================================
-       INSPECT ENEMY
-       ============================================================ */
-
-    function inspectEnemy() {
-      const e = combatState.enemy;
-      const box = document.getElementById("inspectContent");
-
-      box.innerHTML = `
-        <div class="inspect-row"><strong>Name:</strong> ${format(e.name)}</div>
-        <div class="inspect-row"><strong>Level:</strong> ${e.level}</div>
-        <div class="inspect-row"><strong>Rarity:</strong> ${format(
-          e.rarity
-        )}</div>
-        <div class="inspect-row"><strong>Family:</strong> ${format(
-          e.family
-        )}</div>
-        <div class="inspect-row"><strong>HP:</strong> ${e.hp}/${e.hpMax}</div>
-        <div class="inspect-row"><strong>Element:</strong> ${format(
-          e.element
-        )}</div>
-      `;
-
-      document.getElementById("inspectMenu").style.display = "flex";
-    }
-
-    function closeInspectMenu() {
-      document.getElementById("inspectMenu").style.display = "none";
-    }
-
-    /* ============================================================
-       CINEMATIC INTRO
-       ============================================================ */
-
-    function showCinematicIntro(enemy) {
-      const intro = document.getElementById("cinematicIntro");
-      const portrait = document.getElementById("cinematicPortrait");
-      const name = document.getElementById("cinematicName");
-
-      portrait.className = `portrait-frame portrait-${enemy.rarity.toLowerCase()}`;
-      portrait.innerHTML = `
-        <img class="portrait-img" src="${enemy.portrait}">
-      `;
-
-      name.textContent = `${format(enemy.name)} (Lv ${enemy.level})`;
-
-      intro.style.display = "flex";
-
-      portrait.classList.add("roar-shake");
-      setTimeout(() => portrait.classList.remove("roar-shake"), 600);
-
-      setTimeout(() => {
-        intro.style.display = "none";
-      }, 1800);
-    }
-
-    /* ============================================================
-       VFX HELPERS
-       ============================================================ */
-
-    function applyVFX(entry) {
-      if (!entry || typeof entry !== "object") return;
-
-      const target =
-        entry.target === "PLAYER" ? "playerPanel" : "enemyPanel";
-
-      if (entry.type === "attack") {
-        screenShake();
-        if (entry.crit) critFlash(target);
-        if (entry.element) elementalPulse(target, entry.element.toLowerCase());
-      }
-
-      if (entry.type === "dot") dotTick(target);
-      if (entry.type === "hot") hotTick(target);
-    }
-
-    function screenShake() {
-      document.body.classList.add("screen-shake");
-      setTimeout(() => document.body.classList.remove("screen-shake"), 400);
-    }
-
-    function critFlash(targetPanelId) {
-      const panel = document.getElementById(targetPanelId);
-      panel.classList.add("crit-flash");
-      setTimeout(() => panel.classList.remove("crit-flash"), 400);
-    }
-
-    function elementalPulse(targetPanelId, element) {
-      const panel = document.getElementById(targetPanelId);
-      const cls = `${element}-pulse`;
-      panel.classList.add(cls);
-      setTimeout(() => panel.classList.remove(cls), 500);
-    }
-
-    function dotTick(targetPanelId) {
-      const panel = document.getElementById(targetPanelId);
-      panel.classList.add("dot-tick");
-      setTimeout(() => panel.classList.remove("dot-tick"), 400);
-    }
-
-    function hotTick(targetPanelId) {
-      const panel = document.getElementById(targetPanelId);
-      panel.classList.add("hot-tick");
-      setTimeout(() => panel.classList.remove("hot-tick"), 400);
-    }
-
-    /* ============================================================
-       HELPERS
-       ============================================================ */
-
-    function formatLog(entry) {
-      if (typeof entry === "string") return entry;
-
-      switch (entry.type) {
-        case "attack":
-          return `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg`;
-        case "dot":
-          return `${entry.effectKey} deals ${entry.amount} DOT`;
-        case "hot":
-          return `${entry.effectKey} heals ${entry.amount} HOT`;
-        case "expire":
-          return `${entry.effectKey} expired`;
-        default:
-          return JSON.stringify(entry);
-      }
-    }
-
-    function format(str) {
-      return String(str)
-        .toLowerCase()
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-    }
-
-    /* ============================================================
-       OPEN / CLOSE ITEM MODAL
-       ============================================================ */
-
-    function openItemModal() {
-      const modal = document.getElementById("itemModal");
-      modal.classList.remove("hidden");
-      loadCombatItems();
-    }
-
-    function closeItemModal() {
-      const modal = document.getElementById("itemModal");
-      modal.classList.add("hidden");
-    }
-
-    /* ============================================================
-       LOAD USABLE ITEMS DURING COMBAT (CLIENT-SIDE)
-       ============================================================ */
-
-    function loadCombatItems() {
-      const list = document.getElementById("itemList");
-      list.textContent = "Loading...";
-
-      const p = combatState.player;
-      const usable = (p.inventory || []).filter(
-        (i) => i.type === "consumable"
-      );
-
-      if (!usable.length) {
-        list.innerHTML = "<div>No usable items.</div>";
-        return;
-      }
-
-      list.innerHTML = usable
-        .map((item) => {
-          const rarityClass =
-            "rarity-" + (item.rarity || "common").toLowerCase();
-          return `
-            <div class="item-entry">
-              <div class="item-info">
-                <div class="item-name ${rarityClass}">${item.name}</div>
-                <div class="item-desc">${item.description || item.meta?.description || ""}</div>
-                <div class="item-qty">x${item.quantity}</div>
-              </div>
-              <div class="item-actions">
-                <button onclick="useCombatItem('${item.id}')">Use</button>
-              </div>
-            </div>
-          `;
-        })
-        .join("");
-    }
-
-    /* ============================================================
-       USE ITEM DURING COMBAT (CLIENT-SIDE)
-       ============================================================ */
-
-    async function useCombatItem(itemId) {
-      try {
-        hideActionPanel();
-        addLog("\nPlayer uses an item...\n");
-        await engine.useItem(itemId);
-        closeItemModal();
-      } catch (err) {
-        alert("Error using item: " + err.message);
-      }
-    }
-
-  </script>
   <script type="module">
-  import { startCombat } from "./combat-flow.js";
+    import { startCombat, runCombatRound } from "./combat-flow.js";
 
-  // UI elements
-  const startBtn = document.getElementById("startFightBtn");
-  const logBox   = document.getElementById("combatLog");
-  const regionSel = document.getElementById("regionSelect");
+    const logBox = document.getElementById("combatLog");
+    const actionPanel = document.getElementById("actionPanel");
+    const abilityPanel = document.getElementById("abilityPanel");
+    const itemModal = document.getElementById("itemModal");
 
-  // Replace this with your real player loader
-  async function loadPlayer() {
-    const raw = JSON.parse(localStorage.getItem("playerData"));
-    return raw;
-  }
+    let combat = null;
+    let autoBattle = false;
 
-  function renderLogs(logs) {
-    logBox.innerHTML = "";
-    for (const line of logs) {
+    function addLog(line) {
       const div = document.createElement("div");
       div.textContent = line;
       logBox.appendChild(div);
-    }
-    logBox.scrollTop = logBox.scrollHeight;
-  }
-
-  async function handleStartFight() {
-    logBox.innerHTML = "Starting combat…";
-
-    const player = await loadPlayer();
-    if (!player) {
-      logBox.innerHTML = "No player loaded.";
-      return;
+      logBox.scrollTop = logBox.scrollHeight;
     }
 
-    const regionKey = regionSel.value || "forest";
+    function renderLogs(logs) {
+      for (const line of logs) addLog(line);
+    }
 
-    try {
-      const result = startCombat(player.username, regionKey);
+    async function beginFight() {
+      logBox.innerHTML = "";
+    
+      const rawPlayer = JSON.parse(localStorage.getItem("playerData"));
+      if (!rawPlayer) {
+        addLog("No player loaded.");
+        return;
+      }
+    
+      const regionKey = document.getElementById("regionSelect").value;
+    
+      combat = startCombat(rawPlayer.username, regionKey);
+      renderLogs(combat.logs);
+      renderPanels(); // ← HUD
+    
+      if (combat.outcome) {
+        addLog("Combat ended immediately: " + combat.outcome);
+        return;
+      }
+    
+      showActionPanel();
+    }
+    
+    async function runRound(playerAction) {
+      hideActionPanel();
+    
+      const result = runCombatRound(combat, playerAction);
       renderLogs(result.logs);
-    } catch (err) {
-      logBox.innerHTML = "Combat error: " + err.message;
-      console.error(err);
+      renderPanels(); // ← HUD
+    
+      // If you later pipe context.events through applyVFX:
+      // (result.events || []).forEach(applyVFX);
+    
+      if (result.outcome) {
+        addLog("Combat ended: " + result.outcome.toUpperCase());
+        return;
+      }
+    
+      if (autoBattle) {
+        autoLoop();
+      } else {
+        showActionPanel();
+      }
     }
-  }
 
-  startBtn.addEventListener("click", handleStartFight);
-</script>
+    // HELPER FUNCTIONS
+    function renderPanels() {
+      if (!combat) return;
+      renderPlayerPanel(combat.playerState);
+      renderEnemyPanel(combat.enemyState);
+    }
+    
+    function renderPlayerPanel(p) {
+      if (!p) return;
+    
+      document.getElementById("playerName").textContent = p.name || "Player";
+      document.getElementById("playerLevel").textContent = "Lv " + (p.level || 1);
+    
+      updateHPBar("playerHpFill", "playerHpText", p.hpCurrent, p.hpMax);
+      updateManaBar("playerManaFill", "playerManaText", p.manaCurrent, p.manaMax);
+      updateUltimateBar(p);
+    }
+    
+    function renderEnemyPanel(e) {
+      if (!e) return;
+    
+      document.getElementById("enemyName").textContent = e.name || "Enemy";
+      document.getElementById("enemyLevel").textContent = "Lv " + (e.level || 1);
+    
+      updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
+      updateManaBar("enemyManaFill", "enemyManaText", e.manaCurrent || 0, e.manaMax || 0);
+    }
+    
+    function updateHPBar(fillId, textId, current, max) {
+      const fill = document.getElementById(fillId);
+      const text = document.getElementById(textId);
+    
+      current = current || 0;
+      max = max || 1;
+    
+      const pct = Math.max(0, Math.min(100, (current / max) * 100));
+      if (fill) fill.style.width = pct + "%";
+      if (text) text.textContent = `HP ${current} / ${max}`;
+    }
+    
+    function updateManaBar(fillId, textId, current, max) {
+      const fill = document.getElementById(fillId);
+      const text = document.getElementById(textId);
+    
+      current = current || 0;
+      max = max || 0;
+    
+      const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
+      if (fill) fill.style.width = pct + "%";
+      if (text) text.textContent = `MP ${current} / ${max}`;
+    }
+    
+    function updateUltimateBar(playerState) {
+      const fill = document.getElementById("playerUltFill");
+      const text = document.getElementById("playerUltText");
+    
+      const charge = playerState.ultimateCharge || 0;
+      const required = playerState.ultimateChargeRequired || 100;
+    
+      const pct = Math.max(0, Math.min(100, (charge / required) * 100));
+      if (fill) fill.style.width = pct + "%";
+      if (text) text.textContent = `ULT ${Math.round(pct)}%`;
+    }
+
+    // VFX HOOKS
+    function screenShake(intensity = 5, duration = 150) {
+      const root = document.body;
+      root.classList.add("screen-shake");
+      setTimeout(() => root.classList.remove("screen-shake"), duration);
+    }
+    
+    function critFlash() {
+      const log = document.getElementById("combatLog");
+      log.classList.add("crit-flash");
+      setTimeout(() => log.classList.remove("crit-flash"), 200);
+    }
+    
+    function elementalPulse(element) {
+      // e.g. add a class like `pulse-fire`, `pulse-ice`, etc.
+      const hud = document.getElementById("combatHud");
+      if (!hud) return;
+      hud.classList.add(`pulse-${element}`);
+      setTimeout(() => hud.classList.remove(`pulse-${element}`), 300);
+    }
+    
+    function applyVFX(event) {
+      // Hook this into your logEvent types later
+      if (!event || !event.type) return;
+    
+      if (event.type === "crit") critFlash();
+      if (event.type === "big_hit") screenShake();
+      if (event.type === "elemental_hit" && event.payload?.element) {
+        elementalPulse(event.payload.element);
+      }
+    }
+    
+    // Simple HOT / DOT tick hooks (you can expand later)
+    function hotTick(target) {
+      // animate healing on HUD if you want
+    }
+    
+    function dotTick(target) {
+      // animate damage-over-time on HUD if you want
+    }
+
+
+    async function chooseBasicAttack() { await runRound({ type: "basic" }); }
+    async function chooseAbility(key) { await runRound({ type: "ability", key }); }
+    async function chooseUltimate() { await runRound({ type: "ultimate" }); }
+    async function chooseItem(itemId) { await runRound({ type: "item", itemId }); }
+    async function chooseFlee() { await runRound({ type: "flee" }); }
+
+    async function toggleAutoBattle() {
+      autoBattle = !autoBattle;
+      addLog("Auto-battle: " + (autoBattle ? "ON" : "OFF"));
+      if (autoBattle) autoLoop();
+    }
+
+    async function autoLoop() {
+      if (!autoBattle) return;
+      const action = { type: "basic" };
+      await runRound(action);
+    }
+
+    function showActionPanel() { actionPanel.style.display = "block"; }
+    function hideActionPanel() { actionPanel.style.display = "none"; }
+
+    document.getElementById("startFightBtn").onclick = beginFight;
+    document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
+    document.getElementById("ultimateBtn").onclick = chooseUltimate;
+    document.getElementById("fleeBtn").onclick = chooseFlee;
+    document.getElementById("autoBtn").onclick = toggleAutoBattle;
+
+    window.chooseAbility = chooseAbility;
+    window.chooseItem = chooseItem;
+  </script>
 </body>
 </html>
