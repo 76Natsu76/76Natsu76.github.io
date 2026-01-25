@@ -28,11 +28,6 @@
       color:#ffd27f;
     }
 
-    #timer {
-      margin-bottom:16px;
-      opacity:0.8;
-    }
-
     .item-card {
       padding:12px;
       margin:10px 0;
@@ -138,26 +133,15 @@
     Gold: <span id="userShopGold">0</span>
   </div>
 
-  <div id="timer"></div>
+  <div id="dailyShopTimer" style="margin-top:10px; opacity:0.8;"></div>
 
   <div id="userShopContainer" style="margin-top:20px;">Loading...</div>
 
   <button class="btn" onclick="goToMap()">World Map</button>
   <button class="btn" onclick="goToInventory()">Inventory</button>
-  
-  <div id="dailyShopTimer" style="margin-top:10px; opacity:0.8;"></div>
-  
-  <div class="item-actions">
-    <button class="buy1-btn">Buy 1</button>
-    <button class="buymax-btn">Buy Max</button>
-    <button class="buyx-btn">Buy X</button>
-  </div>
 
   <script type="module">
     import { initUserShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
-
-    initUserShopUI();
-    startShopCountdown("dailyShopTimer");
 
     const username = sessionStorage.getItem("twitch_username");
     document.getElementById("usernameDisplay").textContent =
@@ -166,6 +150,7 @@
     document.getElementById("setTokenBtn").onclick = promptForToken;
 
     initUserShopUI();
+    startShopCountdown("dailyShopTimer");
 
     function goToMap() {
       window.location.href = "world-map.html";
