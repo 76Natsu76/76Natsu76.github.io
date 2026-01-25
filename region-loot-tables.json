@@ -881,4 +881,482 @@
       "paladin": ["Light‑Against‑Darkness Sigil"]
     }
   },
+    "primordial-grove": {
+    "common": [
+      "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Ancient Bark Fragment"
+    ],
+    "uncommon": [
+      "Thornvine Segment","Primordial Sap","Copper Ore","Leather Strip","Grovekeeper’s Charm"
+    ],
+    "rare": [
+      "Elderroot Core","Primordial Resin","Mythic Beast Claw","Ancient Grove Totem"
+    ],
+    "epic": [
+      "Mantle of the First Wilds","Grove Titan’s Aegis","Primordial Heartwood Staff"
+    ],
+    "mythic": [
+      "Seed of the World‑Root","Crown of the First Grove"
+    ],
+    "weatherModifiers": {
+      "storm": ["Storm‑Charged Vine","Thunder‑Sap Vial"],
+      "rain": ["Grove‑Steeped Herb Bundle","Drenched Bark Poultice"]
+    },
+    "crisisModifiers": {
+      "beastUprising": ["Alpha Beast Fang","Wildheart Totem"],
+      "ancientAwakening": ["Awakened Root Core","Elder Spirit Fragment"]
+    },
+    "eventModifiers": {
+      "worldBloom": ["Worldbloom Petal","Ancient Seed Cluster"],
+      "druidicRite": ["Ritual Bark Mask","Circle Stone Fragment"]
+    },
+    "professionModifiers": {
+      "druid": ["Grovewarden’s Focus"],
+      "ranger": ["Wildpath Tracker’s Band"]
+    }
+  },
+
+  "celestial-expanse": {
+    "common": [
+      "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
+    ],
+    "uncommon": [
+      "Celestial Ink Vial","Planar Residue","Star‑Etched Coin","Radiant Cloth Strip"
+    ],
+    "rare": [
+      "Fragment of a Fallen Star","Celestial Beast Feather","Astral Convergence Crystal",
+      "Radiant Sigil"
+    ],
+    "epic": [
+      "Mantle of the Starborn","Aegis of the Celestial Choir","Astral Navigator’s Staff"
+    ],
+    "mythic": [
+      "Heart of a Dying Star","Crown of the Celestial Sovereign"
+    ],
+    "weatherModifiers": {
+      "cosmicWind": ["Cosmic‑Charged Dust","Star‑Tuned Charm"],
+      "starlightSurge": ["Starlight‑Infused Crystal","Radiant Feather Bundle"]
+    },
+    "crisisModifiers": {
+      "planarRift": ["Rift‑Stabilizer Sigil","Planar Anchor Fragment"],
+      "celestialWar": ["Fallen Halo Shard","Celestial Warbanner Scrap"]
+    },
+    "eventModifiers": {
+      "meteorShower": ["Meteor Fragment","Skyfire Dust"],
+      "solstice": ["Solstice Ember","Radiant Blessing Token"]
+    },
+    "professionModifiers": {
+      "mage": ["Celestial Focus Gem"],
+      "priest": ["Radiant Prayer Beads"]
+    }
+  },
+
+  "eternal-citadel": {
+    "common": [
+      "Broken Brick","Ancient Coin Fragment","Tarnished Ring","Cracked Idol","Dusty Tome Page"
+    ],
+    "uncommon": [
+      "Reinforced Citadel Plate","Guardian’s Leather Strap","Ancient Gear Fragment","Citadel Key Blank"
+    ],
+    "rare": [
+      "Runed Relic Shard","Guardian’s Broken Seal","Eternal Crest Fragment","Citadel Wardstone"
+    ],
+    "epic": [
+      "Mantle of the Eternal Watch","Citadel Aegis","Runebound Guardian’s Staff"
+    ],
+    "mythic": [
+      "Heart of the Eternal King","Crown of the First Sentinel"
+    ],
+    "weatherModifiers": {
+      "overcast": ["Dust‑Filter Mask","Weathered Cloak"],
+      "storm": ["Lightning Rod Spike","Storm‑Ward Talisman"]
+    },
+    "crisisModifiers": {
+      "undeadStirring": ["Grave‑Cold Coin","Bone‑Etched Relic"],
+      "siege": ["Siege Engineer’s Toolkit","Citadel Defense Banner"]
+    },
+    "eventModifiers": {
+      "relicAuction": ["Appraised Relic Tag","Auctioneer’s Ledger Page"],
+      "guardianVigil": ["Vigil Candle","Guardian’s Blessing Token"]
+    },
+    "professionModifiers": {
+      "paladin": ["Citadel‑Blessed Emblem"],
+      "historian": ["Archivist’s Lens"]
+    }
+  },
+
+  "worldbreaker-horizon": {
+    "common": [
+      "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
+    ],
+    "uncommon": [
+      "Cracked Sigil","Distorted Eye","Flickering Essence","Torn Reality Thread"
+    ],
+    "rare": [
+      "Fragment of the Worldbreaker","Abyss‑Forged Plate","Reality‑Warped Core","Titanbone Splinter"
+    ],
+    "epic": [
+      "Mantle of the Horizon’s End","Worldbreaker Aegis","Paradox‑Charged Staff"
+    ],
+    "mythic": [
+      "Heart of the Worldbreaker","Crown of the Final Titan"
+    ],
+    "weatherModifiers": {
+      "voidStorm": ["Void‑Charged Dust","Reality‑Tether Charm"],
+      "darkOvercast": ["Shadow‑Veined Cloth","Gloom‑Steeped Resin"]
+    },
+    "crisisModifiers": {
+      "voidRift": ["Rift‑Stabilizer","Void Anchor Fragment"],
+      "titanAwakening": ["Titanbone Core","Awakened Colossus Fragment"]
+    },
+    "eventModifiers": {
+      "endtimesEclipse": ["Eclipse‑Forged Shard","Shadow‑Crowned Token"],
+      "cosmicAlignment": ["Aligned Star Fragment","Planar Harmony Dust"]
+    },
+    "professionModifiers": {
+      "warlock": ["Void‑Tuned Focus"],
+      "paladin": ["Light‑Against‑Darkness Sigil"]
+    }
+  },
+  
+  "arcane-riftlands": {
+    "common": [
+      "Mana Residue","Arcane Dust","Runed Shard","Spell‑Scorched Parchment","Crystal Ink Vial"
+    ],
+    "uncommon": [
+      "Focus Gem Chip","Arcane Thread","Glyph Fragment","Charged Rod Splinter"
+    ],
+    "rare": [
+      "Rift‑Charged Crystal","Arcane Convergence Core","Spell‑Etched Plate","Runebound Focus"
+    ],
+    "epic": [
+      "Mantle of the Riftbinder","Arcforge Aegis","Rift‑Tuned Channeler’s Staff"
+    ],
+    "mythic": [
+      "Heart of the Arcane Titan","Crown of the Rift Sovereign"
+    ],
+    "weatherModifiers": {
+      "arcaneStorm": ["Storm‑Charged Dust","Arcane‑Ward Charm"],
+      "manaFlux": ["Flux‑Stabilizer","Mana‑Infused Crystal"]
+    },
+    "crisisModifiers": {
+      "riftTear": ["Rift‑Stabilizer Sigil","Planar Anchor Fragment"],
+      "manaSurge": ["Overcharged Mana Core","Spell‑Dampening Band"]
+    },
+    "eventModifiers": {
+      "arcaneConvergence": ["Convergence Crystal","Runic Alignment Token"],
+      "mageSymposium": ["Mage’s Seal","Arcane Lecture Notes"]
+    },
+    "professionModifiers": {
+      "mage": ["Rift‑Aligned Focus"],
+      "enchanter": ["Runebinder’s Toolkit"]
+    }
+  },
+  
+  "primordial-grove": {
+    "common": [
+      "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Ancient Bark Fragment"
+    ],
+    "uncommon": [
+      "Thornvine Segment","Primordial Sap","Copper Ore","Leather Strip","Grovekeeper’s Charm"
+    ],
+    "rare": [
+      "Elderroot Core","Primordial Resin","Mythic Beast Claw","Ancient Grove Totem"
+    ],
+    "epic": [
+      "Mantle of the First Wilds","Grove Titan’s Aegis","Primordial Heartwood Staff"
+    ],
+    "mythic": [
+      "Seed of the World‑Root","Crown of the First Grove"
+    ],
+    "weatherModifiers": {
+      "storm": ["Storm‑Charged Vine","Thunder‑Sap Vial"],
+      "rain": ["Grove‑Steeped Herb Bundle","Drenched Bark Poultice"]
+    },
+    "crisisModifiers": {
+      "beastUprising": ["Alpha Beast Fang","Wildheart Totem"],
+      "ancientAwakening": ["Awakened Root Core","Elder Spirit Fragment"]
+    },
+    "eventModifiers": {
+      "worldBloom": ["Worldbloom Petal","Ancient Seed Cluster"],
+      "druidicRite": ["Ritual Bark Mask","Circle Stone Fragment"]
+    },
+    "professionModifiers": {
+      "druid": ["Grovewarden’s Focus"],
+      "ranger": ["Wildpath Tracker’s Band"]
+    }
+  },
+
+  "celestial-expanse": {
+    "common": [
+      "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
+    ],
+    "uncommon": [
+      "Celestial Ink Vial","Planar Residue","Star‑Etched Coin","Radiant Cloth Strip"
+    ],
+    "rare": [
+      "Fragment of a Fallen Star","Celestial Beast Feather","Astral Convergence Crystal",
+      "Radiant Sigil"
+    ],
+    "epic": [
+      "Mantle of the Starborn","Aegis of the Celestial Choir","Astral Navigator’s Staff"
+    ],
+    "mythic": [
+      "Heart of a Dying Star","Crown of the Celestial Sovereign"
+    ],
+    "weatherModifiers": {
+      "cosmicWind": ["Cosmic‑Charged Dust","Star‑Tuned Charm"],
+      "starlightSurge": ["Starlight‑Infused Crystal","Radiant Feather Bundle"]
+    },
+    "crisisModifiers": {
+      "planarRift": ["Rift‑Stabilizer Sigil","Planar Anchor Fragment"],
+      "celestialWar": ["Fallen Halo Shard","Celestial Warbanner Scrap"]
+    },
+    "eventModifiers": {
+      "meteorShower": ["Meteor Fragment","Skyfire Dust"],
+      "solstice": ["Solstice Ember","Radiant Blessing Token"]
+    },
+    "professionModifiers": {
+      "mage": ["Celestial Focus Gem"],
+      "priest": ["Radiant Prayer Beads"]
+    }
+  },
+
+  "eternal-citadel": {
+    "common": [
+      "Broken Brick","Ancient Coin Fragment","Tarnished Ring","Cracked Idol","Dusty Tome Page"
+    ],
+    "uncommon": [
+      "Reinforced Citadel Plate","Guardian’s Leather Strap","Ancient Gear Fragment","Citadel Key Blank"
+    ],
+    "rare": [
+      "Runed Relic Shard","Guardian’s Broken Seal","Eternal Crest Fragment","Citadel Wardstone"
+    ],
+    "epic": [
+      "Mantle of the Eternal Watch","Citadel Aegis","Runebound Guardian’s Staff"
+    ],
+    "mythic": [
+      "Heart of the Eternal King","Crown of the First Sentinel"
+    ],
+    "weatherModifiers": {
+      "overcast": ["Dust‑Filter Mask","Weathered Cloak"],
+      "storm": ["Lightning Rod Spike","Storm‑Ward Talisman"]
+    },
+    "crisisModifiers": {
+      "undeadStirring": ["Grave‑Cold Coin","Bone‑Etched Relic"],
+      "siege": ["Siege Engineer’s Toolkit","Citadel Defense Banner"]
+    },
+    "eventModifiers": {
+      "relicAuction": ["Appraised Relic Tag","Auctioneer’s Ledger Page"],
+      "guardianVigil": ["Vigil Candle","Guardian’s Blessing Token"]
+    },
+    "professionModifiers": {
+      "paladin": ["Citadel‑Blessed Emblem"],
+      "historian": ["Archivist’s Lens"]
+    }
+  },
+
+  "worldbreaker-horizon": {
+    "common": [
+      "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
+    ],
+    "uncommon": [
+      "Cracked Sigil","Distorted Eye","Flickering Essence","Torn Reality Thread"
+    ],
+    "rare": [
+      "Fragment of the Worldbreaker","Abyss‑Forged Plate","Reality‑Warped Core","Titanbone Splinter"
+    ],
+    "epic": [
+      "Mantle of the Horizon’s End","Worldbreaker Aegis","Paradox‑Charged Staff"
+    ],
+    "mythic": [
+      "Heart of the Worldbreaker","Crown of the Final Titan"
+    ],
+    "weatherModifiers": {
+      "voidStorm": ["Void‑Charged Dust","Reality‑Tether Charm"],
+      "darkOvercast": ["Shadow‑Veined Cloth","Gloom‑Steeped Resin"]
+    },
+    "crisisModifiers": {
+      "voidRift": ["Rift‑Stabilizer","Void Anchor Fragment"],
+      "titanAwakening": ["Titanbone Core","Awakened Colossus Fragment"]
+    },
+    "eventModifiers": {
+      "endtimesEclipse": ["Eclipse‑Forged Shard","Shadow‑Crowned Token"],
+      "cosmicAlignment": ["Aligned Star Fragment","Planar Harmony Dust"]
+    },
+    "professionModifiers": {
+      "warlock": ["Void‑Tuned Focus"],
+      "paladin": ["Light‑Against‑Darkness Sigil"]
+    }
+  },
+
+  "astral-nexus": {
+    "common": [
+      "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
+    ],
+    "uncommon": [
+      "Celestial Ink Vial","Planar Residue","Star‑Etched Coin","Dreamglass Fragment"
+    ],
+    "rare": [
+      "Nexus Convergence Crystal","Astral Beast Feather","Planar Echo Core","Star‑Forged Plate"
+    ],
+    "epic": [
+      "Mantle of the Nexus Gate","Astral Conductor’s Aegis","Nexus‑Bound Staff"
+    ],
+    "mythic": [
+      "Heart of the Nexus Titan","Crown of the Astral Sovereign"
+    ],
+    "weatherModifiers": {
+      "cosmicWind": ["Cosmic‑Charged Dust","Star‑Tuned Charm"],
+      "starlightSurge": ["Starlight‑Infused Crystal","Radiant Feather Bundle"]
+    },
+    "crisisModifiers": {
+      "planarRift": ["Rift‑Stabilizer Sigil","Planar Anchor Fragment"],
+      "astralStorm": ["Astral Storm Core","Comet‑Flecked Dust"]
+    },
+    "eventModifiers": {
+      "meteorShower": ["Meteor Fragment","Skyfire Dust"],
+      "astralAlignment": ["Aligned Star Fragment","Planar Harmony Dust"]
+    },
+    "professionModifiers": {
+      "mage": ["Astral Focus Gem"],
+      "priest": ["Celestial Prayer Beads"]
+    }
+  },
+
+  "deep-caverns": {
+    "common": [
+      "Cave Moss","Glowshroom","Stone Chip","Bat Guano","Rusty Nail","Old Rope"
+    ],
+    "uncommon": [
+      "Sturdy Torch Bundle","Reinforced Helmet","Cave Explorer’s Gloves","Rope and Piton Kit"
+    ],
+    "rare": [
+      "Abyssal Cavern Core","Echo‑Marked Stone","Chitin Fragment Cluster","Subterranean Map Scrap"
+    ],
+    "epic": [
+      "Mantle of the Hollow Depths","Deepdelver’s Aegis","Cavern‑Heart Channeler’s Staff"
+    ],
+    "mythic": [
+      "Heart of the Hollow Titan","Crown of the Deep Sovereign"
+    ],
+    "weatherModifiers": {
+      "rain": ["Water‑Sealed Torch","Mud‑Guard Boots"],
+      "storm": ["Noise‑Dampening Earwraps","Shock‑Grounding Spike"]
+    },
+    "crisisModifiers": {
+      "caveIn": ["Rescuer’s Support Beam","Emergency Digging Kit"],
+      "eldritchWhispers": ["Whisper‑Marked Stone","Eldritch Echo Vial"]
+    },
+    "eventModifiers": {
+      "glowshroomBloom": ["Luminous Cap Cluster","Bioluminescent Vial"],
+      "deepEchoFestival": ["Echo Resonance Stone","Cavern Song Charm"]
+    },
+    "professionModifiers": {
+      "miner": ["Deep Surveyor’s Tools"],
+      "ranger": ["Cave Scout’s Cloak"]
+    }
+  },
+
+  "ruined-kingdom": {
+    "common": [
+      "Broken Brick","Ancient Coin Fragment","Tarnished Ring","Cracked Idol","Dusty Tome Page"
+    ],
+    "uncommon": [
+      "Reinforced Explorer’s Boots","Relic‑Seeker’s Satchel","Sturdy Crowbar","Map of the Fallen Walls"
+    ],
+    "rare": [
+      "Royal Crest Fragment","Runed Relic Shard","Guardian’s Broken Seal","Forgotten House Emblem"
+    ],
+    "epic": [
+      "Mantle of the Fallen Dynasty","Royal Aegis","Kingdom‑Bound Channeler’s Staff"
+    ],
+    "mythic": [
+      "Heart of the Fallen King","Crown of the Lost Sovereign"
+    ],
+    "weatherModifiers": {
+      "overcast": ["Dust‑Filter Mask","Weathered Cloak"],
+      "storm": ["Lightning Rod Spike","Storm‑Ward Talisman"]
+    },
+    "crisisModifiers": {
+      "undeadStirring": ["Grave‑Cold Coin","Bone‑Etched Relic"],
+      "cultActivity": ["Cultist’s Cipher Scroll","Hidden Shrine Token"]
+    },
+    "eventModifiers": {
+      "relicAuction": ["Appraised Relic Tag","Auctioneer’s Ledger Page"],
+      "royalRemembrance": ["Royal Memorial Token","Ancestral Incense"]
+    },
+    "professionModifiers": {
+      "historian": ["Archivist’s Lens"],
+      "rogue": ["Lockbreaker’s Toolkit"]
+    }
+  },
+
+  "whispering-marsh": {
+    "common": [
+      "Bog Reed","Murkweed","Rotten Bark","Swamp Gas Vial","Leech Cluster","Stagnant Water Flask"
+    ],
+    "uncommon": [
+      "Thick Reed Rope","Marsh‑Hardened Leather","Reed‑Woven Charm","Toxin‑Resistant Cloth"
+    ],
+    "rare": [
+      "Wispheart Core","Ghostlight Glass","Murk‑Infused Resin","Witchlight Lantern Fragment"
+    ],
+    "epic": [
+      "Mantle of the Whispering Bog","Wispcaller’s Aegis","Marsh‑Bound Channeler’s Staff"
+    ],
+    "mythic": [
+      "Heart of the Marsh Titan","Crown of the Sunken Sovereign"
+    ],
+    "weatherModifiers": {
+      "fog": ["Wisp‑Lure Lantern","Fog‑Dampened Herb Bundle"],
+      "rain": ["Waterlogged Reed Bundle","Marsh‑Steeped Tonic"]
+    },
+    "crisisModifiers": {
+      "plagueBloom": ["Plaguebloom Petal","Quarantine Ward Sigil"],
+      "undeadRising": ["Grave‑Slick Bone","Marsh Grave Marker Fragment"]
+    },
+    "eventModifiers": {
+      "willOWispNight": ["Captured Wisp Ember","Ghostlight Glass"],
+      "bogFestival": ["Reed Mask","Swamp Brew Flask"]
+    },
+    "professionModifiers": {
+      "alchemist": ["Marsh Reagent Satchel"],
+      "necromancer": ["Drowned Bone Focus"]
+    }
+  },
+
+  "stormbreaker-coast": {
+    "common": [
+      "Driftwood","Seashell","Salted Fish","Seaweed Strand","Wet Rope","Crab Shell"
+    ],
+    "uncommon": [
+      "Storm‑Etched Charm","Water‑Resistant Cloak","Reinforced Sailcloth","Navigator’s Rope Coil"
+    ],
+    "rare": [
+      "Stormbreaker Core","Thunder‑Marked Coral","Sea Serpent Scale","Storm‑Forged Plate"
+    ],
+    "epic": [
+      "Mantle of the Stormbreaker","Tempest Aegis","Storm‑Bound Navigator’s Staff"
+    ],
+    "mythic": [
+      "Heart of the Tempest Titan","Crown of the Storm Sovereign"
+    ],
+    "weatherModifiers": {
+      "storm": ["Storm‑Tether Rope","Lightning‑Grounding Spike"],
+      "windy": ["Wind‑Baffling Hood","Storm‑Slick Boots"]
+    },
+    "crisisModifiers": {
+      "pirateRaid": ["Pirate Captain’s Token","Hidden Booty Map"],
+      "seaMonster": ["Serpent Fang","Deepwater Ichor"]
+    },
+    "eventModifiers": {
+      "tideFestival": ["Festival Shell Pendant","Tide‑Blessed Ribbon"],
+      "tempestEve": ["Tempest‑Charged Crystal","Storm‑Marked Feather"]
+    },
+    "professionModifiers": {
+      "sailor": ["Storm‑Proof Compass"],
+      "ranger": ["Coast Tracker’s Boots"]
+    }
+  },
+  
 }
