@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Admin – Gift Points</title>
+  <title>Admin – Gift Gold</title>
 
   <style>
     body {
@@ -80,7 +80,7 @@
 
 <body>
 
-  <h1>Admin: Gift Points</h1>
+  <h1>Admin: Gift Gold</h1>
   <div id="adminDisplay"></div>
 
   <label>Target Username</label>
@@ -89,7 +89,7 @@
   <label>Amount to Gift</label>
   <input id="amount" placeholder="e.g. 500">
 
-  <button onclick="giftPoints()">Gift Points</button>
+  <button onclick="giftGold()">Gift Gold</button>
 
   <div id="resultBox">Waiting...</div>
 
@@ -111,7 +111,7 @@
       setTimeout(() => t.style.opacity = 0, 2500);
     }
 
-    async function giftPoints() {
+    async function giftGold() {
       const target = document.getElementById("target").value.trim();
       const amount = Number(document.getElementById("amount").value.trim());
       const box = document.getElementById("resultBox");
@@ -122,7 +122,7 @@
       }
 
       try {
-        const result = await api.admin.giftPoints(admin, target, amount);
+        const result = await api.admin.giftGold(admin, target, amount);
 
         if (!result.success) {
           box.textContent = "Error: " + (result.message || "Unknown error");
