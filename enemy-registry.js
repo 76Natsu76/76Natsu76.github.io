@@ -7,7 +7,7 @@ export const EnemyRegistry = {
   behaviors: {},
   abilities: {},
   ultimates: {},
-  enemies: {},
+  enemies: [],
   regionMap: {},
   subraceMap: {},
 
@@ -32,7 +32,62 @@ export const EnemyRegistry = {
     if (!raw) throw new Error("Unknown enemy: " + key);
 
     const family  = this.families[raw.family];
+    if (!family) throw new Error("Unknown family: " + raw.family);
+
     const variant = raw.variant ? this.variants[raw.variant] : null;
+
+    // --- FAMILY + VARIANT MODIFIERS ---
+    const famMod = family.familyModifiers || {};
+    const varMod = variant?.combatModifiers || {};
+
+    const hpMult  = (famMod.hpMult  ?? 1) * (varMod.hpMult  ?? 1);
+    const atkMult = (famMod.atkMult ?? 1) * (varMod.atkMult ?? 1);
+    const defMult = (famMod.defMult ?? 1) * (varMod.defMult ?? 1);
+
+    // --- BASE STATS ---
+    const baseHP  = (raw.baseHP  ?? family.baseHP)  * hpMult;
+    const baseATK = (raw.baseATK ?? family.baseATK) * atkMult;
+    const baseDEF = (raw.baseDEF ?? family.baseDEF) * defMult;
+
+    // --- ELEMENTAL AFFINITY ---
+    const elementAffinity = {
+      ...(family.elementAffinity || {}),
+      ...(variant?.elementAffinity || {})
+    };
+
+    // --- BEHAVIOR ---
+    const behaviorKey = variant?.behavior || family.behavior;
+    const behavior = this.behaviors[behaviorKey] || null;
+
+    // --- TAGS ---
+    const tagKeys = [
+      ...(family.tags || []),
+      ...(variant?.tags || [])
+    ];
+
+    const resolvedTags = tagKeys.map(t => this.tags[t]).filter(Boolean);
+
+    // --- ABILITIES ---
+    const abilityKeys = [
+      ...(family.abilities || []),
+      ...(variant?.abilities || [])
+    ];
+
+    const resolvedAbilities = abilityKeys.map(a => this.abilities[a]).filter(Boolean);
+
+    // --- ULTIMATE ---
+    const ultimateKey = variant?.ultimate || family.ultimate || null;
+    const ultimate = ultimateKey ? this.ultimates[ultimateKey] : null;
+
+    // --- REGION ---
+    const region = this.regionMap[raw.key] || null;
+
+    // --- SUBRACE ---
+    const subrace = raw.subrace || this.subraceMap[raw.key] || null;
+
+    // --- LOOT / EFFECTS ---
+    const lootTable = parseMaybeJSON(raw.lootTableJSON) || [];
+    const activeEffects = parseMaybeJSON(raw.activeEffectsJSON) || [];
 
     return {
       key: raw.key,
@@ -40,56 +95,49 @@ export const EnemyRegistry = {
 
       family: raw.family,
       variant: raw.variant || null,
-      subrace: raw.subrace || this.subraceMap[raw.key] || null,
+      subrace,
 
       rarity: raw.rarity,
       element: raw.element,
       level: raw.level,
 
-      // Base stats (raw + family + variant modifiers)
-      baseHP:  (raw.baseHP  ?? family.baseHP)  * (variant?.statModifiers?.hpMult  ?? 1),
-      baseATK: (raw.baseATK ?? family.baseATK) * (variant?.statModifiers?.atkMult ?? 1),
-      baseDEF: (raw.baseDEF ?? family.baseDEF) * (variant?.statModifiers?.defMult ?? 1),
+      baseHP,
+      baseATK,
+      baseDEF,
 
-      // Elemental affinities
-      elementAffinity: {
-        ...family.elementAffinity,
-        ...(variant?.elementAffinity || {})
-      },
+      elementAffinity,
+      behavior,
 
-      // Behavior profile
-      behavior: this.behaviors[variant?.behavior || family.behavior],
+      tags: resolvedTags,
+      abilities: resolvedAbilities,
+      ultimate,
 
-      // Tags
-      tags: [
-        ...(family.tags || []),
-        ...(variant?.tags || [])
-      ],
+      lootTable,
+      activeEffects,
 
-      // Abilities
-      abilities: variant?.abilities || family.abilities || [],
+      region,
 
-      // Ultimate
-      ultimate: variant?.ultimate || family.ultimate || null,
-
-      // Loot
-      lootTable: raw.lootTable || [],
-
-      // Effects
-      activeEffects: raw.activeEffects || [],
-
-      // Region
-      region: raw.region || this.regionMap[raw.key] || null,
-
-      // Flavor
       flavor: variant?.flavor || family.flavor || ""
     };
   }
 };
 
-// Helper
+// -----------------
+// Helper Functions
+// -----------------
+
 async function fetchJSON(path) {
   const res = await fetch(path, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to load " + path);
   return await res.json();
+}
+
+function parseMaybeJSON(value) {
+  if (!value) return null;
+  if (typeof value !== "string") return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
 }
