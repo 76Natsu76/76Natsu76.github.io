@@ -106,6 +106,9 @@
   <h1>Economy Controls</h1>
   <div id="adminDisplay"></div>
 
+  <!-- ============================
+       GLOBAL MULTIPLIERS
+       ============================ -->
   <div class="section">
     <h2>Global Multipliers</h2>
 
@@ -128,6 +131,9 @@
     <div id="statusMessage"></div>
   </div>
 
+  <!-- ============================
+       SHOP SETTINGS
+       ============================ -->
   <div class="section">
     <h2>Shop & Refresh</h2>
 
@@ -144,6 +150,44 @@
     <button class="btn-primary" onclick="saveShop()">Save Shop Settings</button>
   </div>
 
+  <!-- ============================
+       ADMIN TOOLS
+       ============================ -->
+  <div class="section">
+    <h2>Admin Tools</h2>
+
+    <div class="field-row">
+      <label>Target Username</label>
+      <input id="targetUser" placeholder="username">
+    </div>
+
+    <div class="field-row">
+      <label>Gold Amount</label>
+      <input id="goldAmount" type="number" placeholder="e.g. 500">
+    </div>
+
+    <button class="btn-primary" onclick="giftGold()">Gift Gold</button>
+
+    <div class="field-row">
+      <label>EXP Amount</label>
+      <input id="expAmount" type="number" placeholder="e.g. 250">
+    </div>
+
+    <button class="btn-primary" onclick="giftExp()">Gift EXP</button>
+
+    <div class="field-row">
+      <label>Item Key</label>
+      <input id="itemKey" placeholder="e.g. MYSTERY_BOX">
+    </div>
+
+    <div class="field-row">
+      <label>Quantity</label>
+      <input id="itemQty" type="number" placeholder="1">
+    </div>
+
+    <button class="btn-primary" onclick="grantItem()">Grant Item</button>
+  </div>
+
   <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
 
   <script>
@@ -151,6 +195,9 @@
     document.getElementById("adminDisplay").textContent =
       admin ? "Admin: " + admin : "Not logged in";
 
+    // ============================
+    // LOAD ECONOMY
+    // ============================
     async function loadEconomy() {
       try {
         const res = await fetch("/api/admin/economy", { cache:"no-store" });
@@ -164,10 +211,13 @@
         document.getElementById("shopPriceScale").value = data.shopPriceScale ?? 1;
         document.getElementById("dailyRefreshHour").value = data.dailyRefreshHour ?? 0;
       } catch {
-        // silent; page still usable
+        // silent
       }
     }
 
+    // ============================
+    // SAVE ECONOMY
+    // ============================
     async function saveEconomy() {
       const payload = {
         admin,
@@ -194,6 +244,9 @@
       }
     }
 
+    // ============================
+    // SAVE SHOP SETTINGS
+    // ============================
     async function saveShop() {
       const payload = {
         admin,
@@ -217,54 +270,57 @@
       }
     }
 
-    function goAdmin() {
-      window.location.href = "admin-dashboard.html";
-    }
-
+    // ============================
+    // ADMIN ACTIONS
+    // ============================
     async function giftGold() {
       const target = document.getElementById("targetUser").value.trim();
       const amount = Number(document.getElementById("goldAmount").value);
       const status = document.getElementById("statusMessage");
-    
+
       const res = await fetch("/api/admin/gold/gift", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({ admin, target, amount })
       });
-    
+
       const data = await res.json();
       status.textContent = data.message || "Gold gifted.";
     }
-    
+
     async function giftExp() {
       const target = document.getElementById("targetUser").value.trim();
       const amount = Number(document.getElementById("expAmount").value);
       const status = document.getElementById("statusMessage");
-    
+
       const res = await fetch("/api/admin/exp/gift", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({ admin, target, amount })
       });
-    
+
       const data = await res.json();
       status.textContent = data.message || "EXP gifted.";
     }
-    
+
     async function grantItem() {
       const target = document.getElementById("targetUser").value.trim();
       const itemKey = document.getElementById("itemKey").value.trim();
       const quantity = Number(document.getElementById("itemQty").value);
       const status = document.getElementById("statusMessage");
-    
+
       const res = await fetch("/api/admin/items/grant", {
         method:"POST",
         headers:{ "Content-Type":"application/json" },
         body:JSON.stringify({ admin, target, itemKey, quantity })
       });
-    
+
       const data = await res.json();
       status.textContent = data.message || "Item granted.";
+    }
+
+    function goAdmin() {
+      window.location.href = "admin-dashboard.html";
     }
 
     loadEconomy();
