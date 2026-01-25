@@ -84,5 +84,8 @@ total = 67
 
 
 Note -- world tick counter exists
+
 Shops -- global shop ... player based daily shop ... travelling merchant ... seasonal shop-ware
+
 Time -- world tick ... minutes counted ... seasons will be 1 week rotational ... seasons matter
+
