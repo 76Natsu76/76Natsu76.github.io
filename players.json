@@ -29,7 +29,20 @@
       }
     },
 
-    "items": {},
+    "inventory": [
+      { "id": "leveler", "qty": 3 },
+      { "id": "instant_escape", "qty": 5 },
+      { "id": "mystery_box", "qty": 7 },
+      { "id": "exp_buff", "qty": 2 },
+      { "id": "regen_charm", "qty": 2 },
+      { "id": "low_hp_potion", "qty": 11 },
+      { "id": "low_mp_potion", "qty": 7 },
+      { "id": "mid_mp_potion", "qty": 2 },
+      { "id": "high_hp_potion", "qty": 31 },
+      { "id": "high_mp_potion", "qty": 17 },
+      { "id": "ultra_hp_potion", "qty": 4 },
+      { "id": "ultra_mp_potion", "qty": 1 }
+    ],
 
     "equipment": {
       "weapon": {
