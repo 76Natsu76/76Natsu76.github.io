@@ -1,108 +1,113 @@
 // encounter.js
-// Modernized client-side encounter generator (Option B)
+// Final GitHub‑native Encounter Engine
 
 (function () {
+
   // ============================================================
   // PUBLIC API
   // ============================================================
-
   window.EncounterEngine = {
-    rollEncounter,
-    loadEncounterFromSession,
-    clearEncounter
+    generate,
+    loadFromSession,
+    clear
   };
 
   // ============================================================
   // MAIN ENTRY POINT
   // ============================================================
-
-  function rollEncounter(regionKey, enemyOverride = null) {
+  function generate(regionKey, username, enemyOverride = null) {
     const region = REGION_DEFINITIONS[regionKey];
-    if (!region) {
-      throw new Error(`Unknown region: ${regionKey}`);
-    }
+    if (!region) throw new Error(`Unknown region: ${regionKey}`);
 
-    // 1. Roll weather + event
+    // 1. Resolve biome
+    const biome = region.biome;
+
+    // 2. Weather + event + hazard + variant
     const weather = pickWeighted(region.weatherPool);
     const event = pickWeighted(region.eventPool);
+    const hazard = pickWeighted(region.hazardPool);
+    const variant = pickWeighted(region.variantPool);
 
-    // 2. Roll rarity
+    // 3. Rarity
     const rarity = pickWeighted(region.rarityWeights);
 
-    // 3. Roll family
+    // 4. Enemy family
     const family = pickWeighted(region.enemyFamilies);
 
-    // 4. Pick enemy template
-    const enemyTemplate = enemyOverride
+    // 5. Pick enemy template
+    const template = enemyOverride
       ? ENEMY_TEMPLATES[enemyOverride]
       : pickEnemyTemplate(family, rarity);
 
-    if (!enemyTemplate) {
+    if (!template) {
       throw new Error(
         `No enemy template found for family=${family}, rarity=${rarity}`
       );
     }
 
-    // 5. Build enemy object
+    // 6. Build enemy instance
     const enemy = buildEnemyInstance(
-      enemyTemplate,
+      template,
       region,
       rarity,
       weather,
-      event
+      event,
+      variant
     );
 
-    // 6. Build encounter object
+    // 7. Build encounter object
     const encounter = {
       region: regionKey,
-      biome: region.biome,
+      biome,
       weather,
+      hazard,
       event,
+      rarity,
+      variant,
       flavor: region.flavor || "",
-      enemy
+      enemy,
+      debug: {
+        family,
+        rarity,
+        weather,
+        event,
+        hazard,
+        variant
+      }
     };
 
-    // 7. Save to sessionStorage
-    sessionStorage.setItem(
-      "encounter",
-      JSON.stringify(encounter)
-    );
+    // 8. Save to sessionStorage
+    sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
 
     return encounter;
   }
 
-  function loadEncounterFromSession() {
-    const raw = sessionStorage.getItem("encounter");
+  function loadFromSession() {
+    const raw = sessionStorage.getItem("currentEncounter");
     return raw ? JSON.parse(raw) : null;
   }
 
-  function clearEncounter() {
-    sessionStorage.removeItem("encounter");
+  function clear() {
+    sessionStorage.removeItem("currentEncounter");
   }
 
   // ============================================================
   // ENEMY INSTANCE BUILDER
   // ============================================================
-
   function buildEnemyInstance(
     template,
     region,
     rarity,
     weather,
-    event
+    event,
+    variant
   ) {
     const level = rollLevel(region.levelRange);
     const rarityMult = rarityScaling(rarity);
 
-    const baseHP = Math.round(
-      template.baseHP * rarityMult * region.lootModifier
-    );
-    const baseATK = Math.round(
-      template.attack * rarityMult
-    );
-    const baseDEF = Math.round(
-      template.defense * rarityMult
-    );
+    const baseHP = Math.round(template.baseHP * rarityMult * region.lootModifier);
+    const baseATK = Math.round(template.attack * rarityMult);
+    const baseDEF = Math.round(template.defense * rarityMult);
 
     const modifiers = [];
 
@@ -116,7 +121,12 @@
       modifiers.push(EVENT_MODIFIERS[event]);
     }
 
-    // Region combat modifiers (converted to readable text)
+    // Variant modifiers (optional)
+    if (variant && VARIANT_MODIFIERS?.[variant]) {
+      modifiers.push(VARIANT_MODIFIERS[variant]);
+    }
+
+    // Region combat modifiers
     if (region.combatModifiers) {
       const cm = region.combatModifiers;
       if (cm.playerDEFMult && cm.playerDEFMult < 1) {
@@ -158,7 +168,6 @@
   // ============================================================
   // HELPERS
   // ============================================================
-
   function pickWeighted(pool) {
     if (!pool || !pool.length) return null;
 
@@ -188,75 +197,35 @@
 
   function rarityScaling(rarity) {
     switch (rarity.toLowerCase()) {
-      case "common":
-        return 1.0;
-      case "uncommon":
-        return 1.1;
-      case "rare":
-        return 1.25;
-      case "epic":
-        return 1.45;
-      case "elite":
-        return 1.65;
-      case "mythical":
-        return 1.9;
-      case "legendary":
-        return 2.2;
-      case "ancient":
-        return 2.6;
-      default:
-        return 1.0;
+      case "common": return 1.0;
+      case "uncommon": return 1.1;
+      case "rare": return 1.25;
+      case "epic": return 1.45;
+      case "elite": return 1.65;
+      case "mythical": return 1.9;
+      case "legendary": return 2.2;
+      case "ancient": return 2.6;
+      default: return 1.0;
     }
   }
 
   // ============================================================
-  // WEATHER / EVENT MODIFIER DEFINITIONS
-  // (You can expand these anytime)
+  // WEATHER / EVENT MODIFIERS
   // ============================================================
-
   const WEATHER_MODIFIERS = {
-    rain: {
-      icon: "rain.png",
-      text: "Rain: +10% lightning damage"
-    },
-    clear: {
-      icon: "sun.png",
-      text: "Clear Skies: No special effects"
-    },
-    storm: {
-      icon: "storm.png",
-      text: "Storm: +15% lightning damage"
-    },
-    heatwave: {
-      icon: "heat.png",
-      text: "Heatwave: +10% fire damage"
-    },
-    arcane_winds: {
-      icon: "arcane.png",
-      text: "Arcane Winds: +10% arcane damage"
-    }
+    rain: { icon: "rain.png", text: "Rain: +10% lightning damage" },
+    clear: { icon: "sun.png", text: "Clear Skies: No special effects" },
+    storm: { icon: "storm.png", text: "Storm: +15% lightning damage" },
+    heatwave: { icon: "heat.png", text: "Heatwave: +10% fire damage" },
+    arcane_winds: { icon: "arcane.png", text: "Arcane Winds: +10% arcane damage" }
   };
 
   const EVENT_MODIFIERS = {
-    beast_migration: {
-      icon: "paw.png",
-      text: "Beast Migration: Beast enemies gain +10% HP"
-    },
-    cosmic_flux: {
-      icon: "cosmic.png",
-      text: "Cosmic Flux: +10% arcane damage"
-    },
-    timeline_echo: {
-      icon: "time.png",
-      text: "Timeline Echo: Random stat fluctuations"
-    },
-    scorched_earth: {
-      icon: "fire.png",
-      text: "Scorched Earth: +10% fire damage"
-    },
-    titanic_footfall: {
-      icon: "titan.png",
-      text: "Titanic Footfall: +10% earth damage"
-    }
+    beast_migration: { icon: "paw.png", text: "Beast Migration: Beast enemies gain +10% HP" },
+    cosmic_flux: { icon: "cosmic.png", text: "Cosmic Flux: +10% arcane damage" },
+    timeline_echo: { icon: "time.png", text: "Timeline Echo: Random stat fluctuations" },
+    scorched_earth: { icon: "fire.png", text: "Scorched Earth: +10% fire damage" },
+    titanic_footfall: { icon: "titan.png", text: "Titanic Footfall: +10% earth damage" }
   };
+
 })();
