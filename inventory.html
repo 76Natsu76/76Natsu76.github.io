@@ -19,73 +19,13 @@
 
     #usernameDisplay {
       opacity:0.8;
-      margin-bottom:16px;
+      margin-bottom:6px;
     }
 
-    .section {
-      margin-top:24px;
-      padding:16px;
-      background:#11141c;
-      border-radius:8px;
-      border:1px solid #262a36;
-    }
-
-    .section h2 {
-      margin-top:0;
-      font-size:18px;
-      color:#9af7ff;
-    }
-
-    .equipment-card,
-    .item-card {
-      padding:10px;
-      margin:8px 0;
-      background:#1a1d24;
-      border-radius:6px;
-      border:1px solid #333;
-      position:relative;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-    }
-
-    .equipment-card:hover,
-    .item-card:hover {
-      background:#222832;
-    }
-
-    .tooltip {
-      display:none;
-      position:absolute;
-      left:10px;
-      top:100%;
-      background:#11141c;
-      border:1px solid #262a36;
-      padding:10px;
-      border-radius:6px;
-      width:260px;
-      z-index:1000;
+    #syncIndicator {
       font-size:13px;
-    }
-
-    .equipment-card:hover .tooltip,
-    .item-card:hover .tooltip {
-      display:block;
-    }
-
-    .item-actions button {
-      margin-left:6px;
-      padding:6px 10px;
-      border-radius:4px;
-      border:1px solid #444;
-      background:#1a1d24;
-      color:#eee;
-      cursor:pointer;
-      font-size:12px;
-    }
-
-    .item-actions button:hover {
-      background:#222832;
+      opacity:0.7;
+      margin-bottom:16px;
     }
 
     .btn {
@@ -103,6 +43,123 @@
     .btn:hover {
       background:#222832;
     }
+
+    /* Collapsible sections */
+    .section {
+      margin-top:24px;
+      padding:16px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+    }
+
+    .section h2 {
+      margin-top:0;
+      font-size:18px;
+      color:#9af7ff;
+      cursor:pointer;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .collapse-arrow {
+      font-size:16px;
+      opacity:0.7;
+      transition:0.2s;
+    }
+
+    .collapsed .collapse-arrow {
+      transform:rotate(-90deg);
+    }
+
+    .collapsed .section-content {
+      display:none;
+    }
+
+    /* Item cards */
+    .item-card,
+    .equipment-card {
+      padding:10px;
+      margin:8px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      position:relative;
+    }
+
+    .item-card:hover,
+    .equipment-card:hover {
+      background:#222832;
+    }
+
+    .item-icon {
+      width:48px;
+      height:48px;
+      border-radius:4px;
+      border:1px solid #444;
+      object-fit:cover;
+    }
+
+    .item-info {
+      flex-grow:1;
+    }
+
+    .item-name {
+      font-weight:600;
+      font-size:15px;
+    }
+
+    .item-qty {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .item-actions button {
+      padding:6px 10px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      font-size:12px;
+      margin-left:6px;
+    }
+
+    .item-actions button:hover {
+      background:#222832;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      display:none;
+      position:absolute;
+      left:10px;
+      top:100%;
+      background:#11141c;
+      border:1px solid #262a36;
+      padding:10px;
+      border-radius:6px;
+      width:260px;
+      z-index:1000;
+      font-size:13px;
+    }
+
+    .item-card:hover .tooltip,
+    .equipment-card:hover .tooltip {
+      display:block;
+    }
+
+    /* Rarity glows */
+    .rarity-common { box-shadow:0 0 6px #bfbfbf55; }
+    .rarity-uncommon { box-shadow:0 0 8px #7fff7f88; }
+    .rarity-rare { box-shadow:0 0 8px #7fcfff88; }
+    .rarity-epic { box-shadow:0 0 10px #c77fffaa; }
+    .rarity-legendary { box-shadow:0 0 12px #ffbf5faa; }
   </style>
 </head>
 
@@ -110,6 +167,9 @@
 
   <h1>Inventory</h1>
   <div id="usernameDisplay"></div>
+  <div id="syncIndicator">Syncing with server…</div>
+
+  <button class="btn" onclick="refreshInventory()">Refresh</button>
 
   <div id="inventoryContainer">Loading...</div>
 
@@ -127,15 +187,22 @@
 
     loadInventory();
 
-    /* ============================================================
-       HYBRID LOADING: sessionStorage → api.js refresh
-       ============================================================ */
+    async function refreshInventory() {
+      document.getElementById("syncIndicator").textContent = "Syncing with server…";
+      const fresh = await api.getPlayer(username);
+      if (fresh) {
+        player = fresh;
+        sessionStorage.setItem("player", JSON.stringify(player));
+        renderInventory(player);
+        document.getElementById("syncIndicator").textContent = "Synced ✔";
+      }
+    }
 
     async function loadInventory() {
       const cached = sessionStorage.getItem("player");
       if (cached) {
         player = JSON.parse(cached);
-        renderInventory(player, true);
+        renderInventory(player);
       }
 
       if (username) {
@@ -143,9 +210,11 @@
         if (fresh) {
           player = fresh;
           sessionStorage.setItem("player", JSON.stringify(player));
-          renderInventory(player, false);
+          renderInventory(player);
         }
       }
+
+      document.getElementById("syncIndicator").textContent = "Synced ✔";
     }
 
     /* ============================================================
@@ -156,56 +225,112 @@
       const container = document.getElementById("inventoryContainer");
       const out = [];
 
+      /* Categorize items */
+      const consumables = [];
+      const materials = [];
+      const quest = [];
+      const misc = [];
+
+      for (const item of p.inventory || []) {
+        switch (item.type) {
+          case "consumable": consumables.push(item); break;
+          case "material": materials.push(item); break;
+          case "quest": quest.push(item); break;
+          default: misc.push(item); break;
+        }
+      }
+
       /* ------------------------------
          EQUIPMENT
       ------------------------------ */
       out.push(`
-        <div class="section">
-          <h2>Equipment</h2>
-          ${Object.entries(p.equipment || {})
-            .map(([slot, item]) => `
-              <div class="equipment-card">
-                <div>
-                  <strong>${format(slot)}</strong>: ${item ? item.name : "—"}
-                </div>
+        <div class="section collapsible">
+          <h2 onclick="toggleSection(this)">
+            Equipment <span class="collapse-arrow">▼</span>
+          </h2>
+          <div class="section-content">
+            ${
+              Object.entries(p.equipment || {})
+                .map(([slot, item]) => `
+                  <div class="equipment-card rarity-${(item?.rarity || "common").toLowerCase()}">
+                    <img class="item-icon"
+                         src="${item?.icon || "/assets/items/default.png"}"
+                         onerror="this.src='/assets/items/default.png'">
 
-                ${
-                  item
-                    ? `<div class="tooltip">
-                        <strong>${item.name}</strong><br>
-                        Rarity: ${format(item.rarity)}<br>
-                        ${item.bonuses ? formatBonuses(item.bonuses) : ""}
-                      </div>`
-                    : ""
-                }
+                    <div class="item-info">
+                      <div class="item-name">${item ? item.name : "—"}</div>
+                      <div class="item-qty">${format(slot)}</div>
+                    </div>
 
-                ${
-                  item
-                    ? `<button onclick="unequipItem('${slot}')">Unequip</button>`
-                    : ""
-                }
-              </div>
-            `)
-            .join("")}
+                    ${
+                      item
+                        ? `<div class="tooltip">
+                            <strong>${item.name}</strong><br>
+                            Rarity: ${format(item.rarity)}<br>
+                            ${item.bonuses ? formatBonuses(item.bonuses) : ""}
+                          </div>`
+                        : ""
+                    }
+
+                    ${
+                      item
+                        ? `<div class="item-actions">
+                            <button onclick="unequipItem('${slot}')">Unequip</button>
+                          </div>`
+                        : ""
+                    }
+                  </div>
+                `)
+                .join("")
+            }
+          </div>
         </div>
       `);
 
       /* ------------------------------
-         INVENTORY ITEMS
+         CONSUMABLES
       ------------------------------ */
-      out.push(`
-        <div class="section">
-          <h2>Items</h2>
-          ${
-            (p.inventory || []).length === 0
-              ? "<div>No items in inventory.</div>"
-              : p.inventory
-                  .map(
-                    (item) => `
-              <div class="item-card">
-                <div>
-                  <div><strong>${item.name}</strong></div>
-                  <div style="opacity:0.8;">x${item.quantity}</div>
+      out.push(renderCategory("Consumables", consumables, true));
+
+      /* ------------------------------
+         MATERIALS
+      ------------------------------ */
+      out.push(renderCategory("Materials", materials, false));
+
+      /* ------------------------------
+         QUEST ITEMS
+      ------------------------------ */
+      out.push(renderCategory("Quest Items", quest, false));
+
+      /* ------------------------------
+         MISC
+      ------------------------------ */
+      out.push(renderCategory("Misc", misc, false));
+
+      container.innerHTML = out.join("");
+    }
+
+    function renderCategory(title, items, allowUse) {
+      return `
+        <div class="section collapsible">
+          <h2 onclick="toggleSection(this)">
+            ${title} <span class="collapse-arrow">▼</span>
+          </h2>
+          <div class="section-content">
+            ${
+              items.length === 0
+                ? "<div>No items.</div>"
+                : items
+                    .map(
+                      item => `
+              <div class="item-card rarity-${(item.rarity || "common").toLowerCase()}">
+                <img class="item-icon"
+                     src="${item.icon || "/assets/items/default.png"}"
+                     onerror="this.src='/assets/items/default.png'">
+
+                <div class="item-info">
+                  <div class="item-name">${item.name}</div>
+                  <div class="item-qty">x${item.quantity}</div>
 
                   <div class="tooltip">
                     <strong>${item.name}</strong><br>
@@ -222,20 +347,19 @@
                       : ""
                   }
                   ${
-                    item.type === "consumable"
+                    allowUse
                       ? `<button onclick="useItem('${item.id}')">Use</button>`
                       : ""
                   }
                 </div>
               </div>
             `
-                  )
-                  .join("")
-          }
+                    )
+                    .join("")
+            }
+          </div>
         </div>
-      `);
-
-      container.innerHTML = out.join("");
+      `;
     }
 
     /* ============================================================
@@ -245,30 +369,34 @@
     async function useItem(itemId) {
       const result = await api.useItem(username, itemId);
       alert(result.message || "Item used.");
-      loadInventory();
+      refreshInventory();
     }
 
     async function equipItem(itemId) {
       const result = await api.equipItem(username, itemId);
       alert(result.message || "Item equipped.");
-      loadInventory();
+      refreshInventory();
     }
 
     async function unequipItem(slot) {
       const result = await api.unequipItem(username, slot);
       alert(result.message || "Item unequipped.");
-      loadInventory();
+      refreshInventory();
     }
 
     /* ============================================================
        HELPERS
        ============================================================ */
 
+    function toggleSection(header) {
+      header.parentElement.classList.toggle("collapsed");
+    }
+
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
+        .replace(/\b\w/g, c => c.toUpperCase());
     }
 
     function formatBonuses(b) {
