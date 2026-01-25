@@ -1,0 +1,381 @@
+{
+  "boss_ultimate": {
+    "key": "boss_ultimate",
+    "name": "Cataclysmic Strike",
+    "power": 2.5,
+    "description": "A devastating blow that shakes the battlefield.",
+    "statusEffects": [
+      { "type": "stun", "power": 0, "duration": 1, "stack": "replace" }
+    ]
+  },
+
+  "dragon_roar": {
+    "key": "dragon_roar",
+    "name": "Dragon's Roar",
+    "power": 2.0,
+    "description": "A thunderous roar that weakens the opponent.",
+    "statusEffects": [
+      { "type": "defence_down", "power": 15, "duration": 2, "stack": "add" }
+    ]
+  },
+
+  "infernal_eruption": {
+    "key": "infernal_eruption",
+    "name": "Infernal Eruption",
+    "power": 2.2,
+    "description": "A burst of demonic fire that burns the target.",
+    "statusEffects": [
+      { "type": "burn", "power": 8, "duration": 3, "stack": "add" }
+    ]
+  },
+
+  "warrior": {
+    "key": "enemy_warrior_earthsplitter",
+    "name": "Earthsplitter",
+    "type": "damage",
+    "power": 1.8,
+    "ignoreDefPercent": 0.20,
+    "flavor": "The warrior slams the ground with earth‑shattering force!"
+  },
+
+  "mage": {
+    "key": "enemy_mage_arcane_storm",
+    "name": "Arcane Storm",
+    "type": "multi_damage",
+    "hits": 3,
+    "power": 0.9,
+    "applyVulnerability": true,
+    "vulnerabilityPercent": 0.15,
+    "vulnerabilityDuration": 2,
+    "flavor": "Arcane energy erupts in a chaotic storm!"
+  },
+
+  "thief": {
+    "key": "enemy_thief_shadow_ambush",
+    "name": "Shadow Ambush",
+    "type": "damage",
+    "power": 2.2,
+    "guaranteedCrit": true,
+    "ignoreDefPercent": 0.25,
+    "flavor": "The thief vanishes and strikes from the shadows!"
+  },
+
+  "archer": {
+    "key": "enemy_archer_piercing_barrage",
+    "name": "Piercing Barrage",
+    "type": "multi_damage",
+    "hits": 4,
+    "power": 0.7,
+    "armorShredPercent": 0.10,
+    "armorShredDuration": 2,
+    "flavor": "A deadly barrage of arrows rains down!"
+  },
+
+  "guardian": {
+    "key": "enemy_guardian_iron_wall",
+    "name": "Iron Wall",
+    "type": "buff",
+    "defenceBoostPercent": 0.40,
+    "damageReductionPercent": 0.30,
+    "durationTurns": 3,
+    "flavor": "The guardian becomes an unbreakable wall of steel!"
+  },
+
+  "cleric": {
+    "key": "enemy_cleric_divine_judgment",
+    "name": "Divine Judgment",
+    "type": "damage_heal",
+    "power": 1.4,
+    "healPercent": 0.20,
+    "flavor": "Holy light smites you as the cleric restores its strength!"
+  },
+
+  "ranger": {
+    "key": "enemy_ranger_hunters_mark",
+    "name": "Hunter’s Mark",
+    "type": "damage",
+    "power": 1.6,
+    "applyBleed": true,
+    "bleedPercent": 0.04,
+    "bleedDuration": 3,
+    "flavor": "The ranger marks you for death!"
+  },
+
+  "necromancer": {
+    "key": "enemy_necromancer_soul_reap",
+    "name": "Soul Reap",
+    "type": "damage_heal",
+    "power": 1.7,
+    "lifestealPercent": 0.25,
+    "weakenPercent": 0.15,
+    "weakenDuration": 2,
+    "flavor": "The necromancer rips at your soul, feeding on your essence!"
+  },
+
+  "druid": {
+    "key": "enemy_druid_wildshape_fury",
+    "name": "Wildshape Fury",
+    "type": "buff",
+    "attackBoostPercent": 0.25,
+    "defenceBoostPercent": 0.20,
+    "multiHitBasic": true,
+    "durationTurns": 3,
+    "flavor": "The druid transforms into a feral beast!"
+  },
+
+  "berserker": {
+    "key": "enemy_berserker_blood_rampage",
+    "name": "Blood Rampage",
+    "type": "buff",
+    "attackBoostPercent": 0.35,
+    "damageReductionPercent": -0.10,
+    "durationTurns": 3,
+    "flavor": "The berserker enters a frenzied blood rampage!"
+  },
+
+  "assassin": {
+    "key": "enemy_assassin_death_lotus",
+    "name": "Death Lotus",
+    "type": "multi_damage",
+    "hits": 5,
+    "power": 0.6,
+    "guaranteedCrit": true,
+    "flavor": "The assassin spins into a deadly lotus of blades!"
+  },
+
+  "monk": {
+    "key": "enemy_monk_chi_overflow",
+    "name": "Chi Overflow",
+    "type": "buff",
+    "attackBoostPercent": 0.20,
+    "dodgeBoostPercent": 0.25,
+    "durationTurns": 3,
+    "flavor": "The monk channels overflowing chi energy!"
+  },
+
+  "witch": {
+    "key": "enemy_witch_hexstorm",
+    "name": "Hexstorm",
+    "type": "damage",
+    "power": 1.5,
+    "applyCurse": true,
+    "curseDuration": 3,
+    "flavor": "A storm of wicked hexes engulfs you!"
+  },
+
+  "shaman": {
+    "key": "enemy_shaman_totemic_overload",
+    "name": "Totemic Overload",
+    "type": "buff",
+    "attackBoostPercent": 0.15,
+    "defenceBoostPercent": 0.15,
+    "hotPercent": 0.05,
+    "hotDuration": 3,
+    "flavor": "Totemic power surges through the shaman!"
+  },
+
+  "warlock": {
+    "key": "enemy_warlock_void_surge",
+    "name": "Void Surge",
+    "type": "damage",
+    "power": 1.8,
+    "applyCorruption": true,
+    "corruptionPercent": 0.05,
+    "corruptionDuration": 3,
+    "flavor": "Void energy surges outward, corrupting everything it touches!"
+  },
+
+  "paladin": {
+    "key": "enemy_paladin_holy_retribution",
+    "name": "Holy Retribution",
+    "type": "damage_heal",
+    "power": 1.5,
+    "healPercent": 0.15,
+    "applyVulnerability": true,
+    "vulnerabilityPercent": 0.10,
+    "vulnerabilityDuration": 2,
+    "flavor": "Holy retribution strikes you down!"
+  },
+
+  "beast": {
+    "key": "enemy_beast_savage_maul",
+    "name": "Savage Maul",
+    "type": "multi_damage",
+    "hits": 2,
+    "power": 1.1,
+    "flavor": "The beast unleashes a savage mauling attack!"
+  },
+
+  "undead": {
+    "key": "enemy_undead_death_chill",
+    "name": "Death Chill",
+    "type": "damage",
+    "power": 1.4,
+    "applyWeaken": true,
+    "weakenPercent": 0.15,
+    "weakenDuration": 2,
+    "flavor": "A chilling aura of death drains your strength!"
+  },
+
+  "elemental": {
+    "key": "enemy_elemental_eruption",
+    "name": "Elemental Eruption",
+    "type": "damage",
+    "power": 1.7,
+    "flavor": "The elemental erupts with raw elemental force!"
+  },
+
+  "demon": {
+    "key": "enemy_demon_hellburst",
+    "name": "Hellburst",
+    "type": "damage",
+    "power": 1.9,
+    "applyBurn": true,
+    "burnPercent": 0.04,
+    "burnDuration": 3,
+    "flavor": "Infernal flames burst outward!"
+  },
+
+  "dragon": {
+    "key": "enemy_dragon_dragon_roar",
+    "name": "Dragon Roar",
+    "type": "damage",
+    "power": 2.0,
+    "applyFear": true,
+    "fearDuration": 1,
+    "flavor": "The dragon unleashes a terrifying roar!"
+  },
+
+  "slime": {
+    "key": "enemy_slime_acid_flood",
+    "name": "Acid Flood",
+    "type": "damage",
+    "power": 1.3,
+    "applyCorrode": true,
+    "corrodePercent": 0.10,
+    "corrodeDuration": 2,
+    "flavor": "A wave of corrosive acid surges forward!"
+  },
+
+  "elite": {
+    "key": "enemy_elite_power_surge",
+    "name": "Power Surge",
+    "type": "buff",
+    "attackBoostPercent": 0.20,
+    "defenceBoostPercent": 0.10,
+    "durationTurns": 2,
+    "flavor": "The elite enemy surges with newfound power!"
+  },
+
+  "mythical": {
+    "key": "enemy_mythical_reality_fracture",
+    "name": "Reality Fracture",
+    "type": "damage",
+    "power": 2.2,
+    "applyVulnerability": true,
+    "vulnerabilityPercent": 0.20,
+    "vulnerabilityDuration": 2,
+    "flavor": "Reality fractures under the mythical foe’s power!"
+  },
+
+  "stormforged": {
+    "key": "enemy_variant_thunderclap",
+    "name": "Thunderclap",
+    "type": "damage",
+    "power": 1.6,
+    "applyShock": true,
+    "shockDuration": 1,
+    "flavor": "Lightning erupts violently from the stormforged foe!"
+  },
+
+  "frostborn": {
+    "key": "enemy_variant_glacial_burst",
+    "name": "Glacial Burst",
+    "type": "damage",
+    "power": 1.5,
+    "applyFreeze": true,
+    "freezeDuration": 1,
+    "flavor": "A burst of freezing energy chills you to the core!"
+  },
+
+  "abyss": {
+    "key": "enemy_variant_void_implosion",
+    "name": "Void Implosion",
+    "type": "damage",
+    "power": 1.7,
+    "applyCorruption": true,
+    "corruptionPercent": 0.05,
+    "corruptionDuration": 3,
+    "flavor": "A void implosion tears at your essence!"
+  },
+
+  "radiant": {
+    "key": "enemy_variant_holy_flash",
+    "name": "Holy Flash",
+    "type": "damage",
+    "power": 1.5,
+    "applyBlind": true,
+    "blindDuration": 1,
+    "flavor": "Radiant light erupts in a blinding flash!"
+  },
+
+  "infernal": {
+    "key": "enemy_variant_inferno_blast",
+    "name": "Inferno Blast",
+    "type": "damage",
+    "power": 1.6,
+    "applyBurn": true,
+    "burnPercent": 0.05,
+    "burnDuration": 3,
+    "flavor": "Infernal flames explode outward!"
+  },
+
+  "naturebound": {
+    "key": "enemy_variant_thorn_burst",
+    "name": "Thorn Burst",
+    "type": "multi_damage",
+    "hits": 2,
+    "power": 0.9,
+    "applyBleed": true,
+    "bleedPercent": 0.04,
+    "bleedDuration": 2,
+    "flavor": "Thorny vines lash out violently!"
+  },
+
+  "stoneborn": {
+    "key": "enemy_variant_earth_guard",
+    "name": "Earth Guard",
+    "type": "buff",
+    "defenceBoostPercent": 0.30,
+    "damageReductionPercent": 0.20,
+    "durationTurns": 3,
+    "flavor": "Stoneborn armor hardens into an impenetrable shell!"
+  },
+
+  "shiny": {
+    "key": "enemy_variant_dazzling_burst",
+    "name": "Dazzling Burst",
+    "type": "damage",
+    "power": 1.4,
+    "applyBlind": true,
+    "blindDuration": 1,
+    "flavor": "A dazzling burst of light blinds you momentarily!"
+  },
+
+  "elder": {
+    "key": "enemy_variant_ancient_crush",
+    "name": "Ancient Crush",
+    "type": "damage",
+    "power": 1.8,
+    "flavor": "Ancient power crushes the battlefield!"
+  },
+
+  "mythic": {
+    "key": "enemy_variant_mythic_overdrive",
+    "name": "Mythic Overdrive",
+    "type": "multi_damage",
+    "hits": 2,
+    "power": 1.2,
+    "flavor": "Mythic energy overwhelms you with unstoppable force!"
+  }
+}
