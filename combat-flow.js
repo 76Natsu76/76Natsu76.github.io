@@ -1,154 +1,228 @@
-/****************************************************
- * CORE COMBAT FLOW
- ****************************************************/
+// combat-flow.js
+// Turn-based orchestration layer for the modern engine
 
-var MAX_ROUNDS = 50;
+import { resolveEnemy } from "./resolveEnemy.js";
+import { generateEncounter } from "./encounter-generator.js";
+import { applyAllModifiers } from "./world-simulation.js";
+import { executeAbility } from "./ability-resolver.js";
+import { resolveEnemyAction } from "./enemy-ai.js";
+import { tickStatusEffects } from "./status-effects.js";
+import { resolveHitAndCrit } from "./combat-engine.js";
 
-// Simple event logger used by variant hooks, etc.
-function logEvent(context, type, payload) {
-  context.events = context.events || [];
-  context.events.push({
-    type: type,
-    ts: new Date().toISOString(),
-    payload: payload || {}
-  });
+// If you have a dedicated player loader, swap this out:
+import { loadPlayer } from "./player-registry.js";
+
+// --------------------------------------------------
+// Utility: shallow clone (to avoid mutating originals)
+// --------------------------------------------------
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }
 
 // --------------------------------------------------
-// ENTRY POINT: one-shot combat run
+// Build runtime player from stored record
+// (You already have resolvePlayer in another file;
+// if so, import and use that instead.)
 // --------------------------------------------------
-function startCombat(username, regionKey) {
-  // 1. Load + resolve player
-  var rawPlayer = loadPlayerRecord(username); // your existing loader
-  if (!rawPlayer) {
-    throw new Error("Player not found: " + username);
-  }
+function resolvePlayer(raw) {
+  const stats = raw.computedStatsJSON || {};
 
-  var playerState = resolvePlayer(rawPlayer);
+  const hpMax = stats.hpMax || 1;
+  const manaMax = stats.manaMax || 0;
 
-  // 2. Resolve encounter + enemy
-  var encounter = resolveEncounter(regionKey, playerState);
-  var enemyState = resolveEnemy(encounter.enemy, encounter); // from resolveEnemy.js
-
-  // 3. Build environment context + apply modifiers
-  var context = prepareCombatEnvironment(regionKey, playerState, enemyState);
-  context.regionKey = regionKey;
-  context.biomeKey = encounter.biome || null;
-  context.weatherKey = encounter.weather || null;
-  context.eventKey = encounter.event || null;
-
-  var logs = [];
-  context.logs = logs;
-
-  logs.push("You encounter " + enemyState.name + " in the " + regionKey + "!");
-
-  applyAllModifiers(context, playerState, enemyState);
-
-  // 4. Environmental hazards at start
-  if (encounter.hazard) {
-    applyHazardEffect(encounter.hazard, playerState, enemyState, logs);
-  }
-
-  // 5. Run the combat loop
-  var result = runCombatInternal(playerState, enemyState, context, logs);
-
-  // 6. Persist combat snapshot (optional)
-  saveCombatState(username, {
-    player: playerState,
-    enemy: enemyState,
-    context: {
-      regionKey: context.regionKey,
-      biomeKey: context.biomeKey,
-      weatherKey: context.weatherKey,
-      eventKey: context.eventKey
-    },
-    outcome: result.outcome
-  });
+  const hpCurrent = Math.max(0, Math.min(raw.hpCurrent ?? hpMax, hpMax));
+  const manaCurrent = Math.max(0, Math.min(raw.manaCurrent ?? manaMax, manaMax));
 
   return {
-    success: true,
-    outcome: result.outcome,
-    logs: logs,
-    playerState: playerState,
-    enemyState: enemyState,
-    encounter: encounter
+    id: raw.username,
+    name: raw.username,
+    level: raw.level || 1,
+    profession: raw.profession,
+    race: raw.race,
+    subrace: raw.subrace,
+
+    hpCurrent,
+    hpMax,
+    manaCurrent,
+    manaMax,
+
+    atk: stats.atk || 1,
+    def: stats.def || 0,
+    speed: stats.speed || 1,
+
+    critChance: stats.critChance || 0.05,
+    critDamage: stats.critDamage || 1.5,
+
+    elementAffinity: stats.elementAffinity || {},
+
+    statusEffects: Array.isArray(raw.playerStatusEffects)
+      ? raw.playerStatusEffects
+      : [],
+    cooldowns: raw.cooldowns || {},
+    pendingAction: null,
+
+    abilities: raw.abilities || [], // or load from your ability system
+    ultimate: raw.ultimate || null,
+    ultimateCharge: raw.ultimateCharge || 0,
+    ultimateChargeRequired: raw.ultimateChargeRequired || 100,
+
+    equipment: raw.equipment || {},
+    talentTree: raw.talentTree || {},
+    talentPoints: raw.talentPoints || 0,
+
+    inventory: raw.inventory || [],
+
+    regionMetaJSON: raw.regionMetaJSON || {},
+
+    isPlayer: true,
+    lastAction: null,
+    lastActionType: null
   };
 }
 
 // --------------------------------------------------
-// MAIN LOOP
+// Context builder
 // --------------------------------------------------
-function runCombatInternal(playerState, enemyState, context, logs) {
-  var round = 1;
-
-  while (round <= MAX_ROUNDS &&
-         playerState.hpCurrent > 0 &&
-         enemyState.hpCurrent > 0) {
-
-    logs.push("— Round " + round + " —");
-
-    // 1. Tick status effects
-    tickStatusEffects(playerState, context, logs);
-    tickStatusEffects(enemyState, context, logs);
-
-    if (playerState.hpCurrent <= 0 || enemyState.hpCurrent <= 0) break;
-
-    // 2. Crowd control checks
-    var playerCC = crowdControlCheck(playerState, logs);
-    var enemyCC  = crowdControlCheck(enemyState, logs);
-
-    // 3. Turn order by speed
-    var first = playerState.speed >= enemyState.speed ? "player" : "enemy";
-
-    if (first === "player") {
-      if (!playerCC.stunned && !playerCC.feared && playerState.hpCurrent > 0) {
-        executePlayerTurn(playerState, enemyState, context, logs);
-      }
-      if (enemyState.hpCurrent > 0 && !enemyCC.stunned && !enemyCC.feared) {
-        executeEnemyTurn(enemyState, playerState, context, logs);
-      }
-    } else {
-      if (!enemyCC.stunned && !enemyCC.feared && enemyState.hpCurrent > 0) {
-        executeEnemyTurn(enemyState, playerState, context, logs);
-      }
-      if (playerState.hpCurrent > 0 && !playerCC.stunned && !playerCC.feared) {
-        executePlayerTurn(playerState, enemyState, context, logs);
-      }
-    }
-
-    if (playerState.hpCurrent <= 0 || enemyState.hpCurrent <= 0) break;
-
-    // 4. Mid-combat flavor (variant, weather, biome, boss, etc.)
-    var variantLine = maybeGetVariantMidCombatFlavor(context, enemyState);
-    if (variantLine) logs.push(variantLine);
-
-    round++;
-  }
-
-  var outcome = "draw";
-  if (playerState.hpCurrent <= 0 && enemyState.hpCurrent > 0) outcome = "defeat";
-  else if (enemyState.hpCurrent <= 0 && playerState.hpCurrent > 0) outcome = "victory";
-
-  logs.push("Combat ends: " + outcome.toUpperCase() + ".");
-
-  return { outcome: outcome, rounds: round };
+function buildCombatContext(encounter, playerState, enemyState) {
+  return {
+    regionKey: encounter.regionKey,
+    biomeKey: encounter.biome,
+    weatherKey: encounter.weather,
+    eventKey: encounter.event || null,
+    hazard: encounter.hazard || null,
+    finalModifiers: encounter.finalModifiers || {},
+    logs: [],
+    round: 1
+  };
 }
 
 // --------------------------------------------------
-// PLAYER TURN (placeholder: basic attack or queued ability)
+// Public: startCombat(username, regionKey)
 // --------------------------------------------------
-function executePlayerTurn(player, enemy, context, logs) {
-  // If you later add interactive turns, read player.pendingAction here.
-  var action = { type: "basic" };
+export function startCombat(username, regionKey) {
+  const logs = [];
 
-  context.lastPlayerActionType = action.type;
+  const rawPlayer = loadPlayerRecord(username);
+  if (!rawPlayer) {
+    throw new Error("Player not found: " + username);
+  }
+
+  const playerState = resolvePlayer(rawPlayer);
+
+  const encounter = generateEncounter(regionKey, playerState);
+  const enemyState = resolveEnemy(encounter.enemy, encounter);
+
+  const context = buildCombatContext(
+    { ...encounter, regionKey },
+    playerState,
+    enemyState
+  );
+
+  // Apply world/biome/weather modifiers
+  applyAllModifiers(context, playerState, enemyState);
+
+  logs.push(
+    `You encounter **${enemyState.name}** in the ${regionKey}!`
+  );
+
+  // Initial hazard, if any
+  if (encounter.hazard) {
+    logs.push(`The area is hazardous: ${encounter.hazard.name || encounter.hazard}`);
+  }
+
+  context.logs = logs;
+
+  const outcome = checkOutcome(playerState, enemyState);
+  return {
+    playerState,
+    enemyState,
+    context,
+    logs,
+    outcome
+  };
+}
+
+// --------------------------------------------------
+// Public: runCombatRound(combat, playerAction)
+// combat: { playerState, enemyState, context }
+// playerAction: { type, key?, itemId? }
+// --------------------------------------------------
+export function runCombatRound(combat, playerAction) {
+  const logs = [];
+
+  const playerState = clone(combat.playerState);
+  const enemyState = clone(combat.enemyState);
+  const context = clone(combat.context);
+
+  context.round = (context.round || 0) + 1;
+  logs.push(`— Round ${context.round} —`);
+
+  // 1. Tick status effects
+  tickStatusEffects(playerState, context, logs);
+  tickStatusEffects(enemyState, context, logs);
+
+  if (isDead(playerState) || isDead(enemyState)) {
+    const outcome = checkOutcome(playerState, enemyState);
+    return { playerState, enemyState, context, logs, outcome };
+  }
+
+  // 2. Determine turn order
+  const first = (playerState.speed || 1) >= (enemyState.speed || 1)
+    ? "player"
+    : "enemy";
+
+  if (first === "player") {
+    playerTurn(playerState, enemyState, context, logs, playerAction);
+    if (!isDead(enemyState)) {
+      enemyTurn(enemyState, playerState, context, logs);
+    }
+  } else {
+    enemyTurn(enemyState, playerState, context, logs);
+    if (!isDead(playerState)) {
+      playerTurn(playerState, enemyState, context, logs, playerAction);
+    }
+  }
+
+  const outcome = checkOutcome(playerState, enemyState);
+
+  return {
+    playerState,
+    enemyState,
+    context,
+    logs,
+    outcome
+  };
+}
+
+// --------------------------------------------------
+// Turn handlers
+// --------------------------------------------------
+function playerTurn(player, enemy, context, logs, action) {
+  if (!action) {
+    action = { type: "basic" };
+  }
 
   switch (action.type) {
-    case "ability":
-      resolveAbilityUse(player, enemy, action.ability, context, logs, true);
+    case "basic":
+      basicAttack(player, enemy, context, logs, true);
       break;
 
-    case "basic":
+    case "ability":
+      useAbility(player, enemy, context, logs, action.key, true);
+      break;
+
+    case "ultimate":
+      useUltimate(player, enemy, context, logs);
+      break;
+
+    case "item":
+      useItem(player, enemy, context, logs, action.itemId);
+      break;
+
+    case "flee":
+      attemptFlee(player, enemy, context, logs);
+      break;
+
     default:
       basicAttack(player, enemy, context, logs, true);
       break;
@@ -158,39 +232,21 @@ function executePlayerTurn(player, enemy, context, logs) {
   player.lastActionType = action.type;
 }
 
-// --------------------------------------------------
-// ENEMY TURN (driven by enemy-ai.js / boss patterns)
-// --------------------------------------------------
-function executeEnemyTurn(enemy, player, context, logs) {
-  var action = null;
+function enemyTurn(enemy, player, context, logs) {
+  if (isDead(enemy) || isDead(player)) return;
 
-  // 1. Boss combo / pattern hook
-  if (enemy.tags && enemy.tags.indexOf("boss") !== -1) {
-    var combo = resolveBossCombo(enemy, player, enemy.abilities);
-    if (combo) action = combo;
-    else {
-      var patterns = getBossPatterns(enemy);
-      // Simple example: always use phase1[0]
-      var step = patterns.phase1[0];
-      action = resolvePatternStep(step, enemy, player, enemy.abilities);
-    }
-  }
+  let action = null;
 
-  // 2. Fallback to AI resolver
-  if (!action) {
-    action = resolveEnemyAction(enemy, player, context); // from enemy-ai.js
-  }
+  // Boss pattern hooks could go here if you want
+  action = resolveEnemyAction(enemy, player, context);
 
   if (!action) {
-    // Final fallback: basic attack
     action = { type: "basic" };
   }
 
-  context.lastEnemyAction = action;
-
   switch (action.type) {
     case "ability":
-      resolveAbilityUse(enemy, player, action.ability, context, logs, false);
+      useAbility(enemy, player, context, logs, action.abilityKey || action.key, false);
       break;
 
     case "basic":
@@ -198,64 +254,129 @@ function executeEnemyTurn(enemy, player, context, logs) {
       basicAttack(enemy, player, context, logs, false);
       break;
   }
+
+  enemy.lastAction = action;
+  enemy.lastActionType = action.type;
 }
 
 // --------------------------------------------------
-// BASIC ATTACK
+// Actions
 // --------------------------------------------------
 function basicAttack(attacker, defender, context, logs, isPlayer) {
-  var hitData = resolveHitAndCrit(attacker, defender, context);
+  const hitData = resolveHitAndCrit(attacker, defender, context);
 
   if (!hitData.hit) {
-    logs.push((attacker.name || "Attacker") + " misses " + (defender.name || "the target") + "!");
+    logs.push(`${attacker.name} misses ${defender.name}!`);
     return;
   }
 
-  var base = Math.max(1, (attacker.atk || 1) - (defender.def || 0));
-  var dmg = Math.floor(base * hitData.damageMult);
-
-  // Weather multiplier
-  if (context.weatherKey) {
-    var wMult = getWeatherDamageMultiplier(attacker, defender, context.weatherKey);
-    dmg = Math.floor(dmg * wMult);
-  }
-
-  // Shields
-  dmg = applyShieldReduction(defender, dmg, logs);
+  const base = Math.max(1, (attacker.atk || 1) - (defender.def || 0));
+  let dmg = Math.floor(base * hitData.damageMult);
 
   if (dmg <= 0) {
-    logs.push((defender.name || "Defender") + "'s defenses negate the blow.");
+    logs.push(`${defender.name}'s defenses negate the blow.`);
     return;
   }
 
   defender.hpCurrent = Math.max(0, defender.hpCurrent - dmg);
 
-  var line = (attacker.name || "Attacker") + " hits " +
-             (defender.name || "the target") + " for " + dmg + " damage";
+  let line = `${attacker.name} hits ${defender.name} for ${dmg} damage`;
   if (hitData.isCrit) line += " (CRITICAL!)";
   line += ".";
   logs.push(line);
 
   if (defender.hpCurrent <= 0) {
-    logs.push((defender.name || "The foe") + " is defeated!");
+    logs.push(`${defender.name} is defeated!`);
+  }
+
+  // Simple ult charge on basic
+  if (isPlayer) {
+    attacker.ultimateCharge = (attacker.ultimateCharge || 0) + 10;
+  }
+}
+
+function useAbility(attacker, defender, context, logs, key, isPlayer) {
+  if (!key) {
+    logs.push(`${attacker.name} fumbles and does nothing.`);
+    return;
+  }
+
+  const ability = (attacker.abilities || []).find(a => a.key === key);
+  if (!ability) {
+    logs.push(`${attacker.name} tries to use an unknown ability.`);
+    return;
+  }
+
+  logs.push(`${attacker.name} uses **${ability.name}**!`);
+  executeAbility(attacker, defender, ability, context, logs, isPlayer);
+}
+
+function useUltimate(attacker, defender, context, logs) {
+  const charge = attacker.ultimateCharge || 0;
+  const required = attacker.ultimateChargeRequired || 100;
+
+  if (charge < required) {
+    logs.push("Ultimate not ready!");
+    return;
+  }
+
+  const ult = attacker.ultimate;
+  if (!ult) {
+    logs.push("No ultimate ability set.");
+    return;
+  }
+
+  logs.push(`${attacker.name} unleashes their ULTIMATE: **${ult.name}**!`);
+  executeAbility(attacker, defender, ult, context, logs, attacker.isPlayer);
+
+  attacker.ultimateCharge = 0;
+}
+
+function useItem(player, enemy, context, logs, itemId) {
+  const inv = player.inventory || [];
+  const item = inv.find(i => i.id === itemId);
+
+  if (!item) {
+    logs.push("Item not found.");
+    return;
+  }
+
+  logs.push(`${player.name} uses **${item.name}**.`);
+
+  // Simple example: healing potion
+  if (item.type === "heal") {
+    const amount = item.amount || 20;
+    player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + amount);
+    logs.push(`${player.name} recovers ${amount} HP.`);
+  }
+
+  item.qty = (item.qty || 1) - 1;
+  if (item.qty <= 0) {
+    const idx = inv.indexOf(item);
+    if (idx >= 0) inv.splice(idx, 1);
+  }
+}
+
+function attemptFlee(player, enemy, context, logs) {
+  const chance = 0.35; // tune later
+  if (Math.random() < chance) {
+    logs.push(`${player.name} successfully flees from ${enemy.name}!`);
+    enemy.hpCurrent = 0; // treat as end of combat
+  } else {
+    logs.push(`${player.name} fails to flee!`);
   }
 }
 
 // --------------------------------------------------
-// ABILITY USE (thin wrapper; your ability engine plugs here)
+// Outcome helpers
 // --------------------------------------------------
-function resolveAbilityUse(attacker, defender, ability, context, logs, isPlayer) {
-  if (!ability) {
-    basicAttack(attacker, defender, context, logs, isPlayer);
-    return;
-  }
+function isDead(entity) {
+  return !entity || entity.hpCurrent <= 0;
+}
 
-  // You already have a modern ability resolver in the new engine;
-  // call into it here, e.g.:
-  //
-  //   executeAbility(attacker, defender, ability, context, logs);
-  //
-  // For now, just log a stub:
-  logs.push((attacker.name || "Attacker") + " uses " + ability.name + "!");
-  // TODO: wire to real ability resolution.
+function checkOutcome(player, enemy) {
+  if (player.hpCurrent <= 0 && enemy.hpCurrent <= 0) return "draw";
+  if (player.hpCurrent <= 0) return "defeat";
+  if (enemy.hpCurrent <= 0) return "victory";
+  return null;
 }
