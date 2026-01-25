@@ -177,7 +177,7 @@
                         <div class="item-qty">x${item.quantity}</div>
                       </div>
                       <div class="item-actions">
-                        <button onclick="useItem('${item.id}')">Use</button>
+                        <button onclick="useItem('${item.id || item._id}')">Use</button>
                       </div>
                     </div>
                   `;
@@ -194,6 +194,11 @@
     async function useItem(itemId) {
       try {
         const result = await api.useItem(username, itemId);
+    
+        // Refresh stored player
+        const updated = await api.getPlayer(username);
+        sessionStorage.setItem("player", JSON.stringify(updated));
+    
         alert(result.message || "Item used.");
         loadUsableItems();
       } catch (err) {
