@@ -1,0 +1,147 @@
+{
+  "alpha": {
+    "name": "Alpha",
+    "flavor": "An empowered version of its species, radiating aggression.",
+    "tags": ["alpha"],
+    "lootMult": 1.10,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.15,
+      "atkMult": 1.10,
+      "defMult": 1.05,
+      "specialRules": ["alpha_aggression"]
+    }
+  },
+
+  "elder": {
+    "name": "Elder",
+    "flavor": "An ancient specimen hardened by countless battles.",
+    "tags": ["elder"],
+    "lootMult": 1.15,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.25,
+      "atkMult": 1.05,
+      "defMult": 1.20,
+      "speedBias": -0.05,
+      "critDamageMult": 1.10,
+      "specialRules": ["ancient_resilience"]
+    }
+  },
+
+  "champion": {
+    "name": "Champion",
+    "flavor": "A rare elite variant with exceptional strength.",
+    "tags": ["champion", "elite"],
+    "lootMult": 1.25,
+    "abilities": ["power_strike"],
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.40,
+      "atkMult": 1.30,
+      "defMult": 1.20,
+      "critChanceAdd": 0.05,
+      "critDamageMult": 1.20,
+      "specialRules": ["elite_presence"]
+    }
+  },
+
+  "boss": {
+    "name": "Boss",
+    "flavor": "A towering monstrosity radiating overwhelming power.",
+    "tags": ["boss"],
+    "lootMult": 1.50,
+    "abilities": ["power_strike", "battle_cry"],
+    "ultimate": "boss_ultimate",
+    "combatModifiers": {
+      "hpMult": 2.0,
+      "atkMult": 1.75,
+      "defMult": 1.50,
+      "critChanceAdd": 0.10,
+      "critDamageMult": 1.30,
+      "specialRules": ["boss_pressure"]
+    }
+  },
+
+  "frost_touched": {
+    "name": "Frost‑Touched",
+    "flavor": "Cold winds cling to its form.",
+    "tags": ["elemental", "ice"],
+    "lootMult": 1.10,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.10,
+      "atkMult": 1.05,
+      "defMult": 1.10,
+      "accuracyMult": 0.95,
+      "speedBias": -0.05,
+      "specialRules": ["chill_on_hit"]
+    }
+  },
+
+  "ash_marked": {
+    "name": "Ash‑Marked",
+    "flavor": "Ash and embers cling to its body.",
+    "tags": ["fiery"],
+    "lootMult": 1.15,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.05,
+      "atkMult": 1.15,
+      "defMult": 1.05,
+      "specialRules": ["ember_burn"]
+    }
+  },
+
+  "void_scarred": {
+    "name": "Void‑Scarred",
+    "flavor": "Warped by the void.",
+    "tags": ["void"],
+    "lootMult": 1.20,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.20,
+      "atkMult": 1.20,
+      "defMult": 1.10,
+      "statusEffectChanceMult": 1.25,
+      "specialRules": ["void_corruption"]
+    }
+  },
+
+  "crystal_infused": {
+    "name": "Crystal‑Infused",
+    "flavor": "Crystalline energy pulses through it.",
+    "tags": ["elemental", "arcane"],
+    "lootMult": 1.15,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.15,
+      "atkMult": 1.10,
+      "defMult": 1.15,
+      "critChanceAdd": 0.05,
+      "specialRules": ["arcane_burst"]
+    }
+  },
+
+  "rot_swollen": {
+    "name": "Rot‑Swollen",
+    "flavor": "Bloated with swamp rot.",
+    "tags": ["poisonous"],
+    "lootMult": 1.10,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.25,
+      "atkMult": 1.05,
+      "defMult": 1.05,
+      "dotDamageMult": 1.5,
+      "specialRules": ["rot_spread"]
+    }
+  }
+}
