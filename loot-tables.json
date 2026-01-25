@@ -762,6 +762,448 @@
     "topCategory": "elemental",
     "subCategory": "advanced",
     "group": "advanced"
+  },
+
+  {
+    "id": "void_fragment",
+    "name": "Void Fragment",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["void", "fragment", "abyssal", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "fragments",
+    "group": "fragments"
+  },
+  {
+    "id": "abyssal_fragment",
+    "name": "Abyssal Fragment",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["void", "abyssal", "fragment", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "fragments",
+    "group": "fragments"
+  },
+  {
+    "id": "eldritch_fragment",
+    "name": "Eldritch Fragment",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["void", "eldritch", "fragment", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "fragments",
+    "group": "fragments"
+  },
+
+  {
+    "id": "void_crystal",
+    "name": "Void Crystal",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["void", "crystal", "abyssal", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "crystals",
+    "group": "crystals"
+  },
+  {
+    "id": "abyssal_crystal",
+    "name": "Abyssal Crystal",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["void", "abyssal", "crystal", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "crystals",
+    "group": "crystals"
+  },
+  {
+    "id": "eldritch_crystal",
+    "name": "Eldritch Crystal",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["void", "eldritch", "crystal", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "crystals",
+    "group": "crystals"
+  },
+
+  {
+    "id": "void_essence",
+    "name": "Void Essence",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["void", "essence", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+  {
+    "id": "abyssal_essence",
+    "name": "Abyssal Essence",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["void", "abyssal", "essence", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+  {
+    "id": "eldritch_residue",
+    "name": "Eldritch Residue",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["void", "eldritch", "residue", "material", "magical", "unstable"],
+    "topCategory": "void",
+    "subCategory": "essences",
+    "group": "essences"
+  },
+
+  {
+    "id": "fractured_reality_shard",
+    "name": "Fractured Reality Shard",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["void", "anomaly", "reality", "shard", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "nullstone_core",
+    "name": "Nullstone Core",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["void", "null", "core", "anomaly", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "terminarch_residuum",
+    "name": "Terminarch Residuum",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["void", "cosmic", "terminarch", "residue", "anomaly", "material", "magical"],
+    "topCategory": "void",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+
+  {
+    "id": "star_fragment",
+    "name": "Star Fragment",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["cosmic", "star", "fragment", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "fragments",
+    "group": "fragments"
+  },
+  {
+    "id": "celestial_fragment",
+    "name": "Celestial Fragment",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["cosmic", "celestial", "fragment", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "fragments",
+    "group": "fragments"
+  },
+  {
+    "id": "astral_fragment",
+    "name": "Astral Fragment",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["cosmic", "astral", "fragment", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "fragments",
+    "group": "fragments"
+  },
+
+  {
+    "id": "celestial_dust",
+    "name": "Celestial Dust",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["cosmic", "celestial", "dust", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+  {
+    "id": "starforged_dust",
+    "name": "Starforged Dust",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["cosmic", "star", "dust", "forged", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+  {
+    "id": "astral_powder",
+    "name": "Astral Powder",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["cosmic", "astral", "powder", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+
+  {
+    "id": "astral_core",
+    "name": "Astral Core",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["cosmic", "astral", "core", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "cosmic_core",
+    "name": "Cosmic Core",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["cosmic", "core", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "starheart_core",
+    "name": "Starheart Core",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["cosmic", "star", "heart", "core", "material", "magical", "artifact"],
+    "topCategory": "cosmic",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+
+  {
+    "id": "cosmic_shard",
+    "name": "Cosmic Shard",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["cosmic", "shard", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "stellar_shard",
+    "name": "Stellar Shard",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["cosmic", "stellar", "shard", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "nebula_shard",
+    "name": "Nebula Shard",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["cosmic", "nebula", "shard", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+
+  {
+    "id": "terminarch_starcore",
+    "name": "Terminarch Starcore",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["cosmic", "terminarch", "star", "core", "anomaly", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "void_star_singularity",
+    "name": "Void-Star Singularity",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["cosmic", "void", "star", "singularity", "anomaly", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "celestial_tyrant_residuum",
+    "name": "Celestial Tyrant Residuum",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["cosmic", "celestial", "tyrant", "residue", "anomaly", "material", "magical"],
+    "topCategory": "cosmic",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  }.
+
+  {
+    "id": "radiant_shard",
+    "name": "Radiant Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["holy", "radiant", "shard", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "sunlight_shard",
+    "name": "Sunlight Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["holy", "solar", "light", "shard", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "dawn_shard",
+    "name": "Dawn Shard",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["holy", "dawn", "shard", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+
+  {
+    "id": "blessed_core",
+    "name": "Blessed Core",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["holy", "blessed", "core", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "sunsteel_core",
+    "name": "Sunsteel Core",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["holy", "solar", "metal", "core", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "archon_core",
+    "name": "Archon Core",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["holy", "archon", "core", "material", "magical", "artifact"],
+    "topCategory": "holy",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+
+  {
+    "id": "holy_dust",
+    "name": "Holy Dust",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["holy", "dust", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+  {
+    "id": "purified_ash",
+    "name": "Purified Ash",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["holy", "purified", "ash", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+  {
+    "id": "sanctified_powder",
+    "name": "Sanctified Powder",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["holy", "sanctified", "powder", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "dusts",
+    "group": "dusts"
+  },
+
+  {
+    "id": "archons_halo_fragment",
+    "name": "Archon’s Halo Fragment",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["holy", "archon", "halo", "fragment", "anomaly", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "seraphic_feather_core",
+    "name": "Seraphic Feather Core",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["holy", "seraphic", "feather", "core", "anomaly", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "anomalies",
+    "group": "anomalies"
+  },
+  {
+    "id": "solar_heart_relic",
+    "name": "Solar Heart Relic",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["holy", "solar", "heart", "relic", "anomaly", "material", "magical"],
+    "topCategory": "holy",
+    "subCategory": "anomalies",
+    "group": "anomalies"
   }
 ]
 
