@@ -127,6 +127,11 @@ function addItemToInventory(player, itemId, qty) {
   }
 }
 
+function calculateMaxAffordable(player, entry) {
+  const gold = player.gold ?? 0;
+  return Math.floor(gold / entry.price);
+}
+
 // -----------------------------
 // GLOBAL SHOP LOGIC
 // -----------------------------
@@ -299,32 +304,75 @@ function renderUserShop(userShop, player, players, playersSha, userShops, userSh
   });
 }
 
-async function handleUserPurchase(index, userShop, player, players, playersSha, userShops, userShopsSha) {
-  const entry = userShop.items[index];
+async function handlePurchase(shopType, index, shop, player, players, playersSha, userShops, userShopsSha) {
+  const entry = shop.items[index];
   if (!entry) return;
 
-  const cost = entry.price;
-  if ((player.gold ?? 0) < cost) {
-    alert("Not enough gold.");
+  // Ask how many to buy
+  const qtyOptions = {
+    "1": 1,
+    "max": calculateMaxAffordable(player, entry),
+    "x": null
+  };
+
+  let choice = prompt("Buy 1, max, or x?", "1").toLowerCase();
+  if (!qtyOptions.hasOwnProperty(choice)) {
+    alert("Invalid choice.");
     return;
   }
 
+  let qty = qtyOptions[choice];
+
+  if (choice === "x") {
+    qty = parseInt(prompt("Enter quantity:"), 10);
+    if (!qty || qty <= 0) {
+      alert("Invalid quantity.");
+      return;
+    }
+  }
+
+  const maxAffordable = calculateMaxAffordable(player, entry);
+  if (qty > maxAffordable) {
+    alert(`You can only afford ${maxAffordable}.`);
+    return;
+  }
+
+  const totalCost = qty * entry.price;
+
   // Deduct gold
-  player.gold = (player.gold ?? 0) - cost;
+  player.gold -= totalCost;
 
   // Add to inventory
-  addItemToInventory(player, entry.id, entry.qty);
+  addItemToInventory(player, entry.id, qty);
 
-  // Remove from user shop
-  userShop.items.splice(index, 1);
+  // Reduce or remove shop stock
+  entry.qty -= qty;
+  if (entry.qty <= 0) {
+    shop.items.splice(index, 1);
+  }
 
   // Save players.json
-  await saveJsonFile(FILE_PLAYERS, players, "Purchase from user daily shop", playersSha);
+  await saveJsonFile(FILE_PLAYERS, players, "Shop purchase", playersSha);
 
-  // Save user-shops.json
-  userShops[player.username.toLowerCase()] = userShop;
-  await saveJsonFile(FILE_USER_SHOPS, userShops, `Update daily shop for ${player.username}`, userShopsSha);
+  // Save shop file
+  if (shopType === "global") {
+    const { sha: shopSha } = await loadJsonFile(FILE_GLOBAL_SHOP, {});
+    await saveJsonFile(FILE_GLOBAL_SHOP, shop, "Update global shop", shopSha);
+  } else {
+    userShops[player.username.toLowerCase()] = shop;
+    await saveJsonFile(FILE_USER_SHOPS, userShops, "Update user shop", userShopsSha);
+  }
 
-  // Re-render
-  renderUserShop(userShop, player, players, playersSha, userShops, userShopsSha);
+  // Log purchase
+  await logPurchase({
+    username: player.username,
+    itemId: entry.id,
+    qty,
+    price: entry.price,
+    totalCost,
+    shopType,
+    timestamp: Date.now()
+  });
+
+  alert(`Purchased ${qty}x ${entry.id} for ${totalCost} gold.`);
 }
