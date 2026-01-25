@@ -1,0 +1,109 @@
+{
+  "leveler": {
+    "id": "leveler",
+    "name": "Leveler",
+    "rarity": "rare",
+    "description": "Instantly grants 1 level.",
+    "type": "consumable",
+    "effect": { "levelUp": 1 }
+  },
+
+  "instant_escape": {
+    "id": "instant_escape",
+    "name": "Instant Escape",
+    "rarity": "uncommon",
+    "description": "Immediately flee from combat.",
+    "type": "consumable",
+    "effect": { "escape": true }
+  },
+
+  "mystery_box": {
+    "id": "mystery_box",
+    "name": "Mystery Box",
+    "rarity": "rare",
+    "description": "Contains a random item.",
+    "type": "container",
+    "effect": { "randomItem": true }
+  },
+
+  "exp_buff": {
+    "id": "exp_buff",
+    "name": "EXP Buff",
+    "rarity": "uncommon",
+    "description": "Doubles EXP gained for 10 minutes.",
+    "type": "buff",
+    "effect": { "expMultiplier": 2, "duration": 600000 }
+  },
+
+  "regen_charm": {
+    "id": "regen_charm",
+    "name": "Regen Charm",
+    "rarity": "uncommon",
+    "description": "Regenerates HP and MP over time.",
+    "type": "buff",
+    "effect": { "regen": true, "duration": 600000 }
+  },
+
+  "low_hp_potion": {
+    "id": "low_hp_potion",
+    "name": "Low HP Potion",
+    "rarity": "common",
+    "description": "Restores 20 HP.",
+    "type": "heal",
+    "effect": { "hp": 20 }
+  },
+
+  "low_mp_potion": {
+    "id": "low_mp_potion",
+    "name": "Low MP Potion",
+    "rarity": "common",
+    "description": "Restores 10 MP.",
+    "type": "mana",
+    "effect": { "mp": 10 }
+  },
+
+  "mid_mp_potion": {
+    "id": "mid_mp_potion",
+    "name": "Mid MP Potion",
+    "rarity": "uncommon",
+    "description": "Restores 25 MP.",
+    "type": "mana",
+    "effect": { "mp": 25 }
+  },
+
+  "high_hp_potion": {
+    "id": "high_hp_potion",
+    "name": "High HP Potion",
+    "rarity": "uncommon",
+    "description": "Restores 50 HP.",
+    "type": "heal",
+    "effect": { "hp": 50 }
+  },
+
+  "high_mp_potion": {
+    "id": "high_mp_potion",
+    "name": "High MP Potion",
+    "rarity": "uncommon",
+    "description": "Restores 40 MP.",
+    "type": "mana",
+    "effect": { "mp": 40 }
+  },
+
+  "ultra_hp_potion": {
+    "id": "ultra_hp_potion",
+    "name": "Ultra HP Potion",
+    "rarity": "rare",
+    "description": "Restores 100 HP.",
+    "type": "heal",
+    "effect": { "hp": 100 }
+  },
+
+  "ultra_mp_potion": {
+    "id": "ultra_mp_potion",
+    "name": "Ultra MP Potion",
+    "rarity": "rare",
+    "description": "Restores 80 MP.",
+    "type": "mana",
+    "effect": { "mp": 80 }
+  }
+}
