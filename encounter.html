@@ -132,10 +132,6 @@
   <script src="encounter.js"></script>
 
   <script>
-    /* ============================================================
-       INITIALIZATION
-       ============================================================ */
-
     const username = sessionStorage.getItem("twitch_username");
     document.getElementById("usernameDisplay").textContent =
       username ? "Logged in as: " + username : "No user logged in";
@@ -151,11 +147,13 @@
     /* ============================================================
        MAIN FLOW
        ============================================================ */
-
     function startEncounter() {
       try {
-        // Use the new encounter engine
-        encounter = EncounterEngine.rollEncounter(region);
+        // GitHub-native encounter engine
+        encounter = EncounterEngine.generate(region, username);
+
+        // Save for fight-interactive.html
+        sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
 
         renderEncounter();
       } catch (err) {
@@ -167,7 +165,6 @@
     /* ============================================================
        RENDER ENCOUNTER
        ============================================================ */
-
     function renderEncounter() {
       const e = encounter.enemy;
 
@@ -202,9 +199,7 @@
         </h2>
 
         <div style="text-align:center; opacity:0.8;">
-          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(
-        e.rarity
-      )}</span>
+          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(e.rarity)}</span>
         </div>
 
         <div style="margin-top:10px; opacity:0.8; text-align:center;">
@@ -222,18 +217,16 @@
     /* ============================================================
        BUTTON ACTIONS
        ============================================================ */
-
     function inspect() {
       const e = encounter.enemy;
       alert(
         `${e.name} (Lv ${e.level})\n` +
-          `Rarity: ${e.rarity}\n\n` +
-          (e.flavor || "")
+        `Rarity: ${e.rarity}\n\n` +
+        (e.flavor || "")
       );
     }
 
     function fight() {
-      // Encounter already saved to sessionStorage by encounter.js
       window.location.href = "fight-interactive.html";
     }
 
@@ -244,7 +237,6 @@
     /* ============================================================
        HELPERS
        ============================================================ */
-
     function format(str) {
       return String(str)
         .toLowerCase()
