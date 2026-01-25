@@ -1,0 +1,310 @@
+{
+  "verdant-woods": {
+    "common": [
+      "Wildroot",
+      "Meadow Bloom",
+      "Wood Plank",
+      "Raw Meat",
+      "Slime Gel"
+    ],
+    "uncommon": [
+      "Mossleaf",
+      "Shadecap",
+      "Copper Ore",
+      "Leather Strip",
+      "Gatherer’s Sickle"
+    ],
+    "rare": [
+      "Moonpetal",
+      "Starblossom",
+      "Venom Sac",
+      "Reinforced Plate",
+      "Ranger Tracking Compass"
+    ],
+    "epic": [
+      "Spirit Orchid",
+      "Arcane Fern",
+      "Verdant Sigil"
+    ],
+    "mythic": [
+      "Eternal Bloom",
+      "Titan Core Fragment"
+    ],
+    "weatherModifiers": {
+      "rain": ["Frost Oil", "Healing Powder"],
+      "storm": ["Stormfin Eel"]
+    },
+    "crisisModifiers": {
+      "beastUprising": ["Beast Trophy", "Beast Collar"]
+    },
+    "eventModifiers": {
+      "bloomingSeason": ["Sunleaf", "Golden Gourd"]
+    },
+    "professionModifiers": {
+      "druid": ["Nature Fetish"],
+      "herbalist": ["Botanist Satchel"]
+    }
+  },
+
+  "forest-edge": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+  "deep-forest": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+  "plains-field": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "frostlands": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "volcanic-wastes": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "primordial-grove": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "celestial-expanse": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "eternal-citadel": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "worldbreaker-horizon": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "astral-nexus": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "forest": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "plains": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "swamp": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "desert": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "tundra": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "mountains": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "void": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "celestial": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "elderwood-heart": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "primeval-overgrowth": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "celestial-horizon": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  },
+
+  "worlds-end-expanse": {
+    "common": [],
+    "uncommon": [],
+    "rare": [],
+    "epic": [],
+    "mythic": [],
+    "weatherModifiers": {},
+    "crisisModifiers": {},
+    "eventModifiers": {},
+    "professionModifiers": {}
+  }
+}
