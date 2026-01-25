@@ -4,6 +4,7 @@
 import { generateGlobalShop, generateUserShop, shouldResetShop } from "./shop-engine.js";
 import playersData from "./players.json" assert { type: "json" };
 import shopPool from "./shop-pool.json" assert { type: "json" };
+import itemsData from "./items.json" assert { type: "json" };
 
 // -----------------------------
 // CONFIG
@@ -241,20 +242,32 @@ function renderGlobalShop(shop, player, players, playersSha) {
     const div = document.createElement("div");
     div.className = "shop-item";
 
-    const name = poolEntry ? poolEntry.id : entry.id;
+    const itemInfo = itemsData[entry.id] || {};
+    const name = itemInfo.name || entry.id;
+    const desc = itemInfo.description || "No description available.";
+
     const rarity = entry.rarity || (poolEntry && poolEntry.rarity) || "unknown";
 
     div.innerHTML = `
-      <div class="shop-item-name">${name}</div>
-      <div class="shop-item-rarity">${rarity}</div>
-      <div class="shop-item-qty">Qty: ${entry.qty}</div>
-      <div class="shop-item-price">Price: ${entry.price} gold</div>
+      <div class="item-info">
+        <div class="item-name rarity-${rarity}">${name}</div>
+        <div class="item-price">Price: ${entry.price} gold</div>
+    
+        <div class="tooltip">
+          <strong>${name}</strong><br>
+          <span class="rarity-${rarity}">Rarity: ${rarity}</span><br><br>
+          ${desc}
+        </div>
+      </div>
+    
       <div class="item-actions">
         <button class="btn buy1-btn">Buy 1</button>
         <button class="btn buymax-btn">Buy Max</button>
         <button class="btn buyx-btn">Buy X</button>
       </div>
     `;
+    div.classList.add(`glow-${rarity}`);
+    div.classList.add("rarity-animated");
 
     const btn1 = div.querySelector(".buy1-btn");
     const btnMax = div.querySelector(".buymax-btn");
@@ -314,20 +327,32 @@ function renderUserShop(userShop, player, players, playersSha, userShops, userSh
     const div = document.createElement("div");
     div.className = "shop-item";
 
-    const name = poolEntry ? poolEntry.id : entry.id;
+    const itemInfo = itemsData[entry.id] || {};
+    const name = itemInfo.name || entry.id;
+    const desc = itemInfo.description || "No description available.";
+
     const rarity = entry.rarity || (poolEntry && poolEntry.rarity) || "unknown";
 
     div.innerHTML = `
-      <div class="shop-item-name">${name}</div>
-      <div class="shop-item-rarity">${rarity}</div>
-      <div class="shop-item-qty">Qty: ${entry.qty}</div>
-      <div class="shop-item-price">Price: ${entry.price} gold</div>
+      <div class="item-info">
+        <div class="item-name rarity-${rarity}">${name}</div>
+        <div class="item-price">Price: ${entry.price} gold</div>
+    
+        <div class="tooltip">
+          <strong>${name}</strong><br>
+          <span class="rarity-${rarity}">Rarity: ${rarity}</span><br><br>
+          ${desc}
+        </div>
+      </div>
+    
       <div class="item-actions">
         <button class="btn buy1-btn">Buy 1</button>
         <button class="btn buymax-btn">Buy Max</button>
         <button class="btn buyx-btn">Buy X</button>
       </div>
     `;
+    div.classList.add(`glow-${rarity}`);
+    div.classList.add("rarity-animated");
 
     const btn1 = div.querySelector(".buy1-btn");
     const btnMax = div.querySelector(".buymax-btn");
