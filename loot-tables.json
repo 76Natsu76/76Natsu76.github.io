@@ -2583,6 +2583,466 @@
     "topCategory": "craftingMaterials",
     "subCategory": "bolts",
     "group": "bolts"
+  },
+
+  {
+    "id": "lesser_rune_of_power",
+    "name": "Lesser Rune of Power",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "rune",
+    "tags": ["rune", "power", "basic"],
+    "topCategory": "runes",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+  {
+    "id": "lesser_rune_of_defense",
+    "name": "Lesser Rune of Defense",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "rune",
+    "tags": ["rune", "defense", "basic"],
+    "topCategory": "runes",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+
+  {
+    "id": "greater_rune_of_fury",
+    "name": "Greater Rune of Fury",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "rune",
+    "tags": ["rune", "fury", "advanced"],
+    "topCategory": "runes",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+  {
+    "id": "greater_rune_of_warding",
+    "name": "Greater Rune of Warding",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "rune",
+    "tags": ["rune", "warding", "advanced"],
+    "topCategory": "runes",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+
+  {
+    "id": "glyph_of_precision",
+    "name": "Glyph of Precision",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "glyph",
+    "tags": ["glyph", "precision", "rune"],
+    "topCategory": "runes",
+    "subCategory": "glyphs",
+    "group": "glyphs"
+  },
+  {
+    "id": "glyph_of_restoration",
+    "name": "Glyph of Restoration",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "glyph",
+    "tags": ["glyph", "restoration", "rune"],
+    "topCategory": "runes",
+    "subCategory": "glyphs",
+    "group": "glyphs"
+  },
+
+  {
+    "id": "runestone_of_ascension",
+    "name": "Runestone of Ascension",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "runestone",
+    "tags": ["runestone", "ascension", "mythic", "rune", "magical"],
+    "topCategory": "runes",
+    "subCategory": "mythic",
+    "group": "mythic"
+  },
+
+  {
+    "id": "ancient_relic_fragment",
+    "name": "Ancient Relic Fragment",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "artifact",
+    "tags": ["artifact", "relic", "ancient"],
+    "topCategory": "artifacts",
+    "subCategory": "relics",
+    "group": "relics"
+  },
+  {
+    "id": "sunken_relic",
+    "name": "Sunken Relic",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "artifact",
+    "tags": ["artifact", "relic", "sunken"],
+    "topCategory": "artifacts",
+    "subCategory": "relics",
+    "group": "relics"
+  },
+
+  {
+    "id": "forgotten_idol",
+    "name": "Forgotten Idol",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "artifact",
+    "tags": ["artifact", "idol", "forgotten"],
+    "topCategory": "artifacts",
+    "subCategory": "artifacts",
+    "group": "artifacts"
+  },
+  {
+    "id": "crown_of_the_first_flame",
+    "name": "Crown of the First Flame",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "artifact",
+    "tags": ["artifact", "crown", "flame", "first", "mythic"],
+    "topCategory": "artifacts",
+    "subCategory": "artifacts",
+    "group": "artifacts"
+  },
+
+  {
+    "id": "old_key",
+    "name": "Old Key",
+    "rarity": "common",
+    "tier": 1,
+    "type": "quest",
+    "tags": ["quest", "key", "basic"],
+    "topCategory": "quest",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+  {
+    "id": "tattered_note",
+    "name": "Tattered Note",
+    "rarity": "common",
+    "tier": 1,
+    "type": "quest",
+    "tags": ["quest", "note", "tattered", "basic"],
+    "topCategory": "quest",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+
+  {
+    "id": "ancient_map_piece",
+    "name": "Ancient Map Piece",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "quest",
+    "tags": ["quest", "map", "ancient", "piece", "important"],
+    "topCategory": "quest",
+    "subCategory": "important",
+    "group": "important"
+  },
+  {
+    "id": "sealed_letter",
+    "name": "Sealed Letter",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "quest",
+    "tags": ["quest", "letter", "sealed", "important"],
+    "topCategory": "quest",
+    "subCategory": "important",
+    "group": "important"
+  },
+
+  {
+    "id": "heros_sigil",
+    "name": "Hero’s Sigil",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "quest",
+    "tags": ["quest", "sigil", "hero", "epic"],
+    "topCategory": "quest",
+    "subCategory": "epic",
+    "group": "epic"
+  },
+
+  {
+    "id": "gold_coin",
+    "name": "Gold Coin",
+    "rarity": "common",
+    "tier": 1,
+    "type": "currency",
+    "tags": ["trade", "currency", "gold"],
+    "topCategory": "trade",
+    "subCategory": "currency",
+    "group": "currency"
+  },
+  {
+    "id": "platinum_coin",
+    "name": "Platinum Coin",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "currency",
+    "tags": ["trade", "currency", "platinum"],
+    "topCategory": "trade",
+    "subCategory": "currency",
+    "group": "currency"
+  },
+
+  {
+    "id": "spice_bundle",
+    "name": "Spice Bundle",
+    "rarity": "common",
+    "tier": 1,
+    "type": "trade_good",
+    "tags": ["trade", "goods", "spice"],
+    "topCategory": "trade",
+    "subCategory": "goods",
+    "group": "goods"
+  },
+  {
+    "id": "silk_roll",
+    "name": "Silk Roll",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "trade_good",
+    "tags": ["trade", "goods", "silk"],
+    "topCategory": "trade",
+    "subCategory": "goods",
+    "group": "goods"
+  },
+
+  {
+    "id": "jeweled_trinket",
+    "name": "Jeweled Trinket",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "luxury",
+    "tags": ["trade", "luxury", "jewel"],
+    "topCategory": "trade",
+    "subCategory": "luxury",
+    "group": "luxury"
+  },
+
+  {
+    "id": "wooden_chair",
+    "name": "Wooden Chair",
+    "rarity": "common",
+    "tier": 1,
+    "type": "furniture",
+    "tags": ["furniture", "wood", "chair"],
+    "topCategory": "furniture",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+  {
+    "id": "simple_bed",
+    "name": "Simple Bed",
+    "rarity": "common",
+    "tier": 1,
+    "type": "furniture",
+    "tags": ["furniture", "bed", "simple"],
+    "topCategory": "furniture",
+    "subCategory": "basic",
+    "group": "basic"
+  },
+
+  {
+    "id": "frostwood_table",
+    "name": "Frostwood Table",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "furniture",
+    "tags": ["furniture", "table", "frostwood"],
+    "topCategory": "furniture",
+    "subCategory": "regional",
+    "group": "regional"
+  },
+  {
+    "id": "sunbloom_lantern",
+    "name": "Sunbloom Lantern",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "furniture",
+    "tags": ["furniture", "lantern", "sunbloom"],
+    "topCategory": "furniture",
+    "subCategory": "regional",
+    "group": "regional"
+  },
+
+  {
+    "id": "arcane_bookshelf",
+    "name": "Arcane Bookshelf",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "furniture",
+    "tags": ["furniture", "bookshelf", "arcane", "magical"],
+    "topCategory": "furniture",
+    "subCategory": "magical",
+    "group": "magical"
+  },
+
+  {
+    "id": "astral_observatory_piece",
+    "name": "Astral Observatory Piece",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "furniture",
+    "tags": ["furniture", "astral", "observatory", "mythic"],
+    "topCategory": "furniture",
+    "subCategory": "mythic",
+    "group": "mythic"
+  },
+  
+  {
+    "id": "storm_core_residue",
+    "name": "Storm Core Residue",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["world_event", "storm", "elemental", "residue"],
+    "topCategory": "worldEvents",
+    "subCategory": "elementalStorms",
+    "group": "elementalStorms"
+  },
+  {
+    "id": "frozen_tempest_shard",
+    "name": "Frozen Tempest Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["world_event", "tempest", "frozen", "shard"],
+    "topCategory": "worldEvents",
+    "subCategory": "elementalStorms",
+    "group": "elementalStorms"
+  },
+
+  {
+    "id": "rift_echo",
+    "name": "Rift Echo",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["world_event", "rift", "void", "echo"],
+    "topCategory": "worldEvents",
+    "subCategory": "voidRifts",
+    "group": "voidRifts"
+  },
+  {
+    "id": "abyssal_pulse_fragment",
+    "name": "Abyssal Pulse Fragment",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["world_event", "abyssal", "pulse", "fragment"],
+    "topCategory": "worldEvents",
+    "subCategory": "voidRifts",
+    "group": "voidRifts"
+  },
+
+  {
+    "id": "radiant_blessing_seal",
+    "name": "Radiant Blessing Seal",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["world_event", "holy", "radiant", "seal"],
+    "topCategory": "worldEvents",
+    "subCategory": "holyAlignments",
+    "group": "holyAlignments"
+  },
+
+  {
+    "id": "starfall_memory",
+    "name": "Starfall Memory",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "material",
+    "tags": ["cosmic_event", "starfall", "memory", "anomaly"],
+    "topCategory": "cosmicEvents",
+    "subCategory": "cosmicEvents",
+    "group": "cosmicEvents"
+  },
+
+  {
+    "id": "frostberry_treat",
+    "name": "Frostberry Treat",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "consumable",
+    "tags": ["seasonal", "winter", "food", "cold"],
+    "topCategory": "seasonal",
+    "subCategory": "winter",
+    "group": "winter"
+  },
+  {
+    "id": "snowglobe_charm",
+    "name": "Snowglobe Charm",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "trinket",
+    "tags": ["seasonal", "winter", "charm", "frost", "magical"],
+    "topCategory": "seasonal",
+    "subCategory": "winter",
+    "group": "winter"
+  },
+
+  {
+    "id": "golden_gourd",
+    "name": "Golden Gourd",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "consumable",
+    "tags": ["seasonal", "harvest", "food", "plant"],
+    "topCategory": "seasonal",
+    "subCategory": "harvest",
+    "group": "harvest"
+  },
+  {
+    "id": "harvest_lantern",
+    "name": "Harvest Lantern",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "trinket",
+    "tags": ["seasonal", "harvest", "lantern", "crafted"],
+    "topCategory": "seasonal",
+    "subCategory": "harvest",
+    "group": "harvest"
+  },
+
+  {
+    "id": "sunspire_ribbon",
+    "name": "Sunspire Ribbon",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["seasonal", "summer", "cloth", "solar"],
+    "topCategory": "seasonal",
+    "subCategory": "summer",
+    "group": "summer"
+  },
+
+  {
+    "id": "eclipse_crown_fragment",
+    "name": "Eclipse Crown Fragment",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "material",
+    "tags": ["seasonal", "mythic", "void", "crown", "fragment"],
+    "topCategory": "seasonal",
+    "subCategory": "mythic",
+    "group": "mythic"
+  },
+
+  {
+  "mountsAndPets": {
+    "mountGear": [],
+    "petItems": [],
+    "evolution": [],
+    "rare": []
   }
 ]
-
