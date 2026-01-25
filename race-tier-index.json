@@ -1,0 +1,91 @@
+{
+  "humanoid": 1,
+  "elf": 1,
+  "dwarf": 1,
+  "orc": 1,
+  "goblinoid": 1,
+  "beastkin": 1
+}
+
+{
+  "draconian": 2,
+  "undead": 2,
+  "demonborn": 2,
+  "voidborn": 2,
+  "celestialborn": 2,
+  "spiritborn": 2,
+  "elementalborn": 2,
+  "titanborn": 2,
+  "giantkin": 2,
+  "colossus": 2,
+  "fae": 2,
+  "chimera": 2,
+  "construct": 2,
+  "plantfolk": 2,
+  "slimeborn": 2,
+  "insectoids": 2,
+  "arachnids": 2,
+  "supernatural": 2
+}
+
+
+{
+  "astralborn": 3,
+  "chaosborn": 3,
+  "dragonkin": 3,
+  "aberration": 3,
+  "eldritch": 3,
+  "lich": 3,
+  "mimic": 3,
+  "beast": 3,
+  "amorphous": 3,
+  "mythic_beast": 3,
+  "divinity": 3,
+  "unique": 3
+}
+
+
+{
+  "techborn": 4,
+  "machina": 4,
+  "dragon": 4,
+  "wyrm": 4,
+  "spirit": 4,
+  "primordial": 4,
+  "ethereal": 4,
+  "titan": 4,
+  "outer_god": 4,
+  "planar_entity": 4,
+  "cosmic_construct": 4,
+  "cosmic_fauna": 4,
+  "mythic_undead": 4
+}
+
+
+{
+  "anomaly": 5,
+  "legendary_boss_template": 5,
+  "paragon": 5,
+  "hybrid": 5,
+  "forgotten_race": 5,
+  "metaphysical_phenomenon": 5,
+  "parasite": 5,
+  "hivemind": 5,
+  "living_location": 5,
+  "artificial_life": 5,
+  "temporal_entity": 5,
+  "divine_beast": 5,
+  "meta_entity": 5,
+  "narrative_construct": 5,
+  "emotional": 5
+}
+
+
+{
+  "paradox_god": 6
+}
+
+
+{
+  "multiversal_paragon": 7
+}
