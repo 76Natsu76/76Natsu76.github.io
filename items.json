@@ -2,7 +2,7 @@
   "leveler": {
     "id": "leveler",
     "name": "Leveler",
-    "rarity": "rare",
+    "rarity": "ultra",
     "description": "Instantly grants 1 level.",
     "type": "consumable",
     "effect": { "levelUp": 1 }
@@ -11,7 +11,7 @@
   "instant_escape": {
     "id": "instant_escape",
     "name": "Instant Escape",
-    "rarity": "rare",
+    "rarity": "ridiculous",
     "description": "Immediately flee from combat.",
     "type": "consumable",
     "effect": { "escape": true }
@@ -20,7 +20,7 @@
   "mystery_box": {
     "id": "mystery_box",
     "name": "Mystery Box",
-    "rarity": "rare",
+    "rarity": "very",
     "description": "Contains a random item.",
     "type": "container",
     "effect": { "randomItem": true }
@@ -29,7 +29,7 @@
   "exp_buff": {
     "id": "exp_buff",
     "name": "EXP Buff",
-    "rarity": "rare",
+    "rarity": "very",
     "description": "Doubles EXP gained for 10 minutes.",
     "type": "buff",
     "effect": { "expMultiplier": 2, "duration": 600000 }
@@ -65,7 +65,7 @@
   "mid_hp_potion": {
     "id": "mid_hp_potion",
     "name": "Mid HP Potion",
-    "rarity": "uncommon",
+    "rarity": "rare",
     "description": "Restores 60 HP.",
     "type": "heal",
     "effect": { "hp": 60 }
@@ -74,7 +74,7 @@
   "mid_mp_potion": {
     "id": "mid_mp_potion",
     "name": "Mid MP Potion",
-    "rarity": "uncommon",
+    "rarity": "rare",
     "description": "Restores 25 MP.",
     "type": "mana",
     "effect": { "mp": 25 }
@@ -83,7 +83,7 @@
   "high_hp_potion": {
     "id": "high_hp_potion",
     "name": "High HP Potion",
-    "rarity": "rare",
+    "rarity": "ultra",
     "description": "Restores 100 HP.",
     "type": "heal",
     "effect": { "hp": 100 }
@@ -92,7 +92,7 @@
   "high_mp_potion": {
     "id": "high_mp_potion",
     "name": "High MP Potion",
-    "rarity": "rare",
+    "rarity": "ultra",
     "description": "Restores 40 MP.",
     "type": "mana",
     "effect": { "mp": 40 }
@@ -101,7 +101,7 @@
   "ultra_hp_potion": {
     "id": "ultra_hp_potion",
     "name": "Ultra HP Potion",
-    "rarity": "ultra",
+    "rarity": "ridiculous",
     "description": "Restores 250 HP.",
     "type": "heal",
     "effect": { "hp": 250 }
@@ -110,7 +110,7 @@
   "ultra_mp_potion": {
     "id": "ultra_mp_potion",
     "name": "Ultra MP Potion",
-    "rarity": "ultra",
+    "rarity": "ridiculous",
     "description": "Restores 100 MP.",
     "type": "mana",
     "effect": { "mp": 100 }
