@@ -1,0 +1,767 @@
+[
+  {
+    "id": "broken_sword",
+    "name": "Broken Sword",
+    "rarity": "common",
+    "tier": 1,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "metal", "hostile"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "basic"
+  },
+  {
+    "id": "iron_sword",
+    "name": "Iron Sword",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "metal"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "basic"
+  },
+  {
+    "id": "steel_sword",
+    "name": "Steel Sword",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "metal"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "basic"
+  },
+  {
+    "id": "fire_sword",
+    "name": "Fire Sword",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "elemental", "fire", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "elemental"
+  },
+  {
+    "id": "water_sword",
+    "name": "Water Sword",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "elemental", "water", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "elemental"
+  },
+  {
+    "id": "earth_sword",
+    "name": "Earth Sword",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "elemental", "earth", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "elemental"
+  },
+  {
+    "id": "wind_sword",
+    "name": "Wind Sword",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "elemental", "wind", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "elemental"
+  },
+  {
+    "id": "lightning_sword",
+    "name": "Lightning Sword",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "elemental", "electric", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "elemental"
+  },
+  {
+    "id": "ice_sword",
+    "name": "Ice Sword",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "elemental", "cold", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "elemental"
+  },
+
+  {
+    "id": "light_sword",
+    "name": "Light Sword",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "holy", "light", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "holy"
+  },
+  {
+    "id": "crusaders_sunblade",
+    "name": "Crusader’s Sunblade",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "holy", "solar", "radiant", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "holy"
+  },
+  {
+    "id": "paragons_sunblade",
+    "name": "Paragon’s Sunblade",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "holy", "solar", "radiant", "magical", "artifact"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "holy"
+  },
+  {
+    "id": "elders_natureblade",
+    "name": "Elder’s Natureblade",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "holy", "nature", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "holy"
+  },
+
+  {
+    "id": "dark_sword",
+    "name": "Dark Sword",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "dark", "hostile", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+  {
+    "id": "specterblade_edge",
+    "name": "Specterblade Edge",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "dark", "spectral", "void", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+  {
+    "id": "wraithknight_greatsword",
+    "name": "Wraithknight Greatsword",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "greatsword", "dark", "void", "undead", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+  {
+    "id": "harrower_greatsword",
+    "name": "Harrower Greatsword",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "greatsword", "abyssal", "dark", "hostile", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+  {
+    "id": "void_sundered_edge",
+    "name": "Void-Sundered Edge",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "void", "abyssal", "magical", "artifact"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+  {
+    "id": "archfiends_voidblade",
+    "name": "Archfiend’s Voidblade",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "void", "demonic", "abyssal", "magical", "artifact"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+  {
+    "id": "celestial_tyrant_greatsword",
+    "name": "Celestial Tyrant Greatsword",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "greatsword", "cosmic", "celestial", "magical", "artifact"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+  {
+    "id": "terminarchs_starblade",
+    "name": "Terminarch’s Starblade",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "cosmic", "stellar", "void", "magical", "artifact"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "darkVoid"
+  },
+
+  {
+    "id": "holy_sticalibur",
+    "name": "Holy Sticalibur",
+    "rarity": "transcendent",
+    "tier": 7,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "holy", "wood", "magical", "anomaly", "absurd", "artifact"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "special"
+  },
+
+  {
+    "id": "greatsword",
+    "name": "Greatsword",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "greatsword", "metal", "heavy"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "basic"
+  },
+
+  {
+    "id": "dull_knife",
+    "name": "Dull Knife",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "weapon",
+    "tags": ["weapon", "dagger", "metal"],
+    "topCategory": "weapons",
+    "subCategory": "daggers",
+    "group": "basic"
+  },
+  {
+    "id": "steel_dagger",
+    "name": "Steel Dagger",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "weapon",
+    "tags": ["weapon", "dagger", "metal"],
+    "topCategory": "weapons",
+    "subCategory": "daggers",
+    "group": "basic"
+  },
+  {
+    "id": "dull_fang_dagger",
+    "name": "Dull Fang Dagger",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "weapon",
+    "tags": ["weapon", "dagger", "beast", "fang"],
+    "topCategory": "weapons",
+    "subCategory": "daggers",
+    "group": "beast"
+  },
+  {
+    "id": "shadow_knife",
+    "name": "Shadow Knife",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "weapon",
+    "tags": ["weapon", "dagger", "dark", "stealthy", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "daggers",
+    "group": "shadow"
+  },
+  {
+    "id": "shade_touched_knife",
+    "name": "Shade-Touched Knife",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "weapon",
+    "tags": ["weapon", "dagger", "dark", "void", "stealthy", "magical"],
+    "topCategory": "weapons",
+    "subCategory": "daggers",
+    "group": "shadow"
+  },
+
+  {
+    "id": "short_bow",
+    "name": "Short Bow",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "weapon",
+    "tags": ["weapon", "bow", "wood", "ranged"],
+    "topCategory": "weapons",
+    "subCategory": "bows",
+    "group": "basic"
+  },
+  {
+    "id": "hunter_bow",
+    "name": "Hunter Bow",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "weapon",
+    "tags": ["weapon", "bow", "wood", "ranged", "hunting"],
+    "topCategory": "weapons",
+    "subCategory": "bows",
+    "group": "crafted"
+  },
+
+  {
+    "id": "archons_solar_mace",
+    "name": "Archon’s Solar Mace",
+    "rarity": "mythic",
+    "tier": 6,
+    "type": "weapon",
+    "tags": ["weapon", "mace", "holy", "solar", "radiant", "magical", "artifact"],
+    "topCategory": "weapons",
+    "subCategory": "maces",
+    "group": "holy"
+  },
+
+  {
+    "id": "__placeholder_staves_category",
+    "name": "Staves Placeholder",
+    "rarity": "common",
+    "tier": 1,
+    "type": "weapon",
+    "tags": ["placeholder", "weapon", "staff"],
+    "topCategory": "weapons",
+    "subCategory": "staves",
+    "group": "placeholder"
+  },
+
+  {
+    "id": "__placeholder_wands_category",
+    "name": "Wands Placeholder",
+    "rarity": "common",
+    "tier": 1,
+    "type": "weapon",
+    "tags": ["placeholder", "weapon", "wand"],
+    "topCategory": "weapons",
+    "subCategory": "wands",
+    "group": "placeholder"
+  },
+
+  {
+    "id": "wolf_pelt",
+    "name": "Wolf Pelt",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["beast", "pelt", "fur", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "pelts",
+    "group": "common"
+  },
+  {
+    "id": "boar_hide",
+    "name": "Boar Hide",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["beast", "pelt", "hide", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "pelts",
+    "group": "common"
+  },
+  {
+    "id": "bear_pelt",
+    "name": "Bear Pelt",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["beast", "pelt", "fur", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "pelts",
+    "group": "sturdy"
+  },
+  {
+    "id": "thick_fur",
+    "name": "Thick Fur",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["beast", "pelt", "fur", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "pelts",
+    "group": "sturdy"
+  },
+  {
+    "id": "alpha_wolf_pelt",
+    "name": "Alpha Wolf Pelt",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["beast", "pelt", "fur", "alpha", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "pelts",
+    "group": "elite"
+  },
+  {
+    "id": "elder_bear_pelt",
+    "name": "Elder Bear Pelt",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["beast", "pelt", "fur", "elder", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "pelts",
+    "group": "elite"
+  },
+
+  {
+    "id": "wolf_fang",
+    "name": "Wolf Fang",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["beast", "fang", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "fangs",
+    "group": "common"
+  },
+  {
+    "id": "boar_tusk",
+    "name": "Boar Tusk",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["beast", "fang", "tusk", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "fangs",
+    "group": "common"
+  },
+  {
+    "id": "bear_fang",
+    "name": "Bear Fang",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["beast", "fang", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "fangs",
+    "group": "sturdy"
+  },
+  {
+    "id": "alpha_fang",
+    "name": "Alpha Fang",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["beast", "fang", "alpha", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "fangs",
+    "group": "elite"
+  },
+  {
+    "id": "elder_fang",
+    "name": "Elder Fang",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["beast", "fang", "elder", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "fangs",
+    "group": "elite"
+  },
+
+  {
+    "id": "lizard_scale",
+    "name": "Lizard Scale",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["beast", "scale", "reptile", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "scales",
+    "group": "common"
+  },
+  {
+    "id": "serpent_scale",
+    "name": "Serpent Scale",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["beast", "scale", "serpent", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "scales",
+    "group": "common"
+  },
+  {
+    "id": "heavy_scale",
+    "name": "Heavy Scale",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["beast", "scale", "heavy", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "scales",
+    "group": "sturdy"
+  },
+  {
+    "id": "alpha_scale",
+    "name": "Alpha Scale",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["beast", "scale", "alpha", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "scales",
+    "group": "elite"
+  },
+  {
+    "id": "elder_scale",
+    "name": "Elder Scale",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["beast", "scale", "elder", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "scales",
+    "group": "elite"
+  },
+
+  {
+    "id": "boar_hide_material",
+    "name": "Boar Hide",
+    "rarity": "uncommon",
+    "tier": 2,
+    "type": "material",
+    "tags": ["beast", "hide", "pelt", "material"],
+    "topCategory": "beastMaterials",
+    "subCategory": "hides",
+    "group": "common"
+  },
+
+  {
+    "id": "fire_core",
+    "name": "Fire Core",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "fire", "core", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "water_core",
+    "name": "Water Core",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "water", "core", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "earth_core",
+    "name": "Earth Core",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "earth", "core", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "wind_core",
+    "name": "Wind Core",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "wind", "core", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "lightning_core",
+    "name": "Lightning Core",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["elemental", "electric", "core", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+  {
+    "id": "ice_core",
+    "name": "Ice Core",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "cold", "core", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "cores",
+    "group": "cores"
+  },
+
+  {
+    "id": "fire_shard",
+    "name": "Fire Shard",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["elemental", "fire", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "water_shard",
+    "name": "Water Shard",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["elemental", "water", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "earth_shard",
+    "name": "Earth Shard",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["elemental", "earth", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "wind_shard",
+    "name": "Wind Shard",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["elemental", "wind", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "lightning_shard",
+    "name": "Lightning Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "electric", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+  {
+    "id": "ice_shard",
+    "name": "Ice Shard",
+    "rarity": "rare",
+    "tier": 3,
+    "type": "material",
+    "tags": ["elemental", "cold", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "shards",
+    "group": "shards"
+  },
+
+  {
+    "id": "storm_shard",
+    "name": "Storm Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "electric", "wind", "storm", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+  {
+    "id": "frost_shard",
+    "name": "Frost Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "cold", "frost", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+  {
+    "id": "magma_shard",
+    "name": "Magma Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "fire", "earth", "magma", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+  {
+    "id": "gale_shard",
+    "name": "Gale Shard",
+    "rarity": "epic",
+    "tier": 4,
+    "type": "material",
+    "tags": ["elemental", "wind", "gale", "shard", "material"],
+    "topCategory": "elemental",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+  {
+    "id": "crystalized_ember",
+    "name": "Crystalized Ember",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["elemental", "fire", "ember", "shard", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "advanced",
+    "group": "advanced"
+  },
+  {
+    "id": "frozen_heart_shard",
+    "name": "Frozen Heart Shard",
+    "rarity": "legendary",
+    "tier": 5,
+    "type": "material",
+    "tags": ["elemental", "cold", "frost", "shard", "magical", "material"],
+    "topCategory": "elemental",
+    "subCategory": "advanced",
+    "group": "advanced"
+  }
+]
+
