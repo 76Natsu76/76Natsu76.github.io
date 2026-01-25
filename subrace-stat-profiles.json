@@ -2746,4 +2746,13 @@
       "description": "A deity that reflects all realities, including those that contradict each other."
     }
   },
+  
+  "multiversal_paragon": {
+
+    "the_multiversal_paragon": {
+      "growth": { "hp": 999.0, "atk": 999.0, "def": 999.0, "speed": 999.0, "mana": 999.0 },
+      "elementAffinity": { "arcane": 1.0, "void": 1.0, "light": 1.0, "dark": 1.0, "chaos": 1.0, "holy": 1.0, "all": 1.0 },
+      "description": "The supreme architect of all existence — a being who creates, destroys,\n and governs entire multiverses with a single thought. \nBeyond gods, beyond paradox, beyond narrative. \nThe final and absolute pinnacle of all power."
+    }
+  }
 }
