@@ -1,0 +1,188 @@
+{
+  "small": {
+    "key": "small",
+    "description": "Small creature. Harder to hit, faster actions.",
+    "effects": {
+      "evadeBonus": 0.05,
+      "accuracyPenaltyToPlayer": 0.03
+    }
+  },
+
+  "medium": {
+    "key": "medium",
+    "description": "Standard-sized enemy.",
+    "effects": {}
+  },
+
+  "large": {
+    "key": "large",
+    "description": "Large creature. Hits harder but slower.",
+    "effects": {
+      "damageBoost": 0.10,
+      "hastePenalty": 0.05
+    }
+  },
+
+  "colossal": {
+    "key": "colossal",
+    "description": "Massive creature. Extremely powerful.",
+    "effects": {
+      "damageBoost": 0.20,
+      "damageReduction": 0.10,
+      "hastePenalty": 0.10
+    }
+  },
+
+  "beast": {
+    "key": "beast",
+    "description": "Instinct-driven creature.",
+    "effects": {
+      "bleedChance": 0.05
+    }
+  },
+
+  "undead": {
+    "key": "undead",
+    "description": "Animated by dark magic.",
+    "effects": {
+      "immuneTo": ["poison", "bleed"]
+    }
+  },
+
+  "elemental": {
+    "key": "elemental",
+    "description": "Creature of pure elemental energy.",
+    "effects": {
+      "resistances": {
+        "fire": 0.20,
+        "ice": 0.20,
+        "lightning": 0.20
+      }
+    }
+  },
+
+  "void": {
+    "key": "void",
+    "description": "Entity touched by the void.",
+    "effects": {
+      "corruptionChance": 0.05,
+      "resistances": {
+        "void": 0.25
+      }
+    }
+  },
+
+  "demon": {
+    "key": "demon",
+    "description": "Infernal being from the lower realms.",
+    "effects": {
+      "burnChance": 0.05,
+      "resistances": {
+        "fire": 0.15
+      }
+    }
+  },
+
+  "aggressive": {
+    "key": "aggressive",
+    "description": "Prefers offensive actions.",
+    "effects": {
+      "aiBias": { "attack": 0.10 }
+    }
+  },
+
+  "defensive": {
+    "key": "defensive",
+    "description": "Prefers defensive actions.",
+    "effects": {
+      "aiBias": { "defend": 0.10 }
+    }
+  },
+
+  "caster": {
+    "key": "caster",
+    "description": "Prefers magical abilities.",
+    "effects": {
+      "aiBias": { "special": 0.10 }
+    }
+  },
+
+  "chaotic": {
+    "key": "chaotic",
+    "description": "Unpredictable behavior.",
+    "effects": {
+      "aiBias": { "randomize": true }
+    }
+  },
+
+  "armored": {
+    "key": "armored",
+    "description": "Heavily armored enemy.",
+    "effects": {
+      "damageReduction": 0.10
+    }
+  },
+
+  "flying": {
+    "key": "flying",
+    "description": "Enemy that hovers above the ground.",
+    "effects": {
+      "evadeBonus": 0.05,
+      "immuneTo": ["ground"]
+    }
+  },
+
+  "spectral": {
+    "key": "spectral",
+    "description": "Partially incorporeal entity.",
+    "effects": {
+      "resistances": { "physical": 0.20 },
+      "weakTo": { "holy": 0.20 }
+    }
+  },
+
+  "poisonous": {
+    "key": "poisonous",
+    "description": "Can inflict poison on hit.",
+    "effects": {
+      "poisonChance": 0.05
+    }
+  },
+
+  "fiery": {
+    "key": "fiery",
+    "description": "Burning aura surrounds this enemy.",
+    "effects": {
+      "burnChance": 0.05
+    }
+  },
+
+  "elite": {
+    "key": "elite",
+    "description": "Stronger than normal enemies.",
+    "effects": {
+      "damageBoost": 0.10,
+      "defenceBoost": 0.10
+    }
+  },
+
+  "mythical": {
+    "key": "mythical",
+    "description": "Extremely powerful rare enemy.",
+    "effects": {
+      "damageBoost": 0.20,
+      "defenceBoost": 0.15,
+      "rareLootBonus": 0.20
+    }
+  },
+
+  "legendary": {
+    "key": "legendary",
+    "description": "A legendary foe of immense strength.",
+    "effects": {
+      "damageBoost": 0.30,
+      "defenceBoost": 0.20,
+      "rareLootBonus": 0.30
+    }
+  }
+}
