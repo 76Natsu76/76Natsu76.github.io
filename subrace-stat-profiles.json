@@ -787,4 +787,68 @@
 
   },
 
+  "spiritborn": {
+
+    "ember_spirit": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 0.9, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "A fiery spirit whose burning essence fuels aggressive elemental magic."
+    },
+
+    "river_spirit": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "water": 0.3 },
+      "description": "A fluid spirit attuned to flowing water and restorative magic."
+    },
+
+    "wind_spirit": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.5, "mana": 1.2 },
+      "elementAffinity": { "wind": 0.3 },
+      "description": "A swift spirit of the air, moving with unmatched speed and grace."
+    },
+
+    "stone_spirit": {
+      "growth": { "hp": 1.2, "atk": 1.0, "def": 1.2, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "A sturdy spirit formed from ancient stone, embodying resilience and stability."
+    },
+
+    "storm_spirit": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.0, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": { "lightning": 0.3, "wind": 0.1 },
+      "description": "A volatile spirit born of thunder and lightning, crackling with raw energy."
+    },
+
+    "forest_spirit": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "A guardian of the wilds, channeling the life force of ancient forests."
+    },
+
+    "shadow_spirit": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.4, "mana": 1.3 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "A spirit woven from darkness, striking swiftly from the shadows."
+    },
+
+    "ancestral_spirit": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2, "light": 0.1 },
+      "description": "A venerable spirit carrying the wisdom and magic of ancient ancestors."
+    },
+
+    "emberwisp": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.4, "mana": 1.3 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "A tiny flickering spirit of flame, swift and magically potent."
+    },
+
+    "mist_spirit": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "water": 0.2, "ice": 0.1 },
+      "description": "A drifting spirit of fog and chill, elusive and ethereal."
+    }
+
+  },
+
 }
