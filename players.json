@@ -1,0 +1,603 @@
+{
+  "s3ven_six": {
+    "username": "s3ven_six",
+    "level": 55,
+    "race": "elf",
+    "subrace": "dark_elf",
+    "profession": "thief",
+    "exp": 106684,
+    "gold": 692,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 160,
+    "manaCurrent": 5,
+    "speedBase": 347,
+
+    "computedStatsJSON": {
+      "hpMax": 159,
+      "atk": 244,
+      "def": 126,
+      "speed": 347,
+      "manaMax": 15,
+      "critChance": 1,
+      "critDamage": 1.5,
+      "elementAffinity": {
+        "nature": 0.1,
+        "arcane": 0.1,
+        "dark": 0.2
+      }
+    },
+
+    "items": {},
+
+    "equipment": {
+      "weapon": {
+        "name": "Twin Daggers",
+        "rarity": "uncommon",
+        "level": 1,
+        "stats": { "atk": 7, "critChance": 0.03 }
+      },
+      "armor": {
+        "name": "Shadow Vest",
+        "rarity": "common",
+        "level": 1,
+        "stats": { "def": 5, "evade": 0.05 }
+      },
+      "accessory": {
+        "name": "Silent Charm",
+        "rarity": "common",
+        "level": 1,
+        "stats": { "critChance": 0.03 }
+      }
+    },
+
+    "inventory": [
+      { "name": "Wolf Pelt", "qty": 2, "rarity": "common" }
+    ],
+
+    "abilities": ["backstab"],
+    "ultimate": null,
+
+    "cooldowns": { "backstab": 0 },
+    "abilityLevels": {},
+    "abilityPoints": 1,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {
+      "visitedRegions": {
+        "cavern": true,
+        "void_frontier": true,
+        "worldbreaker_horizon": true,
+        "ruins": true,
+        "mountains": true,
+        "arcane_rift": true,
+        "swamp": true,
+        "astral_nexus": true,
+        "tundra": true,
+        "void": true,
+        "abyssal_scar": true,
+        "celestial_expanse": true,
+        "celestial": true,
+        "eternal_citadel": true,
+        "desert": true,
+        "plains": true,
+        "forest": true,
+        "primordial_grove": true
+      },
+      "encountersSinceBoss": 4,
+      "lastExplored": 1769212912052,
+      "region": "primordial_grove",
+      "family": "beast"
+    },
+
+    "regenTimeStamp": 1737265898000,
+    "regenBuffUntil": 1736980715000,
+
+    "role": "admin"
+  },
+
+  "pokelordomegaa": {
+    "username": "pokelordomegaa",
+    "level": 3,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 134,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265898000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+
+  "07gmz": {
+    "username": "07gmz",
+    "level": 2,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 23,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265898000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+
+  "me_is_meow1": {
+    "username": "me_is_meow1",
+    "level": 4,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 676,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265898000,
+    "regenBuffUntil": 1736980511000,
+
+    "role": "player"
+  },
+
+  "gmnexuss": {
+    "username": "gmnexuss",
+    "level": 6,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 3885,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265898000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+
+  "spectre2409": {
+    "username": "spectre2409",
+    "level": 1,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 0,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265838000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+
+  "ccnekona1": {
+    "username": "ccnekona1",
+    "level": 1,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 0,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265839000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+
+  "ccnekona": {
+    "username": "ccnekona",
+    "level": 1,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 0,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265839000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+
+  "hazelthepuppygirl": {
+    "username": "hazelthepuppygirl",
+    "level": 1,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 0,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265838000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+  "undefined": {
+    "username": "undefined",
+    "level": 1,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 0,
+    "gold": 0,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265839000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  },
+
+  "pizzatimerbot": {
+    "username": "pizzatimerbot",
+    "level": 1,
+    "race": null,
+    "subrace": null,
+    "profession": null,
+    "exp": 25,
+    "gold": 4,
+    "hardcore": false,
+    "transcension": false,
+
+    "hpCurrent": 0,
+    "manaCurrent": 0,
+    "speedBase": null,
+
+    "computedStatsJSON": {},
+    "items": {},
+
+    "equipment": {
+      "weapon": null,
+      "armor": null,
+      "accessory": null
+    },
+
+    "inventory": [
+      { "name": "Iron Sword", "rarity": "common", "level": 1, "atk": 5 },
+      { "name": "Leather Armor", "rarity": "common", "level": 1, "def": 3 }
+    ],
+
+    "abilities": [],
+    "ultimate": null,
+
+    "cooldowns": {},
+    "abilityLevels": {},
+    "abilityPoints": 0,
+
+    "playerStatus": [],
+    "activeEffects": [],
+
+    "talentPoints": 1,
+    "talentTree": {},
+
+    "regionMetaJSON": {},
+
+    "regenTimeStamp": 1737265839000,
+    "regenBuffUntil": 1736980310000,
+
+    "role": "player"
+  }
+}
