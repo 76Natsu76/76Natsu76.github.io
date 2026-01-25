@@ -1,0 +1,80 @@
+{
+  "enemy_basic": {
+    "key": "enemy_basic",
+    "name": "Claw Swipe",
+    "basePower": 1.0,
+    "scaling": 0.05,
+    "description": "A simple physical attack."
+  },
+
+  "feral_bite": {
+    "key": "feral_bite",
+    "name": "Feral Bite",
+    "basePower": 1.4,
+    "scaling": 0.10,
+    "statusEffects": [
+      { "type": "bleed", "power": 4, "duration": 2, "stack": "add" }
+    ],
+    "description": "A vicious bite that causes bleeding."
+  },
+
+  "pounce": {
+    "key": "pounce",
+    "name": "Pounce",
+    "basePower": 1.2,
+    "scaling": 0.08,
+    "statusEffects": [
+      { "type": "stun", "power": 0, "duration": 1, "stack": "replace" }
+    ],
+    "description": "A sudden leap that stuns the target."
+  },
+
+  "rot_touch": {
+    "key": "rot_touch",
+    "name": "Rot Touch",
+    "basePower": 1.3,
+    "scaling": 0.10,
+    "statusEffects": [
+      { "type": "poison", "power": 5, "duration": 3, "stack": "add" }
+    ],
+    "description": "A decaying touch that inflicts poison."
+  },
+
+  "bone_crush": {
+    "key": "bone_crush",
+    "name": "Bone Crush",
+    "basePower": 1.6,
+    "scaling": 0.12,
+    "description": "A heavy strike that deals crushing damage."
+  },
+
+  "flame_burst": {
+    "key": "flame_burst",
+    "name": "Flame Burst",
+    "basePower": 1.5,
+    "scaling": 0.15,
+    "statusEffects": [
+      { "type": "burn", "power": 6, "duration": 2, "stack": "add" }
+    ],
+    "description": "A burst of flame that burns the target."
+  },
+
+  "frost_spike": {
+    "key": "frost_spike",
+    "name": "Frost Spike",
+    "basePower": 1.3,
+    "scaling": 0.12,
+    "statusEffects": [
+      { "type": "slow", "power": 20, "duration": 2, "stack": "replace" }
+    ],
+    "description": "A chilling spike that slows movement."
+  },
+
+  "lightning_arc": {
+    "key": "lightning_arc",
+    "name": "Lightning Arc",
+    "basePower": 1.4,
+    "scaling": 0.15,
+    "description": "A bolt of lightning that shocks the target."
+  }
+}
