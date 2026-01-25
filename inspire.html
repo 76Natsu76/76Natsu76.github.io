@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Inspire</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:40px;
+      text-align:center;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+
+    input, button {
+      background:#1a1d24;
+      color:#eee;
+      border:1px solid #444;
+      padding:8px;
+      border-radius:4px;
+      margin-top:6px;
+      font-size:14px;
+    }
+
+    button {
+      padding:10px 16px;
+      cursor:pointer;
+    }
+
+    button:hover {
+      background:#222832;
+    }
+
+    #output {
+      margin-top:20px;
+      padding:20px;
+      background:#11141c;
+      border-radius:8px;
+      border:1px solid #262a36;
+      white-space:pre-wrap;
+      text-align:left;
+      max-width:600px;
+      margin-left:auto;
+      margin-right:auto;
+      font-size:14px;
+    }
+
+    .btn-nav {
+      margin-top:16px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      text-align:center;
+      display:inline-block;
+      min-width:140px;
+    }
+
+    .btn-nav:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Inspire</h1>
+  <div id="usernameDisplay"></div>
+
+  <p>Target user:</p>
+  <input id="target" placeholder="@username">
+
+  <p>Gift amount:</p>
+  <input id="amount" placeholder="e.g. 100">
+
+  <br><br>
+
+  <button onclick="sendInspire()">Inspire</button>
+
+  <div id="output">Waiting...</div>
+
+  <div style="margin-top:24px;">
+    <button class="btn-nav" onclick="goToMap()">World Map</button>
+    <button class="btn-nav" onclick="goToCharacter()">Character</button>
+  </div>
+
+  <script src="api.js"></script>
+
+  <script>
+    const username = sessionStorage.getItem("twitch_username");
+    document.getElementById("usernameDisplay").textContent =
+      username ? "Logged in as: " + username : "No user logged in";
+
+    async function sendInspire() {
+      const to = document.getElementById("target").value.trim();
+      const amount = document.getElementById("amount").value.trim();
+      const output = document.getElementById("output");
+
+      if (!username) {
+        output.textContent = "Error: No Twitch username found (not logged in).";
+        return;
+      }
+
+      if (!to || !amount) {
+        output.textContent = "Please provide both a target user and an amount.";
+        return;
+      }
+
+      try {
+        const res = await api.inspire(username, to, amount);
+        if (!res.ok) {
+          output.textContent = "Error: " + (res.error || "Unknown error");
+          return;
+        }
+
+        const inspired = res.inspired;
+        const msg = res.message || "Inspiration sent.";
+
+        output.textContent =
+          (inspired ? "✨ INSPIRATION TRIGGERED! ✨\n\n" : "") + msg;
+      } catch (err) {
+        output.textContent = "Network error: " + err.message;
+      }
+    }
+
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+
+    function goToCharacter() {
+      window.location.href = "character.html";
+    }
+  </script>
+
+</body>
+</html>
