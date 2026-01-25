@@ -39,6 +39,20 @@ export function promptForToken() {
   if (token) setGithubToken(token);
 }
 
+
+async function logPurchase(entry) {
+  const { data: logs, sha } = await loadJsonFile("purchases.json", []);
+
+  logs.push(entry);
+
+  await saveJsonFile(
+    "purchases.json",
+    logs,
+    `Log purchase: ${entry.username} bought ${entry.qty}x ${entry.itemId}`,
+    sha
+  );
+}
+
 // -----------------------------
 // GITHUB API HELPERS
 // -----------------------------
@@ -188,51 +202,25 @@ function renderGlobalShop(shop, player, players, playersSha) {
       <div class="shop-item-rarity">${rarity}</div>
       <div class="shop-item-qty">Qty: ${entry.qty}</div>
       <div class="shop-item-price">Price: ${entry.price} gold</div>
-      <button class="btn buy-btn">Buy</button>
+      <div class="item-actions">
+        <button class="btn buy1-btn">Buy 1</button>
+        <button class="btn buymax-btn">Buy Max</button>
+        <button class="btn buyx-btn">Buy X</button>
+      </div>
     `;
 
-    const btn = div.querySelector(".buy-btn");
-    btn.onclick = async () => {
-      try {
-        await handleGlobalPurchase(index, shop, player, players, playersSha);
-      } catch (e) {
-        console.error(e);
-        alert("Purchase failed: " + e.message);
-      }
-    };
+    const btn1 = div.querySelector(".buy1-btn");
+    const btnMax = div.querySelector(".buymax-btn");
+    const btnX = div.querySelector(".buyx-btn");
+    
+    btn1.onclick = () => handlePurchase("global", index, shop, player, players, playersSha);
+    btnMax.onclick = () => handlePurchase("global", index, shop, player, players, playersSha);
+    btnX.onclick = () => handlePurchase("global", index, shop, player, players, playersSha);
+
+    
 
     container.appendChild(div);
   });
-}
-
-async function handleGlobalPurchase(index, shop, player, players, playersSha) {
-  const entry = shop.items[index];
-  if (!entry) return;
-
-  const cost = entry.price;
-  if ((player.gold ?? 0) < cost) {
-    alert("Not enough gold.");
-    return;
-  }
-
-  // Deduct gold
-  player.gold = (player.gold ?? 0) - cost;
-
-  // Add to inventory
-  addItemToInventory(player, entry.id, entry.qty);
-
-  // Remove from shop (or decrement qty if you want)
-  shop.items.splice(index, 1);
-
-  // Save players.json
-  await saveJsonFile(FILE_PLAYERS, players, "Purchase from global shop", playersSha);
-
-  // Save global-shop.json
-  const { sha: shopSha } = await loadJsonFile(FILE_GLOBAL_SHOP, { generatedAt: 0, items: [] });
-  await saveJsonFile(FILE_GLOBAL_SHOP, shop, "Update global shop after purchase", shopSha);
-
-  // Re-render
-  renderGlobalShop(shop, player, players, playersSha);
 }
 
 // -----------------------------
@@ -287,18 +275,21 @@ function renderUserShop(userShop, player, players, playersSha, userShops, userSh
       <div class="shop-item-rarity">${rarity}</div>
       <div class="shop-item-qty">Qty: ${entry.qty}</div>
       <div class="shop-item-price">Price: ${entry.price} gold</div>
-      <button class="btn buy-btn">Buy</button>
+      <div class="item-actions">
+        <button class="btn buy1-btn">Buy 1</button>
+        <button class="btn buymax-btn">Buy Max</button>
+        <button class="btn buyx-btn">Buy X</button>
+      </div>
     `;
 
-    const btn = div.querySelector(".buy-btn");
-    btn.onclick = async () => {
-      try {
-        await handleUserPurchase(index, userShop, player, players, playersSha, userShops, userShopsSha);
-      } catch (e) {
-        console.error(e);
-        alert("Purchase failed: " + e.message);
-      }
-    };
+    const btn1 = div.querySelector(".buy1-btn");
+    const btnMax = div.querySelector(".buymax-btn");
+    const btnX = div.querySelector(".buyx-btn");
+    
+    btn1.onclick = () => handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
+    btnMax.onclick = () => handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
+    btnX.onclick = () => handlePurchase("daily", index, userShop, player, players, playersSha, userShops, userShopsSha);
+
 
     container.appendChild(div);
   });
