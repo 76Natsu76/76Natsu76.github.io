@@ -658,7 +658,133 @@
     }
 
   },
-
   
+  "voidborn": {
+
+    "void_reaver": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 0.9, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "Aggressive void entities that tear through reality with unstable power."
+    },
+
+    "nullborn_ravager": {
+      "growth": { "hp": 1.0, "atk": 1.4, "def": 0.8, "speed": 1.2, "mana": 1.2 },
+      "elementAffinity": { "void": 0.3, "arcane": -0.1 },
+      "description": "Warped beings whose presence erases magic and destabilizes the world around them."
+    },
+
+    "shadehound": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "void": 0.2, "dark": 0.1 },
+      "description": "Void‑touched predators that stalk prey between shadows and broken space."
+    },
+
+    "astral_voidling": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.9, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "void": 0.2, "arcane": 0.2 },
+      "description": "Cosmic anomalies born from collapsed stars and void‑warped astral energy."
+    },
+
+    "entropy_spawn": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 0.8, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": { "void": 0.3, "chaos": 0.2 },
+      "description": "Manifestations of entropy that unravel order and feed on instability."
+    },
+
+    "hollowborn": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "Emptied beings whose bodies echo with void resonance and eerie silence."
+    },
+
+    "riftstalker": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 0.9, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "void": 0.2 },
+      "description": "Swift hunters who slip between rifts, striking from impossible angles."
+    },
+
+    "void_savant": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.1, "mana": 1.5 },
+      "elementAffinity": { "void": 0.3, "arcane": 0.1 },
+      "description": "Void scholars who manipulate forbidden cosmic principles with immense mana."
+    },
+
+    "abyss_touched": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 0.9, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "void": 0.3, "dark": 0.2 },
+      "description": "Mortals partially consumed by the abyss, gaining dark and void synergy."
+    },
+
+    "nullshade": {
+      "growth": { "hp": 0.9, "atk": 1.1, "def": 0.8, "speed": 1.4, "mana": 1.4 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "Shadow‑thin voidborn who flicker between existence and nothingness."
+    }
+
+  }, 
+
+  "celestialborn": {
+
+    "seraph": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.2, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "holy": 0.3, "light": 0.2 },
+      "description": "Radiant winged beings who embody divine purity and celestial might."
+    },
+
+    "archon": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.3, "speed": 1.0, "mana": 1.3 },
+      "elementAffinity": { "holy": 0.3 },
+      "description": "Stalwart celestial guardians who enforce divine order with unwavering resolve."
+    },
+
+    "herald": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.1, "speed": 1.2, "mana": 1.4 },
+      "elementAffinity": { "holy": 0.2, "light": 0.1 },
+      "description": "Messengers of the heavens who channel radiant magic with grace and speed."
+    },
+
+    "dawnborne": {
+      "growth": { "hp": 1.1, "atk": 1.1, "def": 1.1, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "Celestialborn touched by the first light of dawn, wielding luminous power."
+    },
+
+    "radiant_ascendant": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.2, "speed": 1.0, "mana": 1.5 },
+      "elementAffinity": { "holy": 0.3, "arcane": 0.1 },
+      "description": "Ascended beings who channel pure radiance and overwhelming divine mana."
+    },
+
+    "halo_guardian": {
+      "growth": { "hp": 1.2, "atk": 1.0, "def": 1.3, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "holy": 0.2 },
+      "description": "Celestial protectors whose glowing halos shield allies from harm."
+    },
+
+    "luminary": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.3, "mana": 1.3 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "Swift celestialborn who wield beams of concentrated light."
+    },
+
+    "starborne": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "arcane": 0.2, "holy": 0.1 },
+      "description": "Cosmic‑touched celestials who draw power from distant starlight."
+    },
+
+    "sunforged": {
+      "growth": { "hp": 1.2, "atk": 1.2, "def": 1.2, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": { "light": 0.3, "fire": 0.1 },
+      "description": "Celestialborn forged in solar flame, radiating intense heat and brilliance."
+    },
+
+    "duskwarden": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.2, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "holy": 0.2, "shadow": -0.1 },
+      "description": "Guardians of twilight who balance fading light with divine vigilance."
+    }
+
+  },
 
 }
