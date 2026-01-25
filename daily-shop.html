@@ -22,7 +22,7 @@
       margin-bottom:16px;
     }
 
-    #currencyDisplay {
+    #userShopGold {
       margin-bottom:12px;
       font-size:16px;
       color:#ffd27f;
@@ -132,136 +132,29 @@
   <h1>Daily Shop</h1>
   <div id="usernameDisplay"></div>
 
-  <div id="currencyDisplay"></div>
+  <button id="setTokenBtn" class="btn">Set GitHub Token</button>
+
+  <div style="margin-top:12px;">
+    Gold: <span id="userShopGold">0</span>
+  </div>
+
   <div id="timer"></div>
 
-  <div id="shopContainer">Loading...</div>
+  <div id="userShopContainer" style="margin-top:20px;">Loading...</div>
 
   <button class="btn" onclick="goToMap()">World Map</button>
   <button class="btn" onclick="goToInventory()">Inventory</button>
 
-  <script src="api.js"></script>
+  <script type="module">
+    import { initUserShopUI, promptForToken } from "./shop-ui.js";
 
-  <script>
     const username = sessionStorage.getItem("twitch_username");
     document.getElementById("usernameDisplay").textContent =
       username ? "Logged in as: " + username : "No user logged in";
 
-    let timerInterval = null;
+    document.getElementById("setTokenBtn").onclick = promptForToken;
 
-    loadShop();
-
-    /* ============================================================
-       LOAD SHOP
-       ============================================================ */
-    async function loadShop() {
-      const container = document.getElementById("shopContainer");
-      container.textContent = "Loading...";
-
-      try {
-        const data = await api.dailyShop.get(username);
-        renderShop(data);
-      } catch (err) {
-        container.textContent = "Error loading daily shop: " + err.message;
-      }
-    }
-
-    /* ============================================================
-       RENDER SHOP
-       ============================================================ */
-    function renderShop(data) {
-      const container = document.getElementById("shopContainer");
-      const currencyDisplay = document.getElementById("currencyDisplay");
-
-      currencyDisplay.textContent = `Your Gold: ${data.gold}`;
-
-      const expiresAt = new Date(data.expiresAt);
-      startTimer(expiresAt);
-
-      if (!data.items?.length) {
-        container.innerHTML = "<div>No items available.</div>";
-        return;
-      }
-
-      container.innerHTML = data.items
-        .map(item => {
-          const rarityClass = "rarity-" + item.rarity.toLowerCase();
-          return `
-            <div class="item-card">
-              <div class="item-info">
-                <div class="item-name ${rarityClass}">${item.name}</div>
-                <div class="item-desc">${item.description || ""}</div>
-                <div class="item-price">Price: ${item.price}</div>
-
-                <div class="tooltip">
-                  <strong>${item.name}</strong><br>
-                  Rarity: ${item.rarity}<br>
-                  ${item.bonuses ? formatBonuses(item.bonuses) : ""}
-                </div>
-              </div>
-
-              <div class="item-actions">
-                <button onclick="buyItem('${item.id}')">Buy</button>
-              </div>
-            </div>
-          `;
-        })
-        .join("");
-    }
-
-    /* ============================================================
-       BUY ITEM
-       ============================================================ */
-    async function buyItem(itemId) {
-      try {
-        const result = await api.dailyShop.buy(username, itemId);
-        alert(result.message || "Purchase complete.");
-        loadShop();
-      } catch (err) {
-        alert("Error purchasing item: " + err.message);
-      }
-    }
-
-    /* ============================================================
-       TIMER
-       ============================================================ */
-    function startTimer(expiresAt) {
-      if (timerInterval) clearInterval(timerInterval);
-
-      timerInterval = setInterval(() => {
-        const now = new Date();
-        const diff = expiresAt - now;
-
-        if (diff <= 0) {
-          document.getElementById("timer").textContent = "Shop has refreshed!";
-          clearInterval(timerInterval);
-          return;
-        }
-
-        const h = Math.floor(diff / 3600000);
-        const m = Math.floor((diff % 3600000) / 60000);
-        const s = Math.floor((diff % 60000) / 1000);
-
-        document.getElementById("timer").textContent =
-          `Refreshes in: ${h}h ${m}m ${s}s`;
-      }, 1000);
-    }
-
-    /* ============================================================
-       HELPERS
-       ============================================================ */
-    function formatBonuses(b) {
-      return Object.entries(b)
-        .map(([k, v]) => `${format(k)}: +${v}`)
-        .join("<br>");
-    }
-
-    function format(str) {
-      return String(str)
-        .toLowerCase()
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase());
-    }
+    initUserShopUI();
 
     function goToMap() {
       window.location.href = "world-map.html";
