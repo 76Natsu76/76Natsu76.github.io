@@ -1,20 +1,97 @@
 // REGION_MODIFIERS
 
-const REGION_BIOME_PRESETS = {
-  lowland:   { hpMult: 1.0, atkMult: 1.0, defMult: 1.0, speedMult: 1.0, elementAffinity: {} },
-  forest:    { hpMult: 1.05, atkMult: 1.0, defMult: 1.0, speedMult: 1.0, elementAffinity: { nature: 0.1 } },
-  swamp:     { hpMult: 1.1, atkMult: 0.95, defMult: 1.05, speedMult: 0.9, elementAffinity: { poison: 0.1 } },
-  desert:    { hpMult: 1.0, atkMult: 1.05, defMult: 0.95, speedMult: 1.05, elementAffinity: { fire: 0.05 } },
-  tundra:    { hpMult: 1.1, atkMult: 1.0, defMult: 1.05, speedMult: 0.9, elementAffinity: { ice: 0.1 } },
-  mountain:  { hpMult: 1.1, atkMult: 1.05, defMult: 1.1, speedMult: 0.9, elementAffinity: { earth: 0.1 } },
-  volcanic:  { hpMult: 1.0, atkMult: 1.1, defMult: 1.0, speedMult: 1.0, elementAffinity: { fire: 0.15 } },
-  coastal:   { hpMult: 1.0, atkMult: 1.0, defMult: 1.0, speedMult: 1.05, elementAffinity: { water: 0.1 } },
-  cavern:    { hpMult: 1.05, atkMult: 1.0, defMult: 1.1, speedMult: 0.95, elementAffinity: { earth: 0.05, shadow: 0.05 } },
-  ruins:     { hpMult: 1.0, atkMult: 1.05, defMult: 1.0, speedMult: 1.0, elementAffinity: { arcane: 0.05 } },
+const BIOME_PRESETS = {
+  forest:    { hpMult: 1.05, atkMult: 1.0,  defMult: 1.0,  speedMult: 1.0,  elementAffinity: { nature: 0.10 } },
+  plains:    { hpMult: 1.0,  atkMult: 1.05, defMult: 1.0,  speedMult: 1.05, elementAffinity: {} },
+  swamp:     { hpMult: 1.10, atkMult: 0.95, defMult: 1.05, speedMult: 0.9,  elementAffinity: { poison: 0.10 } },
+  desert:    { hpMult: 1.0,  atkMult: 1.10, defMult: 0.95, speedMult: 1.05, elementAffinity: { fire: 0.05 } },
+  tundra:    { hpMult: 1.10, atkMult: 1.0,  defMult: 1.05, speedMult: 0.9,  elementAffinity: { ice: 0.10 } },
+  mountains: { hpMult: 1.10, atkMult: 1.05, defMult: 1.10, speedMult: 0.9,  elementAffinity: { earth: 0.10 } },
+  cavern:    { hpMult: 1.05, atkMult: 1.0,  defMult: 1.10, speedMult: 0.95, elementAffinity: { earth: 0.05, shadow: 0.05 } },
+  ruins:     { hpMult: 1.0,  atkMult: 1.05, defMult: 1.0,  speedMult: 1.0,  elementAffinity: { arcane: 0.05 } },
+  coastal:   { hpMult: 1.0,  atkMult: 1.0,  defMult: 1.0,  speedMult: 1.05, elementAffinity: { water: 0.10 } },
+
+  volcanic:  { hpMult: 1.0,  atkMult: 1.15, defMult: 1.0,  speedMult: 1.0,  elementAffinity: { fire: 0.15 } },
   arcane:    { hpMult: 0.95, atkMult: 1.15, defMult: 0.95, speedMult: 1.05, elementAffinity: { arcane: 0.15 } },
-  celestial: { hpMult: 1.05, atkMult: 1.05, defMult: 1.05, speedMult: 1.0, elementAffinity: { light: 0.15 } },
-  void:      { hpMult: 1.05, atkMult: 1.1, defMult: 0.95, speedMult: 1.0, elementAffinity: { shadow: 0.15, void: 0.1 } },
-  primeval:  { hpMult: 1.15, atkMult: 1.05, defMult: 1.05, speedMult: 0.95, elementAffinity: { nature: 0.15 } }
+  celestial: { hpMult: 1.05, atkMult: 1.05, defMult: 1.05, speedMult: 1.0,  elementAffinity: { light: 0.15 } },
+  void:      { hpMult: 1.05, atkMult: 1.10, defMult: 0.95, speedMult: 1.0,  elementAffinity: { shadow: 0.15, void: 0.10 } },
+  primeval:  { hpMult: 1.15, atkMult: 1.05, defMult: 1.05, speedMult: 0.95, elementAffinity: { nature: 0.15 } },
+
+  storm:     { hpMult: 1.0,  atkMult: 1.10, defMult: 1.0,  speedMult: 1.10, elementAffinity: { lightning: 0.15 } },
+  abyssal:   { hpMult: 1.10, atkMult: 1.10, defMult: 1.0,  speedMult: 1.0,  elementAffinity: { shadow: 0.10, fire: 0.05 } },
+  astral:    { hpMult: 1.05, atkMult: 1.10, defMult: 1.0,  speedMult: 1.05, elementAffinity: { arcane: 0.10, light: 0.10 } }
+};
+
+const REGION_BIOMES = {
+  "forest-edge": "forest",
+  "deep-forest": "forest",
+  "plains-field": "plains",
+  "swamp-marsh": "swamp",
+  "crystal-pass": "mountains",
+  "cave-entrance": "cavern",
+  "ruins-outskirts": "ruins",
+  "desert-dunes": "desert",
+  "highland-cliffs": "mountains",
+  "volcano-rim": "volcanic",
+  "tundra-wastes": "tundra",
+  "mountain-peak": "mountains",
+  "void-realm": "void",
+  "astral-plane": "astral",
+  "abyss-gate": "abyssal",
+  "spirit-kingdom": "celestial",
+  "outcast-island": "coastal",
+  "trainers-city": "plains",
+  "titanfall": "mountains",
+
+  "verdant-woods": "forest",
+  "frostlands": "tundra",
+  "volcanic-wastes": "volcanic",
+  "azure-coast": "coastal",
+  "sunspire-highlands": "mountains",
+  "void-spire": "void",
+  "crystal-caverns": "cavern",
+  "highlands-of-thorne": "mountains",
+  "shattered-desert": "desert",
+  "abyssal-scar": "abyssal",
+  "arcane-riftlands": "arcane",
+  "primordial-grove": "primeval",
+  "celestial-expanse": "celestial",
+  "eternal-citadel": "celestial",
+  "worldbreaker-horizon": "void",
+  "astral-nexus": "astral",
+  "deep-caverns": "cavern",
+  "ruined-kingdom": "ruins",
+  "whispering-marsh": "swamp",
+  "stormbreaker-coast": "storm",
+  "emberforge-depths": "volcanic",
+  "crystalline-tundra": "tundra",
+  "abyssal-deep": "abyssal",
+
+  "forest": "forest",
+  "plains": "plains",
+  "cavern": "cavern",
+  "ruins": "ruins",
+  "swamp": "swamp",
+  "desert": "desert",
+  "tundra": "tundra",
+  "mountains": "mountains",
+
+  "verdant-wildwood": "forest",
+  "arcstone-enclave": "arcane",
+  "emberfang-ridge": "volcanic",
+  "void": "void",
+  "celestial": "celestial",
+  "arcane-rift": "arcane",
+  "stormforge-sanctum": "storm",
+  "molten-underdeep": "volcanic",
+  "shadow-labyrinth": "void",
+  "void-frontier": "void",
+  "radiant-ascension-spire": "celestial",
+  "seraphic-crucible": "celestial",
+  "elderwood-heart": "primeval",
+  "primeval-overgrowth": "primeval",
+  "celestial-horizon": "celestial",
+  "worlds-end-expanse": "void"
 };
 
 function clonePreset(key) {
@@ -27,104 +104,18 @@ function clonePreset(key) {
     elementAffinity: { ...(p.elementAffinity || {}) }
   } : { hpMult: 1, atkMult: 1, defMult: 1, speedMult: 1, elementAffinity: {} };
 }
-
-const REGION_MODIFIERS = {
-  // early game / base biomes
-  "forest-edge": clonePreset("forest"),
-  "deep-forest": clonePreset("forest"),
-  "plains-field": clonePreset("lowland"),
-  "swamp-marsh": clonePreset("swamp"),
-  "crystal-pass": clonePreset("mountain"),
-  "cave-entrance": clonePreset("cavern"),
-  "ruins-outskirts": clonePreset("ruins"),
-  "desert-dunes": clonePreset("desert"),
-  "highland-cliffs": clonePreset("mountain"),
-  "volcano-rim": clonePreset("volcanic"),
-  "tundra-wastes": clonePreset("tundra"),
-  "mountain-peak": clonePreset("mountain"),
-  "void-realm": clonePreset("void"),
-  "astral-plane": clonePreset("celestial"),
-  "abyss-gate": clonePreset("void"),
-  "spirit-kingdom": clonePreset("celestial"),
-  "outcast-island": clonePreset("coastal"),
-  "trainers-city": clonePreset("lowland"),
-  "titanfall": clonePreset("mountain"),
-
-  // mid / late regions
-  "verdant-woods": clonePreset("forest"),
-  "frostlands": clonePreset("tundra"),
-  "volcanic-wastes": clonePreset("volcanic"),
-  "azure-coast": clonePreset("coastal"),
-  "sunspire-highlands": clonePreset("mountain"),
-  "void-spire": clonePreset("void"),
-  "crystal-caverns": clonePreset("cavern"),
-  "highlands-of-thorne": clonePreset("mountain"),
-  "shattered-desert": clonePreset("desert"),
-  "abyssal-scar": clonePreset("void"),
-  "arcane-riftlands": clonePreset("arcane"),
-  "primordial-grove": clonePreset("primeval"),
-  "celestial-expanse": clonePreset("celestial"),
-  "eternal-citadel": clonePreset("celestial"),
-  "worldbreaker-horizon": clonePreset("void"),
-  "astral-nexus": clonePreset("celestial"),
-  "deep-caverns": clonePreset("cavern"),
-  "ruined-kingdom": clonePreset("ruins"),
-  "whispering-marsh": clonePreset("swamp"),
-  "stormbreaker-coast": clonePreset("coastal"),
-  "emberforge-depths": clonePreset("volcanic"),
-  "crystalline-tundra": clonePreset("tundra"),
-  "abyssal-deep": clonePreset("void"),
-
-  // generic biomes
-  "forest": clonePreset("forest"),
-  "plains": clonePreset("lowland"),
-  "cavern": clonePreset("cavern"),
-  "ruins": clonePreset("ruins"),
-  "swamp": clonePreset("swamp"),
-  "desert": clonePreset("desert"),
-  "tundra": clonePreset("tundra"),
-  "mountains": clonePreset("mountain"),
-
-  // high fantasy / late game
-  "verdant-wildwood": clonePreset("forest"),
-  "arcstone-enclave": clonePreset("arcane"),
-  "emberfang-ridge": clonePreset("volcanic"),
-  "void": clonePreset("void"),
-  "celestial": clonePreset("celestial"),
-  "arcane-rift": clonePreset("arcane"),
-  "stormforge-sanctum": (() => {
-    const p = clonePreset("volcanic");
-    p.atkMult += 0.05;
-    p.elementAffinity.light = (p.elementAffinity.light || 0) + 0.05;
-    p.elementAffinity.storm = 0.15;
-    return p;
-  })(),
-  "molten-underdeep": (() => {
-    const p = clonePreset("volcanic");
-    p.hpMult += 0.05;
-    p.defMult += 0.05;
-    p.elementAffinity.earth = (p.elementAffinity.earth || 0) + 0.05;
-    return p;
-  })(),
-  "shadow-labyrinth": (() => {
-    const p = clonePreset("ruins");
-    p.elementAffinity.shadow = (p.elementAffinity.shadow || 0) + 0.15;
-    return p;
-  })(),
-  "void-frontier": clonePreset("void"),
-  "radiant-ascension-spire": clonePreset("celestial"),
-  "seraphic-crucible": (() => {
-    const p = clonePreset("celestial");
-    p.atkMult += 0.05;
-    p.elementAffinity.fire = (p.elementAffinity.fire || 0) + 0.05;
-    return p;
-  })(),
-  "elderwood-heart": clonePreset("primeval"),
-  "primeval-overgrowth": clonePreset("primeval"),
-  "celestial-horizon": clonePreset("celestial"),
-  "worlds-end-expanse": clonePreset("void")
-};
-
+const REGION_MODIFIERS = Object.fromEntries(
+  Object.entries(REGION_BIOMES).map(([region, biome]) => {
+    const preset = BIOME_PRESETS[biome];
+    return [region, {
+      hpMult: preset.hpMult,
+      atkMult: preset.atkMult,
+      defMult: preset.defMult,
+      speedMult: preset.speedMult,
+      elementAffinity: { ...preset.elementAffinity }
+    }];
+  })
+);
 
 // PROFESSION_STAT_MODIFIERS
 
