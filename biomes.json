@@ -1,383 +1,1381 @@
 {
   "forest": {
     "name": "Forest",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The trees whisper as you pass.",
+      "Sunlight flickers through the leaves like dancing spirits.",
+      "A distant howl echoes through the canopy."
+    ],
+    "encounterWeights": {
+      "beast": 35,
+      "slimeborn": 15,
+      "plantfolk": 15,
+      "humanoid": 20,
+      "fae": 10,
+      "undead": 5
+    },
+    "hazards": [
+      { "key": "hidden_root_snare", "chance": 0.08 }
+    ],
+    "weatherPool": ["clear", "overcast", "rain"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.0,
+      "enemyDEFMult": 1.0,
+      "elementBias": { "nature": 0.10 },
+      "statusEffectChanceMult": 1.0,
+      "notes": "Dense foliage favors ambush predators and nature‑aligned magic."
+    }
   },
+
   "deep-forest": {
     "name": "Deep Forest",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The forest grows unnaturally quiet.",
+      "Ancient trees loom overhead, their roots twisting like veins.",
+      "You feel unseen eyes watching from the shadows."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "plantfolk": 20,
+      "fae": 20,
+      "undead": 10,
+      "spirit": 15,
+      "mythic_beast": 10
+    },
+    "hazards": [
+      { "key": "root_pitfall", "chance": 0.10 },
+      { "key": "bewitching_spores", "chance": 0.06 }
+    ],
+    "weatherPool": ["overcast", "rain", "fog"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "nature": 0.15, "dark": 0.05 },
+      "statusEffectChanceMult": 1.15,
+      "notes": "Ancient magic and thick undergrowth hinder movement but empower spirits and fae."
+    }
   },
+
   "wild-forest": {
     "name": "Wild Forest",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Untamed growth crowds the path ahead.",
+      "Bird calls and beast cries overlap in a chaotic chorus.",
+      "The forest feels alive, restless, and unpredictable."
+    ],
+    "encounterWeights": {
+      "beast": 40,
+      "beastkin": 15,
+      "slimeborn": 10,
+      "plantfolk": 15,
+      "chimera": 10,
+      "fae": 10
+    },
+    "hazards": [
+      { "key": "charging_beast", "chance": 0.09 }
+    ],
+    "weatherPool": ["clear", "rain", "storm"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.0,
+      "elementBias": { "nature": 0.15 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Unstable wildlife and overgrowth favor fast, aggressive creatures."
+    }
   },
+
   "ancient-forest": {
     "name": "Ancient Forest",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Colossal trees tower like living titans.",
+      "The air hums with ancient magic.",
+      "Roots twist into natural pathways beneath your feet."
+    ],
+    "encounterWeights": {
+      "plantfolk": 30,
+      "spirit": 20,
+      "fae": 20,
+      "mythic_beast": 15,
+      "elementalborn": 10,
+      "astralborn": 5
+    },
+    "hazards": [
+      { "key": "awakened_roots", "chance": 0.12 }
+    ],
+    "weatherPool": ["overcast", "rain", "mystic_fog"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "nature": 0.20, "arcane": 0.05 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Ancient magic and awakened flora empower spirits and plantfolk."
+    }
   },
+
   "eldergrove-depths": {
     "name": "Eldergrove Depths",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The forest floor is carpeted in luminous moss.",
+      "Whispers drift between the trees like half‑remembered prayers.",
+      "You feel as though you are walking through a memory older than the world."
+    ],
+    "encounterWeights": {
+      "spirit": 25,
+      "plantfolk": 25,
+      "fae": 20,
+      "mythic_beast": 15,
+      "mythic_undead": 10,
+      "astralborn": 5
+    },
+    "hazards": [
+      { "key": "spirit_drain", "chance": 0.10 }
+    ],
+    "weatherPool": ["mystic_fog", "soft_rain"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 1.1,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "nature": 0.2, "holy": 0.05, "dark": 0.05 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Spiritual resonance amplifies both healing and hexes."
+    }
   },
+
   "elderwood-heart": {
     "name": "Elderwood Heart",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "You stand where the forest’s lifeblood converges.",
+      "Every leaf seems to turn toward you in silent judgment.",
+      "The air is thick with the weight of countless seasons."
+    ],
+    "encounterWeights": {
+      "plantfolk": 30,
+      "spirit": 25,
+      "mythic_beast": 15,
+      "elementalborn": 10,
+      "mythic_undead": 10,
+      "divine_beast": 10
+    },
+    "hazards": [
+      { "key": "wrath_of_the_grove", "chance": 0.15 }
+    ],
+    "weatherPool": ["mystic_fog", "rain", "sunbeam_breaks"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.1,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "nature": 0.25, "holy": 0.05 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "The heart of the forest fiercely defends itself and its chosen guardians."
+    }
   },
+
   "primeval-overgrowth": {
     "name": "Primeval Overgrowth",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Vines as thick as trunks coil around ancient stone.",
+      "The air is heavy with the scent of sap and old storms.",
+      "You feel as though you’ve stepped into a world that never knew civilization."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "mythic_beast": 20,
+      "plantfolk": 20,
+      "chimera": 15,
+      "primordial": 10,
+      "titanborn": 10
+    },
+    "hazards": [
+      { "key": "collapsing_canopy", "chance": 0.12 },
+      { "key": "toxic_pollen_cloud", "chance": 0.08 }
+    ],
+    "weatherPool": ["humid", "storm", "overcast"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "nature": 0.2, "earth": 0.1 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Raw, ancient life energy empowers colossal beasts and primordial forces."
+    }
   },
 
   "plains": {
     "name": "Plains",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Wind sweeps across the open fields.",
+      "Tall grass rustles with hidden movement.",
+      "The horizon stretches endlessly in every direction."
+    ],
+    "encounterWeights": {
+      "beast": 40,
+      "humanoid": 25,
+      "beastkin": 15,
+      "slimeborn": 10,
+      "dragonkin": 5,
+      "mythic_beast": 5
+    },
+    "hazards": [
+      { "key": "stampede", "chance": 0.07 }
+    ],
+    "weatherPool": ["clear", "windy", "storm"],
+    "combatModifiers": {
+      "playerATKMult": 1.05,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 0.95,
+      "elementBias": { "wind": 0.1 },
+      "statusEffectChanceMult": 1.0,
+      "notes": "Open terrain favors mobility and ranged combat."
+    }
   },
+
   "open-steppe": {
     "name": "Open Steppe",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The sky feels impossibly vast above you.",
+      "Sparse shrubs cling to the dry soil.",
+      "Distant thunder rolls across the horizon."
+    ],
+    "encounterWeights": {
+      "beast": 35,
+      "humanoid": 20,
+      "beastkin": 15,
+      "dragonkin": 10,
+      "mythic_beast": 10,
+      "giantkin": 10
+    },
+    "hazards": [
+      { "key": "dust_storm", "chance": 0.1 }
+    ],
+    "weatherPool": ["clear", "windy", "dust_storm"],
+    "combatModifiers": {
+      "playerATKMult": 1.05,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 0.95,
+      "elementBias": { "wind": 0.1, "earth": 0.05 },
+      "statusEffectChanceMult": 1.05,
+      "notes": "Harsh winds and open ground reward endurance and long‑range tactics."
+    }
   },
+
   "plateau": {
     "name": "Plateau",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Wind sweeps across the high flatlands.",
+      "The sky feels impossibly close.",
+      "You hear distant thunder rolling across the plains below."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "giantkin": 20,
+      "titanborn": 10,
+      "humanoid": 20,
+      "elementalborn": 15,
+      "dragon": 10
+    },
+    "hazards": [
+      { "key": "sheer_drop", "chance": 0.08 }
+    ],
+    "weatherPool": ["clear", "storm", "windy"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "storm": 0.1, "wind": 0.1 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "High altitude and storms empower storm‑aligned and giant‑blooded foes."
+    }
   },
 
   "swamp": {
     "name": "Swamp",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Thick fog clings to the stagnant water.",
+      "The air reeks of decay and rot.",
+      "Something bubbles beneath the murky surface."
+    ],
+    "encounterWeights": {
+      "undead": 30,
+      "beast": 20,
+      "slimeborn": 15,
+      "plantfolk": 10,
+      "parasite": 10,
+      "amorphous": 15
+    },
+    "hazards": [
+      { "key": "sinking_mire", "chance": 0.12 }
+    ],
+    "weatherPool": ["fog", "rain", "overcast"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "poison": 0.15, "water": 0.1 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Rot and stagnant water favor poison, disease, and attrition tactics."
+    }
   },
+
   "drowned-marsh": {
     "name": "Drowned Marsh",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Waterlogged ground squelches beneath every step.",
+      "Rotting trees jut from the murky water like broken teeth.",
+      "The air is thick with the buzz of unseen insects."
+    ],
+    "encounterWeights": {
+      "undead": 35,
+      "beast": 25,
+      "amorphous": 20,
+      "parasite": 10,
+      "slimeborn": 10
+    },
+    "hazards": [
+      { "key": "bog_sinkhole", "chance": 0.12 }
+    ],
+    "weatherPool": ["fog", "rain"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "water": 0.1, "poison": 0.1 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Murky waters amplify poison and hinder movement."
+    }
   },
+
   "whispering-marsh": {
     "name": "Whispering Marsh",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Voices drift across the water, never quite forming words.",
+      "Pale lights flicker in the distance, luring the unwary.",
+      "Every ripple feels like something watching from below."
+    ],
+    "encounterWeights": {
+      "spirit": 25,
+      "undead": 25,
+      "parasite": 15,
+      "amorphous": 15,
+      "fae": 10,
+      "mythic_undead": 10
+    },
+    "hazards": [
+      { "key": "will_o_wisp_lure", "chance": 0.1 }
+    ],
+    "weatherPool": ["fog", "mystic_fog", "rain"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "water": 0.1, "dark": 0.1 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Illusory lights and spectral whispers disorient intruders."
+    }
   },
 
   "desert": {
     "name": "Desert",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Heat radiates from the endless dunes.",
+      "The sun beats down mercilessly.",
+      "Wind carries grains of sand like tiny blades."
+    ],
+    "encounterWeights": {
+      "beast": 30,
+      "humanoid": 25,
+      "elementalborn": 15,
+      "undead": 10,
+      "dragonkin": 10,
+      "construct": 10
+    },
+    "hazards": [
+      { "key": "sandstorm", "chance": 0.12 }
+    ],
+    "weatherPool": ["clear", "heatwave", "sandstorm"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.0,
+      "elementBias": { "fire": 0.1, "earth": 0.1 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Harsh heat and shifting sands favor hardy and burrowing foes."
+    }
   },
+
   "sunscorched-dunes": {
     "name": "Sunscorched Dunes",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The air shimmers with oppressive heat.",
+      "Bones bleach quickly beneath the relentless sun.",
+      "Every dune looks like the last, stretching into infinity."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "undead": 20,
+      "elementalborn": 20,
+      "dragonkin": 15,
+      "mythic_beast": 10,
+      "primordial": 10
+    },
+    "hazards": [
+      { "key": "blinding_sunflare", "chance": 0.1 }
+    ],
+    "weatherPool": ["heatwave", "clear"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "fire": 0.15, "light": 0.05 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Extreme heat saps stamina and empowers fire‑aligned foes."
+    }
   },
+
   "shattered-desert": {
     "name": "Shattered Desert",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Jagged glass and cracked stone litter the sands.",
+      "The land looks as if it was once shattered by some colossal force.",
+      "Heat rises from fissures that never cool."
+    ],
+    "encounterWeights": {
+      "elementalborn": 25,
+      "construct": 20,
+      "primordial": 20,
+      "dragon": 15,
+      "mythic_beast": 10,
+      "chaosborn": 10
+    },
+    "hazards": [
+      { "key": "glass_shard_field", "chance": 0.12 }
+    ],
+    "weatherPool": ["heatwave", "storm", "ashfall"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "fire": 0.15, "earth": 0.1, "chaos": 0.05 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "A scarred desert where elemental and chaotic forces still linger."
+    }
   },
+
   "void-wastes": {
     "name": "Void Wastes",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The sand here seems to swallow light.",
+      "Shadows stretch in impossible directions.",
+      "The air hums with a low, unsettling resonance."
+    ],
+    "encounterWeights": {
+      "voidborn": 30,
+      "anomaly": 20,
+      "eldritch": 20,
+      "aberration": 15,
+      "outer_god": 10,
+      "mythic_undead": 5
+    },
+    "hazards": [
+      { "key": "void_rift", "chance": 0.15 }
+    ],
+    "weatherPool": ["void_storm", "dark_overcast"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "void": 0.25, "dark": 0.1 },
+      "statusEffectChanceMult": 1.35,
+      "notes": "Reality is thin and hostile, favoring void‑aligned horrors."
+    }
   },
 
   "tundra": {
     "name": "Tundra",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "A biting wind cuts through your armor.",
+      "Snow crunches beneath your boots.",
+      "The world is silent beneath a blanket of frost."
+    ],
+    "encounterWeights": {
+      "beast": 30,
+      "mythic_beast": 10,
+      "undead": 15,
+      "giantkin": 15,
+      "titanborn": 10,
+      "elementalborn": 20
+    },
+    "hazards": [
+      { "key": "whiteout_blizzard", "chance": 0.1 }
+    ],
+    "weatherPool": ["snow", "blizzard", "clear_cold"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "ice": 0.2 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Cold saps strength and favors frost‑aligned creatures."
+    }
   },
+
   "frozen-expanse": {
     "name": "Frozen Expanse",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The horizon is a seamless sheet of ice and sky.",
+      "Your breath crystallizes instantly in the air.",
+      "Every sound feels muffled by the endless snow."
+    ],
+    "encounterWeights": {
+      "elementalborn": 25,
+      "mythic_beast": 15,
+      "titanborn": 15,
+      "giantkin": 15,
+      "mythic_undead": 15,
+      "dragon": 15
+    },
+    "hazards": [
+      { "key": "ice_crack_collapse", "chance": 0.12 }
+    ],
+    "weatherPool": ["blizzard", "snow", "clear_cold"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "ice": 0.25, "wind": 0.05 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Extreme cold and unstable ice favor massive and frost‑aligned foes."
+    }
   },
+
   "crystalline-tundra": {
     "name": "Crystalline Tundra",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Shards of ice jut from the ground like glass spires.",
+      "Light refracts into cold, shimmering rainbows.",
+      "Each step crunches over frost‑coated crystal."
+    ],
+    "encounterWeights": {
+      "elementalborn": 30,
+      "construct": 15,
+      "mythic_beast": 15,
+      "astralborn": 10,
+      "primordial": 15,
+      "dragon": 15
+    },
+    "hazards": [
+      { "key": "shattering_ice_spike", "chance": 0.1 }
+    ],
+    "weatherPool": ["clear_cold", "snow", "crystal_glow"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "ice": 0.25, "arcane": 0.1 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Crystalline resonance amplifies both frost and arcane energies."
+    }
   },
 
   "highlands": {
     "name": "Highlands",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Cold winds sweep across the rocky cliffs.",
+      "Thunder rumbles in the distance.",
+      "The air is thin but invigorating."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "giantkin": 20,
+      "titanborn": 10,
+      "humanoid": 20,
+      "dragonkin": 15,
+      "elementalborn": 10
+    },
+    "hazards": [
+      { "key": "rockslide", "chance": 0.1 }
+    ],
+    "weatherPool": ["clear", "storm", "windy"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "storm": 0.1, "earth": 0.1 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Steep terrain and storms favor large and storm‑touched foes."
+    }
   },
+
   "storm-highlands": {
     "name": "Storm Highlands",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Lightning dances across distant peaks.",
+      "Thunder feels close enough to touch.",
+      "The wind howls like a living thing."
+    ],
+    "encounterWeights": {
+      "titanborn": 20,
+      "giantkin": 20,
+      "elementalborn": 20,
+      "dragon": 15,
+      "mythic_beast": 15,
+      "primordial": 10
+    },
+    "hazards": [
+      { "key": "lightning_strike", "chance": 0.12 }
+    ],
+    "weatherPool": ["storm", "thunderclouds", "windy"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "storm": 0.25, "electric": 0.15 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Relentless storms empower thunder and lightning‑aligned entities."
+    }
   },
+
   "mountain-peak": {
     "name": "Mountain Peak",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The air is thin and frigid.",
+      "Clouds swirl below your vantage point.",
+      "A fierce wind threatens to push you back."
+    ],
+    "encounterWeights": {
+      "dragon": 25,
+      "mythic_beast": 20,
+      "giantkin": 15,
+      "titanborn": 15,
+      "elementalborn": 15,
+      "celestial": 10
+    },
+    "hazards": [
+      { "key": "sudden_gale", "chance": 0.1 }
+    ],
+    "weatherPool": ["clear_cold", "storm", "snow"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "wind": 0.2, "ice": 0.1 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "High altitude and fierce winds favor flying and colossal foes."
+    }
   },
+
   "mountain": {
     "name": "Mountain",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Jagged cliffs tower above you.",
+      "Loose stones shift underfoot.",
+      "A cold wind whistles through narrow passes."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "giantkin": 20,
+      "construct": 10,
+      "dragonkin": 15,
+      "elementalborn": 15,
+      "titanborn": 15
+    },
+    "hazards": [
+      { "key": "falling_rocks", "chance": 0.1 }
+    ],
+    "weatherPool": ["clear", "windy", "snow"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "earth": 0.15, "wind": 0.05 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Treacherous footing and narrow ledges favor sure‑footed and massive foes."
+    }
   },
 
   "volcano": {
     "name": "Volcano",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Ash falls like snow around you.",
+      "Molten cracks glow beneath your feet.",
+      "The air shimmers with intense heat."
+    ],
+    "encounterWeights": {
+      "elementalborn": 25,
+      "demonborn": 20,
+      "construct": 15,
+      "dragon": 20,
+      "primordial": 10,
+      "chaosborn": 10
+    },
+    "hazards": [
+      { "key": "lava_surge", "chance": 0.12 }
+    ],
+    "weatherPool": ["ashfall", "heatwave"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "fire": 0.3, "earth": 0.1 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Volcanic fury empowers fire and magma‑aligned entities."
+    }
   },
+
   "molten-crest": {
     "name": "Molten Crest",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Rivers of lava carve glowing paths through black stone.",
+      "The ground trembles with each distant eruption.",
+      "Heat distorts the air into wavering mirages."
+    ],
+    "encounterWeights": {
+      "elementalborn": 30,
+      "demonborn": 20,
+      "construct": 15,
+      "dragon": 20,
+      "primordial": 10,
+      "titanborn": 5
+    },
+    "hazards": [
+      { "key": "lava_eruption", "chance": 0.15 }
+    ],
+    "weatherPool": ["ashfall", "heatwave", "ember_rain"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "fire": 0.35, "chaos": 0.1 },
+      "statusEffectChanceMult": 1.35,
+      "notes": "An apex volcanic biome where only the most heat‑forged beings thrive."
+    }
   },
+
   "magma": {
     "name": "Magma Fields",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Lava bubbles dangerously close.",
+      "Heat distorts the air around you.",
+      "The ground trembles with volcanic fury."
+    ],
+    "encounterWeights": {
+      "elementalborn": 30,
+      "construct": 20,
+      "demonborn": 20,
+      "dragon": 15,
+      "primordial": 15
+    },
+    "hazards": [
+      { "key": "magma_burst", "chance": 0.12 }
+    ],
+    "weatherPool": ["ashfall", "heatwave"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "fire": 0.3 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Unstable magma flows punish missteps and reward fire‑aligned resilience."
+    }
   },
 
   "cave": {
     "name": "Cave",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Dripping water echoes in the darkness.",
+      "The air is cold and stale.",
+      "Shadows twist unnaturally along the cavern walls."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "slimeborn": 20,
+      "undead": 15,
+      "insectoids": 20,
+      "arachnids": 15,
+      "construct": 5
+    },
+    "hazards": [
+      { "key": "ceiling_collapse", "chance": 0.1 }
+    ],
+    "weatherPool": ["stale_air", "dripping_echoes"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "dark": 0.1, "earth": 0.1 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Tight spaces favor ambush predators and burrowing creatures."
+    }
   },
+
   "crystal-cave": {
     "name": "Crystal Cave",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Crystals hum with faint arcane resonance.",
+      "Light refracts into shimmering patterns.",
+      "Your footsteps echo like chimes."
+    ],
+    "encounterWeights": {
+      "construct": 20,
+      "elementalborn": 20,
+      "spirit": 15,
+      "aberration": 15,
+      "eldritch": 10,
+      "astralborn": 20
+    },
+    "hazards": [
+      { "key": "crystal_resonance_burst", "chance": 0.1 }
+    ],
+    "weatherPool": ["arcane_glow"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "arcane": 0.25, "light": 0.05 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Crystalline resonance amplifies spells and psionic effects."
+    }
   },
+
   "prism-caverns": {
     "name": "Prism Caverns",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Prismatic light fractures across every surface.",
+      "Shifting colors make it hard to judge distance.",
+      "The air vibrates with a low, harmonic tone."
+    ],
+    "encounterWeights": {
+      "astralborn": 25,
+      "construct": 20,
+      "elementalborn": 20,
+      "eldritch": 15,
+      "aberration": 10,
+      "meta_entity": 10
+    },
+    "hazards": [
+      { "key": "prismatic_beam", "chance": 0.12 }
+    ],
+    "weatherPool": ["arcane_glow", "color_shift"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "arcane": 0.3, "light": 0.1 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Prismatic energies warp perception and empower spellcasters."
+    }
   },
+
   "underdeep": {
     "name": "Underdeep",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The tunnels stretch endlessly in all directions.",
+      "Faint vibrations hint at movement below.",
+      "The darkness feels thick enough to touch."
+    ],
+    "encounterWeights": {
+      "aberration": 25,
+      "eldritch": 20,
+      "insectoids": 20,
+      "arachnids": 15,
+      "undead": 10,
+      "mythic_undead": 10
+    },
+    "hazards": [
+      { "key": "cave_in", "chance": 0.12 }
+    ],
+    "weatherPool": ["stale_air", "echoing_void"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "dark": 0.2, "earth": 0.1 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Deep subterranean pressure and darkness favor aberrant and undead forces."
+    }
   },
+
   "subterranean": {
     "name": "Subterranean",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Moisture drips from the stone ceiling.",
+      "The air is cool and still.",
+      "You feel the weight of the world pressing down from above."
+    ],
+    "encounterWeights": {
+      "insectoids": 25,
+      "arachnids": 20,
+      "slimeborn": 15,
+      "undead": 15,
+      "construct": 10,
+      "aberration": 15
+    },
+    "hazards": [
+      { "key": "unstable_tunnel", "chance": 0.1 }
+    ],
+    "weatherPool": ["stale_air"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "earth": 0.15, "dark": 0.1 },
+      "statusEffectChanceMult": 1.15,
+      "notes": "Confined tunnels favor burrowing and ambush‑oriented creatures."
+    }
   },
+
   "deep-caverns": {
     "name": "Deep Caverns",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "You descend into depths where light feels like an intruder.",
+      "Strange echoes answer your every sound.",
+      "The stone here feels older than memory."
+    ],
+    "encounterWeights": {
+      "eldritch": 25,
+      "aberration": 25,
+      "mythic_undead": 15,
+      "voidborn": 15,
+      "anomaly": 10,
+      "outer_god": 10
+    },
+    "hazards": [
+      { "key": "reality_fracture", "chance": 0.12 }
+    ],
+    "weatherPool": ["echoing_void"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "dark": 0.2, "void": 0.2 },
+      "statusEffectChanceMult": 1.35,
+      "notes": "The deepest caverns brush against the void, warping both stone and sanity."
+    }
   },
 
   "ruins": {
     "name": "Ruins",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Broken stone structures hint at a forgotten age.",
+      "Dust swirls through collapsed hallways.",
+      "Faded carvings watch you with empty eyes."
+    ],
+    "encounterWeights": {
+      "undead": 25,
+      "construct": 20,
+      "humanoid": 20,
+      "spirit": 15,
+      "mimic": 10,
+      "mythic_undead": 10
+    },
+    "hazards": [
+      { "key": "collapsing_archway", "chance": 0.1 }
+    ],
+    "weatherPool": ["overcast", "dusty"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "dark": 0.1, "arcane": 0.05 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Echoes of past civilizations empower lingering spirits and guardians."
+    }
   },
+
   "forgotten-ruins": {
     "name": "Forgotten Ruins",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Vines and moss reclaim once‑grand structures.",
+      "Strange glyphs glow faintly beneath the overgrowth.",
+      "You feel history pressing in from every direction."
+    ],
+    "encounterWeights": {
+      "mythic_undead": 20,
+      "construct": 20,
+      "spirit": 20,
+      "forgotten_race": 15,
+      "aberration": 15,
+      "mythic_beast": 10
+    },
+    "hazards": [
+      { "key": "arcane_trap", "chance": 0.12 }
+    ],
+    "weatherPool": ["overcast", "mystic_fog"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "arcane": 0.15, "dark": 0.1 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Ancient wards and curses still cling to these long‑abandoned halls."
+    }
   },
+
   "ruined-kingdom": {
     "name": "Ruined Kingdom",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Crumbling towers pierce a sky heavy with memory.",
+      "Broken banners flutter in a wind that smells of dust.",
+      "You walk streets where no living crowd has gathered in ages."
+    ],
+    "encounterWeights": {
+      "mythic_undead": 25,
+      "construct": 20,
+      "spirit": 20,
+      "paragon": 10,
+      "forgotten_race": 15,
+      "mythic_beast": 10
+    },
+    "hazards": [
+      { "key": "collapsing_spire", "chance": 0.12 }
+    ],
+    "weatherPool": ["overcast", "storm", "mournful_wind"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "dark": 0.15, "holy": 0.05 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "A fallen empire’s echoes empower its lingering champions and cursed royalty."
+    }
   },
 
   "coastal": {
     "name": "Coastal",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Waves crash rhythmically against the shore.",
+      "Salt fills the air.",
+      "Seabirds cry overhead."
+    ],
+    "encounterWeights": {
+      "beast": 30,
+      "slimeborn": 15,
+      "elementalborn": 15,
+      "humanoid": 20,
+      "mythic_beast": 10,
+      "cosmic_fauna": 10
+    },
+    "hazards": [
+      { "key": "rogue_wave", "chance": 0.08 }
+    ],
+    "weatherPool": ["clear", "rain", "storm"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.0,
+      "elementBias": { "water": 0.2, "wind": 0.05 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Shifting tides and slick rocks favor agile and aquatic foes."
+    }
   },
 
   "arcane": {
     "name": "Arcane",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Mana crackles in the air like static.",
+      "Arcane glyphs glow faintly beneath your feet.",
+      "Reality feels thin and malleable."
+    ],
+    "encounterWeights": {
+      "elementalborn": 25,
+      "astralborn": 20,
+      "eldritch": 15,
+      "construct": 15,
+      "spiritborn": 15,
+      "metaphysical_phenomenon": 10
+    },
+    "hazards": [
+      { "key": "mana_surge", "chance": 0.12 }
+    ],
+    "weatherPool": ["arcane_glow", "mana_storm"],
+    "combatModifiers": {
+      "playerATKMult": 1.05,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "arcane": 0.3 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Unstable magic amplifies spells and can backfire spectacularly."
+    }
   },
+
   "arcane-rift": {
     "name": "Arcane Rift",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Rents in reality leak raw mana into the air.",
+      "Floating shards of stone orbit invisible centers.",
+      "Your thoughts feel louder here, as if the world is listening."
+    ],
+    "encounterWeights": {
+      "astralborn": 25,
+      "eldritch": 20,
+      "anomaly": 15,
+      "metaphysical_phenomenon": 20,
+      "outer_god": 10,
+      "planar_entity": 10
+    },
+    "hazards": [
+      { "key": "rift_collapse", "chance": 0.15 }
+    ],
+    "weatherPool": ["mana_storm", "arcane_glow"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "arcane": 0.35, "void": 0.1 },
+      "statusEffectChanceMult": 1.35,
+      "notes": "Rifts tear at causality, empowering entities from beyond the normal planes."
+    }
   },
 
   "corrupted": {
     "name": "Corrupted Lands",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The ground pulses with sickly energy.",
+      "Corrupted flora writhes as you pass.",
+      "A foul stench permeates the air."
+    ],
+    "encounterWeights": {
+      "undead": 25,
+      "aberration": 20,
+      "eldritch": 20,
+      "parasite": 15,
+      "voidborn": 10,
+      "chaosborn": 10
+    },
+    "hazards": [
+      { "key": "corruption_bloom", "chance": 0.12 }
+    ],
+    "weatherPool": ["miasma_fog", "dark_overcast"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "poison": 0.2, "dark": 0.2 },
+      "statusEffectChanceMult": 1.4,
+      "notes": "Corruption twists both land and life, favoring decay and madness."
+    }
   },
+
   "void": {
     "name": "Voidlands",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "The land is twisted by void corruption.",
+      "Shadows move independently of the light.",
+      "A low hum vibrates through your bones."
+    ],
+    "encounterWeights": {
+      "voidborn": 30,
+      "eldritch": 20,
+      "anomaly": 20,
+      "outer_god": 10,
+      "aberration": 15,
+      "mythic_undead": 5
+    },
+    "hazards": [
+      { "key": "void_pulse", "chance": 0.15 }
+    ],
+    "weatherPool": ["void_storm", "dark_overcast"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "void": 0.3, "dark": 0.1 },
+      "statusEffectChanceMult": 1.4,
+      "notes": "Void saturation erodes sanity and empowers entities from beyond."
+    }
   },
+
   "void-realm": {
     "name": "Void Realm",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Reality bends at the edges of your vision.",
+      "Whispers claw at your mind from unseen places.",
+      "Colors shift in impossible ways."
+    ],
+    "encounterWeights": {
+      "voidborn": 30,
+      "outer_god": 20,
+      "anomaly": 20,
+      "eldritch": 15,
+      "planar_entity": 10,
+      "paradox_god": 5
+    },
+    "hazards": [
+      { "key": "reality_inversion", "chance": 0.18 }
+    ],
+    "weatherPool": ["void_storm", "color_shift"],
+    "combatModifiers": {
+      "playerATKMult": 0.85,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.2,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "void": 0.35, "chaos": 0.15 },
+      "statusEffectChanceMult": 1.5,
+      "notes": "Pure voidspace where causality frays and only the impossible thrives."
+    }
   },
 
   "astral-plane": {
     "name": "Astral Plane",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Stars swirl beneath your feet.",
+      "Gravity feels optional here.",
+      "Your thoughts echo like distant bells."
+    ],
+    "encounterWeights": {
+      "astralborn": 30,
+      "planar_entity": 20,
+      "cosmic_fauna": 20,
+      "outer_god": 10,
+      "metaphysical_phenomenon": 10,
+      "celestial": 10
+    },
+    "hazards": [
+      { "key": "gravity_flux", "chance": 0.12 }
+    ],
+    "weatherPool": ["starlight_surge", "cosmic_wind"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "arcane": 0.2, "cosmic": 0.2 },
+      "statusEffectChanceMult": 1.3,
+      "notes": "Astral tides warp movement and empower beings of starlight and thought."
+    }
   },
+
   "astral-nexus": {
     "name": "Astral Nexus",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Converging star‑paths knot together in luminous strands.",
+      "You feel countless worlds brushing against your awareness.",
+      "Every breath tastes like distant constellations."
+    ],
+    "encounterWeights": {
+      "astralborn": 25,
+      "outer_god": 15,
+      "planar_entity": 20,
+      "cosmic_fauna": 15,
+      "meta_entity": 15,
+      "multiversal_paragon": 10
+    },
+    "hazards": [
+      { "key": "starfall_convergence", "chance": 0.18 }
+    ],
+    "weatherPool": ["cosmic_wind", "starlight_surge", "reality_glimmer"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.2,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "cosmic": 0.3, "arcane": 0.2 },
+      "statusEffectChanceMult": 1.5,
+      "notes": "A convergence point of multiversal paths where only the most transcendent beings gather."
+    }
   },
 
   "abyss": {
     "name": "Abyss",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "Darkness stretches infinitely downward.",
+      "The air feels heavy with dread.",
+      "You sense something ancient stirring below."
+    ],
+    "encounterWeights": {
+      "fiend": 30,
+      "demonborn": 25,
+      "mythic_undead": 15,
+      "eldritch": 15,
+      "voidborn": 10,
+      "outer_god": 5
+    },
+    "hazards": [
+      { "key": "bottomless_chasm", "chance": 0.15 }
+    ],
+    "weatherPool": ["suffocating_darkness"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "dark": 0.3, "fire": 0.1 },
+      "statusEffectChanceMult": 1.4,
+      "notes": "The abyss devours light and hope, empowering fiends and ancient horrors."
+    }
   },
+
   "abyssal-deep": {
     "name": "Abyssal Deep",
-    "flavor": [],
-    "encounterWeights": {},
-    "hazards": [],
-    "weatherPool": [],
-    "combatModifiers": {}
+    "flavor": [
+      "You stand at the edge of an endless drop.",
+      "The darkness below feels hungry.",
+      "Every instinct screams at you to turn back."
+    ],
+    "encounterWeights": {
+      "fiend": 25,
+      "outer_god": 20,
+      "paradox_god": 10,
+      "eldritch": 20,
+      "voidborn": 15,
+      "mythic_undead": 10
+    },
+    "hazards": [
+      { "key": "abyssal_pull", "chance": 0.2 }
+    ],
+    "weatherPool": ["suffocating_darkness", "void_storm"],
+    "combatModifiers": {
+      "playerATKMult": 0.85,
+      "playerDEFMult": 0.85,
+      "enemyATKMult": 1.2,
+      "enemyDEFMult": 1.2,
+      "elementBias": { "dark": 0.35, "void": 0.25 },
+      "statusEffectChanceMult": 1.6,
+      "notes": "The deepest reaches of the abyss, where even gods fear to gaze."
+    }
   }
 }
