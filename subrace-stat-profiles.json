@@ -2063,4 +2063,270 @@
       "description": "A titan infused with stellar power, walking between worlds."
     }
   },
+
+  "outer_god": {
+
+    "the_dreamer_outside_time": {
+      "growth": { "hp": 2.0, "atk": 1.8, "def": 1.8, "speed": 1.4, "mana": 2.0 },
+      "elementAffinity": { "void": 0.3, "arcane": 0.2 },
+      "description": "A slumbering cosmic entity whose dreams shape timelines and destinies."
+    },
+
+    "the_all_seeing_paradox": {
+      "growth": { "hp": 1.9, "atk": 1.7, "def": 1.7, "speed": 1.6, "mana": 2.1 },
+      "elementAffinity": { "psychic": 0.3, "arcane": 0.1 },
+      "description": "A being that perceives all possible realities simultaneously."
+    },
+
+    "the_star_that_should_not_burn": {
+      "growth": { "hp": 2.1, "atk": 1.9, "def": 1.8, "speed": 1.3, "mana": 2.0 },
+      "elementAffinity": { "light": 0.2, "void": 0.2 },
+      "description": "A forbidden star‑god whose radiance unravels the laws of physics."
+    },
+
+    "the_unspoken_truth": {
+      "growth": { "hp": 1.8, "atk": 1.7, "def": 1.6, "speed": 1.5, "mana": 2.2 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A cosmic whisper that drives mortals to madness with forbidden knowledge."
+    },
+
+    "the_first_darkness": {
+      "growth": { "hp": 2.0, "atk": 1.9, "def": 1.9, "speed": 1.2, "mana": 2.0 },
+      "elementAffinity": { "dark": 0.3, "void": 0.1 },
+      "description": "The primordial shadow that existed before creation itself."
+    }
+  },
+
+  {
+  "planar_entity": {
+
+    "ember_djinn": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.2, "speed": 1.3, "mana": 1.7 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "A fiery spirit of the Ember Plane, granting boons or unleashing infernos."
+    },
+
+    "astral_leviathan": {
+      "growth": { "hp": 1.7, "atk": 1.5, "def": 1.6, "speed": 1.2, "mana": 1.8 },
+      "elementAffinity": { "arcane": 0.2, "void": 0.1 },
+      "description": "A colossal astral serpent that swims through the fabric of reality."
+    },
+
+    "shadow_court_noble": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.3, "speed": 1.4, "mana": 1.6 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "A regal being from the Shadow Realm, weaving illusions and secrets."
+    },
+
+    "dreamweaver": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.1, "speed": 1.5, "mana": 1.8 },
+      "elementAffinity": { "psychic": 0.3 },
+      "description": "A creature of the Dreamscape that shapes nightmares and fantasies."
+    },
+
+    "etheric_serpent": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.4, "mana": 1.7 },
+      "elementAffinity": { "wind": 0.1, "arcane": 0.2 },
+      "description": "A serpentine being woven from pure ether and shimmering currents."
+    }
+  },
+
+  "anomaly": {
+
+    "time_fracture": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.2, "speed": 1.6, "mana": 1.8 },
+      "elementAffinity": { "arcane": 0.1, "void": 0.1 },
+      "description": "A creature existing in multiple timelines simultaneously."
+    },
+
+    "probability_beast": {
+      "growth": { "hp": 1.2, "atk": 1.5, "def": 1.1, "speed": 1.5, "mana": 1.7 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "A being whose form changes based on random chance."
+    },
+
+    "dimensional_echo": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.7, "mana": 1.6 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A glitching copy of something that may or may not exist."
+    },
+
+    "plink": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.0, "speed": 1.8, "mana": 1.8 },
+      "elementAffinity": { "chaos": 0.1, "arcane": 0.1 },
+      "description": "A small, inexplicable creature that appears, makes a noise, and vanishes."
+    },
+
+    "funny_sthreeven_man": {
+      "growth": { "hp": 1.4, "atk": 1.6, "def": 1.2, "speed": 1.4, "mana": 1.5 },
+      "elementAffinity": { "chaos": 0.2 },
+      "description": "A bizarre humanoid anomaly whose behavior defies logic and physics."
+    },
+
+    "the_unrendered": {
+      "growth": { "hp": 1.3, "atk": 1.5, "def": 1.0, "speed": 1.6, "mana": 1.7 },
+      "elementAffinity": { "void": 0.2 },
+      "description": "A creature that never fully loads into reality, flickering in and out."
+    }
+  },
+
+  "legendary_boss_template": {
+
+    "world_boss": {
+      "statMultiplier": { "hp": 3.0, "atk": 2.0, "def": 2.0, "speed": 1.2, "mana": 2.0 },
+      "description": "A massive boss that influences an entire region and requires multiple players to defeat."
+    },
+
+    "raid_boss": {
+      "statMultiplier": { "hp": 4.0, "atk": 2.5, "def": 2.5, "speed": 1.3, "mana": 2.5 },
+      "description": "A coordinated multi‑phase encounter designed for large groups."
+    },
+
+    "mythic_avatar": {
+      "statMultiplier": { "hp": 3.5, "atk": 2.3, "def": 2.3, "speed": 1.4, "mana": 2.6 },
+      "description": "A manifestation of a higher power, wielding devastating abilities."
+    },
+
+    "cataclysmic_entity": {
+      "statMultiplier": { "hp": 5.0, "atk": 3.0, "def": 3.0, "speed": 1.2, "mana": 3.0 },
+      "description": "A world‑ending threat whose defeat alters the course of history."
+    },
+
+    "seasonal_titan": {
+      "statMultiplier": { "hp": 3.2, "atk": 2.1, "def": 2.1, "speed": 1.3, "mana": 2.2 },
+      "description": "A recurring boss tied to seasonal events and limited‑time challenges."
+    }
+  },
+
+  "paragon": {
+
+    "paragon_humanoid": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.4, "speed": 1.4, "mana": 1.4 },
+      "elementAffinity": {},
+      "description": "A mortal who has reached the absolute peak of physical and spiritual potential."
+    },
+
+    "paragon_dragon": {
+      "growth": { "hp": 2.0, "atk": 1.8, "def": 1.8, "speed": 1.5, "mana": 1.9 },
+      "elementAffinity": { "arcane": 0.2, "light": 0.1, "fire": 0.1 },
+      "description": "A dragon that has transcended its elemental nature to embody pure draconic perfection."
+    },
+
+    "paragon_fae": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.2, "speed": 1.7, "mana": 1.8 },
+      "elementAffinity": { "illusion": 0.3 },
+      "description": "A fae whose glamour and magic have reached divine levels of beauty and deception."
+    },
+
+    "paragon_construct": {
+      "growth": { "hp": 1.8, "atk": 1.6, "def": 1.8, "speed": 1.3, "mana": 1.5 },
+      "elementAffinity": { "metal": 0.2, "arcane": 0.1 },
+      "description": "A construct refined to flawless precision, surpassing its original design."
+    },
+
+    "paragon_wyrm": {
+      "growth": { "hp": 2.1, "atk": 1.9, "def": 1.9, "speed": 1.4, "mana": 2.0 },
+      "elementAffinity": { "void": 0.1, "arcane": 0.1, "chaos": 0.1 },
+      "description": "A wyrm that has shed all limitations, becoming a primordial serpent of pure power."
+    }
+  },
+
+  "hybrid": {
+
+    "draconic_fae": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.5, "mana": 1.6 },
+      "elementAffinity": { "arcane": 0.2, "light": 0.1 },
+      "description": "A rare fusion of dragon essence and fae glamour, impossibly powerful and beautiful."
+    },
+
+    "void_touched_beast": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A beast mutated by void exposure, gaining unnatural intelligence and power."
+    },
+
+    "celestial_demon": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.4, "speed": 1.3, "mana": 1.6 },
+      "elementAffinity": { "light": 0.2, "dark": 0.2 },
+      "description": "A paradoxical hybrid of celestial radiance and infernal corruption."
+    },
+
+    "techno_lich": {
+      "growth": { "hp": 1.3, "atk": 1.4, "def": 1.4, "speed": 1.2, "mana": 1.7 },
+      "elementAffinity": { "arcane": 0.2, "electric": 0.2 },
+      "description": "A lich who fused its phylactery with advanced technology."
+    },
+
+    "eldritch_slime": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.1, "speed": 1.4, "mana": 1.6 },
+      "elementAffinity": { "void": 0.2, "chaos": 0.1 },
+      "description": "A slime that absorbed an eldritch fragment, becoming a reality‑warping ooze."
+    }
+  },
+
+  "forgotten_race": {
+
+    "aetherians": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.3, "speed": 1.4, "mana": 1.7 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "An ancient race of arcane beings wiped out in the First Collapse."
+    },
+
+    "stoneborn_colossi": {
+      "growth": { "hp": 1.8, "atk": 1.6, "def": 1.8, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "A vanished race of mountain‑sized giants predating even the Titans."
+    },
+
+    "skywhales": {
+      "growth": { "hp": 1.7, "atk": 1.3, "def": 1.5, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "wind": 0.3 },
+      "description": "Massive airborne leviathans that once drifted across the upper atmosphere."
+    },
+
+    "the_first_people": {
+      "growth": { "hp": 1.2, "atk": 1.2, "def": 1.2, "speed": 1.2, "mana": 1.6 },
+      "elementAffinity": { "light": 0.1, "arcane": 0.1 },
+      "description": "A mysterious civilization erased from history by unknown forces."
+    },
+
+    "deepkin": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.4, "speed": 1.1, "mana": 1.5 },
+      "elementAffinity": { "water": 0.2, "dark": 0.1 },
+      "description": "An aquatic race that vanished into the abyss long before recorded time."
+    }
+  },
+
+  "cosmic_construct": {
+
+    "star_forge_automaton": {
+      "growth": { "hp": 1.8, "atk": 1.7, "def": 1.8, "speed": 1.3, "mana": 1.7 },
+      "elementAffinity": { "light": 0.2, "arcane": 0.2 },
+      "description": "A machine forged in the heart of a dying star."
+    },
+
+    "void_engine": {
+      "growth": { "hp": 1.7, "atk": 1.8, "def": 1.6, "speed": 1.4, "mana": 1.9 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "A sentient engine built by an Outer God to manipulate spacetime."
+    },
+
+    "celestial_sentinel": {
+      "growth": { "hp": 1.6, "atk": 1.5, "def": 1.7, "speed": 1.3, "mana": 1.8 },
+      "elementAffinity": { "holy": 0.2, "light": 0.1 },
+      "description": "A divine construct tasked with guarding sacred cosmic gates."
+    },
+
+    "entropy_core": {
+      "growth": { "hp": 1.7, "atk": 1.9, "def": 1.5, "speed": 1.4, "mana": 1.8 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "A machine powered by pure entropy, constantly shifting and mutating."
+    },
+
+    "the_observer_unit": {
+      "growth": { "hp": 1.5, "atk": 1.4, "def": 1.5, "speed": 1.6, "mana": 1.9 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A cosmic surveillance construct that records the evolution of universes."
+    }
+  },
 }
