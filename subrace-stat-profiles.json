@@ -976,6 +976,84 @@
       "elementAffinity": { "earth": 0.1, "fire": 0.1, "water": 0.1, "wind": 0.1 },
       "description": "Ancient titans embodying the four primal elements in perfect balance."
     }
+  },
+
+  "giantkin": {
+
+    "hill_giant": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.1, "speed": 0.9, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.1 },
+      "description": "Massive but simple giants who rely on brute strength and raw endurance."
+    },
+
+    "frost_giant": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "Cold‑forged giants who wield frost and thrive in frozen landscapes."
+    },
+
+    "fire_giant": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.2, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "Volcanic giants who channel molten heat and destructive flame."
+    },
+
+    "storm_giant": {
+      "growth": { "hp": 1.2, "atk": 1.2, "def": 1.1, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "lightning": 0.3, "wind": 0.1 },
+      "description": "Sky‑touched giants empowered by thunder and storm magic."
+    },
+
+    "stone_giant": {
+      "growth": { "hp": 1.4, "atk": 1.1, "def": 1.3, "speed": 0.9, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "Giants with stone‑like skin and immense physical resilience."
+    },
+
+    "sand_giant": {
+      "growth": { "hp": 1.3, "atk": 1.1, "def": 1.1, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": { "earth": 0.1, "wind": 0.1 },
+      "description": "Desert‑dwelling giants adapted to shifting sands and scorching heat."
+    },
+
+    "mire_giant": {
+      "growth": { "hp": 1.4, "atk": 1.1, "def": 1.2, "speed": 0.8, "mana": 1.0 },
+      "elementAffinity": { "poison": 0.2, "water": 0.1 },
+      "description": "Swamp giants steeped in toxic bogs, wielding decay‑tinged strength."
+    }
+  },
+  
+  "colossus": {
+
+    "iron_colossus": {
+      "growth": { "hp": 1.7, "atk": 1.4, "def": 1.6, "speed": 0.7, "mana": 0.9 },
+      "elementAffinity": { "metal": 0.3 },
+      "description": "Towering metal giants forged from living iron, nearly impervious to harm."
+    },
+
+    "mountain_colossus": {
+      "growth": { "hp": 1.8, "atk": 1.3, "def": 1.7, "speed": 0.7, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "Colossal beings carved from mountains, embodying unstoppable geological force."
+    },
+
+    "storm_colossus": {
+      "growth": { "hp": 1.6, "atk": 1.4, "def": 1.4, "speed": 0.9, "mana": 1.2 },
+      "elementAffinity": { "lightning": 0.3, "wind": 0.1 },
+      "description": "Sky‑piercing titans that channel the fury of the heavens."
+    },
+
+    "ashen_colossus": {
+      "growth": { "hp": 1.6, "atk": 1.5, "def": 1.3, "speed": 0.8, "mana": 1.0 },
+      "elementAffinity": { "fire": 0.2, "ash": 0.2 },
+      "description": "Burning giants born from volcanic ruin, leaving scorched earth in their wake."
+    },
+
+    "void_colossus": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.3, "speed": 1.0, "mana": 1.3 },
+      "elementAffinity": { "void": 0.3, "dark": 0.1 },
+      "description": "Reality‑warping mega‑giants whose presence distorts space and consumes light."
+    }
 
   },
 }
