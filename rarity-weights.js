@@ -1,6 +1,7 @@
 export const RARITY_WEIGHTS = {
-  "common": 60,
-  "rare": 25,
+  "common": 45,
+  "uncommon":25,
+  "rare": 15,
   "very": 10,
   "ultra": 4,
   "ridiculous": 1
