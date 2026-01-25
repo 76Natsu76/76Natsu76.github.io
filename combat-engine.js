@@ -1,745 +1,399 @@
 // combat-engine.js
-// Modernized, client-side combat engine (Option B)
 
-class CombatEngine {
-  constructor(player, encounter, callbacks = {}) {
-    this.callbacks = {
-      onUpdate: callbacks.onUpdate || function () {},
-      onLog: callbacks.onLog || function () {},
-      onEnd: callbacks.onEnd || function () {}
-    };
+import { getWeatherDefinition } from "./world-simulation.js";
+import { ELEMENT_MATRIX } from "./element-matrix.js";
+import { chooseBossActionV3, chooseEnemyActionV3 } from "./enemy-ai.js";
+import {
+  weatherTable,
+  WEATHER_DAMAGE_EFFECTS,
+  WEATHER_COMBAT_LOGS,
+  WEATHER_COMBAT_FLAVOR
+} from "./weatherTable.js";
 
-    this.playerTemplate = JSON.parse(JSON.stringify(player || {}));
-    this.encounter = JSON.parse(JSON.stringify(encounter || {}));
+/****************************************************
+ * CORE CONTEXT
+ ****************************************************/
 
-    const saved = sessionStorage.getItem("savedCombat");
-    if (saved) {
-      this.state = JSON.parse(saved);
-    } else {
-      this._initState();
+export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, player, enemy) {
+  const weatherDef = weatherKey ? getWeatherDefinition(weatherKey) : null;
+
+  return {
+    regionKey: regionKey || null,
+    biomeKey: biomeKey || null,
+    weatherKey: weatherKey || (weatherDef ? weatherDef.key : "clear"),
+    eventKey: eventKey || null,
+    player,
+    enemy,
+    turn: 1,
+    flavor: {
+      region: { exploration: [], midCombat: [] },
+      biome: { exploration: [], midCombat: [] },
+      weather: { intro: [], midCombat: [] },
+      event: { intro: [], midCombat: [] }
     }
-
-    this._notifyUpdate();
-  }
-
-  /* =========================================
-   * INITIALIZATION
-   * =======================================*/
-
-  _initState() {
-    const p = this.playerTemplate;
-    const e = this.encounter.enemy || {};
-
-    const playerMaxHP =
-      (p.derived && p.derived.maxHP) || p.hpMax || 100;
-    const enemyMaxHP = e.maxHP || e.hpMax || 100;
-
-    this.state = {
-      turn: "PLAYER",
-      round: 1,
-      outcome: null,
-      log: [],
-      region: this.encounter.region || null,
-      weather: this.encounter.weather || null,
-
-      player: {
-        key: p.key || "player",
-        name: p.name || "Adventurer",
-        level: p.level || 1,
-        rarity: p.rarity || "COMMON",
-        element: p.element || "neutral",
-        family: p.family || "humanoid",
-
-        hp: playerMaxHP,
-        hpMax: playerMaxHP,
-
-        atk:
-          (p.derived && p.derived.attack) ||
-          p.attack ||
-          10,
-        def:
-          (p.derived && p.derived.defense) ||
-          p.defense ||
-          5,
-
-        critChance: p.critChance || 0.05,
-        critMult: p.critMult || 1.5,
-
-        ultCharge: 0,
-        ultReady: false,
-
-        abilities: p.abilities || [],
-        cooldowns: [],
-
-        equipment: p.equipment || {},
-        inventoryEquipment: p.inventoryEquipment || [],
-        // NEW: carry consumable inventory into combat state
-        inventory: p.inventory || []
-      },
-
-      enemy: {
-        key: e.key || "enemy",
-        name: e.name || "Unknown Foe",
-        level: e.level || 1,
-        rarity: e.rarity || "COMMON",
-        family: e.family || "beast",
-        element: e.element || "neutral",
-
-        hp: enemyMaxHP,
-        hpMax: enemyMaxHP,
-
-        atk: e.attack || 8,
-        def: e.defense || 4,
-
-        critChance: e.critChance || 0.03,
-        critMult: e.critMult || 1.4,
-
-        portrait:
-          e.portrait ||
-          `/assets/enemies/${e.key || "default"}.png`,
-        modifiers: e.modifiers || []
-      },
-
-      effects: [], // DOT/HOT etc.
-      rewards: null
-    };
-
-    this._log(
-      `A wild ${this._fmt(this.state.enemy.name)} appears!`
-    );
-    this._persist();
-  }
-
-  /* =========================================
-   * PUBLIC API
-   * =======================================*/
-
-  getState() {
-    return JSON.parse(JSON.stringify(this.state));
-  }
-
-  async basicAttack() {
-    if (this._isOver()) return;
-    if (this.state.turn !== "PLAYER") return;
-
-    this._log("You strike the enemy!");
-    this._playerAttack({ type: "BASIC" });
-
-    await this._afterPlayerAction();
-  }
-
-  async useAbility(key) {
-    if (this._isOver()) return;
-    if (this.state.turn !== "PLAYER") return;
-
-    const ability = this.state.player.abilities.find(
-      (a) => a.key === key
-    );
-    if (!ability) {
-      this._log(`You don't have that ability.`);
-      this._notifyUpdate();
-      return;
-    }
-
-    const cd = this.state.player.cooldowns.find(
-      (c) => c.key === key
-    );
-    if (cd && cd.remaining > 0) {
-      this._log(`${ability.name} is on cooldown.`);
-      this._notifyUpdate();
-      return;
-    }
-
-    this._log(`You use ${ability.name}!`);
-    this._applyAbility(ability);
-
-    this._setCooldown(ability);
-    await this._afterPlayerAction();
-  }
-
-  async useUltimate() {
-    if (this._isOver()) return;
-    if (this.state.turn !== "PLAYER") return;
-
-    if (!this.state.player.ultReady) {
-      this._log("Your ultimate is not ready yet!");
-      this._notifyUpdate();
-      return;
-    }
-
-    this._log("You unleash your Ultimate!");
-    this._applyUltimate();
-
-    this.state.player.ultCharge = 0;
-    this.state.player.ultReady = false;
-
-    await this._afterPlayerAction();
-  }
-
-  async enemyTurn() {
-    if (this._isOver()) return;
-    if (this.state.turn !== "ENEMY") return;
-
-    this._log(
-      `${this._fmt(this.state.enemy.name)} prepares an attack...`
-    );
-
-    this._enemyAttack();
-    await this._endTurn();
-  }
-
-  async flee() {
-    if (this._isOver()) return;
-    if (this.state.turn !== "PLAYER") return;
-
-    const chance = 0.35;
-    if (Math.random() < chance) {
-      this._log("You successfully fled the battle!");
-      this._setOutcome("FLEE");
-      return;
-    } else {
-      this._log("You failed to flee!");
-      await this._afterPlayerAction();
-    }
-  }
-
-  async swapEquipment(slot, itemId) {
-    if (this._isOver()) return;
-    if (this.state.turn !== "PLAYER") return;
-
-    const p = this.state.player;
-    const item = (p.inventoryEquipment || []).find(
-      (i) => String(i.id) === String(itemId)
-    );
-    if (!item) {
-      this._log("Item not found.");
-      this._notifyUpdate();
-      return;
-    }
-
-    const previous = p.equipment[slot] || null;
-    p.equipment[slot] = item;
-
-    if (previous) {
-      p.inventoryEquipment.push(previous);
-    }
-    p.inventoryEquipment = p.inventoryEquipment.filter(
-      (i) => String(i.id) !== String(itemId)
-    );
-
-    this._recalculatePlayerStats();
-    this._log(
-      `You equipped ${item.name} in ${this._fmt(slot)} slot.`
-    );
-
-    this._notifyUpdate();
-    this._persist();
-  }
-
-  // NEW: use consumable item during combat
-  async useItem(itemId) {
-    if (this._isOver()) return;
-    if (this.state.turn !== "PLAYER") return;
-
-    const p = this.state.player;
-    const inv = p.inventory || [];
-
-    const item = inv.find(
-      (i) => String(i.id) === String(itemId)
-    );
-    if (!item || item.type !== "consumable") {
-      this._log("That item cannot be used right now.");
-      this._notifyUpdate();
-      return;
-    }
-
-    this._applyItemEffect(item);
-
-    // Decrement quantity / remove
-    item.quantity = (item.quantity || 1) - 1;
-    if (item.quantity <= 0) {
-      p.inventory = inv.filter(
-        (i) => String(i.id) !== String(itemId)
-      );
-    }
-
-    this._persist();
-    this._notifyUpdate();
-
-    await this._afterPlayerAction();
-  }
-
-  /* =========================================
-   * TURN FLOW
-   * =======================================*/
-
-  async _afterPlayerAction() {
-    this._applyOngoingEffects();
-    this._tickCooldowns();
-    this._checkOutcome();
-    this._persist();
-    this._notifyUpdate();
-
-    if (this._isOver()) return;
-
-    this.state.turn = "ENEMY";
-    await this.enemyTurn();
-  }
-
-  async _endTurn() {
-    this._applyOngoingEffects();
-    this._tickCooldowns();
-    this._checkOutcome();
-    this._persist();
-    this._notifyUpdate();
-
-    if (this._isOver()) return;
-
-    this.state.turn = "PLAYER";
-    this.state.round += 1;
-  }
-
-  /* =========================================
-   * DAMAGE / HEALING
-   * =======================================*/
-
-  _playerAttack({ type }) {
-    const dmg = this._calculateDamage(
-      this.state.player,
-      this.state.enemy,
-      { source: type || "BASIC", attackerSide: "PLAYER" }
-    );
-    this._applyDamage("ENEMY", dmg);
-    this._gainUlt("PLAYER", 10);
-  }
-
-  _enemyAttack() {
-    const dmg = this._calculateDamage(
-      this.state.enemy,
-      this.state.player,
-      { source: "BASIC", attackerSide: "ENEMY" }
-    );
-    this._applyDamage("PLAYER", dmg);
-    this._gainUlt("PLAYER", 5); // gain ult when hit
-  }
-
-  _applyAbility(ability) {
-    // Simple default: treat as a stronger attack + optional DOT/HOT
-    const baseMult = ability.powerMult || 1.2;
-    const isHeal = ability.tags?.includes("HEAL");
-
-    if (isHeal) {
-      const amount =
-        Math.round(
-          (this.state.player.hpMax || 100) *
-            (ability.healPct || 0.25)
-        ) || 20;
-      this._applyHealing("PLAYER", amount);
-      this._log(
-        `${ability.name} heals you for ${amount} HP.`
-      );
-      this._gainUlt("PLAYER", 8);
-      return;
-    }
-
-    const dmg = this._calculateDamage(
-      this.state.player,
-      this.state.enemy,
-      {
-        source: "ABILITY",
-        attackerSide: "PLAYER",
-        powerMult: baseMult,
-        element: ability.element || null
-      }
-    );
-    this._applyDamage("ENEMY", dmg);
-    this._gainUlt("PLAYER", 12);
-
-    if (ability.dot) {
-      this._addEffect({
-        type: "DOT",
-        target: "ENEMY",
-        amount: ability.dot.amount || 5,
-        duration: ability.dot.duration || 3,
-        effectKey: ability.key || "dot",
-        element: ability.element || null
-      });
-      this._log(
-        `${ability.name} applies a damage-over-time effect.`
-      );
-    }
-
-    if (ability.hot) {
-      this._addEffect({
-        type: "HOT",
-        target: "PLAYER",
-        amount: ability.hot.amount || 5,
-        duration: ability.hot.duration || 3,
-        effectKey: ability.key || "hot",
-        element: ability.element || null
-      });
-      this._log(
-        `${ability.name} applies a healing-over-time effect.`
-      );
-    }
-  }
-
-  _applyUltimate() {
-    // Big hit + maybe small self-heal
-    const dmg = this._calculateDamage(
-      this.state.player,
-      this.state.enemy,
-      {
-        source: "ULTIMATE",
-        attackerSide: "PLAYER",
-        powerMult: 2.0
-      }
-    );
-    this._applyDamage("ENEMY", dmg);
-
-    const heal = Math.round(
-      (this.state.player.hpMax || 100) * 0.15
-    );
-    this._applyHealing("PLAYER", heal);
-    this._log(
-      `Your ultimate restores ${heal} HP as residual energy.`
-    );
-  }
-
-  _calculateDamage(attacker, defender, opts = {}) {
-    const powerMult = opts.powerMult || 1.0;
-
-    const atk = attacker.atk || 10;
-    const def = defender.def || 5;
-
-    let base = Math.max(1, atk - def * 0.5);
-    base *= powerMult;
-
-    // Region / element hooks (kept simple, but easy to extend)
-    const element = opts.element || attacker.element || null;
-    const regionKey = this.state.region;
-    if (typeof REGION_DEFINITIONS !== "undefined" && regionKey) {
-      const region = REGION_DEFINITIONS[regionKey];
-      if (region && region.combatModifiers) {
-        const cm = region.combatModifiers;
-        if (opts.attackerSide === "PLAYER") {
-          if (cm.playerATKMult)
-            base *= cm.playerATKMult;
-        } else if (opts.attackerSide === "ENEMY") {
-          if (cm.enemyATKMult)
-            base *= cm.enemyATKMult;
-        }
-        if (element && cm.elementBias && cm.elementBias[element]) {
-          base *= 1 + cm.elementBias[element];
-        }
-      }
-    }
-
-    // Crit
-    const critChance = attacker.critChance || 0;
-    const critMult = attacker.critMult || 1.5;
-    const isCrit = Math.random() < critChance;
-    if (isCrit) base *= critMult;
-
-    const dmg = Math.max(1, Math.round(base));
-
-    this.state.log.push({
-      type: "attack",
-      attacker:
-        opts.attackerSide === "PLAYER"
-          ? "PLAYER"
-          : "ENEMY",
-      target:
-        opts.attackerSide === "PLAYER"
-          ? "ENEMY"
-          : "PLAYER",
-      damage: dmg,
-      crit: isCrit,
-      element: element || null
-    });
-
-    return dmg;
-  }
-
-  _applyDamage(targetSide, amount) {
-    const target =
-      targetSide === "PLAYER"
-        ? this.state.player
-        : this.state.enemy;
-
-    target.hp = Math.max(0, target.hp - amount);
-  }
-
-  _applyHealing(targetSide, amount) {
-    const target =
-      targetSide === "PLAYER"
-        ? this.state.player
-        : this.state.enemy;
-
-    target.hp = Math.min(target.hpMax, target.hp + amount);
-  }
-
-  // NEW: item effect resolver (kept generic but extensible)
-  _applyItemEffect(item) {
-    const meta = item.meta || {};
-    const type = (item.subtype || meta.subtype || "").toLowerCase();
-
-    // Default: healing potion style
-    let healAmount = 0;
-
-    if (typeof meta.healHP === "number") {
-      healAmount = meta.healHP;
-    } else if (typeof meta.healPct === "number") {
-      healAmount = Math.round(
-        (this.state.player.hpMax || 100) * meta.healPct
-      );
-    } else {
-      // fallback
-      healAmount = 30;
-    }
-
-    if (healAmount > 0) {
-      this._applyHealing("PLAYER", healAmount);
-      this._log(
-        `You use ${item.name} and recover ${healAmount} HP.`
-      );
-    } else {
-      this._log(`You use ${item.name}.`);
-    }
-
-    // Optional: ult gain from items
-    if (typeof meta.ultGain === "number") {
-      this._gainUlt("PLAYER", meta.ultGain);
-    }
-  }
-
-  /* =========================================
-   * EFFECTS (DOT / HOT)
-   * =======================================*/
-
-  _addEffect(effect) {
-    this.state.effects.push({
-      type: effect.type, // "DOT" | "HOT"
-      target: effect.target, // "PLAYER" | "ENEMY"
-      amount: effect.amount,
-      duration: effect.duration,
-      remaining: effect.duration,
-      effectKey: effect.effectKey || "effect",
-      element: effect.element || null
-    });
-  }
-
-  _applyOngoingEffects() {
-    const remaining = [];
-
-    for (const eff of this.state.effects) {
-      if (eff.remaining <= 0) continue;
-
-      if (eff.type === "DOT") {
-        this._applyDamage(eff.target, eff.amount);
-        this.state.log.push({
-          type: "dot",
-          target: eff.target,
-          amount: eff.amount,
-          effectKey: eff.effectKey
-        });
-      } else if (eff.type === "HOT") {
-        this._applyHealing(eff.target, eff.amount);
-        this.state.log.push({
-          type: "hot",
-          target: eff.target,
-          amount: eff.amount,
-          effectKey: eff.effectKey
-        });
-      }
-
-      eff.remaining -= 1;
-      if (eff.remaining > 0) {
-        remaining.push(eff);
-      } else {
-        this.state.log.push({
-          type: "expire",
-          effectKey: eff.effectKey
-        });
-      }
-    }
-
-    this.state.effects = remaining;
-  }
-
-  /* =========================================
-   * COOLDOWNS / ULT
-   * =======================================*/
-
-  _setCooldown(ability) {
-    if (!ability.cooldown) return;
-
-    const existing = this.state.player.cooldowns.find(
-      (c) => c.key === ability.key
-    );
-    if (existing) {
-      existing.remaining = ability.cooldown;
-    } else {
-      this.state.player.cooldowns.push({
-        key: ability.key,
-        name: ability.name,
-        remaining: ability.cooldown
-      });
-    }
-  }
-
-  _tickCooldowns() {
-    this.state.player.cooldowns =
-      this.state.player.cooldowns
-        .map((c) => ({
-          ...c,
-          remaining: Math.max(0, c.remaining - 1)
-        }))
-        .filter((c) => c.remaining > 0);
-  }
-
-  _gainUlt(side, amount) {
-    if (side !== "PLAYER") return;
-
-    const p = this.state.player;
-    p.ultCharge = Math.min(100, p.ultCharge + amount);
-    if (p.ultCharge >= 100) {
-      p.ultReady = true;
-    }
-  }
-
-  /* =========================================
-   * OUTCOME / REWARDS
-   * =======================================*/
-
-  _checkOutcome() {
-    if (this.state.outcome) return;
-
-    if (this.state.player.hp <= 0) {
-      this._setOutcome("LOSE");
-    } else if (this.state.enemy.hp <= 0) {
-      this._setOutcome("WIN");
-    }
-  }
-
-  _setOutcome(type) {
-    this.state.outcome = type;
-
-    if (type === "WIN") {
-      this.state.rewards = this._generateRewards();
-      this._log("You are victorious!");
-    } else if (type === "LOSE") {
-      this.state.rewards = null;
-      this._log("You were defeated...");
-    } else if (type === "FLEE") {
-      this.state.rewards = null;
-      this._log("You escaped the encounter.");
-    }
-
-    sessionStorage.removeItem("savedCombat");
-    this._persist(); // final snapshot
-    this._notifyUpdate();
-    this.callbacks.onEnd(this.state.rewards);
-  }
-
-  _generateRewards() {
-    const enemyLevel = this.state.enemy.level || 1;
-    const baseXP = 10 + enemyLevel * 5;
-
-    const xp = baseXP;
-    const xpPercent = Math.min(100, 20 + enemyLevel * 2);
-
-    const levelUp = false; // hook for future
-    const newLevel = this.state.player.level;
-
-    // Simple placeholder loot
-    const loot = {
-      name: "Mysterious Shard",
-      rarity: "RARE",
-      quantity: 1
-    };
-
-    return {
-      xp,
-      xpPercent,
-      levelUp,
-      newLevel,
-      loot
-    };
-  }
-
-  /* =========================================
-   * STATS / EQUIPMENT
-   * =======================================*/
-
-  _recalculatePlayerStats() {
-    const p = this.state.player;
-
-    let atkBase =
-      (this.playerTemplate.derived &&
-        this.playerTemplate.derived.attack) ||
-      this.playerTemplate.attack ||
-      10;
-    let defBase =
-      (this.playerTemplate.derived &&
-        this.playerTemplate.derived.defense) ||
-      this.playerTemplate.defense ||
-      5;
-    let hpBase =
-      (this.playerTemplate.derived &&
-        this.playerTemplate.derived.maxHP) ||
-      this.playerTemplate.hpMax ||
-      100;
-
-    for (const slot of Object.keys(p.equipment || {})) {
-      const item = p.equipment[slot];
-      if (!item || !item.bonuses) continue;
-
-      const b = item.bonuses;
-      if (b.attack) atkBase += b.attack;
-      if (b.defense) defBase += b.defense;
-      if (b.maxHP) hpBase += b.maxHP;
-    }
-
-    p.atk = atkBase;
-    p.def = defBase;
-
-    const hpPct = p.hp / p.hpMax;
-    p.hpMax = hpBase;
-    p.hp = Math.max(1, Math.round(p.hpMax * hpPct));
-  }
-
-  /* =========================================
-   * UTILITIES
-   * =======================================*/
-
-  _isOver() {
-    return !!this.state.outcome;
-  }
-
-  _log(msg) {
-    this.callbacks.onLog(msg);
-    this.state.log.push(msg);
-  }
-
-  _notifyUpdate() {
-    this.callbacks.onUpdate(this.getState());
-  }
-
-  _persist() {
-    sessionStorage.setItem(
-      "savedCombat",
-      JSON.stringify(this.state)
-    );
-  }
-
-  _fmt(str) {
-    return String(str)
-      .toLowerCase()
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, (c) => c.toUpperCase());
+  };
+}
+
+export function applyEnvironmentIntroFlavor(context, logs) {
+  const weatherKey = context.weatherKey || "clear";
+  const pool = WEATHER_COMBAT_FLAVOR[weatherKey];
+  if (pool && pool.length && logs) {
+    const line = pool[Math.floor(Math.random() * pool.length)];
+    logs.push(line);
   }
 }
 
-// Expose globally in browser
-window.CombatEngine = CombatEngine;
+/****************************************************
+ * STATUS EFFECTS
+ ****************************************************/
+
+export function applyStatusEffect(target, effect) {
+  if (!target.statusEffects) target.statusEffects = [];
+  const eff = JSON.parse(JSON.stringify(effect));
+  eff.duration = eff.duration != null ? eff.duration : eff.maxDuration || 1;
+  eff.maxDuration = eff.maxDuration != null ? eff.maxDuration : eff.duration;
+
+  if (eff.stack === "replace") {
+    target.statusEffects = target.statusEffects.filter(e => e.type !== eff.type);
+  }
+
+  target.statusEffects.push(eff);
+}
+
+export function tickStatusEffects(target, context, logs) {
+  if (!target.statusEffects || !target.statusEffects.length) return;
+
+  const remaining = [];
+
+  for (let i = 0; i < target.statusEffects.length; i++) {
+    const eff = target.statusEffects[i];
+
+    if (eff.valuePerTurn && eff.type === "dot") {
+      const dmg = eff.valuePerTurn;
+      applyDamage(null, target, dmg, context, logs, {
+        isDOT: true,
+        statusType: eff.type,
+        source: eff.source || "status"
+      });
+    }
+
+    if (eff.valuePerTurn && eff.type === "hot") {
+      const heal = eff.valuePerTurn;
+      const before = target.hpCurrent;
+      target.hpCurrent = Math.min(target.hpMax, target.hpCurrent + heal);
+      if (logs) logs.push(`${target.name} regenerates ${target.hpCurrent - before} HP.`);
+    }
+
+    eff.duration -= 1;
+
+    if (eff.duration > 0) {
+      remaining.push(eff);
+    } else if (logs) {
+      logs.push(`${target.name} is no longer affected by ${eff.type || "a status"}.`);
+    }
+  }
+
+  target.statusEffects = remaining;
+}
+
+export function cleanseStatusEffects(entity) {
+  entity.statusEffects = (entity.statusEffects || []).filter(
+    e => e.type === "shield" || !e.isDebuff
+  );
+}
+
+export function crowdControlCheck(entity, logs) {
+  const effects = entity.statusEffects || [];
+
+  let stunned = false;
+  let silenced = false;
+  let rooted = false;
+  let feared = false;
+
+  for (const eff of effects) {
+    switch (eff.type) {
+      case "stun":
+        stunned = true;
+        break;
+      case "silence":
+        silenced = true;
+        break;
+      case "root":
+        rooted = true;
+        break;
+      case "fear":
+        feared = true;
+        break;
+    }
+  }
+
+  const any = stunned || silenced || rooted || feared;
+
+  if (any && logs) {
+    if (stunned) logs.push(`${entity.name} is stunned and cannot act.`);
+    if (silenced) logs.push(`${entity.name} is silenced and cannot cast spells.`);
+    if (rooted) logs.push(`${entity.name} is rooted.`);
+    if (feared) logs.push(`${entity.name} is feared and may act unpredictably.`);
+  }
+
+  return { stunned, silenced, rooted, feared, any };
+}
+
+export function applyShieldReduction(defender, incomingDamage, logs) {
+  let dmg = incomingDamage;
+  if (!defender.statusEffects || !defender.statusEffects.length) return dmg;
+
+  for (let i = 0; i < defender.statusEffects.length; i++) {
+    const eff = defender.statusEffects[i];
+    if (eff.type === "shield" && eff.power > 0) {
+      const absorbed = Math.min(eff.power, dmg);
+      eff.power -= absorbed;
+      dmg -= absorbed;
+
+      if (logs) logs.push(`${defender.name}'s shield absorbs ${absorbed} damage.`);
+
+      if (eff.power <= 0) {
+        defender.statusEffects.splice(i, 1);
+        i--;
+      }
+      if (dmg <= 0) return 0;
+    }
+  }
+
+  return dmg;
+}
+
+/****************************************************
+ * WEATHER MODIFIERS
+ ****************************************************/
+
+function getWeatherDamageMultiplier(attacker, weatherKey) {
+  const wfx = WEATHER_DAMAGE_EFFECTS[weatherKey];
+  if (!wfx) return 1;
+
+  let mult = 1;
+
+  if (attacker.element && wfx.damageBoost && wfx.damageBoost[attacker.element]) {
+    mult *= 1 + wfx.damageBoost[attacker.element];
+  }
+
+  if (attacker.element && wfx.damagePenalty && wfx.damagePenalty[attacker.element]) {
+    mult *= 1 - wfx.damagePenalty[attacker.element];
+  }
+
+  return mult;
+}
+
+function getWeatherCritModifier(weatherKey) {
+  const wfx = WEATHER_DAMAGE_EFFECTS[weatherKey];
+  if (!wfx) return 0;
+  if (wfx.critBoost) return wfx.critBoost;
+  if (wfx.critPenalty) return -wfx.critPenalty;
+  return 0;
+}
+
+function getWeatherAccuracyModifier(weatherKey) {
+  const wfx = WEATHER_DAMAGE_EFFECTS[weatherKey];
+  if (!wfx) return 0;
+  if (wfx.accuracyPenalty) return -wfx.accuracyPenalty;
+  return 0;
+}
+
+/****************************************************
+ * DAMAGE + HIT/Crit
+ ****************************************************/
+
+function rollChance(p) {
+  return Math.random() < p;
+}
+
+function computeHitChance(attacker, defender, context) {
+  const base = 0.9;
+  const acc = attacker.accuracy || 0;
+  const eva = defender.evasion || 0;
+  const weatherMod = getWeatherAccuracyModifier(context.weatherKey || "clear");
+  return Math.max(0.05, Math.min(0.99, base + acc - eva + weatherMod));
+}
+
+function computeCritChance(attacker, context) {
+  const base = attacker.critChance || 0.05;
+  const weatherMod = getWeatherCritModifier(context.weatherKey || "clear");
+  return Math.max(0, Math.min(1, base + weatherMod));
+}
+
+function computeElementMultiplier(attackerElement, defenderElement) {
+  if (!attackerElement || !defenderElement) return 1;
+  const row = ELEMENT_MATRIX[attackerElement];
+  if (!row) return 1;
+  return row[defenderElement] != null ? row[defenderElement] : 1;
+}
+
+export function applyDamage(attacker, defender, baseDamage, context, logs, opts = {}) {
+  const weatherKey = context.weatherKey || "clear";
+
+  let dmg = baseDamage;
+
+  if (attacker && attacker.element && defender.element) {
+    const elemMult = computeElementMultiplier(attacker.element, defender.element);
+    dmg = Math.floor(dmg * elemMult);
+  }
+
+  if (attacker) {
+    const weatherMult = getWeatherDamageMultiplier(attacker, weatherKey);
+    dmg = Math.floor(dmg * weatherMult);
+  }
+
+  const atk = attacker ? attacker.atk : defender.atk;
+  const def = defender.def || 0;
+  const mitigated = Math.max(1, Math.floor(dmg * (atk / (atk + def + 1))));
+
+  let finalDmg = applyShieldReduction(defender, mitigated, logs);
+  finalDmg = Math.max(0, finalDmg);
+
+  defender.hpCurrent = Math.max(0, defender.hpCurrent - finalDmg);
+
+  if (logs && finalDmg > 0) {
+    const srcName = attacker ? attacker.name : "The environment";
+    logs.push(`${srcName} deals ${finalDmg} damage to ${defender.name}.`);
+  }
+
+  return finalDmg;
+}
+
+/****************************************************
+ * ABILITY RESOLUTION
+ ****************************************************/
+
+export function resolveAbilityUse(attacker, defender, ability, context, logs) {
+  const weatherKey = context.weatherKey || "clear";
+
+  const hitChance = computeHitChance(attacker, defender, context);
+  if (!rollChance(hitChance)) {
+    if (logs) logs.push(`${attacker.name}'s ${ability.name} misses!`);
+    return;
+  }
+
+  const critChance = computeCritChance(attacker, context);
+  const isCrit = rollChance(critChance);
+  const power = ability.power || 0;
+  let baseDamage = power + attacker.atk;
+
+  if (isCrit) {
+    const critMult = attacker.critDamageMult || 1.5;
+    baseDamage = Math.floor(baseDamage * critMult);
+  }
+
+  const dmg = applyDamage(attacker, defender, baseDamage, context, logs, {
+    isAbility: true,
+    abilityKey: ability.key
+  });
+
+  if (isCrit && logs && dmg > 0) {
+    logs.push("Critical hit!");
+  }
+
+  if (ability.statusEffects && ability.statusEffects.length) {
+    for (const eff of ability.statusEffects) {
+      applyStatusEffect(defender, eff);
+      if (logs) logs.push(`${defender.name} is affected by ${eff.type}.`);
+    }
+  }
+
+  if (ability.selfStatusEffects && ability.selfStatusEffects.length) {
+    for (const eff of ability.selfStatusEffects) {
+      applyStatusEffect(attacker, eff);
+      if (logs) logs.push(`${attacker.name} gains ${eff.type}.`);
+    }
+  }
+}
+
+/****************************************************
+ * BASIC ATTACK
+ ****************************************************/
+
+export function resolveBasicAttack(attacker, defender, context, logs) {
+  const hitChance = computeHitChance(attacker, defender, context);
+  if (!rollChance(hitChance)) {
+    if (logs) logs.push(`${attacker.name}'s attack misses!`);
+    return;
+  }
+
+  const critChance = computeCritChance(attacker, context);
+  const isCrit = rollChance(critChance);
+
+  let baseDamage = attacker.atk;
+  if (isCrit) {
+    const critMult = attacker.critDamageMult || 1.5;
+    baseDamage = Math.floor(baseDamage * critMult);
+  }
+
+  const dmg = applyDamage(attacker, defender, baseDamage, context, logs, {
+    isBasic: true
+  });
+
+  if (isCrit && logs && dmg > 0) {
+    logs.push("Critical hit!");
+  }
+}
+
+/****************************************************
+ * TURN RESOLUTION
+ ****************************************************/
+
+export function runEnemyTurn(enemy, player, context, logs) {
+  const cc = crowdControlCheck(enemy, logs);
+  if (cc.stunned) return;
+
+  const aiContext = {
+    lastPlayerActionType: context.lastPlayerActionType || null
+  };
+
+  const action = enemy.isBoss
+    ? chooseBossActionV3(enemy, player, aiContext, logs)
+    : chooseEnemyActionV3(enemy, player, aiContext, logs);
+
+  if (action.type === "basic") {
+    resolveBasicAttack(enemy, player, context, logs);
+  } else if (action.type === "ability" && action.ability) {
+    resolveAbilityUse(enemy, player, action.ability, context, logs);
+    enemy.lastBossAction = action.ability.key || action.ability.name;
+  }
+}
+
+export function runPlayerAction(player, enemy, action, context, logs) {
+  const cc = crowdControlCheck(player, logs);
+  if (cc.stunned) return;
+
+  if (action.type === "basic") {
+    resolveBasicAttack(player, enemy, context, logs);
+  } else if (action.type === "ability" && action.ability) {
+    resolveAbilityUse(player, enemy, action.ability, context, logs);
+    context.lastPlayerActionType = action.ability.actionType || "ability";
+  }
+}
+
+/****************************************************
+ * ROUND DRIVER
+ ****************************************************/
+
+export function runCombatRound(player, enemy, context, playerAction, logs) {
+  logs = logs || [];
+
+  tickStatusEffects(player, context, logs);
+  tickStatusEffects(enemy, context, logs);
+
+  const actors = [player, enemy].sort((a, b) => (b.speed || 0) - (a.speed || 0));
+
+  for (const actor of actors) {
+    if (player.hpCurrent <= 0 || enemy.hpCurrent <= 0) break;
+
+    if (actor === player) {
+      runPlayerAction(player, enemy, playerAction, context, logs);
+    } else {
+      runEnemyTurn(enemy, player, context, logs);
+    }
+  }
+
+  context.turn += 1;
+  return { player, enemy, context, logs };
+}
