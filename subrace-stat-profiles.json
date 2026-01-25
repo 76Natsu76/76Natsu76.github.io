@@ -1054,6 +1054,134 @@
       "elementAffinity": { "void": 0.3, "dark": 0.1 },
       "description": "Reality‑warping mega‑giants whose presence distorts space and consumes light."
     }
+  },
 
+  "fae": {
+
+    "sprite": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.4, "mana": 1.3 },
+      "elementAffinity": { "nature": 0.2, "light": 0.1 },
+      "description": "Tiny winged fae who wield quick magic and dazzling bursts of light."
+    },
+
+    "dryad": {
+      "growth": { "hp": 1.0, "atk": 1.0, "def": 1.1, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "nature": 0.3 },
+      "description": "Tree‑bound fae who channel the life force of ancient forests."
+    },
+
+    "thornborn_fae": {
+      "growth": { "hp": 1.1, "atk": 1.1, "def": 1.1, "speed": 1.0, "mana": 1.1 },
+      "elementAffinity": { "nature": 0.2, "poison": 0.2 },
+      "description": "Fae bonded with thorned flora, blending beauty with venomous magic."
+    },
+
+    "glimmerling": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.5, "mana": 1.3 },
+      "elementAffinity": { "illusion": 0.3 },
+      "description": "Illusion‑weaving fae who flicker between forms and confuse attackers."
+    },
+
+    "bog_fae": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.1, "mana": 1.2 },
+      "elementAffinity": { "poison": 0.2, "water": 0.1 },
+      "description": "Swamp‑dwelling fae with murky magic and deceptive charm."
+    },
+
+    "ember_fae": {
+      "growth": { "hp": 0.9, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 1.2 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "Fae touched by wildfire, dancing with sparks and burning glamour."
+    },
+
+    "moon_fae": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 1.0, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2, "ice": 0.1 },
+      "description": "Mystic fae who draw power from moonlight and subtle arcane tides."
+    },
+
+    "court_fae": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.2, "mana": 1.3 },
+      "elementAffinity": { "light": 0.1, "illusion": 0.2 },
+      "description": "Noble fae of the courts, wielding refined glamour and political magic."
+    }
+  },
+
+  "chimera": {
+
+    "lion_chimera": {
+      "growth": { "hp": 1.2, "atk": 1.4, "def": 1.1, "speed": 1.1, "mana": 0.9 },
+      "elementAffinity": {},
+      "description": "A ferocious hybrid with leonine strength and predatory instincts."
+    },
+
+    "serpent_chimera": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.2, "mana": 1.0 },
+      "elementAffinity": { "poison": 0.3 },
+      "description": "A venomous chimera with serpentine agility and toxic fangs."
+    },
+
+    "ram_chimera": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 1.0, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.1 },
+      "description": "A horned chimera known for brutal charges and mountainous resilience."
+    },
+
+    "avian_chimera": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.4, "mana": 1.0 },
+      "elementAffinity": { "wind": 0.2 },
+      "description": "A winged chimera with razor talons and swift aerial movement."
+    },
+
+    "drake_chimera": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 1.1, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.2 },
+      "description": "A draconic hybrid that breathes flame and fights with scaled ferocity."
+    },
+
+    "shadow_chimera": {
+      "growth": { "hp": 1.0, "atk": 1.3, "def": 1.0, "speed": 1.3, "mana": 1.1 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "A night‑born chimera that stalks prey from the darkness."
+    }
+  },
+
+  "construct": {
+
+    "golem": {
+      "growth": { "hp": 1.4, "atk": 1.1, "def": 1.4, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "earth": 0.2 },
+      "description": "A stone‑forged construct animated by ancient runes."
+    },
+
+    "iron_construct": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.5, "speed": 0.8, "mana": 0.9 },
+      "elementAffinity": { "metal": 0.3 },
+      "description": "A heavy metal construct built for durability and crushing force."
+    },
+
+    "arcane_automaton": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.1, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "A magically‑powered construct designed for precision spellwork."
+    },
+
+    "clockwork_sentinel": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.2, "speed": 1.0, "mana": 1.1 },
+      "elementAffinity": { "metal": 0.2 },
+      "description": "A mechanical guardian driven by gears, springs, and arcane timing."
+    },
+
+    "ember_core_construct": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 1.1, "speed": 0.9, "mana": 1.1 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "A construct powered by a burning ember core, radiating volatile heat."
+    },
+
+    "crystal_sentinel": {
+      "growth": { "hp": 1.1, "atk": 1.0, "def": 1.3, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "arcane": 0.2 },
+      "description": "A crystalline construct that channels magical energy through refracted light."
+    }
   },
 }
