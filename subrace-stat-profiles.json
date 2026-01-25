@@ -1565,4 +1565,238 @@
       "description": "A mimic corrupted by cosmic influence, warping its form unpredictably."
     }
   },
+
+  "beast": {
+
+    "wolf": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.3, "mana": 0.8 },
+      "elementAffinity": {},
+      "description": "Swift pack predators with sharp instincts and coordinated attacks."
+    },
+
+    "bear": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 0.9, "mana": 0.8 },
+      "elementAffinity": {},
+      "description": "Massive beasts with overwhelming strength and thick hides."
+    },
+
+    "boar": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.1, "speed": 1.0, "mana": 0.8 },
+      "elementAffinity": {},
+      "description": "Aggressive wild boars known for powerful charges."
+    },
+
+    "hawk": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.5, "mana": 0.8 },
+      "elementAffinity": {},
+      "description": "Aerial predators with razor talons and unmatched speed."
+    },
+
+    "serpent": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.2, "mana": 0.8 },
+      "elementAffinity": { "poison": 0.2 },
+      "description": "Venomous reptiles that strike with deadly precision."
+    }
+  },
+
+  "amorphous": {
+
+    "gelatinous_cube": {
+      "growth": { "hp": 1.4, "atk": 1.1, "def": 0.8, "speed": 0.8, "mana": 1.0 },
+      "elementAffinity": { "acid": 0.3 },
+      "description": "A transparent cube that engulfs prey and dissolves them slowly."
+    },
+
+    "ooze_mass": {
+      "growth": { "hp": 1.3, "atk": 1.0, "def": 0.8, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "A shifting blob of organic matter with unpredictable movement."
+    },
+
+    "tar_beast": {
+      "growth": { "hp": 1.4, "atk": 1.2, "def": 0.9, "speed": 0.9, "mana": 1.0 },
+      "elementAffinity": { "decay": 0.2 },
+      "description": "A sticky, tar‑like creature that traps and suffocates prey."
+    },
+
+    "eldritch_ooze": {
+      "growth": { "hp": 1.2, "atk": 1.3, "def": 0.9, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "void": 0.2, "chaos": 0.1 },
+      "description": "A cosmic‑tainted ooze that shifts in impossible geometries."
+    },
+
+    "plasma_wisp": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 0.9, "speed": 1.3, "mana": 1.4 },
+      "elementAffinity": { "lightning": 0.2 },
+      "description": "A semi‑liquid, semi‑energy being that crackles with unstable plasma."
+    }
+  },
+
+  "techborn": {
+
+    "cyber_scout": {
+      "growth": { "hp": 1.0, "atk": 1.1, "def": 1.0, "speed": 1.3, "mana": 1.1 },
+      "elementAffinity": { "electric": 0.1 },
+      "description": "Lightly augmented scouts with enhanced reflexes and sensory implants."
+    },
+
+    "steel_grafted": {
+      "growth": { "hp": 1.2, "atk": 1.2, "def": 1.2, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": { "metal": 0.2 },
+      "description": "Mortals reinforced with steel plating and mechanical limbs."
+    },
+
+    "neural_hacker": {
+      "growth": { "hp": 0.9, "atk": 1.0, "def": 0.9, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "electric": 0.2, "arcane": 0.1 },
+      "description": "Techborn specialists who manipulate digital and magical systems alike."
+    },
+
+    "bio_mechanist": {
+      "growth": { "hp": 1.1, "atk": 1.1, "def": 1.1, "speed": 1.0, "mana": 1.2 },
+      "elementAffinity": {},
+      "description": "Hybrid engineers who integrate living tissue with mechanical enhancements."
+    },
+
+    "pulse_runner": {
+      "growth": { "hp": 1.0, "atk": 1.2, "def": 1.0, "speed": 1.4, "mana": 1.1 },
+      "elementAffinity": { "electric": 0.2 },
+      "description": "Speed‑focused techborn with pulse‑boosted limbs and kinetic amplifiers."
+    }
+  },
+
+  "machina": {
+
+    "war_mech": {
+      "growth": { "hp": 1.5, "atk": 1.4, "def": 1.5, "speed": 1.0, "mana": 1.0 },
+      "elementAffinity": { "metal": 0.3 },
+      "description": "A heavily armored combat machine built for frontline devastation."
+    },
+
+    "arcane_engine": {
+      "growth": { "hp": 1.2, "atk": 1.1, "def": 1.3, "speed": 1.0, "mana": 1.5 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "A magically‑powered machine that channels arcane energy through runic cores."
+    },
+
+    "sentinel_unit": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.4, "speed": 1.1, "mana": 1.0 },
+      "elementAffinity": {},
+      "description": "An autonomous guardian designed to patrol and protect strategic zones."
+    },
+
+    "nanite_swarm": {
+      "growth": { "hp": 1.1, "atk": 1.3, "def": 1.0, "speed": 1.4, "mana": 1.2 },
+      "elementAffinity": { "electric": 0.2 },
+      "description": "A cloud of microscopic machines acting as a single adaptive entity."
+    },
+
+    "titan_forge": {
+      "growth": { "hp": 1.6, "atk": 1.5, "def": 1.6, "speed": 0.9, "mana": 1.2 },
+      "elementAffinity": { "metal": 0.2, "fire": 0.1 },
+      "description": "A colossal machine built for industrial warfare and heavy destruction."
+    }
+  },
+
+  "dragon": {
+
+    "young_dragon": {
+      "growth": { "hp": 1.3, "atk": 1.2, "def": 1.2, "speed": 1.2, "mana": 1.1 },
+      "elementAffinity": {},
+      "description": "A juvenile dragon, smaller but still immensely powerful and fast-growing."
+    },
+
+    "fire_dragon": {
+      "growth": { "hp": 1.6, "atk": 1.5, "def": 1.4, "speed": 1.1, "mana": 1.3 },
+      "elementAffinity": { "fire": 0.3 },
+      "description": "Ancient dragons of flame whose breath scorches entire landscapes."
+    },
+
+    "earth_dragon": {
+      "growth": { "hp": 1.7, "atk": 1.4, "def": 1.6, "speed": 0.9, "mana": 1.2 },
+      "elementAffinity": { "earth": 0.3 },
+      "description": "Dragons with stone-like scales and mountain-shattering strength."
+    },
+
+    "water_dragon": {
+      "growth": { "hp": 1.5, "atk": 1.3, "def": 1.4, "speed": 1.1, "mana": 1.4 },
+      "elementAffinity": { "water": 0.3 },
+      "description": "Dragons attuned to tides and storms, commanding aquatic magic."
+    },
+
+    "wind_dragon": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.2, "speed": 1.4, "mana": 1.3 },
+      "elementAffinity": { "wind": 0.3 },
+      "description": "Swift dragons who ride the skies and slice foes with gale-force winds."
+    },
+
+    "lightning_dragon": {
+      "growth": { "hp": 1.4, "atk": 1.4, "def": 1.3, "speed": 1.4, "mana": 1.4 },
+      "elementAffinity": { "lightning": 0.3 },
+      "description": "Dragons born of thunderclouds, wielding lightning with terrifying precision."
+    },
+
+    "ice_dragon": {
+      "growth": { "hp": 1.5, "atk": 1.3, "def": 1.5, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "Glacial dragons who freeze the air around them with every wingbeat."
+    },
+
+    "light_dragon": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.4, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "light": 0.3 },
+      "description": "Radiant dragons who channel pure celestial brilliance."
+    },
+
+    "dark_dragon": {
+      "growth": { "hp": 1.4, "atk": 1.5, "def": 1.3, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "dark": 0.3 },
+      "description": "Shadow-wreathed dragons who command darkness and fear."
+    },
+
+    "crystal_dragon": {
+      "growth": { "hp": 1.4, "atk": 1.3, "def": 1.5, "speed": 1.1, "mana": 1.5 },
+      "elementAffinity": { "arcane": 0.3 },
+      "description": "Dragons whose crystalline bodies refract arcane energy into devastating beams."
+    },
+
+    "stormdrake": {
+      "growth": { "hp": 1.3, "atk": 1.3, "def": 1.2, "speed": 1.4, "mana": 1.3 },
+      "elementAffinity": { "lightning": 0.2, "wind": 0.1 },
+      "description": "Lesser storm dragons known for speed and electrified aerial strikes."
+    },
+
+    "void_dragon": {
+      "growth": { "hp": 1.3, "atk": 1.5, "def": 1.3, "speed": 1.2, "mana": 1.6 },
+      "elementAffinity": { "void": 0.3 },
+      "description": "Dragons touched by the abyss, warping space with their presence."
+    }
+  },
+
+  "wyrm": {
+
+    "frost_wyrm": {
+      "growth": { "hp": 1.6, "atk": 1.4, "def": 1.5, "speed": 1.0, "mana": 1.4 },
+      "elementAffinity": { "ice": 0.3 },
+      "description": "Ancient serpentine wyrms that freeze entire regions with their breath."
+    },
+
+    "chaos_wyrm": {
+      "growth": { "hp": 1.5, "atk": 1.6, "def": 1.3, "speed": 1.2, "mana": 1.5 },
+      "elementAffinity": { "chaos": 0.3 },
+      "description": "Unstable wyrms born of raw entropy, shifting unpredictably in form and power."
+    },
+
+    "primordial_wyrm": {
+      "growth": { "hp": 1.7, "atk": 1.5, "def": 1.6, "speed": 1.1, "mana": 1.5 },
+      "elementAffinity": { "fire": 0.1, "earth": 0.1, "water": 0.1, "wind": 0.1 },
+      "description": "Wyrms from the dawn of creation, embodying all primal elements."
+    },
+
+    "eternal_wyrm": {
+      "growth": { "hp": 1.8, "atk": 1.6, "def": 1.7, "speed": 1.1, "mana": 1.6 },
+      "elementAffinity": { "arcane": 0.2, "void": 0.2 },
+      "description": "Timeless wyrms that transcend mortality, bending reality with their presence."
+    }
+  },
 }
