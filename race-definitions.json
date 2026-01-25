@@ -1,272 +1,682 @@
 {
-  // ============================================================
-  // RACE DEFINITIONS (Jan 2026)
-  // ------------------------------------------------------------
-  // These define:
-  // - Race identity & description
-  // - Base stat multipliers
-  // - Elemental affinities
-  // - Allowed / restricted weapon tags
-  // - Notes for subrace groupings
-  // ============================================================
-
   "humanoid": {
     "name": "Humanoid",
-    "description": "Mortals of flesh and blood, adaptable and diverse.",
-    "baseModifiers": { "hpMult": 1.0, "manaMult": 1.0 },
+    "description": "The most common mortal shape—two arms, two legs, and a spirit shaped by culture, conflict, and ambition.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.0 },
     "elementAffinity": {},
-    "weaponTagsAllowed": ["light", "medium", "heavy", "ranged", "magic"],
+    "weaponTagsAllowed": ["light", "medium", "heavy", "ranged", "magic", "focus"],
     "weaponTagsRestricted": [],
-    "notes": "Now includes human‑derived subraces: occultborn, monastic, duelist, etc."
+    "notes": "Defined not by innate power, but by adaptability and the will to shape their own destiny."
   },
 
   "elf": {
     "name": "Elf",
-    "description": "Graceful and magically attuned, but physically frail.",
+    "description": "Long‑lived wanderers whose senses stretch beyond the physical world, hearing the quiet pulse of magic in all things.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
     "elementAffinity": { "nature": 0.1, "arcane": 0.1 },
-    "weaponTagsAllowed": ["light", "ranged", "magic"],
+    "weaponTagsAllowed": ["light", "ranged", "magic", "focus"],
     "weaponTagsRestricted": ["heavy"],
-    "notes": "Strong synergy with mage, ranger, druid, monk."
+    "notes": "Their spirits resonate with ancient forests and forgotten ley‑lines, granting them grace where others find only mystery."
   },
 
   "dwarf": {
     "name": "Dwarf",
-    "description": "Sturdy and resilient, with strong physical defenses.",
+    "description": "Stout, unyielding, and carved from the bones of the earth, dwarves endure where others falter.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 0.9, "manaMult": 0.9 },
     "elementAffinity": { "earth": 0.1, "fire": 0.05 },
     "weaponTagsAllowed": ["medium", "heavy", "shield"],
-    "weaponTagsRestricted": ["light", "magic_focus"],
-    "notes": "Excellent for tank professions."
+    "weaponTagsRestricted": ["light", "focus"],
+    "notes": "Their hearts burn like forge‑fires, steady and resolute even in the darkest depths."
   },
 
   "orc": {
     "name": "Orc",
-    "description": "Powerful and aggressive warriors with low magical aptitude.",
+    "description": "Born of storm and struggle, orcs carry a fierce vitality that drives them toward challenge and triumph.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.15, "defMult": 1.0, "speedMult": 1.0, "manaMult": 0.7 },
     "elementAffinity": { "fire": 0.05 },
     "weaponTagsAllowed": ["medium", "heavy"],
-    "weaponTagsRestricted": ["magic_focus"],
-    "notes": "High synergy with warrior, berserker, barbarian."
+    "weaponTagsRestricted": ["focus"],
+    "notes": "Their strength is not merely physical—it is the fire of a spirit that refuses to break."
   },
 
   "goblinoid": {
     "name": "Goblinoid",
-    "description": "Cunning, fast, and opportunistic, but physically weak.",
+    "description": "Quick‑witted and quicker‑footed, goblinoids thrive in chaos, scavenging opportunity from every shadow.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.15, "manaMult": 1.0 },
     "elementAffinity": {},
     "weaponTagsAllowed": ["light", "ranged"],
     "weaponTagsRestricted": ["heavy"],
-    "notes": "Great synergy with thief, assassin, ranger."
+    "notes": "Their cunning is their greatest weapon, turning mischief into survival and survival into advantage."
   },
 
   "beastkin": {
     "name": "Beastkin",
-    "description": "Humanoids with animal lineage, agile and instinctive.",
+    "description": "Children of instinct and wilderness, beastkin walk the line between civilization and the primal world.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.05, "defMult": 0.95, "speedMult": 1.1, "manaMult": 0.9 },
     "elementAffinity": { "nature": 0.1 },
     "weaponTagsAllowed": ["light", "ranged", "claws", "fangs"],
     "weaponTagsRestricted": ["heavy"],
-    "notes": "Catkin, Dogkin, Wolfkin, Tigerkin, Boarkin, etc."
+    "notes": "Their senses sharpen the world into clarity—every scent, every sound, every heartbeat a story waiting to be read."
   },
 
   "draconian": {
     "name": "Draconian",
-    "description": "Scaled humanoids with elemental dragon ancestry.",
+    "description": "Scaled descendants of ancient wyrms, carrying the echo of draconic majesty in their blood.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.05, "speedMult": 1.0, "manaMult": 1.1 },
     "elementAffinity": {},
-    "weaponTagsAllowed": ["medium", "heavy", "magic"],
+    "weaponTagsAllowed": ["medium", "heavy", "magic", "breath"],
     "weaponTagsRestricted": [],
-    "notes": "Subraces: fire, frost, storm, crystal, etc."
+    "notes": "Their presence radiates elemental power, as though the world itself remembers the dragons they descend from."
   },
 
   "undead": {
     "name": "Undead",
-    "description": "Reanimated beings sustained by necrotic energy.",
+    "description": "Souls unmoored from life, bound to motion by necrotic will rather than breath or heartbeat.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.0, "speedMult": 0.95, "manaMult": 1.0 },
     "elementAffinity": { "dark": 0.2, "holy": -0.2 },
     "weaponTagsAllowed": ["light", "medium", "cursed", "ritual"],
     "weaponTagsRestricted": [],
-    "notes": "Skeleton, Ghoul, Wraith, Banshee."
+    "notes": "Their existence is a defiance of nature—an echo that refuses to fade."
   },
 
   "demonborn": {
     "name": "Demonborn",
-    "description": "Infernal beings of fire and shadow.",
+    "description": "Infernal blood burns within them, a smoldering ember of the hells that shapes their every breath.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.0 },
     "elementAffinity": { "fire": 0.2, "dark": 0.2, "holy": -0.2 },
     "weaponTagsAllowed": ["medium", "heavy", "cursed", "magic"],
     "weaponTagsRestricted": [],
-    "notes": "Succubus, Demon Knight, Abyssal Brute."
+    "notes": "Their shadows flicker like flame, whispering of realms where mortals dare not tread."
   },
 
   "voidborn": {
     "name": "Voidborn",
-    "description": "Warped entities touched by the void.",
+    "description": "Shaped by the silence between stars, voidborn carry the cold hunger of nothingness within their veins.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
     "elementAffinity": { "void": 0.3, "arcane": -0.1 },
     "weaponTagsAllowed": ["cursed", "void", "magic"],
     "weaponTagsRestricted": ["holy"],
-    "notes": "Void Reaver, Nullborn Ravager, Shadehound."
+    "notes": "Their presence bends the edges of reality, as though the world struggles to remember they exist."
   },
 
   "celestialborn": {
     "name": "Celestialborn",
-    "description": "Beings of radiant divine essence.",
+    "description": "Radiant souls touched by divine light, walking the mortal world with halos unseen.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": { "holy": 0.3, "dark": -0.2 },
     "weaponTagsAllowed": ["light", "magic", "holy"],
     "weaponTagsRestricted": ["cursed"],
-    "notes": "Seraph, Archon, Herald."
+    "notes": "Their footsteps leave warmth in their wake, as though the heavens themselves watch over them."
   },
 
   "spiritborn": {
     "name": "Spiritborn",
-    "description": "Ethereal beings partially detached from the physical world.",
+    "description": "Half‑anchored to the ethereal, their bodies shimmer with the faint glow of the unseen world.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.8, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": { "arcane": 0.1, "dark": 0.1 },
     "weaponTagsAllowed": ["magic", "ritual"],
     "weaponTagsRestricted": ["heavy"],
-    "notes": "Banshee, Wraith, Tidecaller."
-  },
-
-  "fae": {
-    "name": "Fae",
-    "description": "Nature‑aligned tricksters with magical affinity.",
-    "baseModifiers": { "hpMult": 0.95, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.15, "manaMult": 1.2 },
-    "elementAffinity": { "nature": 0.2 },
-    "weaponTagsAllowed": ["light", "magic"],
-    "weaponTagsRestricted": ["heavy"],
-    "notes": "Satyrs, sylvan spirits, druidic creatures."
-  },
-
-  "slimeborn": {
-    "name": "Slimeborn",
-    "description": "Amorphous beings with high resilience but awkward form.",
-    "baseModifiers": { "hpMult": 1.3, "atkMult": 0.9, "defMult": 1.0, "speedMult": 0.8, "manaMult": 1.0 },
-    "elementAffinity": { "poison": 0.2, "acid": 0.2 },
-    "weaponTagsAllowed": ["improvised", "ooze_form"],
-    "weaponTagsRestricted": ["heavy", "ranged"],
-    "notes": "Tiny Slime, Sticky Slime, Royal Slime."
-  },
-
-  "plantfolk": {
-    "name": "Plantfolk",
-    "description": "Living plant creatures with natural resilience.",
-    "baseModifiers": { "hpMult": 1.2, "atkMult": 0.9, "defMult": 1.1, "speedMult": 0.8, "manaMult": 1.0 },
-    "elementAffinity": { "nature": 0.3, "earth": 0.1 },
-    "weaponTagsAllowed": ["natural", "staff", "magic"],
-    "weaponTagsRestricted": ["heavy"],
-    "notes": "Treants, Thornborn, Rootbound."
-  },
-
-  "construct": {
-    "name": "Construct",
-    "description": "Artificial beings of metal, stone, or arcane design.",
-    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 1.2, "speedMult": 0.8, "manaMult": 0.5 },
-    "elementAffinity": { "lightning": -0.2, "poison": 0.5 },
-    "weaponTagsAllowed": ["heavy", "shield", "integrated"],
-    "weaponTagsRestricted": ["magic_focus"],
-    "notes": "Golems, Sentinels, Spellforged."
-  },
-
-  "chimera": {
-    "name": "Chimera",
-    "description": "Hybrid magical beasts with unpredictable traits.",
-    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.1 },
-    "elementAffinity": {},
-    "weaponTagsAllowed": ["natural", "magic"],
-    "weaponTagsRestricted": [],
-    "notes": "Arcane Chimera, Astral Chimera."
-  },
-
-  "astralborn": {
-    "name": "Astralborn",
-    "description": "Beings infused with cosmic or temporal energy.",
-    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.2, "manaMult": 1.3 },
-    "elementAffinity": { "arcane": 0.3 },
-    "weaponTagsAllowed": ["magic", "focus"],
-    "weaponTagsRestricted": ["heavy"],
-    "notes": "Astral‑Thread Weaver, Chrono‑Fractured Adept."
+    "notes": "They drift like whispers between realms, never fully belonging to either."
   },
 
   "elementalborn": {
     "name": "Elementalborn",
-    "description": "Mortals infused with elemental essence.",
+    "description": "Mortals infused with primal essence, their bodies shaped by flame, frost, storm, or stone.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": {},
     "weaponTagsAllowed": ["magic", "focus", "light"],
     "weaponTagsRestricted": ["heavy"],
-    "notes": "Fireborn, Iceborn, Stormborn, etc."
-  },
-
-  "elemental": {
-    "name": "Elemental",
-    "description": "A being composed entirely of primal or altered elemental forces.",
-    "baseModifiers": { "hpMult": 1.0, "manaMult": 1.2 },
-    "elementAffinity": {},
-    "weaponTagsAllowed": ["magic", "focus", "light"],
-    "weaponTagsRestricted": ["heavy"],
-    "notes": "Unified race for all elemental subraces."
-  },
-
-  "godspawn": {
-    "name": "Godspawn",
-    "description": "Beings of divine, cosmic, or primordial origin whose essence transcends mortal limits.",
-    "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.3, "speedMult": 1.1, "manaMult": 1.4 },
-    "elementAffinity": { "holy": 0.3, "arcane": 0.2, "void": 0.1 },
-    "weaponTagsAllowed": ["holy", "magic", "colossal", "cosmic"],
-    "weaponTagsRestricted": [],
-    "notes": "Includes Demigod, God, Void God, Eternal Wyrm, Celestial Radiant‑Tyrant, Apocalypse‑Crowned Worldrender."
-  },
-
-  "chaosborn": {
-    "name": "Chaosborn",
-    "description": "Unstable beings shaped by chaotic essence.",
-    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.1 },
-    "elementAffinity": { "chaos": 0.3 },
-    "weaponTagsAllowed": ["chaos", "magic", "light"],
-    "weaponTagsRestricted": [],
-    "notes": "Includes Sthreeven’s Chaotic Doppelcat, Chaos Wyrm, Funny Sthreeven Man."
-  },
-
-  "colossus": {
-    "name": "Colossus",
-    "description": "Towering beings of immense size and overwhelming power.",
-    "baseModifiers": { "hpMult": 1.5, "atkMult": 1.3, "defMult": 1.4, "speedMult": 0.6, "manaMult": 0.8 },
-    "elementAffinity": {},
-    "weaponTagsAllowed": ["colossal"],
-    "weaponTagsRestricted": ["light", "ranged"],
-    "notes": "Includes Thunder Colossus, Iron Colossus, Shadow Colossus."
+    "notes": "Their emotions flare like the elements within them—volatile, brilliant, and untamed."
   },
 
   "titanborn": {
     "name": "Titanborn",
-    "description": "Primordial giants forged from elemental or cosmic forces.",
+    "description": "Descendants of ancient giants, their blood carries the echo of mountains, storms, and primordial might.",
     "baseModifiers": { "hpMult": 1.4, "atkMult": 1.2, "defMult": 1.3, "speedMult": 0.7, "manaMult": 1.0 },
     "elementAffinity": { "earth": 0.2, "storm": 0.1 },
     "weaponTagsAllowed": ["heavy", "colossal"],
     "weaponTagsRestricted": ["light"],
-    "notes": "Includes Glacier Titan, Storm Titan, Verdant Colossus."
+    "notes": "Their presence feels like standing before a thunderhead—vast, immovable, and awe‑inspiring."
+  },
+
+  "giantkin": {
+    "name": "Giantkin",
+    "description": "Large‑framed descendants of lesser giants, towering over most mortals with quiet strength.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 1.1, "speedMult": 0.9, "manaMult": 1.0 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["heavy"],
+    "weaponTagsRestricted": ["light"],
+    "notes": "Their footsteps shake the ground, yet their hearts often beat with surprising gentleness."
+  },
+
+  "colossus": {
+    "name": "Colossus",
+    "description": "Titans of flesh or stone, towering far above even giantkin, embodiments of overwhelming force.",
+    "baseModifiers": { "hpMult": 1.5, "atkMult": 1.3, "defMult": 1.4, "speedMult": 0.6, "manaMult": 0.8 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["colossal"],
+    "weaponTagsRestricted": ["light", "ranged"],
+    "notes": "Their shadows fall like mountains, and their roars echo like avalanches."
+  },
+
+  "fae": {
+    "name": "Fae",
+    "description": "Whimsical, dangerous, and bound to ancient pacts, fae embody the wild magic of untamed realms.",
+    "baseModifiers": { "hpMult": 0.95, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.15, "manaMult": 1.2 },
+    "elementAffinity": { "nature": 0.2 },
+    "weaponTagsAllowed": ["light", "magic"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their laughter can bless or curse, and their promises bind tighter than iron."
+  },
+
+  "chimera": {
+    "name": "Chimera",
+    "description": "Beasts of fused essence, their bodies shaped by arcane whim or ancient alchemy.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.1 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their forms defy expectation—each limb, fang, or wing a testament to chaotic creation."
+  },
+
+  "construct": {
+    "name": "Construct",
+    "description": "Forged by mortal hands or ancient rituals, constructs move with purpose granted, not born.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 1.2, "speedMult": 0.8, "manaMult": 0.5 },
+    "elementAffinity": { "poison": 0.5, "lightning": -0.2 },
+    "weaponTagsAllowed": ["heavy", "shield", "integrated"],
+    "weaponTagsRestricted": ["focus"],
+    "notes": "Their hearts are gears or runes, yet some whisper that even metal can dream."
+  },
+
+  "plantfolk": {
+    "name": "Plantfolk",
+    "description": "Rooted in ancient soil and nourished by sunlight, plantfolk embody the quiet strength of nature.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 0.9, "defMult": 1.1, "speedMult": 0.8, "manaMult": 1.0 },
+    "elementAffinity": { "nature": 0.3, "earth": 0.1 },
+    "weaponTagsAllowed": ["natural", "magic", "focus"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their bodies bloom with life, each petal and thorn a memory of the forests that birthed them."
+  },
+
+  "slimeborn": {
+    "name": "Slimeborn",
+    "description": "Creatures of fluid form and shifting mass, their bodies ripple with strange resilience and quiet curiosity.",
+    "baseModifiers": { "hpMult": 1.3, "atkMult": 0.9, "defMult": 1.0, "speedMult": 0.8, "manaMult": 1.0 },
+    "elementAffinity": { "acid": 0.2, "poison": 0.2 },
+    "weaponTagsAllowed": ["improvised", "ooze_form", "natural"],
+    "weaponTagsRestricted": ["heavy", "ranged"],
+    "notes": "Their thoughts move like their bodies—slow at first, then suddenly shifting into unexpected clarity."
+  },
+
+  "insectoids": {
+    "name": "Insectoids",
+    "description": "Chitin‑clad and hive‑minded, insectoids navigate the world with alien precision and instinctive coordination.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.05, "defMult": 1.0, "speedMult": 1.15, "manaMult": 0.9 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "claws", "fangs", "light"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their movements click and hum in rhythmic patterns, as though answering a song only they can hear."
+  },
+
+  "arachnids": {
+    "name": "Arachnids",
+    "description": "Eight‑limbed hunters weaving fate and silk alike, their patience is as deadly as their venom.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 0.9 },
+    "elementAffinity": { "poison": 0.2 },
+    "weaponTagsAllowed": ["natural", "fangs", "claws"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their eyes glimmer with cold calculation, each step a silent promise of ambush."
+  },
+
+  "supernatural": {
+    "name": "Supernatural",
+    "description": "Beings touched by curses, rituals, or forces beyond mortal comprehension, existing half in shadow and half in myth.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "ritual", "light"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their presence bends the air, as though reality hesitates to decide what they truly are."
+  },
+
+  "astralborn": {
+    "name": "Astralborn",
+    "description": "Children of starlight and cosmic tides, their souls shimmer with the glow of distant constellations.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": { "arcane": 0.3 },
+    "weaponTagsAllowed": ["magic", "focus"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "They speak in tones that echo like distant galaxies, each word a fragment of celestial memory."
+  },
+
+  "chaosborn": {
+    "name": "Chaosborn",
+    "description": "Unstable beings shaped by raw entropy, their forms flicker between possibilities with every heartbeat.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.1 },
+    "elementAffinity": { "chaos": 0.3 },
+    "weaponTagsAllowed": ["chaos", "magic", "light"],
+    "weaponTagsRestricted": [],
+    "notes": "Their existence is a coin flip made flesh—beautiful, terrifying, and utterly unpredictable."
+  },
+
+  "dragonkin": {
+    "name": "Dragonkin",
+    "description": "Humanoids bearing the unmistakable spark of draconic ancestry, their spirits burn with inherited majesty.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.05, "speedMult": 1.0, "manaMult": 1.1 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic", "breath", "medium"],
+    "weaponTagsRestricted": [],
+    "notes": "Their eyes gleam with ancient pride, as though remembering skies they never flew."
+  },
+
+  "aberration": {
+    "name": "Aberration",
+    "description": "Twisted forms born of warped biology or psionic mutation, defying the symmetry of natural life.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic", "void"],
+    "weaponTagsRestricted": [],
+    "notes": "Their shapes unsettle the eye, as though reality struggles to render them correctly."
+  },
+
+  "eldritch": {
+    "name": "Eldritch",
+    "description": "Beings from beyond the veil of sanity, their minds echo with whispers from impossible realms.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.3 },
+    "elementAffinity": { "void": 0.2, "arcane": 0.1 },
+    "weaponTagsAllowed": ["magic", "void", "ritual"],
+    "weaponTagsRestricted": [],
+    "notes": "Their presence feels like a dream half‑remembered—familiar, yet fundamentally wrong."
+  },
+
+  "lich": {
+    "name": "Lich",
+    "description": "Masters of forbidden necromancy who traded mortality for eternal intellect and cold ambition.",
+    "baseModifiers": { "hpMult": 0.9, "atkMult": 0.9, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.5 },
+    "elementAffinity": { "dark": 0.3, "arcane": 0.2 },
+    "weaponTagsAllowed": ["magic", "ritual", "focus"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their souls are bound to phylacteries, their minds sharpened by centuries of unbroken thought."
+  },
+
+  "mimic": {
+    "name": "Mimic",
+    "description": "Shapeshifting predators that disguise themselves as mundane objects, waiting for the perfect moment to strike.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.0, "manaMult": 0.9 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "improvised"],
+    "weaponTagsRestricted": [],
+    "notes": "Their hunger is patient and clever, lurking behind the familiar comfort of everyday things."
+  },
+
+  "beast": {
+    "name": "Beast",
+    "description": "Creatures of instinct and muscle, shaped by the wild rather than by magic or civilization.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 0.8 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "claws", "fangs"],
+    "weaponTagsRestricted": ["magic"],
+    "notes": "Their strength is honest and unrefined, born from tooth, claw, and the struggle to survive."
+  },
+
+  "amorphous": {
+    "name": "Amorphous",
+    "description": "Shifting masses of living matter, their forms flow like liquid thought and dissolve all certainty.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 0.9, "speedMult": 0.9, "manaMult": 1.0 },
+    "elementAffinity": { "acid": 0.2 },
+    "weaponTagsAllowed": ["natural", "ooze_form"],
+    "weaponTagsRestricted": ["heavy", "ranged"],
+    "notes": "Their bodies ripple with alien logic, reshaping themselves in ways no bone‑bound creature could imagine."
+  },
+
+  "techborn": {
+    "name": "Techborn",
+    "description": "Mortals enhanced with cybernetic augmentations, bridging the gap between flesh and circuitry.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.0 },
+    "elementAffinity": { "electric": 0.1 },
+    "weaponTagsAllowed": ["tech", "ranged", "medium"],
+    "weaponTagsRestricted": ["ritual"],
+    "notes": "Their hearts beat in sync with humming power cores, each pulse a fusion of biology and machine."
+  },
+
+  "machina": {
+    "name": "Machina",
+    "description": "Autonomous machines forged for war, labor, or cosmic purpose, their minds shaped by logic rather than emotion.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.2, "speedMult": 1.0, "manaMult": 0.9 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["tech", "integrated", "heavy"],
+    "weaponTagsRestricted": ["focus"],
+    "notes": "Their footsteps echo with mechanical certainty, each movement calculated with perfect precision."
   },
 
   "dragon": {
     "name": "Dragon",
-    "description": "True dragons — apex predators with elemental breath and ancient power.",
+    "description": "Ancient apex beings of scale and flame, their wings carve the sky and their breath reshapes the world.",
     "baseModifiers": { "hpMult": 1.3, "atkMult": 1.3, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": {},
     "weaponTagsAllowed": ["natural", "breath", "magic"],
     "weaponTagsRestricted": [],
-    "notes": "Includes Fire Dragon, Ice Dragon, Storm Drake, Crystal Dragon, Chaos Wyrm, Primordial Wyrm."
+    "notes": "Their roars shake mountains, and their wisdom spans centuries beyond mortal reckoning."
   },
 
-  "unique": {
-    "name": "Unique",
-    "description": "Singular beings that defy all known biological categories.",
-    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.0 },
-    "elementAffinity": { "chaos": 0.1, "arcane": 0.1 },
+  "wyrm": {
+    "name": "Wyrm",
+    "description": "Serpentine ancients older than empires, their bodies coil through myth and primordial memory.",
+    "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.2, "speedMult": 1.1, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "breath", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their presence feels like a story whispered by the earth itself—deep, ancient, and unending."
+  },
+
+  "spirit": {
+    "name": "Spirit",
+    "description": "Ethereal echoes of emotion, memory, or elemental force, drifting between realms with weightless grace.",
+    "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "ritual"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their forms shimmer like candlelight in a breeze, never fully present yet impossible to ignore."
+  },
+
+  "mythic_beast": {
+    "name": "Mythic Beast",
+    "description": "Creatures of legend whose names echo through ancient tales—phoenixes, griffins, leviathans, and more.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.1, "speedMult": 1.1, "manaMult": 1.1 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic", "breath"],
+    "weaponTagsRestricted": [],
+    "notes": "Their existence blurs the line between myth and reality, embodying the grandeur of forgotten ages."
+  },
+
+  "divinity": {
+    "name": "Divinity",
+    "description": "Beings touched by divine lineage, carrying fragments of celestial or cosmic power within mortal frames.",
+    "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.3, "speedMult": 1.1, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["holy", "magic", "light"],
+    "weaponTagsRestricted": ["cursed"],
+    "notes": "Their presence radiates quiet authority, as though the heavens themselves acknowledge their bloodline."
+  },
+
+  "celestial": {
+    "name": "Celestial",
+    "description": "Radiant beings forged from divine light, their presence softens shadows and stirs reverence in mortal hearts.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.3 },
+    "elementAffinity": { "light": 0.1 },
+    "weaponTagsAllowed": ["holy", "magic", "light", "focus"],
+    "weaponTagsRestricted": ["cursed"],
+    "notes": "Their wings shimmer with the glow of distant heavens, each feather a hymn to creation."
+  },
+
+  "fiend": {
+    "name": "Fiend",
+    "description": "Born of infernal furnaces and abyssal hatred, fiends stride through the world as living calamities.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.1, "speedMult": 1.0, "manaMult": 1.1 },
+    "elementAffinity": { "dark": 0.1, "fire": 0.1 },
+    "weaponTagsAllowed": ["cursed", "heavy", "magic"],
+    "weaponTagsRestricted": ["holy"],
+    "notes": "Their laughter crackles like burning coals, and their shadows writhe with hungry intent."
+  },
+
+  "primordial": {
+    "name": "Primordial",
+    "description": "Ancient forces older than gods, shaped from the raw elements that birthed the world itself.",
+    "baseModifiers": { "hpMult": 1.3, "atkMult": 1.2, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus", "colossal"],
+    "weaponTagsRestricted": [],
+    "notes": "Their voices rumble like tectonic plates shifting, echoing with the memory of creation’s first dawn."
+  },
+
+  "ethereal": {
+    "name": "Ethereal",
+    "description": "Beings of pure energy and shimmering light, drifting through existence like living auroras.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.3, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus", "light"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their forms flicker like starlight on water, never fully solid yet undeniably present."
+  },
+
+  "titan": {
+    "name": "Titan",
+    "description": "Colossal beings of mythic stature, their steps reshape landscapes and their wrath births storms.",
+    "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.3, "speedMult": 0.9, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["colossal", "heavy"],
+    "weaponTagsRestricted": ["light"],
+    "notes": "Their bodies are monuments to ancient power, carved from the bones of forgotten ages."
+  },
+
+  "outer_god": {
+    "name": "Outer God",
+    "description": "Cosmic entities whose thoughts span galaxies and whose dreams sculpt the fabric of reality.",
+    "baseModifiers": { "hpMult": 1.5, "atkMult": 1.4, "defMult": 1.4, "speedMult": 1.2, "manaMult": 1.6 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["cosmic", "void", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their presence warps time and meaning, as though the universe itself strains to comprehend them."
+  },
+
+  "planar_entity": {
+    "name": "Planar Entity",
+    "description": "Natives of elemental, astral, shadow, or dream realms, shaped by the laws of worlds not their own.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus"],
+    "weaponTagsRestricted": [],
+    "notes": "Their forms shimmer with the essence of distant planes, carrying echoes of realms mortals rarely glimpse."
+  },
+
+  "anomaly": {
+    "name": "Anomaly",
+    "description": "Glitches in the tapestry of existence—paradoxes, errors, and impossibilities given wandering form.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["chaos", "void", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "They flicker between realities like broken reflections, their existence a cosmic typo that refuses correction."
+  },
+
+  "legendary_boss_template": {
+    "name": "Legendary Boss Template",
+    "description": "A mantle of power that transforms any being into a world‑shaking threat, feared across realms.",
+    "baseModifiers": { "hpMult": 3.0, "atkMult": 2.0, "defMult": 2.0, "speedMult": 1.2, "manaMult": 2.0 },
+    "elementAffinity": {},
     "weaponTagsAllowed": ["any"],
     "weaponTagsRestricted": [],
-    "notes": "Includes Plink, Plink of the Seventh Dimension, Funny Sthreeven Man, Sthreeven’s Chaotic Doppelcat."
+    "notes": "Those who bear this mantle become calamities—storms of will and destruction that reshape history."
+  },
+
+  "paragon": {
+    "name": "Paragon",
+    "description": "The perfected form of a race—an embodiment of its highest potential, refined beyond mortal limits.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.2, "speedMult": 1.2, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["any"],
+    "weaponTagsRestricted": [],
+    "notes": "They shine with the brilliance of absolute mastery, each step a testament to perfected essence."
+  },
+
+  "hybrid": {
+    "name": "Hybrid",
+    "description": "Beings born of impossible unions—fusions of essence, magic, or biology that defy natural order.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.1 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their bodies carry contradictions made flesh, each breath a negotiation between clashing ancestries."
+  },
+
+  "forgotten_race": {
+    "name": "Forgotten Race",
+    "description": "Extinct or hidden peoples whose names survive only in ruins, myths, and the whispers of old magic.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 1.0, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["light", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their legacy lingers like dust on ancient tomes, hinting at civilizations lost to time’s hunger."
+  },
+
+  "cosmic_construct": {
+    "name": "Cosmic Construct",
+    "description": "Machines forged by gods, titans, or outer beings—engines of purpose powered by celestial design.",
+    "baseModifiers": { "hpMult": 1.3, "atkMult": 1.2, "defMult": 1.3, "speedMult": 1.0, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["tech", "cosmic", "integrated"],
+    "weaponTagsRestricted": [],
+    "notes": "Their cores hum with starlight, each movement guided by equations older than mortal thought."
+  },
+
+  "metaphysical_phenomenon": {
+    "name": "Metaphysical Phenomenon",
+    "description": "Living storms, sentient spells, and wandering concepts—phenomena that gained awareness.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus", "light"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "They drift like ideas given shape, their forms shifting with the whims of thought and emotion."
+  },
+
+  "parasite": {
+    "name": "Parasite",
+    "description": "Symbiotic or predatory beings that bind themselves to hosts, feeding on body, mind, or soul.",
+    "baseModifiers": { "hpMult": 0.9, "atkMult": 1.2, "defMult": 0.9, "speedMult": 1.3, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "cursed"],
+    "weaponTagsRestricted": [],
+    "notes": "Their survival is entwined with others, their existence a delicate dance of hunger and dependence."
+  },
+
+  "cosmic_fauna": {
+    "name": "Cosmic Fauna",
+    "description": "Creatures that drift through the void between stars, feeding on starlight, gravity, or cosmic winds.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.1, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic", "cosmic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their bodies shimmer with nebula hues, as though painted by the cosmos itself."
+  },
+
+  "mythic_undead": {
+    "name": "Mythic Undead",
+    "description": "Undead of legendary stature—death titans, spectral emperors, and ancient pharaohs bound by eternal will.",
+    "baseModifiers": { "hpMult": 1.3, "atkMult": 1.3, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["cursed", "magic", "ritual"],
+    "weaponTagsRestricted": [],
+    "notes": "Their souls burn with necrotic majesty, commanding legions of the dead with a gesture."
+  },
+
+  "hivemind": {
+    "name": "Hivemind",
+    "description": "Collective intelligences spanning countless bodies, their thoughts woven into a single unified will.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.1, "speedMult": 1.2, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Each drone is a fragment of a greater consciousness, moving with eerie synchronicity."
+  },
+
+  "living_location": {
+    "name": "Living Location",
+    "description": "Sentient forests, awakened dungeons, and wandering cities—places that think, feel, and hunger.",
+    "baseModifiers": { "hpMult": 1.4, "atkMult": 1.2, "defMult": 1.4, "speedMult": 0.8, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "natural", "colossal"],
+    "weaponTagsRestricted": [],
+    "notes": "Their walls breathe, their roots listen, and their halls shift like dreams made stone."
+  },
+
+  "artificial_life": {
+    "name": "Artificial Life",
+    "description": "Digital phantoms, quantum beings, and algorithmic entities born from code rather than flesh.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["tech", "magic", "focus"],
+    "weaponTagsRestricted": [],
+    "notes": "Their minds flicker with synthetic dreams, each thought a cascade of luminous data."
+  },
+
+  "temporal_entity": {
+    "name": "Temporal Entity",
+    "description": "Beings unbound by linear time, drifting through past, present, and future as easily as mortals draw breath.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus", "light"],
+    "weaponTagsRestricted": ["heavy"],
+    "notes": "Their footsteps echo before they land, and their shadows fall where they have not yet stood."
+  },
+
+  "divine_beast": {
+    "name": "Divine Beast",
+    "description": "Animals touched by the breath of gods, their forms radiant with sacred power and mythic presence.",
+    "baseModifiers": { "hpMult": 1.3, "atkMult": 1.2, "defMult": 1.2, "speedMult": 1.1, "manaMult": 1.2 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["natural", "holy", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their roars shake temples, and their silhouettes are etched into the legends of every age."
+  },
+
+  "meta_entity": {
+    "name": "Meta Entity",
+    "description": "Self‑aware beings who perceive the boundaries of story and simulation, gazing beyond the veil of narrative.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.1, "speedMult": 1.3, "manaMult": 1.5 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "focus", "chaos"],
+    "weaponTagsRestricted": [],
+    "notes": "Their eyes track unseen observers, and their words bend toward truths mortals were never meant to hear."
+  },
+
+  "narrative_construct": {
+    "name": "Narrative Construct",
+    "description": "Stories given flesh—heroes who never lived, villains who never fell, myths that stepped out of their own tales.",
+    "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.1, "speedMult": 1.2, "manaMult": 1.3 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "light", "focus"],
+    "weaponTagsRestricted": [],
+    "notes": "Their existence is shaped by archetype and expectation, each action echoing the weight of legend."
+  },
+
+  "emotional": {
+    "name": "Emotional",
+    "description": "Sentient manifestations of feeling—wrath that burns, sorrow that chills, joy that blinds with radiance.",
+    "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["magic", "light", "ritual"],
+    "weaponTagsRestricted": [],
+    "notes": "Their forms pulse with the intensity of the emotions they embody, shaping the world with raw sentiment."
+  },
+
+  "paradox_god": {
+    "name": "Paradox God",
+    "description": "Deities of contradiction and impossibility—beings who exist before their creation and after their destruction.",
+    "baseModifiers": { "hpMult": 1.5, "atkMult": 1.4, "defMult": 1.4, "speedMult": 1.3, "manaMult": 1.6 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["cosmic", "void", "magic"],
+    "weaponTagsRestricted": [],
+    "notes": "Their presence fractures logic, and their words unravel truths that should never coexist."
+  },
+  
+  "unique": {
+    "name": "Unique",
+    "description": "One‑of‑a‑kind beings whose existence cannot be replicated—miracles, accidents, or singular creations that stand alone in all the world.",
+    "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.1 },
+    "elementAffinity": {},
+    "weaponTagsAllowed": ["any"],
+    "weaponTagsRestricted": [],
+    "notes": "Their origins defy categorization, each one a solitary story written only once in the history of existence."
+  },
+
+  "multiversal_paragon": {
+    "name": "Multiversal Paragon",
+    "description": "The supreme architect of all existence—creator, destroyer, and sovereign of infinite multiverses.",
+    "baseModifiers": { "hpMult": 999.0, "atkMult": 999.0, "defMult": 999.0, "speedMult": 999.0, "manaMult": 999.0 },
+    "elementAffinity": { "all": 1.0 },
+    "weaponTagsAllowed": ["any"],
+    "weaponTagsRestricted": [],
+    "notes": "Their will shapes realities, their breath births galaxies, and their silence ends eternity."
   }
+}
 }
