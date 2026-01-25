@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Mystery</title>
+  <title>Mystery Box</title>
 
   <style>
     body {
@@ -77,13 +77,6 @@
       background:#222832;
     }
 
-    /* rarity colors */
-    .rarity-common { color:#bfbfbf; }
-    .rarity-uncommon { color:#7fff7f; }
-    .rarity-rare { color:#7fcfff; }
-    .rarity-epic { color:#c77fff; }
-    .rarity-legendary { color:#ffbf5f; }
-
     #flavor {
       margin-top:10px;
       opacity:0.8;
@@ -122,6 +115,9 @@
     const PLAYER_API = "/api/player/get";
     const MYSTERY_API = "/api/mystery";
 
+    /* ============================================================
+       LOAD PLAYER
+       ============================================================ */
     async function loadPlayer() {
       if (!username) {
         document.getElementById("playerStats").textContent =
@@ -130,9 +126,10 @@
       }
 
       try {
-        const res = await fetch(PLAYER_API + "?username=" + encodeURIComponent(username), {
-          cache:"no-store"
-        });
+        const res = await fetch(
+          PLAYER_API + "?username=" + encodeURIComponent(username),
+          { cache:"no-store" }
+        );
 
         const data = await res.json();
         if (!data.success) {
@@ -153,6 +150,9 @@
       }
     }
 
+    /* ============================================================
+       OPEN MYSTERY
+       ============================================================ */
     async function openMystery() {
       if (!username) return;
 
@@ -189,12 +189,15 @@
       }
     }
 
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
     function goToInventory() {
-      window.location.href = "?page=inventory.html";
+      window.location.href = "inventory.html";
     }
 
     function goToMap() {
-      window.location.href = "?page=world-map.html";
+      window.location.href = "world-map.html";
     }
 
     loadPlayer();
