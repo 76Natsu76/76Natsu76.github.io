@@ -836,6 +836,26 @@
     </div>
   </div>
 
+  <select id="regionSelect">
+    <option value="forest">Forest</option>
+    <option value="mountains">Mountains</option>
+    <option value="swamp">Swamp</option>
+    <option value="desert">Desert</option>
+  </select>
+  
+  <button id="startFightBtn">Start Fight</button>
+  
+  <div id="combatLog" style="
+    width: 100%;
+    height: 400px;
+    overflow-y: auto;
+    background: #111;
+    color: #0f0;
+    padding: 10px;
+    font-family: monospace;
+    border: 1px solid #333;
+  "></div>
+
   <!-- ============================
        CINEMATIC INTRO
   ============================ -->
@@ -1512,5 +1532,51 @@
     }
 
   </script>
+  <script type="module">
+  import { startCombat } from "./combat-flow.js";
+
+  // UI elements
+  const startBtn = document.getElementById("startFightBtn");
+  const logBox   = document.getElementById("combatLog");
+  const regionSel = document.getElementById("regionSelect");
+
+  // Replace this with your real player loader
+  async function loadPlayer() {
+    const raw = JSON.parse(localStorage.getItem("playerData"));
+    return raw;
+  }
+
+  function renderLogs(logs) {
+    logBox.innerHTML = "";
+    for (const line of logs) {
+      const div = document.createElement("div");
+      div.textContent = line;
+      logBox.appendChild(div);
+    }
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  async function handleStartFight() {
+    logBox.innerHTML = "Starting combat…";
+
+    const player = await loadPlayer();
+    if (!player) {
+      logBox.innerHTML = "No player loaded.";
+      return;
+    }
+
+    const regionKey = regionSel.value || "forest";
+
+    try {
+      const result = startCombat(player.username, regionKey);
+      renderLogs(result.logs);
+    } catch (err) {
+      logBox.innerHTML = "Combat error: " + err.message;
+      console.error(err);
+    }
+  }
+
+  startBtn.addEventListener("click", handleStartFight);
+</script>
 </body>
 </html>
