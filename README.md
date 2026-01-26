@@ -301,30 +301,25 @@ Subraces are mapped in `subrace-race-index.json` and their stat/ability profiles
      }
    }
 3. **Status Effects**  
+   - Use statusEffects to attach DOTs, HOTs, shields, buffs, debuffs, cleanses, etc.
+   - status-engine.js, dot-hot-engine.js, shield-engine.js, and cleanse-engine.js interpret these.
 
- - Use statusEffects to attach DOTs, HOTs, shields, buffs, debuffs, cleanses, etc.
-
- - status-engine.js, dot-hot-engine.js, shield-engine.js, and cleanse-engine.js interpret these.
 
 4. **Ultimates**
-
- - Add isUltimate, chargeRequired, usesPerCombat if it’s an ultimate.
-
- - Wire ultimate charge logic in your combat flow (e.g. in combat-engine.js / combat-flow.js).
+   - Add isUltimate, chargeRequired, usesPerCombat if it’s an ultimate.
+   - Wire ultimate charge logic in your combat flow (e.g. in combat-engine.js / combat-flow.js).
 
 ## How to update talent trees
 
 1. **Edit profession-talent-trees.json**
-
- - Add or modify nodes, prerequisites, and bonuses.
+   - Add or modify nodes, prerequisites, and bonuses.
 
 2. **Hook into talent-modifiers.js**
-
- - Read the attacker’s talent state (however you store it) and adjust:
-  - damage
-  - crit chance
-  - resource costs
-  - status durations
+   - Read the attacker’s talent state (however you store it) and adjust:
+     - damage
+     - crit chance
+     - resource costs
+     - status durations
 
  - Example:
    ```javascript
@@ -341,10 +336,10 @@ Subraces are mapped in `subrace-race-index.json` and their stat/ability profiles
  - The world uses a tick counter (stored in world-data.js and/or related files).
  - Time is tracked in minutes, and seasons rotate weekly.
  - Seasons and ticks can influence:
-  - encounter tables
-  - shop inventories
-  - region modifiers
-  - profession/weather synergies
+     - encounter tables
+     - shop inventories
+     - region modifiers
+     - profession/weather synergies
 
  These hooks are intended to be wired through:
   - region-modifiers.js
