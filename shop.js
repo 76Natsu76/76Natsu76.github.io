@@ -1,26 +1,40 @@
 // /js/shop.js
-import { getMerchantInventory } from './merchant-inventory-store.js';
+import { getMerchantInventory } from "./merchant-inventory-store.js";
 
-const MERCHANT_ID = 'draugr_the_dwarf'; // or from URL/query
+export async function loadMerchant(merchantId) {
+  const container = document.getElementById("shop-items");
+  container.innerHTML = "Loading...";
 
-async function loadMerchant() {
-  const data = await getMerchantInventory(MERCHANT_ID);
+  const data = await getMerchantInventory(merchantId);
 
-  const container = document.getElementById('shop-items');
-  container.innerHTML = '';
+  container.innerHTML = "";
 
   for (const item of data.inventory) {
-    const el = document.createElement('div');
-    el.className = `shop-item rarity-${item.rarity}`;
+    const card = document.createElement("div");
+    card.className = `item-card rarity-${item.rarity} glow-${item.rarity}`;
 
-    el.innerHTML = `
-      <div class="item-name">${item.name}</div>
-      <div class="item-rarity">${item.rarity}</div>
-      <button class="buy-button" data-id="${item.id}">Buy</button>
+    card.innerHTML = `
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-price">${item.price ?? "??"} gold</div>
+        <div class="tooltip">
+          <strong>${item.name}</strong><br>
+          Rarity: ${item.rarity}<br>
+          Tier: ${item.tier}<br>
+          Type: ${item.type}
+        </div>
+      </div>
+      <div class="item-actions">
+        <button data-id="${item.id}">Buy</button>
+      </div>
     `;
 
-    container.appendChild(el);
+    container.appendChild(card);
   }
 }
 
-loadMerchant();
+export async function loadMerchantFromDOM() {
+  const container = document.getElementById("shop-items");
+  const merchantId = container.dataset.merchant;
+  await loadMerchant(merchantId);
+}
