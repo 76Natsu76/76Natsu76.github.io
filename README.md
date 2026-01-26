@@ -383,8 +383,7 @@ Almost everything is defined in JSON and resolved by modular JS engines.
 
 ## Add a new ability
 1. Add ability object → appropriate JSON file
-2.. Ensure status effects follow the schema
-
+2. Ensure status effects follow the schema
 3. Ability auto‑resolves via ability-resolver.js
 
 ## Combat Flow
