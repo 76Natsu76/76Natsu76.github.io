@@ -169,6 +169,16 @@
 
   <button class="btn" onclick="goToMap()">World Map</button>
   <button class="btn" onclick="goToInventory()">Inventory</button>
+  
+  <div id="shop-items" data-merchant="global_merchant">Loading...</div>
+  
+  <script type="module">
+    import { loadMerchantFromDOM } from "./js/shop.js";
+    import { initUserShopUI } from "./shop-ui.js";
+  
+    await loadMerchantFromDOM();
+    initUserShopUI();
+  </script>
 
   <script type="module">
     import { initGlobalShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
