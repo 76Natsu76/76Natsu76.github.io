@@ -352,4 +352,58 @@ Subraces are mapped in `subrace-race-index.json` and their stat/ability profiles
  - **Composable systems: enemies, races, professions, abilities, regions, merchants all plug into shared engines.**
  - **Twitch‑friendly: the architecture is designed so viewers can interact via commands that map cleanly to data‑driven actions.**
 
+# Developer Quickguide
+
+This project is fully data‑driven.
+Almost everything is defined in JSON and resolved by modular JS engines.
+
+## Add a new enemy
+1. Add base entry → enemies.json
+2. Add subrace → enemy-subrace.json
+3. Add abilities → enemy-abilities.json
+4. Add region placement → enemy-regions.json
+5. Add loot → region-loot-tables.json or boss-loot-tables.json
+
+## Add a new item
+1. Add item → items.json
+2. Add to loot tables → loot-tables.json, region-loot-tables.json, etc.
+3. Add to merchant pools → merchant-inventory.json
+
+## Add a new profession
+1. Add definition → profession-definitions.json
+2. Add abilities → ability-definitions.json
+3. Add talent tree → profession-talent-trees.json
+4. Add starter kit → profession-starter-kits.json
+
+## Add a new race
+1. Add race → race-definitions.json
+2. Add subraces → subrace-race-index.json
+3. Add subrace stats → subrace-stat-profiles.json
+4. Add subrace abilities → subrace-ability-definitions.json
+
+## Add a new ability
+1. Add ability object → appropriate JSON file
+2.. Ensure status effects follow the schema
+
+3. Ability auto‑resolves via ability-resolver.js
+
+## Combat Flow
+ - combat-engine.js
+     - handles turn order
+ - ability-resolver.js
+     - handles ability execution
+ - status-engine.js
+     - handles DOT/HOT/buffs/debuffs
+ - shield-engine.js
+     - handles shields
+ - cleanse-engine.js
+     - handles cleanses
+
+## World Integration
+ - Biomes → biomes.json
+ - Weather → weatherTable.js
+ - Regions → regions.json
+ - World modifiers → world-modifiers.js
+
+   
 ## Welcome to the multiversal canon.
