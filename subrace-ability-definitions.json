@@ -1,0 +1,828 @@
+{
+  "humanoid": {
+    "human": {
+      "adaptability": {
+        "key": "adaptability",
+        "name": "Adaptability",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["support"],
+        "statusEffects": [
+          { "type": "buff_all_stats_percent", "value": 3, "duration": 2 }
+        ],
+        "description": "Human versatility grants a brief boost to all attributes."
+      }
+    },
+    "occultborn": {
+      "shadow_spark": {
+        "key": "shadow_spark",
+        "name": "Shadow Spark",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.05,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["dark", "magic"],
+        "statusEffects": [],
+        "description": "A flicker of occult energy lashes out at the target."
+      }
+    },
+    "monastic": {
+      "inner_focus": {
+        "key": "inner_focus",
+        "name": "Inner Focus",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["buff"],
+        "statusEffects": [
+          { "type": "buff_evasion", "valuePerTurn": 20, "duration": 1 }
+        ],
+        "description": "A moment of clarity heightens reflexes."
+      }
+    },
+    "duelist": {
+      "quick_thrust": {
+        "key": "quick_thrust",
+        "name": "Quick Thrust",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.06,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["physical", "pierce"],
+        "statusEffects": [],
+        "description": "A swift, precise thrust aimed at a weak point."
+      }
+    }
+  },
+
+  "elf": {
+    "high_elf": {
+      "arcane_affinity": {
+        "key": "arcane_affinity",
+        "name": "Arcane Affinity",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["magic", "buff"],
+        "statusEffects": [
+          { "type": "buff_magic_power", "valuePerTurn": 10, "duration": 2 }
+        ],
+        "description": "Innate arcane talent enhances magical potency."
+      }
+    },
+    "dark_elf": {
+      "shadow_step": {
+        "key": "shadow_step",
+        "name": "Shadow Step",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 4,
+        "cooldown": 2,
+        "combatTags": ["shadow", "mobility"],
+        "statusEffects": [
+          { "type": "buff_evasion", "valuePerTurn": 20, "duration": 1 }
+        ],
+        "description": "You slip briefly into shadow, becoming harder to strike."
+      },
+      "umbral_bolt": {
+        "key": "umbral_bolt",
+        "name": "Umbral Bolt",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["shadow", "magic"],
+        "statusEffects": [
+          { "type": "curse", "value": 8, "duration": 2 }
+        ],
+        "description": "A bolt of condensed darkness that weakens the target."
+      }
+    },
+    "wood_elf": {
+      "forest_step": {
+        "key": "forest_step",
+        "name": "Forest Step",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["mobility"],
+        "statusEffects": [
+          { "type": "buff_speed", "valuePerTurn": 15, "duration": 1 }
+        ],
+        "description": "Graceful movement inspired by the forest."
+      }
+    },
+    "frost_elf": {
+      "frost_touch": {
+        "key": "frost_touch",
+        "name": "Frost Touch",
+        "basePower": 0.7,
+        "scalingPerLevel": 0.05,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["ice", "magic"],
+        "statusEffects": [
+          { "type": "chilled", "duration": 1 }
+        ],
+        "description": "A chilling touch slows the target."
+      }
+    }
+  },
+
+  "dwarf": {
+    "mountain_dwarf": {
+      "stone_skin": {
+        "key": "stone_skin",
+        "name": "Stone Skin",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["defense"],
+        "statusEffects": [
+          { "type": "buff_def", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "Skin hardens like stone, increasing defense."
+      }
+    },
+    "deep_dwarf": {
+      "cave_sense": {
+        "key": "cave_sense",
+        "name": "Cave Sense",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["support"],
+        "statusEffects": [
+          { "type": "buff_accuracy", "valuePerTurn": 10, "duration": 2 }
+        ],
+        "description": "Innate awareness sharpens senses underground."
+      }
+    }
+  },
+
+  "orc": {
+    "ironhide_orc": {
+      "ironhide": {
+        "key": "ironhide",
+        "name": "Ironhide",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["defense"],
+        "statusEffects": [
+          { "type": "damage_reduction_percent", "value": 10, "duration": 1 }
+        ],
+        "description": "Thick hide reduces incoming damage."
+      }
+    },
+    "bloodfang_orc": {
+      "blood_rush": {
+        "key": "blood_rush",
+        "name": "Blood Rush",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["buff"],
+        "statusEffects": [
+          { "type": "buff_atk", "valuePerTurn": 15, "duration": 1 }
+        ],
+        "description": "A surge of bloodlust increases attack power."
+      }
+    }
+  },
+
+  "goblinoid": {
+    "goblin": {
+      "scrap_toss": {
+        "key": "scrap_toss",
+        "name": "Scrap Toss",
+        "basePower": 0.7,
+        "scalingPerLevel": 0.05,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["physical", "ranged"],
+        "statusEffects": [],
+        "description": "A thrown piece of junk deals minor damage."
+      }
+    },
+    "hobgoblin": {
+      "battle_discipline": {
+        "key": "battle_discipline",
+        "name": "Battle Discipline",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["buff"],
+        "statusEffects": [
+          { "type": "buff_def", "valuePerTurn": 10, "duration": 2 }
+        ],
+        "description": "Rigid discipline bolsters defenses."
+      }
+    },
+    "bugbear": {
+      "ambush_club": {
+        "key": "ambush_club",
+        "name": "Ambush Club",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["physical", "blunt"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "A heavy ambush strike disrupts the target."
+      }
+    }
+  },
+
+  "beastkin": {
+    "wolfkin": {
+      "feral_lunge": {
+        "key": "feral_lunge",
+        "name": "Feral Lunge",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["physical", "beast"],
+        "statusEffects": [
+          { "type": "bleed", "value": 5, "duration": 2 }
+        ],
+        "description": "A sudden predatory leap that tears into the target."
+      }
+    },
+    "catkin": {
+      "pounce": {
+        "key": "pounce",
+        "name": "Pounce",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["physical", "agile"],
+        "statusEffects": [
+          { "type": "buff_evasion", "valuePerTurn": 15, "duration": 1 }
+        ],
+        "description": "A swift pounce that boosts evasiveness."
+      }
+    },
+    "dogkin": {
+      "pack_spirit": {
+        "key": "pack_spirit",
+        "name": "Pack Spirit",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["support"],
+        "statusEffects": [
+          { "type": "team_buff_speed", "valuePerTurn": 10, "duration": 1 }
+        ],
+        "description": "Loyal pack instincts inspire allies to move faster."
+      }
+    },
+    "tigerkin": {
+      "rending_swipe": {
+        "key": "rending_swipe",
+        "name": "Rending Swipe",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["physical", "slash"],
+        "statusEffects": [
+          { "type": "bleed", "value": 6, "duration": 2 }
+        ],
+        "description": "A powerful swipe that rends flesh."
+      }
+    },
+    "boarkin": {
+      "boar_charge": {
+        "key": "boar_charge",
+        "name": "Boar Charge",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["physical", "charge"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "A reckless charge that knocks the target off balance."
+      }
+    }
+  },
+
+  "draconian": {
+    "fire_draconian": {
+      "ember_breath": {
+        "key": "ember_breath",
+        "name": "Ember Breath",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["fire", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "burn", "value": 6, "duration": 2 }
+        ],
+        "description": "A cone of heated embers scorches nearby foes."
+      }
+    },
+    "frost_draconian": {
+      "glacial_scales": {
+        "key": "glacial_scales",
+        "name": "Glacial Scales",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["ice", "defense"],
+        "statusEffects": [
+          { "type": "buff_resist", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "Frost‑hardened scales increase resistance to damage."
+      }
+    },
+    "storm_draconian": {
+      "thunder_snap": {
+        "key": "thunder_snap",
+        "name": "Thunder Snap",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["lightning", "magic"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A crackling burst of lightning jolts the target."
+      }
+    },
+    "crystal_draconian": {
+      "crystal_shard": {
+        "key": "crystal_shard",
+        "name": "Crystal Shard",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["arcane", "pierce"],
+        "statusEffects": [],
+        "description": "A razor‑sharp shard of crystal is launched at the target."
+      }
+    }
+  },
+
+  "undead": {
+    "skeleton": {
+      "bone_rattle": {
+        "key": "bone_rattle",
+        "name": "Bone Rattle",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["debuff"],
+        "statusEffects": [
+          { "type": "debuff_atk", "valuePerTurn": -10, "duration": 1 }
+        ],
+        "description": "A rattling shriek weakens the target’s resolve."
+      }
+    },
+    "zombie": {
+      "rotting_grasp": {
+        "key": "rotting_grasp",
+        "name": "Rotting Grasp",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.05,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["decay", "melee"],
+        "statusEffects": [
+          { "type": "poison", "value": 4, "duration": 2 }
+        ],
+        "description": "A decayed hand spreads infection."
+      }
+    },
+    "ghoul": {
+      "frenzied_claw": {
+        "key": "frenzied_claw",
+        "name": "Frenzied Claw",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["physical", "feral"],
+        "statusEffects": [
+          { "type": "bleed", "value": 5, "duration": 2 }
+        ],
+        "description": "A savage claw attack that tears flesh."
+      }
+    },
+    "wight": {
+      "life_drain": {
+        "key": "life_drain",
+        "name": "Life Drain",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["dark", "lifesteal"],
+        "statusEffects": [
+          { "type": "lifesteal_percent", "value": 15, "duration": 0 }
+        ],
+        "description": "A chilling touch siphons vitality."
+      }
+    }
+  },
+
+  "demonborn": {
+    "impborn": {
+      "hell_nip": {
+        "key": "hell_nip",
+        "name": "Hell Nip",
+        "basePower": 0.7,
+        "scalingPerLevel": 0.05,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["fire", "mischief"],
+        "statusEffects": [
+          { "type": "burn", "value": 3, "duration": 1 }
+        ],
+        "description": "A mischievous fiery bite."
+      }
+    },
+    "fiendling": {
+      "infernal_spike": {
+        "key": "infernal_spike",
+        "name": "Infernal Spike",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["fire", "dark"],
+        "statusEffects": [],
+        "description": "A spike of infernal energy pierces the target."
+      }
+    },
+    "brimstoneborn": {
+      "brimstone_aura": {
+        "key": "brimstone_aura",
+        "name": "Brimstone Aura",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["fire", "buff"],
+        "statusEffects": [
+          { "type": "burn_retaliation", "value": 4, "duration": 2 }
+        ],
+        "description": "A fiery aura scorches attackers."
+      }
+    }
+  },
+
+  "voidborn": {
+    "shardling": {
+      "void_shard": {
+        "key": "void_shard",
+        "name": "Void Shard",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["void", "magic"],
+        "statusEffects": [],
+        "description": "A fragment of void energy is hurled at the target."
+      }
+    },
+    "nullspawn": {
+      "entropy_touch": {
+        "key": "entropy_touch",
+        "name": "Entropy Touch",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["void", "debuff"],
+        "statusEffects": [
+          { "type": "debuff_def", "valuePerTurn": -10, "duration": 1 }
+        ],
+        "description": "A destabilizing touch weakens physical structure."
+      }
+    }
+  },
+
+  "elementalborn": {
+    "fireborn": {
+      "ember_spark": {
+        "key": "ember_spark",
+        "name": "Ember Spark",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["fire", "magic"],
+        "statusEffects": [
+          { "type": "burn", "value": 4, "duration": 2 }
+        ],
+        "description": "A flickering ember leaps from your hand, igniting the target."
+      }
+    },
+    "frostborn": {
+      "ice_skin": {
+        "key": "ice_skin",
+        "name": "Ice Skin",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["ice", "defense"],
+        "statusEffects": [
+          { "type": "buff_resist", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "A thin layer of frost forms over your skin, reducing incoming damage."
+      }
+    },
+    "stormborn": {
+      "static_burst": {
+        "key": "static_burst",
+        "name": "Static Burst",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["lightning", "magic"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A sudden discharge of static electricity jolts the target."
+      }
+    },
+    "earthborn": {
+      "stone_grip": {
+        "key": "stone_grip",
+        "name": "Stone Grip",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["earth", "control"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "Earthen force grips the target, slowing their movements."
+      }
+    }
+  },
+
+  "fae": {
+    "sprite": {
+      "glimmer_dust": {
+        "key": "glimmer_dust",
+        "name": "Glimmer Dust",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 4,
+        "cooldown": 2,
+        "combatTags": ["illusion", "debuff"],
+        "statusEffects": [
+          { "type": "confuse", "duration": 1 }
+        ],
+        "description": "A sprinkle of enchanted dust disorients the target."
+      }
+    },
+    "dryad": {
+      "barkskin": {
+        "key": "barkskin",
+        "name": "Barkskin",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["nature", "defense"],
+        "statusEffects": [
+          { "type": "buff_def", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "Your skin hardens like bark, increasing defense."
+      }
+    },
+    "trickster_fae": {
+      "fae_prank": {
+        "key": "fae_prank",
+        "name": "Fae Prank",
+        "basePower": 0.7,
+        "scalingPerLevel": 0.05,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["illusion", "mischief"],
+        "statusEffects": [
+          { "type": "debuff_accuracy", "valuePerTurn": -15, "duration": 1 }
+        ],
+        "description": "A mischievous illusion throws off the target’s aim."
+      }
+    }
+  },
+
+  "construct": {
+    "golem": {
+      "stone_fist": {
+        "key": "stone_fist",
+        "name": "Stone Fist",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["earth", "blunt"],
+        "statusEffects": [],
+        "description": "A heavy stone punch crushes the target."
+      }
+    },
+    "clockwork": {
+      "gear_spin": {
+        "key": "gear_spin",
+        "name": "Gear Spin",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["mechanical", "physical"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "Whirring gears strike the target with mechanical force."
+      }
+    },
+    "animated_armor": {
+      "metal_clang": {
+        "key": "metal_clang",
+        "name": "Metal Clang",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["metal", "blunt"],
+        "statusEffects": [],
+        "description": "A hollow clang of metal slams into the target."
+      }
+    }
+  },
+
+  "plantfolk": {
+    "vinefolk": {
+      "vine_whip": {
+        "key": "vine_whip",
+        "name": "Vine Whip",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["nature", "pierce"],
+        "statusEffects": [
+          { "type": "bleed", "value": 4, "duration": 2 }
+        ],
+        "description": "A thorned vine lashes the target."
+      }
+    },
+    "bloomling": {
+      "pollen_burst": {
+        "key": "pollen_burst",
+        "name": "Pollen Burst",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 4,
+        "cooldown": 2,
+        "combatTags": ["nature", "debuff"],
+        "statusEffects": [
+          { "type": "debuff_accuracy", "valuePerTurn": -10, "duration": 1 }
+        ],
+        "description": "A cloud of pollen irritates and distracts the target."
+      }
+    }
+  },
+
+  "slimeborn": {
+    "green_slime": {
+      "acidic_touch": {
+        "key": "acidic_touch",
+        "name": "Acidic Touch",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["acid", "ooze"],
+        "statusEffects": [
+          { "type": "acid", "value": 4, "duration": 2 }
+        ],
+        "description": "A corrosive touch melts armor and flesh."
+      }
+    },
+    "acid_slime": {
+      "corrosive_spray": {
+        "key": "corrosive_spray",
+        "name": "Corrosive Spray",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["acid", "aoe"],
+        "statusEffects": [
+          { "type": "acid", "value": 5, "duration": 2 }
+        ],
+        "description": "A spray of acid splashes across multiple foes."
+      }
+    },
+    "royal_slime": {
+      "gelatinous_crush": {
+        "key": "gelatinous_crush",
+        "name": "Gelatinous Crush",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["ooze", "blunt"],
+        "statusEffects": [],
+        "description": "A massive gelatinous slam crushes the target."
+      }
+    }
+  },
+
+  "insectoids": {
+    "mantid": {
+      "razor_swipe": {
+        "key": "razor_swipe",
+        "name": "Razor Swipe",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["physical", "slash"],
+        "statusEffects": [
+          { "type": "bleed", "value": 5, "duration": 2 }
+        ],
+        "description": "A sharp mantid strike cuts deep."
+      }
+    },
+    "beetlefolk": {
+      "carapace_guard": {
+        "key": "carapace_guard",
+        "name": "Carapace Guard",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["defense"],
+        "statusEffects": [
+          { "type": "buff_def", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "A hardened shell increases defense."
+      }
+    }
+  },
+
+  "arachnids": {
+    "spiderling": {
+      "web_shot": {
+        "key": "web_shot",
+        "name": "Web Shot",
+        "basePower": 0.7,
+        "scalingPerLevel": 0.05,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["nature", "control"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 25, "duration": 2 }
+        ],
+        "description": "A sticky web slows the target."
+      }
+    },
+    "weaver_spider": {
+      "venom_fang": {
+        "key": "venom_fang",
+        "name": "Venom Fang",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["poison", "pierce"],
+        "statusEffects": [
+          { "type": "poison", "value": 6, "duration": 2 }
+        ],
+        "description": "A venomous bite inflicts lingering poison."
+      }
+    }
+  },
+
+  
