@@ -68,11 +68,6 @@
       const json = await res.json();
       log("Token response: " + JSON.stringify(json));
 
-      if (!json.access_token) {
-        log("Token exchange failed.");
-        return;
-      }
-
       if (json.status !== "success") {
         log("Login failed: " + JSON.stringify(json));
         return;
@@ -80,17 +75,6 @@
       localStorage.setItem("rpg_session", json.session_token);
       localStorage.setItem("rpg_username", json.username);
       localStorage.setItem("rpg_user_id", json.user_id);
-
-
-      const userJson = await userRes.json();
-      const user = userJson.data[0];
-
-      sessionStorage.setItem("twitch_username", user.login);
-      sessionStorage.setItem("twitch_user_id", user.id);
-
-      // Load or create player locally
-      const player = PlayerStorage.load(user.login);
-      sessionStorage.setItem("player", JSON.stringify(player));
 
       window.location.href = "landing.html";
     }
