@@ -300,3 +300,61 @@ Subraces are mapped in `subrace-race-index.json` and their stat/ability profiles
        "description": "A simple prayer restores a small amount of health."
      }
    }
+3. **Status Effects**  
+
+ - Use statusEffects to attach DOTs, HOTs, shields, buffs, debuffs, cleanses, etc.
+
+ - status-engine.js, dot-hot-engine.js, shield-engine.js, and cleanse-engine.js interpret these.
+
+4. **Ultimates**
+
+ - Add isUltimate, chargeRequired, usesPerCombat if it’s an ultimate.
+
+ - Wire ultimate charge logic in your combat flow (e.g. in combat-engine.js / combat-flow.js).
+
+## How to update talent trees
+
+1. **Edit profession-talent-trees.json**
+
+ - Add or modify nodes, prerequisites, and bonuses.
+
+2. **Hook into talent-modifiers.js**
+
+ - Read the attacker’s talent state (however you store it) and adjust:
+  - damage
+  - crit chance
+  - resource costs
+  - status durations
+
+ - Example:
+   ```javascript
+    // talent-modifiers.js
+    if (attacker.talents?.fire_mastery && ability.combatTags?.includes('fire')) {
+      dmg *= 1.1;
+    }
+3. **UI / allocation**
+
+ - Ensure your talent allocation UI (if any) writes to the same structure that talent-modifiers.js expects.
+
+## World tick & seasons
+
+ - The world uses a tick counter (stored in world-data.js and/or related files).
+ - Time is tracked in minutes, and seasons rotate weekly.
+ - Seasons and ticks can influence:
+  - encounter tables
+  - shop inventories
+  - region modifiers
+  - profession/weather synergies
+
+ These hooks are intended to be wired through:
+  - region-modifiers.js
+  - world-modifiers.js
+  - profession-weather-synergies.json
+
+## Philosophy
+ - **Data first: JSON defines the world; JS reads and resolves it.**
+ - **No magic constants: everything important lives in a file you can edit.**
+ - **Composable systems: enemies, races, professions, abilities, regions, merchants all plug into shared engines.**
+ - **Twitch‑friendly: the architecture is designed so viewers can interact via commands that map cleanly to data‑driven actions.**
+
+## Welcome to the multiversal canon.
