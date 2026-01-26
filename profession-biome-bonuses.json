@@ -1,0 +1,130 @@
+{
+  "acolyte": {
+    "celestial_shrine": 0.05
+  },
+  "adept": {
+    "arcane_fields": 0.05
+  },
+  "alchemist": {
+    "swamp": 0.05
+  },
+  "apocalypse": {
+    "ruins": 0.10
+  },
+  "archer": {
+    "plains": 0.05
+  },
+  "assassin": {
+    "urban_ruins": 0.05
+  },
+  "berserker": {
+    "mountain_peak": 0.05
+  },
+  "blacksmith": {
+    "mountain": 0.05
+  },
+  "bozo": {
+    "carnival": 0.10
+  },
+  "carpenter": {
+    "forest": 0.05
+  },
+  "chef": {
+    "grassland": 0.03
+  },
+  "cleric": {
+    "celestial_shrine": 0.08
+  },
+  "corrupted": {
+    "abyss": 0.08
+  },
+  "druid": {
+    "forest": 0.08,
+    "deep_forest": 0.10,
+    "ancient_forest": 0.12
+  },
+  "fisherman": {
+    "coastal": 0.10
+  },
+  "guardian": {
+    "fortress": 0.05
+  },
+  "healer": {
+    "grassland": 0.05
+  },
+  "herbalist": {
+    "forest": 0.05,
+    "swamp": 0.05
+  },
+  "leatherworker": {
+    "grassland": 0.03
+  },
+  "mage": {
+    "arcane_fields": 0.08
+  },
+  "miner": {
+    "cave": 0.10,
+    "mountain": 0.08,
+    "mountain_peak": 0.10
+  },
+  "monk": {
+    "mountain_peak": 0.05
+  },
+  "necromancer": {
+    "void_realm": 0.08,
+    "abyss": 0.10
+  },
+  "paladin": {
+    "celestial_shrine": 0.05
+  },
+  "ranger": {
+    "forest": 0.05,
+    "plains": 0.05
+  },
+  "ritualist": {
+    "void_realm": 0.10,
+    "abyss": 0.12
+  },
+  "rogue": {
+    "urban_ruins": 0.05
+  },
+  "rot": {
+    "swamp": 0.08
+  },
+  "shaman": {
+    "tundra": 0.05
+  },
+  "spelunker": {
+    "cave": 0.10,
+    "crystal_cave": 0.12,
+    "subterranean": 0.10
+  },
+  "thief": {
+    "urban_ruins": 0.05
+  },
+  "tinkerer": {
+    "arcane_fields": 0.05
+  },
+  "trainee": {
+    "plains": 0.02
+  },
+  "trickster": {
+    "carnival": 0.10
+  },
+  "void": {
+    "void_realm": 0.12,
+    "abyss": 0.10
+  },
+  "warlock": {
+    "abyss": 0.10
+  },
+  "warrior": {
+    "fortress": 0.05
+  },
+  "weaver": {
+    "grassland": 0.03
+  },
+  "witch": {
+    "swamp": 0.08
+  }
+}
