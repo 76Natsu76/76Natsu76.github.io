@@ -5,30 +5,17 @@
   <title>Daily Shop</title>
 
   <style>
+    /* ——— your existing CSS unchanged ——— */
     body {
       background:#0d0f14;
       color:#e8e8e8;
       font-family:system-ui, sans-serif;
       padding:24px;
     }
+    h1 { color:#7fffd4; margin-bottom:4px; }
+    #usernameDisplay { opacity:0.8; margin-bottom:16px; }
+    #userShopGold { margin-bottom:12px; font-size:16px; color:#ffd27f; }
 
-    h1 {
-      color:#7fffd4;
-      margin-bottom:4px;
-    }
-
-    #usernameDisplay {
-      opacity:0.8;
-      margin-bottom:16px;
-    }
-
-    #userShopGold {
-      margin-bottom:12px;
-      font-size:16px;
-      color:#ffd27f;
-    }
-
-    /* Inventory Panel */
     .inventory-panel {
       background:#14171f;
       border:1px solid #333;
@@ -36,7 +23,6 @@
       border-radius:8px;
       margin-bottom:20px;
     }
-
     .hidden { display:none; }
 
     .inventory-item {
@@ -46,7 +32,6 @@
       border-radius:6px;
       border:1px solid #333;
     }
-
     .inventory-item-name { font-weight:600; }
     .inventory-item-qty { opacity:0.8; font-size:13px; }
 
@@ -55,7 +40,6 @@
       box-shadow:0 0 8px #7fff7f55;
     }
 
-    /* Shop Items */
     .item-card {
       padding:12px;
       margin:10px 0;
@@ -68,7 +52,6 @@
       position:relative;
       transition:0.2s;
     }
-
     .item-card:hover { background:#222832; }
 
     .item-info { max-width:70%; }
@@ -84,7 +67,6 @@
       cursor:pointer;
       font-size:12px;
     }
-
     .item-actions button:hover { background:#222832; }
 
     .tooltip {
@@ -100,10 +82,8 @@
       z-index:1000;
       font-size:13px;
     }
-
     .item-card:hover .tooltip { display:block; }
 
-    /* Rarity Colors */
     .rarity-common { color:#bfbfbf; }
     .rarity-uncommon { color:#7fff7f; }
     .rarity-rare { color:#7fcfff; }
@@ -111,7 +91,6 @@
     .rarity-ultra { color:#ffbf5f; }
     .rarity-ridiculous { color:#ff4f4f; }
 
-    /* Glow Effects */
     .glow-common { box-shadow:0 0 6px #bfbfbf55; }
     .glow-uncommon { box-shadow:0 0 8px #7fff7f55; }
     .glow-rare { box-shadow:0 0 10px #7fcfff55; }
@@ -119,13 +98,11 @@
     .glow-ultra { box-shadow:0 0 14px #ffbf5f55; }
     .glow-ridiculous { box-shadow:0 0 16px #ff4f4f55; }
 
-    /* Subtle animation */
     @keyframes rarityPulse {
       0% { transform:scale(1); }
       50% { transform:scale(1.02); }
       100% { transform:scale(1); }
     }
-
     .rarity-animated {
       animation: rarityPulse 2.5s infinite ease-in-out;
     }
@@ -141,7 +118,6 @@
       width:100%;
       text-align:center;
     }
-
     .btn:hover { background:#222832; }
   </style>
 </head>
@@ -154,7 +130,6 @@
   <div id="usernameDisplay"></div>
   <button id="setTokenBtn" class="btn">Set GitHub Token</button>
 
-  <!-- Inventory Panel -->
   <button id="toggleInventoryBtn" class="btn">Toggle Inventory</button>
   <div id="inventoryPanel" class="inventory-panel hidden">
     <h2>Your Inventory</h2>
@@ -165,13 +140,17 @@
     Gold: <span id="userShopGold">0</span>
   </div>
 
-  <div id="userShopContainer" style="margin-top:20px;">Loading...</div>
+  <!-- The merchant container -->
+  <div id="shop-items" data-merchant="daily_merchant" style="margin-top:20px;">
+    Loading...
+  </div>
 
   <button class="btn" onclick="goToMap()">World Map</button>
   <button class="btn" onclick="goToInventory()">Inventory</button>
 
   <script type="module">
-    import { initUserShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
+    import { loadMerchantFromDOM } from "./js/shop.js";
+    import { promptForToken, startShopCountdown, initUserShopUI } from "./shop-ui.js";
 
     const username = sessionStorage.getItem("twitch_username");
     document.getElementById("usernameDisplay").textContent =
@@ -183,7 +162,13 @@
       document.getElementById("inventoryPanel").classList.toggle("hidden");
     };
 
+    // Load merchant inventory
+    await loadMerchantFromDOM();
+
+    // Load user inventory + gold
     initUserShopUI();
+
+    // Daily reset countdown
     startShopCountdown("dailyShopTimer");
 
     function goToMap() { window.location.href = "world-map.html"; }
