@@ -54,9 +54,7 @@
     async function exchangeCode() {
       log("Exchanging code for token…");
 
-      const res = await fetch(
-        "https://script.google.com/macros/s/AKfycbxDNb6T8vGq3HkuowswlZ8B_92GB2pNdNwO1Dmpmcc8RK27bU7KdBEO1TYVo5pcmU-B9A/exec",
-        {
+      const res = await fetch("https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiGgUEYI3rvfOhztxSbtGHT6O_KPcEWMKrvKcuTMEetz0wtiL85fzmpnnpvzKZVutxffEYlqiRjWiusbe4t3DQ6_MaHkGl1fCxBR7EaOugF5kEOrdiE4aU8ev8cPRs_Ce-6PRYith0UA5qFvoeQLra0rwSe5pIXfJQ1wNB3l0ecbofxoYNwkYtg0GEKh3uWlQWNcPJxEgz039rSWcmDtabuYbrVDDAFnS5QjdQtzCEc9liWtBcJhveR3UANgjAySkRP3JVGM-Gx9Wd4TNogRbMxWhOHx1fG-fgFXSqu&lib=M3dMWXKZTwvRutoIlDzpz9fVdZcLuuoRV", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: new URLSearchParams({
