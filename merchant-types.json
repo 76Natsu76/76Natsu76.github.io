@@ -1,0 +1,147 @@
+{
+  "general": {
+    "allowedCategories": [
+      "cooking",
+      "fishing",
+      "craftingMaterials",
+      "trade",
+      "components"
+    ],
+    "rarityWeights": {
+      "common": 0.60,
+      "uncommon": 0.25,
+      "rare": 0.10,
+      "epic": 0.04,
+      "legendary": 0.01
+    },
+    "minItems": 4,
+    "maxItems": 7,
+    "guaranteed": [],
+    "banned": []
+  },
+
+  "blacksmith": {
+    "allowedCategories": [
+      "metals",
+      "components",
+      "engineering",
+      "gems"
+    ],
+    "rarityWeights": {
+      "common": 0.40,
+      "uncommon": 0.35,
+      "rare": 0.18,
+      "epic": 0.06,
+      "legendary": 0.01
+    },
+    "minItems": 4,
+    "maxItems": 6,
+    "guaranteed": [],
+    "banned": []
+  },
+
+  "alchemist": {
+    "allowedCategories": [
+      "alchemy",
+      "plants",
+      "cooking",
+      "fishing",
+      "components"
+    ],
+    "rarityWeights": {
+      "common": 0.50,
+      "uncommon": 0.30,
+      "rare": 0.15,
+      "epic": 0.04,
+      "legendary": 0.01
+    },
+    "minItems": 4,
+    "maxItems": 6,
+    "guaranteed": [],
+    "banned": []
+  },
+
+  "nature_merchant": {
+    "allowedCategories": [
+      "plants",
+      "cooking",
+      "fishing",
+      "seasonal",
+      "craftingMaterials"
+    ],
+    "rarityWeights": {
+      "common": 0.55,
+      "uncommon": 0.30,
+      "rare": 0.12,
+      "epic": 0.03
+    },
+    "minItems": 4,
+    "maxItems": 6,
+    "guaranteed": [],
+    "banned": []
+  },
+
+  "rune_vendor": {
+    "allowedCategories": [
+      "runes",
+      "gems",
+      "artifacts"
+    ],
+    "rarityWeights": {
+      "common": 0.20,
+      "uncommon": 0.30,
+      "rare": 0.30,
+      "epic": 0.15,
+      "mythic": 0.05
+    },
+    "minItems": 3,
+    "maxItems": 5,
+    "guaranteed": [],
+    "banned": []
+  },
+
+  "shady_dealer": {
+    "allowedCategories": [
+      "monsterDrops",
+      "worldEvents",
+      "cosmicEvents",
+      "seasonal",
+      "artifacts"
+    ],
+    "rarityWeights": {
+      "common": 0.20,
+      "uncommon": 0.25,
+      "rare": 0.25,
+      "epic": 0.20,
+      "legendary": 0.08,
+      "mythic": 0.02
+    },
+    "minItems": 2,
+    "maxItems": 4,
+    "guaranteed": [],
+    "banned": []
+  },
+
+  "traveling_merchant": {
+    "allowedCategories": [
+      "cooking",
+      "fishing",
+      "craftingMaterials",
+      "gems",
+      "runes",
+      "seasonal",
+      "trade"
+    ],
+    "rarityWeights": {
+      "common": 0.40,
+      "uncommon": 0.30,
+      "rare": 0.20,
+      "epic": 0.08,
+      "legendary": 0.02
+    },
+    "minItems": 5,
+    "maxItems": 7,
+    "guaranteed": [],
+    "banned": []
+  }
+}
