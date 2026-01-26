@@ -825,4 +825,1848 @@
     }
   },
 
+  "aberration": {
+    "mindspawn": {
+      "psychic_lash": {
+        "key": "psychic_lash",
+        "name": "Psychic Lash",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["psychic", "magic"],
+        "statusEffects": [
+          { "type": "confuse", "duration": 1 }
+        ],
+        "description": "A mental spike disrupts the target’s thoughts."
+      }
+    },
+    "tentacled_horror": {
+      "void_tentacle": {
+        "key": "void_tentacle",
+        "name": "Void Tentacle",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.08,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["void", "physical"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "A writhing tentacle lashes out with unnatural force."
+      }
+    }
+  },
+
+  "eldritch": {
+    "starspawn": {
+      "cosmic_gaze": {
+        "key": "cosmic_gaze",
+        "name": "Cosmic Gaze",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 6,
+        "cooldown": 3,
+        "combatTags": ["eldritch", "debuff"],
+        "statusEffects": [
+          { "type": "debuff_resist", "valuePerTurn": -15, "duration": 2 }
+        ],
+        "description": "A glimpse of the void erodes the target’s mental defenses."
+      }
+    },
+    "void_eye": {
+      "entropy_beam": {
+        "key": "entropy_beam",
+        "name": "Entropy Beam",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["void", "magic"],
+        "statusEffects": [
+          { "type": "debuff_def", "valuePerTurn": -10, "duration": 2 }
+        ],
+        "description": "A beam of unraveling energy destabilizes the target’s form."
+      }
+    }
+  },
+
+  "lich": {
+    "lesser_lich": {
+      "necrotic_touch": {
+        "key": "necrotic_touch",
+        "name": "Necrotic Touch",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["dark", "decay"],
+        "statusEffects": [
+          { "type": "poison", "value": 6, "duration": 2 }
+        ],
+        "description": "A chilling touch spreads necrotic decay."
+      }
+    },
+    "bone_sage": {
+      "skeletal_command": {
+        "key": "skeletal_command",
+        "name": "Skeletal Command",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["dark", "support"],
+        "statusEffects": [
+          { "type": "team_buff_def", "valuePerTurn": 12, "duration": 2 }
+        ],
+        "description": "A necromantic chant bolsters nearby undead."
+      }
+    }
+  },
+
+  "mimic": {
+    "chest_mimic": {
+      "adhesive_grip": {
+        "key": "adhesive_grip",
+        "name": "Adhesive Grip",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["sticky", "control"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 30, "duration": 1 }
+        ],
+        "description": "A sticky pseudopod latches onto the target."
+      }
+    },
+    "devourer_mimic": {
+      "devour_form": {
+        "key": "devour_form",
+        "name": "Devour Form",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["physical", "consume"],
+        "statusEffects": [
+          { "type": "lifesteal_percent", "value": 10, "duration": 0 }
+        ],
+        "description": "A ravenous bite drains vitality from the target."
+      }
+    }
+  },
+
+  "beast": {
+    "wolf": {
+      "howl": {
+        "key": "howl",
+        "name": "Howl",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["beast", "buff"],
+        "statusEffects": [
+          { "type": "buff_atk", "valuePerTurn": 10, "duration": 1 }
+        ],
+        "description": "A rallying howl boosts ferocity."
+      }
+    },
+    "bear": {
+      "maul": {
+        "key": "maul",
+        "name": "Maul",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["physical", "feral"],
+        "statusEffects": [],
+        "description": "A brutal mauling attack crushes the target."
+      }
+    },
+    "boar": {
+      "tusk_charge": {
+        "key": "tusk_charge",
+        "name": "Tusk Charge",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["physical", "charge"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "A reckless tusk-first charge."
+      }
+    },
+    "tiger": {
+      "predator_strike": {
+        "key": "predator_strike",
+        "name": "Predator Strike",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["physical", "slash"],
+        "statusEffects": [
+          { "type": "bleed", "value": 6, "duration": 2 }
+        ],
+        "description": "A lethal predatory slash."
+      }
+    }
+  },
+
+  "amorphous": {
+    "ooze": {
+      "sludge_slap": {
+        "key": "sludge_slap",
+        "name": "Sludge Slap",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 4,
+        "cooldown": 1,
+        "combatTags": ["ooze", "acid"],
+        "statusEffects": [
+          { "type": "acid", "value": 4, "duration": 2 }
+        ],
+        "description": "A corrosive slap of semi-liquid mass."
+      }
+    },
+    "shifting_mass": {
+      "amorphous_shift": {
+        "key": "amorphous_shift",
+        "name": "Amorphous Shift",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 3,
+        "combatTags": ["defense", "mobility"],
+        "statusEffects": [
+          { "type": "buff_evasion", "valuePerTurn": 15, "duration": 1 }
+        ],
+        "description": "Your form shifts unpredictably, making attacks harder to land."
+      }
+    }
+  },
+
+  "techborn": {
+    "scrapling": {
+      "junk_bolt": {
+        "key": "junk_bolt",
+        "name": "Junk Bolt",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["mechanical", "ranged"],
+        "statusEffects": [],
+        "description": "A makeshift projectile cobbled together from scrap."
+      }
+    },
+    "gearborn": {
+      "overclock": {
+        "key": "overclock",
+        "name": "Overclock",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 0,
+        "cooldown": 4,
+        "combatTags": ["mechanical", "buff"],
+        "statusEffects": [
+          { "type": "buff_speed", "valuePerTurn": 20, "duration": 1 }
+        ],
+        "description": "You temporarily increase internal processing speed."
+      }
+    }
+  },
+
+  "machina": {
+    "sentinel": {
+      "pulse_shock": {
+        "key": "pulse_shock",
+        "name": "Pulse Shock",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["lightning", "mechanical"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A directed energy pulse shocks the target."
+      }
+    },
+    "automaton": {
+      "metallic_barrage": {
+        "key": "metallic_barrage",
+        "name": "Metallic Barrage",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["metal", "ranged"],
+        "statusEffects": [],
+        "description": "A rapid barrage of metallic projectiles."
+      }
+    }
+  },
+
+  "dragon": {
+    "red_dragon": {
+      "inferno_breath": {
+        "key": "inferno_breath",
+        "name": "Inferno Breath",
+        "basePower": 1.4,
+        "scalingPerLevel": 0.12,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["fire", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "burn", "value": 8, "duration": 2 }
+        ],
+        "description": "A torrent of flame engulfs the battlefield."
+      }
+    },
+    "frost_dragon": {
+      "glacial_roar": {
+        "key": "glacial_roar",
+        "name": "Glacial Roar",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["ice", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "chilled", "duration": 2 }
+        ],
+        "description": "A freezing roar chills enemies to the bone."
+      }
+    },
+    "storm_dragon": {
+      "tempest_surge": {
+        "key": "tempest_surge",
+        "name": "Tempest Surge",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["lightning", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A surge of storm energy crackles outward."
+      }
+    }
+  },
+
+  "wyrm": {
+    "cave_wyrm": {
+      "echoing_hiss": {
+        "key": "echoing_hiss",
+        "name": "Echoing Hiss",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 4,
+        "cooldown": 2,
+        "combatTags": ["sound", "debuff"],
+        "statusEffects": [
+          { "type": "debuff_accuracy", "valuePerTurn": -15, "duration": 1 }
+        ],
+        "description": "A resonant hiss disorients the target."
+      }
+    },
+    "sky_wyrm": {
+      "wind_cleave": {
+        "key": "wind_cleave",
+        "name": "Wind Cleave",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["wind", "slash"],
+        "statusEffects": [],
+        "description": "A slicing gust of wind cuts through the target."
+      }
+    }
+  },
+
+  "spirit": {
+    "ancestral_spirit": {
+      "ancestral_whisper": {
+        "key": "ancestral_whisper",
+        "name": "Ancestral Whisper",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 6,
+        "cooldown": 3,
+        "combatTags": ["spirit", "support"],
+        "statusEffects": [
+          { "type": "team_buff_resist", "valuePerTurn": 12, "duration": 2 }
+        ],
+        "description": "Ancestral guidance shields allies from harm."
+      }
+    },
+    "wandering_soul": {
+      "ethereal_touch": {
+        "key": "ethereal_touch",
+        "name": "Ethereal Touch",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["spirit", "magic"],
+        "statusEffects": [],
+        "description": "A ghostly touch bypasses physical defenses."
+      }
+    }
+  },
+
+  "mythic_beast": {
+    "griffin": {
+      "sky_pounce": {
+        "key": "sky_pounce",
+        "name": "Sky Pounce",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["physical", "aerial"],
+        "statusEffects": [],
+        "description": "A diving strike from above."
+      }
+    },
+    "chimera": {
+      "tri_breath": {
+        "key": "tri_breath",
+        "name": "Tri-Breath",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["fire", "poison", "ice", "magic"],
+        "statusEffects": [
+          { "type": "burn", "value": 4, "duration": 1 },
+          { "type": "poison", "value": 4, "duration": 1 }
+        ],
+        "description": "Three heads unleash elemental chaos."
+      }
+    }
+  },
+
+  "divinity": {
+    "minor_angel": {
+      "radiant_touch": {
+        "key": "radiant_touch",
+        "name": "Radiant Touch",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["holy", "magic"],
+        "statusEffects": [
+          { "type": "burn", "value": 4, "duration": 1 }
+        ],
+        "description": "A touch of divine radiance sears the wicked."
+      }
+    },
+    "minor_avatar": {
+      "divine_presence": {
+        "key": "divine_presence",
+        "name": "Divine Presence",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 10,
+        "cooldown": 4,
+        "combatTags": ["holy", "buff"],
+        "statusEffects": [
+          { "type": "team_buff_all_stats_percent", "value": 3, "duration": 2 }
+        ],
+        "description": "A fragment of divine essence empowers allies."
+      }
+    }
+  },
+
+  "outer_god": {
+    "reality_fracture": {
+      "key": "reality_fracture",
+      "name": "Reality Fracture",
+      "basePower": 1.4,
+      "scalingPerLevel": 0.12,
+      "manaCost": 14,
+      "cooldown": 3,
+      "combatTags": ["eldritch", "void", "magic"],
+      "statusEffects": [
+        { "type": "confuse", "duration": 2 }
+      ],
+      "description": "Reality bends and cracks around the target."
+    }
+  },
+
+  "anomaly": {
+    "temporal_glitch": {
+      "key": "temporal_glitch",
+      "name": "Temporal Glitch",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 6,
+      "cooldown": 3,
+      "combatTags": ["time", "debuff"],
+      "statusEffects": [
+        { "type": "slow", "valuePerTurn": 30, "duration": 1 }
+      ],
+      "description": "A momentary time distortion disrupts movement."
+    }
+  },
+
+  "paragon": {
+    "heroic_surge": {
+      "key": "heroic_surge",
+      "name": "Heroic Surge",
+      "basePower": 1.1,
+      "scalingPerLevel": 0.1,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["physical", "light"],
+      "statusEffects": [],
+      "description": "A surge of heroic power fuels a mighty strike."
+    }
+  },
+
+  "cosmic_construct": {
+    "astral_pulse": {
+      "key": "astral_pulse",
+      "name": "Astral Pulse",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.08,
+      "manaCost": 8,
+      "cooldown": 2,
+      "combatTags": ["astral", "magic"],
+      "statusEffects": [],
+      "description": "A pulse of astral force ripples outward."
+    }
+  },
+
+  "metaphysical_phenomenon": {
+    "conceptual_cut": {
+      "key": "conceptual_cut",
+      "name": "Conceptual Cut",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.1,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["meta", "magic"],
+      "statusEffects": [],
+      "description": "A strike that cuts the idea of the target rather than its body."
+    }
+  },
+
+  "multiversal_paragon": {
+    "paradox_singularity": {
+      "key": "paradox_singularity",
+      "name": "Paradox Singularity",
+      "basePower": 1.5,
+      "scalingPerLevel": 0.15,
+      "manaCost": 14,
+      "cooldown": 3,
+      "combatTags": ["cosmic", "void", "meta", "magic"],
+      "statusEffects": [
+        { "type": "debuff_all_stats_percent", "value": -5, "duration": 2 }
+      ],
+      "description": "A collapsing point of contradictory reality distorts the target’s existence across all layers."
+    },
+    "infinite_reflection": {
+      "key": "infinite_reflection",
+      "name": "Infinite Reflection",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 4,
+      "combatTags": ["cosmic", "meta", "support"],
+      "statusEffects": [
+        { "type": "team_buff_all_stats_percent", "value": 4, "duration": 2 }
+      ],
+      "description": "You manifest countless parallel selves, each reinforcing your allies across overlapping timelines."
+    }
+  },
+
+  "spiritborn": {
+    "spirit_channeler": {
+      "essence_burst": {
+        "key": "essence_burst",
+        "name": "Essence Burst",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["spirit", "magic"],
+        "statusEffects": [],
+        "description": "A burst of condensed spirit energy strikes the target."
+      }
+    },
+    "ethereal_tidecaller": {
+      "tide_surge": {
+        "key": "tide_surge",
+        "name": "Tide Surge",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["water", "spirit"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 20, "duration": 1 }
+        ],
+        "description": "A spectral wave crashes into the target, slowing their movements."
+      }
+    },
+    "frost_veil_apparition": {
+      "apparition_chill": {
+        "key": "apparition_chill",
+        "name": "Apparition Chill",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["ice", "spirit"],
+        "statusEffects": [
+          { "type": "chilled", "duration": 1 }
+        ],
+        "description": "A ghostly chill saps warmth and slows the target."
+      }
+    }
+  },
+
+  "titanborn": {
+    "glacier_titan": {
+      "glacial_crush": {
+        "key": "glacial_crush",
+        "name": "Glacial Crush",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["ice", "blunt"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 25, "duration": 2 }
+        ],
+        "description": "A massive icy blow slows the target with crushing force."
+      }
+    },
+    "storm_titan": {
+      "titanic_thunder": {
+        "key": "titanic_thunder",
+        "name": "Titanic Thunder",
+        "basePower": 1.4,
+        "scalingPerLevel": 0.12,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["lightning", "magic"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A colossal thunderclap shakes the battlefield."
+      }
+    },
+    "titan_of_ruin": {
+      "ruinous_step": {
+        "key": "ruinous_step",
+        "name": "Ruinous Step",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["earth", "blunt", "aoe"],
+        "statusEffects": [],
+        "description": "A single step sends shockwaves through the ground."
+      }
+    },
+    "world_titan": {
+      "earthshatter": {
+        "key": "earthshatter",
+        "name": "Earthshatter",
+        "basePower": 1.5,
+        "scalingPerLevel": 0.12,
+        "manaCost": 14,
+        "cooldown": 4,
+        "combatTags": ["earth", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "A world‑shaking stomp fractures the terrain."
+      }
+    }
+  },
+
+  "giantkin": {
+    "giant_boar": {
+      "boar_rampage": {
+        "key": "boar_rampage",
+        "name": "Boar Rampage",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["physical", "charge"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "A massive charge that bowls over anything in its path."
+      }
+    },
+    "primeval_hornbeast": {
+      "horn_gore": {
+        "key": "horn_gore",
+        "name": "Horn Gore",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["physical", "pierce"],
+        "statusEffects": [],
+        "description": "A brutal horn thrust that pierces armor."
+      }
+    },
+    "sylvan_apex_behemoth": {
+      "behemoth_roar": {
+        "key": "behemoth_roar",
+        "name": "Behemoth Roar",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["nature", "debuff"],
+        "statusEffects": [
+          { "type": "debuff_atk", "valuePerTurn": -15, "duration": 2 }
+        ],
+        "description": "A thunderous roar weakens the resolve of all nearby foes."
+      }
+    }
+  },
+
+  "colossus": {
+    "iron_colossus": {
+      "iron_crash": {
+        "key": "iron_crash",
+        "name": "Iron Crash",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["metal", "blunt"],
+        "statusEffects": [],
+        "description": "A crushing blow of solid iron."
+      }
+    },
+    "shadow_colossus": {
+      "umbra_wave": {
+        "key": "umbra_wave",
+        "name": "Umbra Wave",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["shadow", "magic"],
+        "statusEffects": [
+          { "type": "curse", "value": 10, "duration": 2 }
+        ],
+        "description": "A wave of shadow energy weakens the target."
+      }
+    },
+    "thunder_colossus": {
+      "storm_crash": {
+        "key": "storm_crash",
+        "name": "Storm Crash",
+        "basePower": 1.4,
+        "scalingPerLevel": 0.12,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["lightning", "blunt"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A lightning‑charged slam that electrifies the ground."
+      }
+    },
+    "verdant_colossus": {
+      "rootquake": {
+        "key": "rootquake",
+        "name": "Rootquake",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["nature", "earth", "aoe"],
+        "statusEffects": [],
+        "description": "Roots erupt violently from the ground, shaking the battlefield."
+      }
+    }
+  },
+
+  "chimera": {
+    "arcane_chimera": {
+      "arcane_burst": {
+        "key": "arcane_burst_chimera",
+        "name": "Arcane Burst",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["arcane", "magic"],
+        "statusEffects": [],
+        "description": "A volatile burst of arcane energy erupts from one of the chimera’s heads."
+      }
+    },
+    "astral_chimera": {
+      "astral_rend": {
+        "key": "astral_rend",
+        "name": "Astral Rend",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["astral", "magic"],
+        "statusEffects": [
+          { "type": "debuff_resist", "valuePerTurn": -10, "duration": 2 }
+        ],
+        "description": "A rending strike that tears at the target’s astral form."
+      }
+    },
+    "magma_serpent": {
+      "magma_spit": {
+        "key": "magma_spit",
+        "name": "Magma Spit",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["fire", "earth"],
+        "statusEffects": [
+          { "type": "burn", "value": 5, "duration": 2 }
+        ],
+        "description": "A glob of molten rock splashes onto the target."
+      }
+    }
+  },
   
+  "supernatural": {
+    "banshee": {
+      "wail_of_despair": {
+        "key": "wail_of_despair",
+        "name": "Wail of Despair",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["spirit", "sound", "debuff"],
+        "statusEffects": [
+          { "type": "debuff_atk", "valuePerTurn": -15, "duration": 2 }
+        ],
+        "description": "A haunting wail drains the target’s will to fight."
+      }
+    },
+    "wraith": {
+      "soul_chill": {
+        "key": "soul_chill",
+        "name": "Soul Chill",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["spirit", "ice"],
+        "statusEffects": [
+          { "type": "chilled", "duration": 1 }
+        ],
+        "description": "A spectral chill seeps into the target’s soul."
+      }
+    },
+    "night_torn_specterblade": {
+      "shadow_cleave": {
+        "key": "shadow_cleave",
+        "name": "Shadow Cleave",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["shadow", "magic"],
+        "statusEffects": [],
+        "description": "A blade of condensed darkness slices through the target."
+      }
+    }
+  },
+
+  "astralborn": {
+    "astral_veined_oracle": {
+      "astral_insight": {
+        "key": "astral_insight",
+        "name": "Astral Insight",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 6,
+        "cooldown": 3,
+        "combatTags": ["astral", "support"],
+        "statusEffects": [
+          { "type": "team_buff_accuracy", "valuePerTurn": 15, "duration": 2 }
+        ],
+        "description": "Visions from the astral plane sharpen allies’ focus."
+      }
+    },
+    "astral_sovereign": {
+      "stellar_burst": {
+        "key": "stellar_burst",
+        "name": "Stellar Burst",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["astral", "magic", "aoe"],
+        "statusEffects": [],
+        "description": "A burst of stellar energy radiates outward."
+      }
+    },
+    "astral_chimera": {
+      "astral_fang": {
+        "key": "astral_fang",
+        "name": "Astral Fang",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["astral", "pierce"],
+        "statusEffects": [],
+        "description": "A bite infused with astral force tears at the target’s essence."
+      }
+    }
+  },
+
+  "chaosborn": {
+    "chaos_wyrm": {
+      "chaos_spiral": {
+        "key": "chaos_spiral",
+        "name": "Chaos Spiral",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["chaos", "magic"],
+        "statusEffects": [
+          { "type": "confuse", "duration": 1 }
+        ],
+        "description": "Chaotic energy spirals outward, warping perception."
+      }
+    },
+    "hate_crowned_dreadmonger": {
+      "dread_surge": {
+        "key": "dread_surge",
+        "name": "Dread Surge",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["chaos", "dark"],
+        "statusEffects": [
+          { "type": "fear", "duration": 1 }
+        ],
+        "description": "A surge of hateful energy instills terror."
+      }
+    },
+    "chaos_spiral_sovereign": {
+      "reality_unravel": {
+        "key": "reality_unravel",
+        "name": "Reality Unravel",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.12,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["chaos", "void", "magic"],
+        "statusEffects": [
+          { "type": "debuff_resist", "valuePerTurn": -15, "duration": 2 }
+        ],
+        "description": "A tear in reality weakens the target’s defenses."
+      }
+    }
+  },
+
+  "dragonkin": {
+    "storm_drake": {
+      "drake_bolt": {
+        "key": "drake_bolt",
+        "name": "Drake Bolt",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["lightning", "magic"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A crackling bolt of draconic lightning."
+      }
+    },
+    "young_dragon": {
+      "juvenile_flame": {
+        "key": "juvenile_flame",
+        "name": "Juvenile Flame",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["fire", "magic"],
+        "statusEffects": [
+          { "type": "burn", "value": 4, "duration": 1 }
+        ],
+        "description": "A young dragon’s fiery breath."
+      }
+    },
+    "crystal_dragon": {
+      "prismatic_shard": {
+        "key": "prismatic_shard",
+        "name": "Prismatic Shard",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["arcane", "pierce"],
+        "statusEffects": [],
+        "description": "A razor‑sharp shard of crystal is launched with draconic force."
+      }
+    }
+  },
+
+  "fiend": {
+    "succubus": {
+      "charm_kiss": {
+        "key": "charm_kiss",
+        "name": "Charm Kiss",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["dark", "control"],
+        "statusEffects": [
+          { "type": "confuse", "duration": 1 }
+        ],
+        "description": "A beguiling charm clouds the target’s mind."
+      }
+    },
+    "demon_knight": {
+      "hellcleave": {
+        "key": "hellcleave",
+        "name": "Hellcleave",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["fire", "physical"],
+        "statusEffects": [],
+        "description": "A fiery cleave fueled by infernal strength."
+      }
+    },
+    "infernal_juggernaut": {
+      "infernal_crash": {
+        "key": "infernal_crash",
+        "name": "Infernal Crash",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["fire", "blunt"],
+        "statusEffects": [
+          { "type": "burn", "value": 5, "duration": 2 }
+        ],
+        "description": "A crushing blow wreathed in infernal flame."
+      }
+    },
+    "abyssal_brute": {
+      "abyssal_slam": {
+        "key": "abyssal_slam",
+        "name": "Abyssal Slam",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["dark", "blunt"],
+        "statusEffects": [],
+        "description": "A brutal slam empowered by abyssal force."
+      }
+    }
+  },
+
+  "primordial": {
+    "primordial_wyrm": {
+      "ancient_breath": {
+        "key": "ancient_breath",
+        "name": "Ancient Breath",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.12,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["elemental", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "debuff_resist", "valuePerTurn": -10, "duration": 2 }
+        ],
+        "description": "A breath of primordial force erodes magical defenses."
+      }
+    },
+    "tide_forged_leviathan": {
+      "abyssal_wave": {
+        "key": "abyssal_wave",
+        "name": "Abyssal Wave",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["water", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 20, "duration": 2 }
+        ],
+        "description": "A crushing wave of abyssal water slows all it engulfs."
+      }
+    },
+    "primeval_rootshaper": {
+      "root_sunder": {
+        "key": "root_sunder",
+        "name": "Root Sunder",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["nature", "earth"],
+        "statusEffects": [
+          { "type": "bleed", "value": 5, "duration": 2 }
+        ],
+        "description": "Primeval roots tear through the ground to rend the target."
+      }
+    }
+  },
+
+  "ethereal": {
+    "ethereal_tidecaller": {
+      "tide_echo": {
+        "key": "tide_echo",
+        "name": "Tide Echo",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["water", "spirit"],
+        "statusEffects": [
+          { "type": "chilled", "duration": 1 }
+        ],
+        "description": "An echoing wave of ethereal water chills the target."
+      }
+    },
+    "frost_veil_apparition": {
+      "veil_chill": {
+        "key": "veil_chill",
+        "name": "Veil Chill",
+        "basePower": 0.8,
+        "scalingPerLevel": 0.06,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["ice", "spirit"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 20, "duration": 1 }
+        ],
+        "description": "A spectral frost seeps into the target’s bones."
+      }
+    },
+    "frost_veil_apparition_elite": {
+      "frozen_echo": {
+        "key": "frozen_echo",
+        "name": "Frozen Echo",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["ice", "magic"],
+        "statusEffects": [
+          { "type": "chilled", "duration": 2 }
+        ],
+        "description": "A haunting echo of winter freezes the air around the target."
+      }
+    }
+  },
+
+  "titan": {
+    "storm_sovereign": {
+      "sovereign_bolt": {
+        "key": "sovereign_bolt",
+        "name": "Sovereign Bolt",
+        "basePower": 1.4,
+        "scalingPerLevel": 0.12,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["lightning", "magic"],
+        "statusEffects": [
+          { "type": "shock", "duration": 1 }
+        ],
+        "description": "A bolt of storm authority crashes down upon the target."
+      }
+    },
+    "glacier_titan": {
+      "glacier_step": {
+        "key": "glacier_step",
+        "name": "Glacier Step",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["ice", "blunt"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 25, "duration": 2 }
+        ],
+        "description": "A frigid stomp sends shards of ice across the battlefield."
+      }
+    },
+    "molten_behemoth": {
+      "magma_crush": {
+        "key": "magma_crush",
+        "name": "Magma Crush",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["fire", "earth"],
+        "statusEffects": [
+          { "type": "burn", "value": 6, "duration": 2 }
+        ],
+        "description": "A molten blow erupts with volcanic force."
+      }
+    },
+    "ancient_bark_titan": {
+      "barkquake": {
+        "key": "barkquake",
+        "name": "Barkquake",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["nature", "earth", "aoe"],
+        "statusEffects": [],
+        "description": "A quake of living wood shakes the ground violently."
+      }
+    }
+  },
+
+  "planar_entity": {
+    "banished_hex_caller": {
+      "hexflare": {
+        "key": "hexflare",
+        "name": "Hexflare",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["arcane", "curse"],
+        "statusEffects": [
+          { "type": "curse", "value": 10, "duration": 2 }
+        ],
+        "description": "A burst of planar hex energy afflicts the target."
+      }
+    },
+    "aether_crowned_hexbinder": {
+      "aether_bind": {
+        "key": "aether_bind",
+        "name": "Aether Bind",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["astral", "control"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 25, "duration": 2 }
+        ],
+        "description": "Aetheric chains bind the target’s movements."
+      }
+    },
+    "celestial_spearwarden": {
+      "spear_of_dawn": {
+        "key": "spear_of_dawn",
+        "name": "Spear of Dawn",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["holy", "pierce"],
+        "statusEffects": [],
+        "description": "A radiant spear of planar light pierces the target."
+      }
+    }
+  },
+
+  "legendary_boss_template": {
+    "obsidian_world_breaker": {
+      "worldrend": {
+        "key": "worldrend",
+        "name": "Worldrend",
+        "basePower": 1.6,
+        "scalingPerLevel": 0.14,
+        "manaCost": 14,
+        "cooldown": 4,
+        "combatTags": ["earth", "void", "aoe"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "A catastrophic strike fractures the battlefield itself."
+      }
+    },
+    "apocalypse_crowned_worldrender": {
+      "apocalypse_surge": {
+        "key": "apocalypse_surge",
+        "name": "Apocalypse Surge",
+        "basePower": 1.7,
+        "scalingPerLevel": 0.15,
+        "manaCost": 16,
+        "cooldown": 4,
+        "combatTags": ["cataclysm", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "fear", "duration": 2 }
+        ],
+        "description": "A surge of apocalyptic force overwhelms all who stand before it."
+      }
+    },
+    "cosmic_crowned_terminarch": {
+      "terminus_ray": {
+        "key": "terminus_ray",
+        "name": "Terminus Ray",
+        "basePower": 1.8,
+        "scalingPerLevel": 0.16,
+        "manaCost": 18,
+        "cooldown": 4,
+        "combatTags": ["cosmic", "void", "magic"],
+        "statusEffects": [
+          { "type": "debuff_all_stats_percent", "value": -5, "duration": 2 }
+        ],
+        "description": "A ray of cosmic finality erodes the target’s very existence."
+      }
+    },
+    "eternal_rift_warden": {
+      "rift_collapse": {
+        "key": "rift_collapse",
+        "name": "Rift Collapse",
+        "basePower": 1.5,
+        "scalingPerLevel": 0.14,
+        "manaCost": 14,
+        "cooldown": 4,
+        "combatTags": ["void", "magic", "aoe"],
+        "statusEffects": [
+          { "type": "silence", "duration": 1 }
+        ],
+        "description": "A collapsing rift unleashes a wave of void pressure."
+      }
+    }
+  },
+
+  "hybrid": {
+    "centaur_lancer": {
+      "lancer_charge": {
+        "key": "lancer_charge",
+        "name": "Lancer Charge",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["physical", "charge"],
+        "statusEffects": [
+          { "type": "stagger", "duration": 1 }
+        ],
+        "description": "A swift mounted charge that disrupts the target’s footing."
+      }
+    },
+    "satyr_trickster": {
+      "mischief_spike": {
+        "key": "mischief_spike",
+        "name": "Mischief Spike",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 1,
+        "combatTags": ["illusion", "pierce"],
+        "statusEffects": [
+          { "type": "confuse", "duration": 1 }
+        ],
+        "description": "A deceptive jab accompanied by a burst of fae mischief."
+      }
+    },
+    "minotaur": {
+      "labyrinth_gore": {
+        "key": "labyrinth_gore",
+        "name": "Labyrinth Gore",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["physical", "pierce"],
+        "statusEffects": [],
+        "description": "A brutal horn‑driven charge that pierces armor."
+      }
+    },
+    "serpent_guardian": {
+      "venom_lash": {
+        "key": "venom_lash",
+        "name": "Venom Lash",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["poison", "slash"],
+        "statusEffects": [
+          { "type": "poison", "value": 6, "duration": 2 }
+        ],
+        "description": "A venom‑coated strike lashes across the target."
+      }
+    }
+  },
+
+  "forgotten_race": {
+    "hollowbone_stalker": {
+      "hollow_rend": {
+        "key": "hollow_rend",
+        "name": "Hollow Rend",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["dark", "slash"],
+        "statusEffects": [],
+        "description": "A jagged strike from a creature long erased from history."
+      }
+    },
+    "warped_soulrender": {
+      "soul_rend": {
+        "key": "soul_rend",
+        "name": "Soul Rend",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["void", "magic"],
+        "statusEffects": [
+          { "type": "debuff_resist", "valuePerTurn": -10, "duration": 2 }
+        ],
+        "description": "A tear in the target’s essence weakens their defenses."
+      }
+    },
+    "abyss_gnawed_shadehound": {
+      "shade_bite": {
+        "key": "shade_bite",
+        "name": "Shade Bite",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["shadow", "pierce"],
+        "statusEffects": [],
+        "description": "A bite infused with abyssal shadow energy."
+      }
+    }
+  },
+
+  "cosmic_fauna": {
+    "null_eater_sovereignling": {
+      "null_burst": {
+        "key": "null_burst",
+        "name": "Null Burst",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["void", "magic"],
+        "statusEffects": [
+          { "type": "silence", "duration": 1 }
+        ],
+        "description": "A burst of null energy disrupts magical flow."
+      }
+    },
+    "umbral_rift_howler": {
+      "rift_howl": {
+        "key": "rift_howl",
+        "name": "Rift Howl",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["void", "sound"],
+        "statusEffects": [
+          { "type": "fear", "duration": 1 }
+        ],
+        "description": "A howl resonating from the rift instills primal terror."
+      }
+    },
+    "void_sundered_reaver": {
+      "void_rend": {
+        "key": "void_rend",
+        "name": "Void Rend",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 2,
+        "combatTags": ["void", "slash"],
+        "statusEffects": [],
+        "description": "A rending strike that tears at the boundary of reality."
+      }
+    }
+  },
+
+  "mythic_undead": {
+    "grimhollow_reaperling": {
+      "reaper_slice": {
+        "key": "reaper_slice",
+        "name": "Reaper Slice",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["dark", "slash"],
+        "statusEffects": [
+          { "type": "bleed", "value": 5, "duration": 2 }
+        ],
+        "description": "A spectral scythe‑like strike that leaves a lingering wound."
+      }
+    },
+    "soul_husk_devourer": {
+      "husk_drain": {
+        "key": "husk_drain",
+        "name": "Husk Drain",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["dark", "lifesteal"],
+        "statusEffects": [
+          { "type": "lifesteal_percent", "value": 15, "duration": 0 }
+        ],
+        "description": "A draining bite siphons the target’s vitality."
+      }
+    },
+    "abyss_forged_wraithknight": {
+      "abyssal_cleave": {
+        "key": "abyssal_cleave",
+        "name": "Abyssal Cleave",
+        "basePower": 1.3,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["dark", "void", "slash"],
+        "statusEffects": [],
+        "description": "A cleave forged in the abyss cuts through both armor and spirit."
+      }
+    }
+  },
+
+  "hivemind": {
+    "hornet_swarm": {
+      "swarm_sting": {
+        "key": "swarm_sting",
+        "name": "Swarm Sting",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 1,
+        "combatTags": ["poison", "pierce"],
+        "statusEffects": [
+          { "type": "poison", "value": 4, "duration": 2 }
+        ],
+        "description": "A coordinated sting from multiple drones injects venom."
+      }
+    },
+    "broodmind_drone": {
+      "brood_pulse": {
+        "key": "brood_pulse",
+        "name": "Brood Pulse",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 4,
+        "cooldown": 2,
+        "combatTags": ["psychic", "support"],
+        "statusEffects": [
+          { "type": "team_buff_speed", "valuePerTurn": 10, "duration": 1 }
+        ],
+        "description": "A psychic pulse synchronizes brood movement."
+      }
+    },
+    "hive_overseer": {
+      "command_swarm": {
+        "key": "command_swarm",
+        "name": "Command Swarm",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["poison", "aoe"],
+        "statusEffects": [
+          { "type": "poison", "value": 5, "duration": 2 }
+        ],
+        "description": "A coordinated swarm assault overwhelms multiple foes."
+      }
+    }
+  },
+
+  "living_location": {
+    "grove_heart_oracle": {
+      "grove_blessing": {
+        "key": "grove_blessing",
+        "name": "Grove Blessing",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 8,
+        "cooldown": 3,
+        "combatTags": ["nature", "support"],
+        "statusEffects": [
+          { "type": "team_buff_resist", "valuePerTurn": 12, "duration": 2 }
+        ],
+        "description": "The living grove channels protective energy into its allies."
+      }
+    },
+    "ancient_bark_titan_hollow": {
+      "rooted_slam": {
+        "key": "rooted_slam",
+        "name": "Rooted Slam",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 10,
+        "cooldown": 3,
+        "combatTags": ["earth", "nature", "blunt"],
+        "statusEffects": [],
+        "description": "A slam from a living landmass shakes the battlefield."
+      }
+    }
+  },
+
+  "artificial_life": {
+    "spell_eater_homunculus": {
+      "mana_gorge": {
+        "key": "mana_gorge",
+        "name": "Mana Gorge",
+        "basePower": 0.9,
+        "scalingPerLevel": 0.07,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["arcane", "consume"],
+        "statusEffects": [
+          { "type": "silence", "duration": 1 }
+        ],
+        "description": "A hungry siphon of unstable magic disrupts spellcasting."
+      }
+    },
+    "runespun_aetherling": {
+      "aether_surge": {
+        "key": "aether_surge",
+        "name": "Aether Surge",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["astral", "magic"],
+        "statusEffects": [],
+        "description": "A surge of woven aether strikes the target."
+      }
+    },
+    "rift_wrought_golem": {
+      "rift_pulse": {
+        "key": "rift_pulse",
+        "name": "Rift Pulse",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["void", "mechanical"],
+        "statusEffects": [],
+        "description": "A pulse of rift‑charged energy erupts from its core."
+      }
+    }
+  },
+
+  "temporal_entity": {
+    "chrono_fractured_adept": {
+      "time_slip": {
+        "key": "time_slip",
+        "name": "Time Slip",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 6,
+        "cooldown": 3,
+        "combatTags": ["time", "mobility"],
+        "statusEffects": [
+          { "type": "buff_evasion", "valuePerTurn": 20, "duration": 1 }
+        ],
+        "description": "A brief slip through fractured time makes attacks miss."
+      }
+    },
+    "chrono_shattered_warden": {
+      "temporal_shock": {
+        "key": "temporal_shock",
+        "name": "Temporal Shock",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["time", "magic"],
+        "statusEffects": [
+          { "type": "slow", "valuePerTurn": 30, "duration": 1 }
+        ],
+        "description": "A burst of temporal distortion slows the target’s flow of time."
+      }
+    }
+  },
+
+  "divine_beast": {
+    "arcane_phoenix": {
+      "rebirth_flare": {
+        "key": "rebirth_flare",
+        "name": "Rebirth Flare",
+        "basePower": 1.2,
+        "scalingPerLevel": 0.1,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["fire", "holy", "magic"],
+        "statusEffects": [
+          { "type": "burn", "value": 6, "duration": 2 }
+        ],
+        "description": "A flare of divine flame scorches the target with rebirth energy."
+      }
+    },
+    "celestial_guardian": {
+      "guardian_ray": {
+        "key": "guardian_ray",
+        "name": "Guardian Ray",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 10,
+        "cooldown": 2,
+        "combatTags": ["holy", "magic"],
+        "statusEffects": [],
+        "description": "A ray of celestial judgment strikes the target."
+      }
+    }
+  },
+
+  "meta_entity": {
+    "plink_of_the_seventh_dimension": {
+      "meta_blink": {
+        "key": "meta_blink",
+        "name": "Meta Blink",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 4,
+        "cooldown": 2,
+        "combatTags": ["meta", "mobility"],
+        "statusEffects": [
+          { "type": "teleport", "duration": 0 }
+        ],
+        "description": "A blink that ignores spatial rules entirely."
+      }
+    },
+    "sthreevens_chaotic_doppelcat": {
+      "chaos_pounce": {
+        "key": "chaos_pounce",
+        "name": "Chaos Pounce",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["chaos", "physical"],
+        "statusEffects": [],
+        "description": "A pounce that lands in a place reality didn’t expect."
+      }
+    }
+  },
+
+  "narrative_construct": {
+    "storybound_sentinel": {
+      "plot_strike": {
+        "key": "plot_strike",
+        "name": "Plot Strike",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["meta", "magic"],
+        "statusEffects": [],
+        "description": "A strike that follows narrative inevitability."
+      }
+    },
+    "scripted_champion": {
+      "foreshadow_blow": {
+        "key": "foreshadow_blow",
+        "name": "Foreshadow Blow",
+        "basePower": 1.0,
+        "scalingPerLevel": 0.08,
+        "manaCost": 6,
+        "cooldown": 2,
+        "combatTags": ["meta", "physical"],
+        "statusEffects": [
+          { "type": "debuff_def", "valuePerTurn": -10, "duration": 1 }
+        ],
+        "description": "A blow that hints at the target’s impending downfall."
+      }
+    }
+  },
+
+  "emotional": {
+    "hate_crowned_dreadmonger": {
+      "wrath_surge": {
+        "key": "wrath_surge",
+        "name": "Wrath Surge",
+        "basePower": 1.1,
+        "scalingPerLevel": 0.09,
+        "manaCost": 8,
+        "cooldown": 2,
+        "combatTags": ["dark", "chaos"],
+        "statusEffects": [
+          { "type": "fear", "duration": 1 }
+        ],
+        "description": "A surge of pure hatred terrifies the target."
+      }
+    },
+    "radiant_choir_seraphling": {
+      "joy_resonance": {
+        "key": "joy_resonance",
+        "name": "Joy Resonance",
+        "basePower": 0.0,
+        "scalingPerLevel": 0.0,
+        "manaCost": 6,
+        "cooldown": 3,
+        "combatTags": ["holy", "support"],
+        "statusEffects": [
+          { "type": "team_buff_speed", "valuePerTurn": 10, "duration": 2 }
+        ],
+        "description": "A resonant burst of divine joy uplifts allies."
+      }
+    }
+  },
+
+  "paradox_god": {
+    "null_eclipse_archfiend": {
+      "paradox_breach": {
+        "key": "paradox_breach",
+        "name": "Paradox Breach",
+        "basePower": 1.5,
+        "scalingPerLevel": 0.14,
+        "manaCost": 14,
+        "cooldown": 3,
+        "combatTags": ["void", "meta", "magic"],
+        "statusEffects": [
+          { "type": "confuse", "duration": 2 }
+        ],
+        "description": "A breach in logic and causality overwhelms the target’s mind."
+      }
+    },
+    "chaos_spiral_sovereign": {
+      "inversion_wave": {
+        "key": "inversion_wave",
+        "name": "Inversion Wave",
+        "basePower": 1.4,
+        "scalingPerLevel": 0.12,
+        "manaCost": 12,
+        "cooldown": 3,
+        "combatTags": ["chaos", "meta", "magic"],
+        "statusEffects": [
+          { "type": "debuff_all_stats_percent", "value": -4, "duration": 2 }
+        ],
+        "description": "A wave of paradoxical force inverts the target’s strengths."
+      }
+    }
+  }
+}
