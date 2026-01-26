@@ -1,0 +1,895 @@
+{
+  // ============================================================
+  // COMBAT PROFESSIONS (28)
+  // ============================================================
+
+  acolyte: {
+    name: "Acolyte",
+    role: "combat",
+    tags: ["holy", "support"],
+    baseBonuses: {
+      healingPower: 0.03,
+      manaMult: 1.02,
+      elementalBoost: { holy: 0.03 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  adept: {
+    name: "Adept",
+    role: "combat",
+    tags: ["magic", "novice"],
+    baseBonuses: {
+      manaMult: 1.03,
+      resourceRegen: { mana: 0.03 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  apocalypse: {
+    name: "Apocalypse",
+    role: "combat",
+    tags: ["chaos", "dot", "unpredictable"],
+    baseBonuses: {
+      atkMult: 1.05,
+      dotPower: 0.05,
+      chaosFactor: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  apprentice: {
+    name: "Apprentice",
+    role: "combat",
+    tags: ["novice", "magic"],
+    baseBonuses: {
+      manaMult: 1.02,
+      atkMult: 1.01,
+      learningBoost: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  archer: {
+    name: "Archer",
+    role: "combat",
+    tags: ["ranged", "precision"],
+    baseBonuses: {
+      atkMult: 1.05,
+      critChance: 0.03,
+      speedMult: 1.03
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  assassin: {
+    name: "Assassin",
+    role: "combat",
+    tags: ["melee", "stealth", "crit", "burst"],
+    baseBonuses: {
+      critChance: 0.05,
+      critDamage: 0.10,
+      speedMult: 1.03
+    },
+    abilities: [
+      "assassin_stab",
+      "assassin_quick_slash",
+      "assassin_backstab",
+      "assassin_shadow_strike",
+      "assassin_bleed_strike"
+    ],
+    equipment: {
+      weapons: ["dagger", "claw", "shortblade"],
+      armor: ["light"],
+      accessories: ["stealth_charm", "crit_focus"]
+    },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  berserker: {
+    name: "Berserker",
+    role: "combat",
+    tags: ["melee", "rage"],
+    baseBonuses: {
+      atkMult: 1.08,
+      critChance: 0.03,
+      critDamage: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  bozo: {
+    name: "Bozo",
+    role: "combat",
+    tags: ["joke", "chaos"],
+    baseBonuses: {
+      evadeChance: 0.03,
+      confusionChance: 0.05,
+      chaosFactor: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  cleric: {
+    name: "Cleric",
+    role: "combat",
+    tags: ["holy", "support"],
+    baseBonuses: {
+      healingPower: 0.08,
+      defMult: 1.03,
+      elementalBoost: { holy: 0.05 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  corrupted: {
+    name: "Corrupted",
+    role: "combat",
+    tags: ["dark", "poison", "chaos"],
+    baseBonuses: {
+      dotPower: 0.05,
+      elementalBoost: { dark: 0.05, poison: 0.03 },
+      chaosFactor: 0.03
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  druid: {
+    name: "Druid",
+    role: "combat",
+    tags: ["nature", "healing"],
+    baseBonuses: {
+      healingPower: 0.08,
+      manaMult: 1.05,
+      elementalBoost: { nature: 0.08 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  guardian: {
+    name: "Guardian",
+    role: "combat",
+    tags: ["tank", "defense"],
+    baseBonuses: {
+      defMult: 1.10,
+      blockChance: 0.08,
+      hpRegen: 0.02
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  healer: {
+    name: "Healer",
+    role: "combat",
+    tags: ["support", "holy"],
+    baseBonuses: {
+      healingPower: 0.12,
+      manaMult: 1.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  mage: {
+    name: "Mage",
+    role: "combat",
+    tags: ["magic", "arcane"],
+    baseBonuses: {
+      manaMult: 1.10,
+      resourceRegen: { mana: 0.05 },
+      elementalBoost: { arcane: 0.08 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  monk: {
+    name: "Monk",
+    role: "combat",
+    tags: ["melee", "agile"],
+    baseBonuses: {
+      speedMult: 1.05,
+      evadeChance: 0.03,
+      atkMult: 1.03
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  necromancer: {
+    name: "Necromancer",
+    role: "combat",
+    tags: ["dark", "minions", "dot"],
+    baseBonuses: {
+      dotPower: 0.08,
+      manaMult: 1.05,
+      elementalBoost: { poison: 0.05, dark: 0.05 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  paladin: {
+    name: "Paladin",
+    role: "combat",
+    tags: ["holy", "tank"],
+    baseBonuses: {
+      defMult: 1.05,
+      blockChance: 0.05,
+      elementalBoost: { holy: 0.05 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  ranger: {
+    name: "Ranger",
+    role: "combat",
+    tags: ["ranged", "nature"],
+    baseBonuses: {
+      atkMult: 1.03,
+      speedMult: 1.03,
+      elementalBoost: { nature: 0.05 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  rogue: {
+    name: "Rogue",
+    role: "combat",
+    tags: ["stealth", "agile", "physical"],
+    baseBonuses: {
+      atkMult: 1.04,
+      speedMult: 1.05,
+      critChance: 0.03,
+      elementalBoost: { shadow: 0.05 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  rot: {
+    name: "Rot",
+    role: "combat",
+    tags: ["decay", "disease", "corruption"],
+    baseBonuses: {
+      dotPower: 0.10,
+      manaMult: 1.03,
+      elementalBoost: { decay: 0.07, poison: 0.05 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  shaman: {
+    name: "Shaman",
+    role: "combat",
+    tags: ["elemental", "hybrid"],
+    baseBonuses: {
+      manaMult: 1.05,
+      elementalBoost: { lightning: 0.05, nature: 0.05 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  thief: {
+    name: "Thief",
+    role: "combat",
+    tags: ["stealth", "agile"],
+    baseBonuses: {
+      speedMult: 1.05,
+      evadeChance: 0.05,
+      critChance: 0.02
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  trainee: {
+    name: "Trainee",
+    role: "combat",
+    tags: ["novice"],
+    baseBonuses: {
+      learningBoost: 0.10,
+      atkMult: 1.01
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  trickster: {
+    name: "Trickster",
+    role: "combat",
+    tags: ["illusion", "chaos"],
+    baseBonuses: {
+      evadeChance: 0.04,
+      critChance: 0.02,
+      confusionChance: 0.03
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  void: {
+    name: "Void",
+    role: "combat",
+    tags: ["void", "dark", "chaos"],
+    baseBonuses: {
+      elementalBoost: { void: 0.08 },
+      manaMult: 1.05,
+      chaosFactor: 0.03
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+    warlock: {
+    name: "Warlock",
+    role: "combat",
+    tags: ["dark", "dot"],
+    baseBonuses: {
+      manaMult: 1.08,
+      dotPower: 0.10,
+      elementalBoost: { dark: 0.10 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  warrior: {
+    name: "Warrior",
+    role: "combat",
+    tags: ["melee", "frontline"],
+    baseBonuses: {
+      atkMult: 1.05,
+      defMult: 1.05,
+      blockChance: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  witch: {
+    name: "Witch",
+    role: "combat",
+    tags: ["dark", "magic"],
+    baseBonuses: {
+      manaMult: 1.08,
+      dotPower: 0.05,
+      elementalBoost: { dark: 0.08 }
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: { perks: [], recipes: {}, workstations: [] },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  // ============================================================
+  // NON‑COMBAT PROFESSIONS (13)
+  // ============================================================
+
+  alchemist: {
+    name: "Alchemist",
+    role: "non_combat",
+    tags: ["crafting", "alchemy"],
+    baseBonuses: {
+      potionPotency: 0.10,
+      potionDuration: 0.05,
+      craftingSpeed: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks potion and elixir recipes",
+        "Unlocks bomb and flask recipes",
+        "Can refine herbs into alchemical reagents"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  artificer: {
+    name: "Artificer",
+    role: "non_combat",
+    tags: ["crafting", "enchanting"],
+    baseBonuses: {
+      enchantmentPower: 0.10,
+      enchantmentSuccess: 0.05,
+      craftingQuality: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks magical focus and relic recipes",
+        "Unlocks enchanted accessory recipes",
+        "Can imbue items with elemental properties"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  blacksmith: {
+    name: "Blacksmith",
+    role: "non_combat",
+    tags: ["crafting", "metalworking"],
+    baseBonuses: {
+      craftingQuality: 0.10,
+      craftingSpeed: 0.05,
+      durabilityBonus: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks metal weapon recipes",
+        "Unlocks heavy and medium armor recipes",
+        "Can repair and reinforce metal gear"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  carpenter: {
+    name: "Carpenter",
+    role: "non_combat",
+    tags: ["crafting", "woodworking"],
+    baseBonuses: {
+      craftingQuality: 0.10,
+      craftingSpeed: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks bow, staff, and wooden shield recipes",
+        "Unlocks wooden furniture and structures",
+        "Can reinforce wooden gear"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  chef: {
+    name: "Chef",
+    role: "non_combat",
+    tags: ["crafting", "cooking", "support"],
+    baseBonuses: {
+      foodBuffPower: 0.10,
+      foodBuffDuration: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks advanced food recipes",
+        "Unlocks feast recipes",
+        "Can preserve food for longer"
+      ],
+      recipes: {
+        foods: ["hearty_stew", "spicy_broth", "energizing_feast"],
+        consumables: ["chef_special", "restorative_meal"]
+      },
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  fisherman: {
+    name: "Fisherman",
+    role: "non_combat",
+    tags: ["gathering", "aquatic"],
+    baseBonuses: {
+      gatheringYield: 0.15,
+      rareCatchChance: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Can catch rare aquatic creatures",
+        "Unlocks fish-based consumables",
+        "Can harvest aquatic reagents"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  herbalist: {
+    name: "Herbalist",
+    role: "non_combat",
+    tags: ["gathering", "plants"],
+    baseBonuses: {
+      gatheringYield: 0.15,
+      rareHerbChance: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Can identify rare herbs",
+        "Unlocks herbal mixtures",
+        "Can cultivate personal herb plots"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  leatherworker: {
+    name: "Leatherworker",
+    role: "non_combat",
+    tags: ["crafting", "armor"],
+    baseBonuses: {
+      craftingQuality: 0.10,
+      craftingSpeed: 0.05,
+      materialEfficiency: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks light armor and hide gear",
+        "Can salvage extra leather",
+        "Can add defensive linings to gear"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  miner: {
+    name: "Miner",
+    role: "non_combat",
+    tags: ["gathering", "ore"],
+    baseBonuses: {
+      gatheringYield: 0.15,
+      rareOreChance: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Can mine rare ore veins",
+        "Can extract gems",
+        "Reduces tool wear"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  ritualist: {
+    name: "Ritualist",
+    role: "non_combat",
+    tags: ["rituals", "magic"],
+    baseBonuses: {
+      ritualPower: 0.10,
+      ritualSpeed: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks talisman and charm recipes",
+        "Unlocks ritual catalysts",
+        "Can bind spirits to items"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  spelunker: {
+    name: "Spelunker",
+    role: "non_combat",
+    tags: ["exploration", "caves"],
+    baseBonuses: {
+      gatheringYield: 0.10,
+      trapDetection: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Can detect hidden cave passages",
+        "Can harvest rare cave materials",
+        "Reduced damage from cave hazards"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  tinkerer: {
+    name: "Tinkerer",
+    role: "non_combat",
+    tags: ["engineering", "mechanical", "crafting"],
+    baseBonuses: {
+      craftingQuality: 0.08,
+      craftingSpeed: 0.08,
+      gadgetEfficiency: 0.10
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks mechanical gadget recipes",
+        "Can craft automated tools and traps",
+        "Improves efficiency of engineering components"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  },
+
+  weaver: {
+    name: "Weaver",
+    role: "non_combat",
+    tags: ["crafting", "cloth"],
+    baseBonuses: {
+      craftingQuality: 0.10,
+      craftingSpeed: 0.05,
+      enchantmentAffinity: 0.05
+    },
+    abilities: [],
+    equipment: { weapons: [], armor: [], accessories: [] },
+    noncombat: {
+      perks: [
+        "Unlocks cloth armor and robe recipes",
+        "Can weave magical threads",
+        "Improves enchantment success"
+      ],
+      recipes: {},
+      workstations: []
+    },
+    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+    talentTree: {},
+    starterKit: {},
+    lootKit: {},
+    lootTable: {}
+  }
+}
