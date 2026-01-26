@@ -1,0 +1,234 @@
+{
+  "acolyte": {
+    "atkMult": 0.02,
+    "defMult": 0.03,
+    "manaRegen": 0.03,
+    "flavor": "Devotion and discipline strengthen your spiritual resolve."
+  },
+  "adept": {
+    "atkMult": 0.03,
+    "manaRegen": 0.04,
+    "critChance": 0.01,
+    "flavor": "Growing mastery sharpens your arcane instincts."
+  },
+  "alchemist": {
+    "craftMult": 0.05,
+    "refineMult": 0.04,
+    "flavor": "Chemical mastery enhances your potions and extracts."
+  },
+  "apocalypse": {
+    "atkMult": 0.08,
+    "defMult": -0.03,
+    "critChance": 0.04,
+    "flavor": "Cataclysmic power surges through you, overwhelming but unstable."
+  },
+  "apprentice": {
+    "atkMult": 0.02,
+    "manaRegen": 0.02,
+    "flavor": "Early magical training grants a faint spark of potential."
+  },
+  "archer": {
+    "atkMult": 0.05,
+    "critChance": 0.03,
+    "speedMult": 0.02,
+    "flavor": "Precision and patience enhance your ranged attacks."
+  },
+  "artificer": {
+    "craftMult": 0.05,
+    "refineMult": 0.03,
+    "flavor": "Arcane engineering improves your enchanted creations."
+  },
+  "assassin": {
+    "atkMult": 0.06,
+    "critChance": 0.04,
+    "speedMult": 0.02,
+    "flavor": "Deadly precision and swift execution define your strikes."
+  },
+  "berserker": {
+    "atkMult": 0.07,
+    "defMult": -0.02,
+    "critChance": 0.02,
+    "flavor": "Rage fuels your blows, trading defense for overwhelming force."
+  },
+  "blacksmith": {
+    "craftMult": 0.05,
+    "refineMult": 0.04,
+    "flavor": "Metalworking expertise strengthens your forged goods."
+  },
+  "bozo": {
+    "atkMult": 0.01,
+    "defMult": 0.01,
+    "critChance": 0.05,
+    "flavor": "Chaotic antics unpredictably shift the flow of battle."
+  },
+  "carpenter": {
+    "craftMult": 0.05,
+    "resourceEfficiency": 0.03,
+    "flavor": "Woodcraft skill improves your structural creations."
+  },
+  "chef": {
+    "craftMult": 0.05,
+    "refineMult": 0.03,
+    "flavor": "Culinary mastery enhances the potency of your meals."
+  },
+  "cleric": {
+    "atkMult": 0.03,
+    "defMult": 0.04,
+    "manaRegen": 0.03,
+    "flavor": "Divine conviction bolsters both offense and protection."
+  },
+  "corrupted": {
+    "atkMult": 0.06,
+    "defMult": -0.01,
+    "critChance": 0.03,
+    "flavor": "Twisted energies empower your strikes at a subtle cost."
+  },
+  "druid": {
+    "atkMult": 0.03,
+    "manaRegen": 0.03,
+    "hpRegen": 0.02,
+    "flavor": "Nature’s harmony strengthens your body and spirit."
+  },
+  "fisherman": {
+    "gatherMult": 0.05,
+    "yieldMult": 0.03,
+    "flavor": "Aquatic knowledge improves your fishing results."
+  },
+  "guardian": {
+    "atkMult": 0.03,
+    "defMult": 0.07,
+    "flavor": "Unyielding defense and discipline fortify your stance."
+  },
+  "healer": {
+    "manaRegen": 0.05,
+    "hpRegen": 0.03,
+    "defMult": 0.02,
+    "flavor": "Compassion and focus enhance your restorative abilities."
+  },
+  "herbalist": {
+    "gatherMult": 0.05,
+    "refineMult": 0.04,
+    "flavor": "Botanical expertise enhances your herb gathering."
+  },
+  "leatherworker": {
+    "craftMult": 0.05,
+    "refineMult": 0.03,
+    "flavor": "Hidecraft skill improves your leather goods."
+  },
+  "mage": {
+    "atkMult": 0.04,
+    "manaRegen": 0.05,
+    "critChance": 0.02,
+    "flavor": "Arcane study amplifies your destructive potential."
+  },
+  "miner": {
+    "gatherMult": 0.05,
+    "refineMult": 0.03,
+    "flavor": "Stone sense and precision improve your mining yields."
+  },
+  "monk": {
+    "atkMult": 0.04,
+    "speedMult": 0.03,
+    "defMult": 0.02,
+    "flavor": "Balance and discipline refine your martial technique."
+  },
+  "necromancer": {
+    "atkMult": 0.04,
+    "manaRegen": 0.04,
+    "critChance": 0.02,
+    "flavor": "Mastery of decay empowers your dark arts."
+  },
+  "paladin": {
+    "atkMult": 0.04,
+    "defMult": 0.05,
+    "manaRegen": 0.02,
+    "flavor": "Holy conviction strengthens both blade and shield."
+  },
+  "ranger": {
+    "atkMult": 0.04,
+    "critChance": 0.03,
+    "gatherMult": 0.02,
+    "flavor": "Survival instincts sharpen your aim and awareness."
+  },
+  "ritualist": {
+    "craftMult": 0.04,
+    "refineMult": 0.04,
+    "flavor": "Ceremonial focus strengthens your ritual outcomes."
+  },
+  "rogue": {
+    "atkMult": 0.05,
+    "speedMult": 0.03,
+    "critChance": 0.03,
+    "flavor": "Cunning and agility enhance your opportunistic strikes."
+  },
+  "rot": {
+    "atkMult": 0.05,
+    "defMult": -0.02,
+    "hpRegen": -0.02,
+    "critChance": 0.03,
+    "flavor": "Decay clings to you, weakening the body but empowering corruption."
+  },
+  "shaman": {
+    "atkMult": 0.03,
+    "manaRegen": 0.04,
+    "critChance": 0.02,
+    "flavor": "Elemental spirits guide your strikes and spells."
+  },
+  "spelunker": {
+    "gatherMult": 0.04,
+    "yieldMult": 0.03,
+    "flavor": "Deep‑cave instincts enhance your subterranean discoveries."
+  },
+  "thief": {
+    "atkMult": 0.04,
+    "speedMult": 0.03,
+    "critChance": 0.03,
+    "flavor": "Speed and subtlety enhance your precision attacks."
+  },
+  "tinkerer": {
+    "craftMult": 0.05,
+    "gadgetEfficiency": 0.04,
+    "refineMult": 0.02,
+    "flavor": "Mechanical ingenuity enhances your gadgets, tools, and automated creations."
+  },
+  "trainee": {
+    "atkMult": 0.01,
+    "defMult": 0.01,
+    "flavor": "Basic training grants only the faintest edge."
+  },
+  "trickster": {
+    "atkMult": 0.03,
+    "critChance": 0.04,
+    "speedMult": 0.02,
+    "flavor": "Misdirection and flair amplify your unpredictable style."
+  },
+  "void": {
+    "atkMult": 0.06,
+    "manaRegen": 0.03,
+    "defMult": -0.02,
+    "flavor": "The emptiness between worlds fuels your power at a cost."
+  },
+  "warlock": {
+    "atkMult": 0.04,
+    "manaRegen": 0.04,
+    "critChance": 0.02,
+    "flavor": "Dark pacts enhance your destructive magic."
+  },
+  "warrior": {
+    "atkMult": 0.05,
+    "defMult": 0.05,
+    "critChance": 0.02,
+    "flavor": "Strength and discipline sharpen your combat prowess."
+  },
+  "weaver": {
+    "craftMult": 0.05,
+    "refineMult": 0.03,
+    "flavor": "Threadwork mastery improves your textile quality."
+  },
+  "witch": {
+    "atkMult": 0.03,
+    "manaRegen": 0.04,
+    "critChance": 0.03,
+    "flavor": "Hexcraft and cunning empower your eerie magic."
+  }
+}
