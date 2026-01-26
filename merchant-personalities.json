@@ -1,0 +1,46 @@
+{
+  "dwarven_smith": {
+    "preferredCategories": ["metals", "components", "engineering"],
+    "bannedCategories": ["plants", "seasonal", "alchemy"],
+    "guaranteed": ["iron_ingot", "steel_ingot"],
+    "overrides": ["reinforced_plate"],
+    "rarityBias": {
+      "rare": 1.2,
+      "epic": 1.1
+    }
+  },
+
+  "elven_naturalist": {
+    "preferredCategories": ["plants", "cooking", "fishing", "seasonal"],
+    "bannedCategories": ["metals", "void", "dark"],
+    "guaranteed": ["fresh_herbs", "moonfruit"],
+    "overrides": [],
+    "rarityBias": {
+      "uncommon": 1.3,
+      "rare": 1.1
+    }
+  },
+
+  "shady_operator": {
+    "preferredCategories": ["monsterDrops", "worldEvents", "cosmicEvents"],
+    "bannedCategories": ["holy", "seasonal"],
+    "guaranteed": ["shadow_plate"],
+    "overrides": ["abyssal_scale"],
+    "rarityBias": {
+      "epic": 1.4,
+      "legendary": 1.3,
+      "mythic": 1.2
+    }
+  },
+
+  "wandering_scholar": {
+    "preferredCategories": ["runes", "gems", "artifacts"],
+    "bannedCategories": [],
+    "guaranteed": ["quartz_shard"],
+    "overrides": ["glyph_of_precision"],
+    "rarityBias": {
+      "rare": 1.2,
+      "epic": 1.2
+    }
+  }
+}
