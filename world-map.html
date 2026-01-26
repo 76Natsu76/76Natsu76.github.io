@@ -92,47 +92,83 @@
   <button class="btn" onclick="goToInventory()">Inventory</button>
   <button class="btn" onclick="goToBestiary()">Bestiary</button>
 
-  <!-- Load shared modules -->
-  <script src="api.js"></script>
-  <script src="world-data.js"></script>
-  <script src="encounters.js"></script>
+  <!-- Load modules -->
+  <script type="module">
+    import { WORLD_DATA } from "./world-data.js";
+    import { BIOMES } from "./biomes.js";
+    import { REGION_TO_BIOME } from "./region-to-biome.js";
+    import { EncounterEngine } from "./encounters.js";
 
-  <script>
     const username = sessionStorage.getItem("twitch_username");
     const userId = sessionStorage.getItem("twitch_user_id");
 
     document.getElementById("usernameDisplay").textContent =
       username ? "Logged in as: " + username : "No user logged in";
 
-    // Load player data from sessionStorage
+    // Load player data
     let player = JSON.parse(sessionStorage.getItem("player_data") || "{}");
     let playerLevel = Number(player.level || 1);
 
-    async function loadWorld() {
+    // ------------------------------------------------------------
+    // LOAD WORLD
+    // ------------------------------------------------------------
+    function loadWorld() {
       renderWorld(WORLD_DATA);
     }
 
+    // ------------------------------------------------------------
+    // RENDER WORLD MAP
+    // ------------------------------------------------------------
     function renderWorld(world) {
       const container = document.getElementById("mapContainer");
       const out = [];
 
-      for (const region of world.regions) {
-        const minLevel = region.minLevel ?? 1;
-        const maxLevel = region.maxLevel ?? 999;
+      for (const regionKey in world.regions) {
+        const region = world.regions[regionKey];
 
-        const locked = playerLevel < minLevel || playerLevel > maxLevel;
+        // Resolve biome
+        const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
+        const biome = BIOMES[biomeKey];
+
+        // Level range
+        const [minLevel, maxLevel] = region.levelRange || [1, 999];
+        const locked = playerLevel < minLevel;
+
+        // Flavor text
+        const biomeFlavor = biome?.flavor
+          ? biome.flavor[Math.floor(Math.random() * biome.flavor.length)]
+          : "Unknown biome.";
+
+        const regionFlavor = region.flavor || "";
+
+        // Weather preview
+        const weatherPreview = region.weatherPool?.join(", ") ||
+                               biome?.weatherPool?.join(", ") ||
+                               "Unknown";
+
+        // Hazards
+        const hazards = biome?.hazards?.length
+          ? biome.hazards.map(h => h.key).join(", ")
+          : "None";
+
+        // Events
+        const events = region.eventPool?.length
+          ? region.eventPool.map(e => `<div class="event">${format(e)}</div>`).join("")
+          : "<div class='event'>None</div>";
 
         out.push(`
           <div class="region-card">
-            <h2>${format(region.key)}</h2>
+            <h2>${region.name}</h2>
 
-            <div class="stat-row"><span>Weather</span><span>${format(region.weather)}</span></div>
-            <div class="stat-row"><span>Danger</span><span>${region.danger}</span></div>
-            <div class="stat-row"><span>Blessing</span><span>${region.blessing}</span></div>
+            <div class="stat-row"><span>Biome</span><span>${format(biomeKey)}</span></div>
+            <div class="stat-row"><span>Weather</span><span>${weatherPreview}</span></div>
+            <div class="stat-row"><span>Hazards</span><span>${hazards}</span></div>
+            <div class="stat-row"><span>Danger</span><span>${region.danger || "Moderate"}</span></div>
+            <div class="stat-row"><span>Blessing</span><span>${region.blessing || "None"}</span></div>
 
             <div class="stat-row">
               <span>World Boss</span>
-              <span>${region.worldBoss?.alive ? "Active" : "Defeated"}</span>
+              <span>${region.worldBoss ? "Active" : "None"}</span>
             </div>
 
             <div class="stat-row">
@@ -141,23 +177,23 @@
             </div>
 
             <div class="section">
+              <strong>Biome Flavor:</strong>
+              <div class="event">${biomeFlavor}</div>
+            </div>
+
+            <div class="section">
+              <strong>Region Flavor:</strong>
+              <div class="event">${regionFlavor}</div>
+            </div>
+
+            <div class="section">
               <strong>Events:</strong>
-              ${
-                region.events.length === 0
-                  ? "<div class='event'>None</div>"
-                  : region.events
-                      .map(e => `<div class="event">${format(e)}</div>`)
-                      .join("")
-              }
+              ${events}
             </div>
 
             <button class="btn ${locked ? "disabled" : ""}"
-              onclick="enterRegion('${region.key}', ${locked})">
-              ${
-                locked
-                  ? `Locked (Requires Lv ${minLevel})`
-                  : "Enter Region"
-              }
+              onclick="enterRegion('${regionKey}', ${locked})">
+              ${locked ? `Locked (Requires Lv ${minLevel})` : "Enter Region"}
             </button>
           </div>
         `);
@@ -166,37 +202,33 @@
       container.innerHTML = out.join("");
     }
 
-    async function enterRegion(regionKey, locked) {
+    // ------------------------------------------------------------
+    // ENTER REGION → GENERATE ENCOUNTER
+    // ------------------------------------------------------------
+    window.enterRegion = function(regionKey, locked) {
       if (locked) return;
 
-      // Resolve encounter client-side
-      const encounter = resolveEncounter(regionKey, player);
+      const encounter = EncounterEngine.generate(regionKey, username);
 
-      // Store encounter for fight page
       sessionStorage.setItem("current_encounter", JSON.stringify(encounter));
 
-      // Redirect to fight page
       window.location.href = "fight-interactive.html";
-    }
+    };
 
+    // ------------------------------------------------------------
+    // HELPERS
+    // ------------------------------------------------------------
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
+        .replace(/-/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
 
-    function goToCharacter() {
-      window.location.href = "character.html";
-    }
-
-    function goToInventory() {
-      window.location.href = "inventory.html";
-    }
-
-    function goToBestiary() {
-      window.location.href = "bestiary.html";
-    }
+    window.goToCharacter = () => window.location.href = "character.html";
+    window.goToInventory = () => window.location.href = "inventory.html";
+    window.goToBestiary = () => window.location.href = "bestiary.html";
 
     loadWorld();
   </script>
