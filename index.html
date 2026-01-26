@@ -51,24 +51,34 @@
 
     const codeVerifier = sessionStorage.getItem("pkce_verifier");
 
+    const WORKER_URL = "https://twitch-rpg-worker.godeaterspersona.workers.dev/";
+    
     async function exchangeCode() {
       log("Exchanging code for token…");
-
-      const WORKER_URL = "https://twitch-rpg-worker.godeaterspersona.workers.dev/";
-
+    
+      const res = await fetch(WORKER_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code: code,
+          code_verifier: codeVerifier,
+          client_id: CLIENT_ID,
+          redirect_uri: REDIRECT_URI
+        }).toString()
+      });
+    
       const json = await res.json();
       log("Token response: " + JSON.stringify(json));
-
+    
       if (json.status !== "success") {
         log("Login failed: " + JSON.stringify(json));
         return;
       }
-
-      // Store permanent session
+    
       localStorage.setItem("rpg_session", json.session_token);
       localStorage.setItem("rpg_username", json.username);
       localStorage.setItem("rpg_user_id", json.user_id);
-
+    
       window.location.href = "landing.html";
     }
 
