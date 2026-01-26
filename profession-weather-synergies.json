@@ -1,0 +1,139 @@
+{
+  "acolyte": {
+    "clear": { "healingBoost": 0.05 }
+  },
+  "adept": {
+    "arcane_winds": { "damageBoost": 0.05 }
+  },
+  "alchemist": {
+    "rain": { "damageBoost": 0.05 }
+  },
+  "apocalypse": {
+    "storm": { "damageBoost": 0.15 },
+    "void_storm": { "damageBoost": 0.10 }
+  },
+  "apprentice": {
+    "clear": { "damageBoost": 0.02 }
+  },
+  "archer": {
+    "clear": { "damageBoost": 0.10 },
+    "storm": { "accuracyPenalty": 0.05 }
+  },
+  "artificer": {
+    "arcane_winds": { "damageBoost": 0.05 }
+  },
+  "assassin": {
+    "fog": { "damageBoost": 0.15 },
+    "rain": { "damageBoost": 0.05 }
+  },
+  "berserker": {
+    "storm": { "damageBoost": 0.10 }
+  },
+  "blacksmith": {
+    "heatwave": { "damageBoost": 0.02 }
+  },
+  "bozo": {
+    "storm": { "damageBoost": 0.01, "critBoost": 0.01 },
+    "rain": { "damagePenalty": 0.01 },
+    "fog": { "damagePenalty": 0.01 }
+  },
+  "carpenter": {
+    "rain": { "damagePenalty": 0.02 }
+  },
+  "chef": {
+    "heatwave": { "damageBoost": 0.02 }
+  },
+  "cleric": {
+    "clear": { "healingBoost": 0.10 },
+    "celestial": { "damageBoost": 0.10 }
+  },
+  "corrupted": {
+    "void_storm": { "damageBoost": 0.10 }
+  },
+  "druid": {
+    "rain": { "healingBoost": 0.10 },
+    "fog": { "damageBoost": 0.05 }
+  },
+  "fisherman": {
+    "rain": { "damageBoost": 0.10 }
+  },
+  "guardian": {
+    "fog": { "damagePenalty": 0.05 },
+    "clear": { "damageBoost": 0.05 }
+  },
+  "healer": {
+    "clear": { "healingBoost": 0.10 }
+  },
+  "herbalist": {
+    "rain": { "healingBoost": 0.05 }
+  },
+  "leatherworker": {
+    "rain": { "damagePenalty": 0.02 }
+  },
+  "mage": {
+    "arcane_winds": { "damageBoost": 0.15, "critBoost": 0.05 }
+  },
+  "miner": {
+    "heatwave": { "damagePenalty": 0.05 }
+  },
+  "monk": {
+    "heatwave": { "damageBoost": 0.05 }
+  },
+  "necromancer": {
+    "void_storm": { "damageBoost": 0.15 }
+  },
+  "paladin": {
+    "clear": { "damageBoost": 0.05 },
+    "arcane_winds": { "damageBoost": 0.05 }
+  },
+  "ranger": {
+    "clear": { "damageBoost": 0.05 },
+    "rain": { "damagePenalty": 0.05 }
+  },
+  "ritualist": {
+    "void_storm": { "damageBoost": 0.10 }
+  },
+  "rogue": {
+    "fog": { "damageBoost": 0.05 }
+  },
+  "rot": {
+    "rain": { "damageBoost": 0.05 },
+    "fog": { "damageBoost": 0.05 }
+  },
+  "shaman": {
+    "storm": { "damageBoost": 0.15 }
+  },
+  "spelunker": {
+    "fog": { "damagePenalty": 0.05 }
+  },
+  "thief": {
+    "fog": { "damageBoost": 0.10 }
+  },
+  "tinkerer": {
+    "storm": { "damagePenalty": 0.02 }
+  },
+  "trainee": {
+    "clear": { "damageBoost": 0.02 }
+  },
+  "trickster": {
+    "fog": { "critBoost": 0.03 },
+    "storm": { "chaosBoost": 0.02 }
+  },
+  "void": {
+    "void_storm": { "damageBoost": 0.15 },
+    "fog": { "damageBoost": 0.05 }
+  },
+  "warlock": {
+    "void_storm": { "damageBoost": 0.20 }
+  },
+  "warrior": {
+    "clear": { "damageBoost": 0.05 }
+  },
+  "weaver": {
+    "fog": { "damagePenalty": 0.02 }
+  },
+  "witch": {
+    "fog": { "damageBoost": 0.10 },
+    "rain": { "damageBoost": 0.05 }
+  }
+}
