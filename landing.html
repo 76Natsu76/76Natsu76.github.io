@@ -50,9 +50,8 @@
 
   <button id="enterBtn" style="display:none;">Enter the World</button>
 
-  <script>
-    const API_URL =
-      "https://script.google.com/macros/s/AKfycbyqqCpcGmg_k3d4Zo6bmkiYZ3AzMWhjgaKEqYrGz-Ii/exec";
+  <script type="module">
+    import { PlayerStorage } from "./player-storage.js";
 
     const statusBox = document.getElementById("status");
     const enterBtn = document.getElementById("enterBtn");
@@ -70,36 +69,27 @@
     if (!accessToken || !username || !userId) {
       statusBox.textContent = "Missing login info — redirecting to login…";
       setTimeout(() => {
-        window.location.href = "https://76natsu76.github.io/index.html";
+        window.location.href = "login.html";
       }, 1500);
     }
 
     log("Logged in as: " + username);
 
     async function loadPlayer() {
-      log("Contacting RPG server…");
+      log("Loading local player data…");
 
-      const url =
-        `${API_URL}?cmd=loadPlayer&userId=${encodeURIComponent(userId)}&origin=${encodeURIComponent(location.origin)}`;
+      // Load or create player locally
+      const player = PlayerStorage.load(username);
 
-      const res = await fetch(url);
-      const json = await res.json();
-
-      log("Server response: " + JSON.stringify(json));
-
-      if (!json.ok) {
-        log("Creating new character…");
-      }
-
-      // Store player data for other pages
-      sessionStorage.setItem("player_data", JSON.stringify(json.player || {}));
+      // Store player for other pages
+      sessionStorage.setItem("player", JSON.stringify(player));
 
       statusBox.textContent = `Welcome, ${username}!`;
       enterBtn.style.display = "block";
     }
 
     enterBtn.addEventListener("click", () => {
-      window.location.href = "https://76natsu76.github.io/world-map.html";
+      window.location.href = "world-map.html";
     });
 
     loadPlayer();
