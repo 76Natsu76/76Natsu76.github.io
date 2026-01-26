@@ -478,4 +478,508 @@
     "tier2": {},
     "tier3": {}
   },
+
+  "leatherworker": {
+    "tier1": {"branches":{
+      "hide_processing":[
+        {"id":"leatherworker_hide_1","name":"Basic Skinning","description":"You extract hides cleanly with minimal damage.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"leatherworker_hide_2","name":"Efficient Scraping","description":"You remove impurities and waste more effectively.","bonuses":{"resourceEfficiency":0.05},"requires":"leatherworker_hide_1"},
+        {"id":"leatherworker_hide_3","name":"Quality Preservation","description":"Your careful processing preserves hide integrity.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"leatherworker_hide_2"}
+      ],
+      "tanning_and_treatment":[
+        {"id":"leatherworker_tan_1","name":"Basic Tanning","description":"You treat hides to make them workable and durable.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"leatherworker_tan_2","name":"Oil & Resin Treatment","description":"You enhance leather flexibility and strength.","bonuses":{"itemDurability":0.05},"requires":"leatherworker_tan_1"},
+        {"id":"leatherworker_tan_3","name":"Advanced Curing","description":"Your tanning process yields premium leather.","bonuses":{"craftQuality":0.03,"itemDurability":0.05},"requires":"leatherworker_tan_2"}
+      ],
+      "leathercraft":[
+        {"id":"leatherworker_craft_1","name":"Basic Stitching","description":"You craft simple leather goods with reliable quality.","bonuses":{"craftYield":0.05},"requires":null},
+        {"id":"leatherworker_craft_2","name":"Pattern Cutting","description":"You cut leather efficiently, reducing waste.","bonuses":{"resourceEfficiency":0.05},"requires":"leatherworker_craft_1"},
+        {"id":"leatherworker_craft_3","name":"Master Stitchwork","description":"Your craftsmanship produces exceptionally fine leather goods.","bonuses":{"craftQuality":0.05,"craftYield":0.03},"requires":"leatherworker_craft_2"}
+      ]
+    },"capstone":{
+      "id":"leatherworker_capstone","name":"Master Leatherworker","description":"Your mastery of hides and leathercraft yields exceptional materials and goods.","bonuses":{"refineQuality":0.10,"itemDurability":0.10,"rareYield":0.05,"special":"leatherworker_masterwork_leather"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "mage": {
+    "tier1": {"branches":{
+      "arcane_mastery":[
+        {"id":"mage_arcane_1","name":"Arcane Attunement","description":"You align your spirit with the flow of arcane energy.","bonuses":{"manaMult":0.04,"elementalBoost":{"arcane":0.03}},"requires":null},
+        {"id":"mage_arcane_2","name":"Spell Amplification","description":"Your spells grow in potency as your arcane control improves.","bonuses":{"atkMult":0.03,"elementalBoost":{"arcane":0.04}},"requires":"mage_arcane_1"},
+        {"id":"mage_arcane_3","name":"Arcane Overload","description":"Your arcane power surges, empowering your strongest spells.","bonuses":{"critDamage":0.06,"special":"arcane_overload_proc"},"requires":"mage_arcane_2"}
+      ],
+      "mana_control":[
+        {"id":"mage_mana_1","name":"Mana Flow","description":"You improve your ability to channel and circulate mana.","bonuses":{"resourceRegen":{"mana":0.03}},"requires":null},
+        {"id":"mage_mana_2","name":"Focused Reservoir","description":"Your mana pool deepens, allowing for more powerful spells.","bonuses":{"manaMult":0.05},"requires":"mage_mana_1"},
+        {"id":"mage_mana_3","name":"Arcane Efficiency","description":"Your refined technique reduces magical waste.","bonuses":{"resourceRegen":{"mana":0.04},"special":"reduced_mana_cost_small"},"requires":"mage_mana_2"}
+      ],
+      "elemental_arcana":[
+        {"id":"mage_elemental_1","name":"Elemental Spark","description":"You learn to infuse your spells with elemental force.","bonuses":{"elementalBoost":{"fire":0.02,"frost":0.02,"lightning":0.02}},"requires":null},
+        {"id":"mage_elemental_2","name":"Tri-Element Weave","description":"Your mastery of elemental blending enhances your spell versatility.","bonuses":{"atkMult":0.02,"elementalBoost":{"fire":0.03,"frost":0.03,"lightning":0.03}},"requires":"mage_elemental_1"},
+        {"id":"mage_elemental_3","name":"Elemental Convergence","description":"Your elemental energies converge into devastating bursts.","bonuses":{"critChance":0.02,"elementalBoost":{"fire":0.04,"frost":0.04,"lightning":0.04},"special":"elemental_burst_proc"},"requires":"mage_elemental_2"}
+      ]
+    },"capstone":{
+      "id":"mage_capstone","name":"Archmage Ascension","description":"You ascend to true arcane mastery, unleashing overwhelming magical force.","bonuses":{"manaMult":0.08,"resourceRegen":{"mana":0.05},"elementalBoost":{"arcane":0.08},"special":"mage_arcane_ascension"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "miner": {
+    "tier1": {"branches":{
+      "extraction_technique":[
+        {"id":"miner_extract_1","name":"Basic Swing","description":"You strike stone with practiced rhythm, improving basic yield.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"miner_extract_2","name":"Angle Mastery","description":"You strike at optimal angles, reducing wasted effort.","bonuses":{"resourceEfficiency":0.05},"requires":"miner_extract_1"},
+        {"id":"miner_extract_3","name":"Precision Mining","description":"You extract ore cleanly, preserving material quality.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"miner_extract_2"}
+      ],
+      "geological_knowledge":[
+        {"id":"miner_geo_1","name":"Stone Sense","description":"You read rock layers and identify promising formations.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"miner_geo_2","name":"Vein Detection","description":"You locate ore veins with improved accuracy.","bonuses":{"rareYield":0.03},"requires":"miner_geo_1"},
+        {"id":"miner_geo_3","name":"Geological Insight","description":"Your deep understanding of stone improves all mining outcomes.","bonuses":{"refineQuality":0.05,"gatherYield":0.03},"requires":"miner_geo_2"}
+      ],
+      "mining_efficiency":[
+        {"id":"miner_eff_1","name":"Tool Care","description":"You maintain your tools well, reducing wear and waste.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"miner_eff_2","name":"Sturdy Bracing","description":"You stabilize tunnels and work areas, improving safety and speed.","bonuses":{"craftSpeed":0.05},"requires":"miner_eff_1"},
+        {"id":"miner_eff_3","name":"Optimized Workflow","description":"Your mining process becomes exceptionally efficient and productive.","bonuses":{"craftYield":0.05,"resourceEfficiency":0.05},"requires":"miner_eff_2"}
+      ]
+    },"capstone":{
+      "id":"miner_capstone","name":"Master Miner","description":"Your mastery of stone and ore yields exceptional materials and rare finds.","bonuses":{"rareYield":0.05,"refineQuality":0.10,"gatherYield":0.05,"special":"miner_masterwork_ore"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "monk": {
+    "tier1": {"branches":{
+      "inner_focus":[
+        {"id":"monk_focus_1","name":"Calm Mind","description":"You center your thoughts, improving clarity and control.","bonuses":{"manaMult":0.03,"resourceRegen":{"mana":0.02}},"requires":null},
+        {"id":"monk_focus_2","name":"Meditative Flow","description":"Your breathing techniques enhance your inner energy circulation.","bonuses":{"speedMult":0.02,"special":"minor_energy_flow"},"requires":"monk_focus_1"},
+        {"id":"monk_focus_3","name":"Serenity","description":"Your inner calm reduces the impact of harmful effects.","bonuses":{"dotPower":-0.03,"special":"reduced_debuff_duration"},"requires":"monk_focus_2"}
+      ],
+      "martial_mastery":[
+        {"id":"monk_martial_1","name":"Palm Strike","description":"You refine your basic martial techniques, increasing strike potency.","bonuses":{"atkMult":0.03},"requires":null},
+        {"id":"monk_martial_2","name":"Pressure Point Training","description":"You learn to target vital points with precision.","bonuses":{"critChance":0.02,"special":"minor_weaken_on_hit"},"requires":"monk_martial_1"},
+        {"id":"monk_martial_3","name":"Flurry Technique","description":"Your rapid strikes overwhelm opponents with relentless force.","bonuses":{"speedMult":0.03,"atkMult":0.02},"requires":"monk_martial_2"}
+      ],
+      "spiritual_harmony":[
+        {"id":"monk_spirit_1","name":"Chi Alignment","description":"You align your chi, enhancing your natural resilience.","bonuses":{"defMult":0.03},"requires":null},
+        {"id":"monk_spirit_2","name":"Inner Warmth","description":"Your chi radiates outward, granting minor regeneration.","bonuses":{"hpRegen":0.01,"manaMult":0.02},"requires":"monk_spirit_1"},
+        {"id":"monk_spirit_3","name":"Spirit Echo","description":"Your spiritual energy echoes through your strikes and defenses.","bonuses":{"elementalBoost":{"holy":0.03},"special":"minor_reflect_chi"},"requires":"monk_spirit_2"}
+      ]
+    },"capstone":{
+      "id":"monk_capstone","name":"Ascended Tranquility","description":"You transcend physical limits, becoming a serene force of perfect balance.","bonuses":{"atkMult":0.05,"defMult":0.05,"speedMult":0.04,"special":"monk_tranquility_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "necromancer": {
+    "tier1": {"branches":{
+      "death_magic":[
+        {"id":"necromancer_death_1","name":"Grave Whisper","description":"You attune your spirit to the quiet murmur of the dead.","bonuses":{"elementalBoost":{"dark":0.03}},"requires":null},
+        {"id":"necromancer_death_2","name":"Soul Rot","description":"Your dark magic inflicts lingering decay.","bonuses":{"dotPower":0.04,"special":"apply_minor_decay"},"requires":"necromancer_death_1"},
+        {"id":"necromancer_death_3","name":"Death’s Embrace","description":"Your decay magic intensifies, weakening enemy vitality.","bonuses":{"elementalBoost":{"dark":0.05},"special":"reduce_enemy_healing"},"requires":"necromancer_death_2"}
+      ],
+      "bonecraft":[
+        {"id":"necromancer_bone_1","name":"Raise Skeleton","description":"You learn the fundamental necromantic rite: animating a basic skeletal minion.","bonuses":{"special":"summon_basic_skeleton","elementalBoost":{"dark":0.02}},"requires":null},
+        {"id":"necromancer_bone_2","name":"Reinforced Bones","description":"Your skeletal minions grow sturdier and more reliable.","bonuses":{"defMult":0.02,"special":"summon_hp_boost_small"},"requires":"necromancer_bone_1"},
+        {"id":"necromancer_bone_3","name":"Skeletal Vanguard","description":"Your minions become more aggressive, striking with greater force.","bonuses":{"atkMult":0.03,"special":"summon_damage_boost_small"},"requires":"necromancer_bone_2"}
+      ],
+      "life_drain":[
+        {"id":"necromancer_drain_1","name":"Essence Sip","description":"Your dark spells siphon a trace of life from enemies.","bonuses":{"special":"minor_lifesteal"},"requires":null},
+        {"id":"necromancer_drain_2","name":"Blood Funnel","description":"Your draining magic becomes more efficient.","bonuses":{"healingPower":0.03,"special":"enhanced_lifesteal"},"requires":"necromancer_drain_1"},
+        {"id":"necromancer_drain_3","name":"Soul Harvest","description":"You reap fragments of soul energy from weakened foes.","bonuses":{"atkMult":0.03,"manaMult":0.03,"special":"bonus_damage_vs_low_hp"},"requires":"necromancer_drain_2"}
+      ]
+    },"capstone":{
+      "id":"necromancer_capstone","name":"Lich Ascension","description":"You transcend mortal limits, becoming a conduit of deathly power.","bonuses":{"elementalBoost":{"dark":0.08},"dotPower":0.08,"manaMult":0.05,"special":"necromancer_lich_form"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "paladin": {
+    "tier1": {"branches":{
+      "holy_zeal":[
+        {"id":"paladin_zeal_1","name":"Zealbound Strike","description":"Your weapon becomes an instrument of holy justice.","bonuses":{"atkMult":0.03,"elementalBoost":{"holy":0.02}},"requires":null},
+        {"id":"paladin_zeal_2","name":"Righteous Momentum","description":"Your zeal intensifies, empowering consecutive strikes.","bonuses":{"speedMult":0.02,"critChance":0.01},"requires":"paladin_zeal_1"},
+        {"id":"paladin_zeal_3","name":"Smite of Conviction","description":"Your holy strikes burn with unwavering conviction.","bonuses":{"elementalBoost":{"holy":0.05},"critDamage":0.05},"requires":"paladin_zeal_2"}
+      ],
+      "divine_protection":[
+        {"id":"paladin_protect_1","name":"Blessed Guard","description":"A faint divine aura reinforces your defenses.","bonuses":{"defMult":0.03},"requires":null},
+        {"id":"paladin_protect_2","name":"Aegis of Light","description":"You channel holy energy into a protective barrier.","bonuses":{"blockChance":0.03,"special":"small_damage_shield"},"requires":"paladin_protect_1"},
+        {"id":"paladin_protect_3","name":"Sanctified Bulwark","description":"Your divine protection strengthens, reducing incoming harm.","bonuses":{"defMult":0.04,"special":"minor_damage_reduction"},"requires":"paladin_protect_2"}
+      ],
+      "radiant_aegis":[
+        {"id":"paladin_radiant_1","name":"Aura of Mercy","description":"A gentle radiance grants minor healing to allies.","bonuses":{"healingPower":0.03,"special":"minor_party_regen"},"requires":null},
+        {"id":"paladin_radiant_2","name":"Beacon of Valor","description":"Your presence emboldens allies, improving their combat performance.","bonuses":{"atkMult":0.02,"defMult":0.02},"requires":"paladin_radiant_1"},
+        {"id":"paladin_radiant_3","name":"Radiant Ward","description":"Your aura intensifies, shielding allies from harm.","bonuses":{"special":"small_aoe_damage_reduction","healingPower":0.03},"requires":"paladin_radiant_2"}
+      ]
+    },"capstone":{
+      "id":"paladin_capstone","name":"Avatar of the Light","description":"You become a living vessel of divine radiance, smiting foes and shielding allies.","bonuses":{"elementalBoost":{"holy":0.08},"defMult":0.06,"atkMult":0.04,"special":"paladin_holy_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "ranger": {
+    "tier1": {"branches":{
+      "wilderness_instincts":[
+        {"id":"ranger_wild_1","name":"Hunter’s Awareness","description":"Your senses sharpen, allowing you to read enemy movements.","bonuses":{"critChance":0.02,"evadeChance":0.02},"requires":null},
+        {"id":"ranger_wild_2","name":"Trailblazer","description":"Your experience in the wild enhances your mobility.","bonuses":{"speedMult":0.03},"requires":"ranger_wild_1"},
+        {"id":"ranger_wild_3","name":"Predator’s Insight","description":"You identify weak points with uncanny precision.","bonuses":{"critDamage":0.05,"special":"bonus_damage_vs_beasts"},"requires":"ranger_wild_2"}
+      ],
+      "ranged_mastery":[
+        {"id":"ranger_ranged_1","name":"Longshot Training","description":"You refine your technique for long‑range attacks.","bonuses":{"atkMult":0.03},"requires":null},
+        {"id":"ranger_ranged_2","name":"Piercing Arrow","description":"Your arrows strike deeper, penetrating enemy defenses.","bonuses":{"elementalBoost":{"nature":0.03},"special":"minor_armor_pierce"},"requires":"ranger_ranged_1"},
+        {"id":"ranger_ranged_3","name":"Eagle Eye","description":"Your aim becomes nearly flawless, enhancing critical precision.","bonuses":{"critChance":0.03,"atkMult":0.02},"requires":"ranger_ranged_2"}
+      ],
+      "survival_expertise":[
+        {"id":"ranger_survival_1","name":"Forager’s Knowledge","description":"Your understanding of the wild grants minor regeneration.","bonuses":{"hpRegen":0.01},"requires":null},
+        {"id":"ranger_survival_2","name":"Camouflage","description":"You blend into your surroundings, making you harder to target.","bonuses":{"evadeChance":0.03,"special":"reduced_enemy_detection"},"requires":"ranger_survival_1"},
+        {"id":"ranger_survival_3","name":"Ambush Mastery","description":"Your first strike from stealth or distance hits with devastating force.","bonuses":{"critDamage":0.06,"special":"bonus_opening_strike_damage"},"requires":"ranger_survival_2"}
+      ]
+    },"capstone":{
+      "id":"ranger_capstone","name":"Master of the Wilds","description":"You become one with the wilderness, striking with unmatched precision and instinct.","bonuses":{"atkMult":0.05,"critChance":0.03,"speedMult":0.03,"special":"ranger_wild_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "ritualist": {
+    "tier1": {"branches":{
+      "circle_craft":[
+        {"id":"ritualist_circle_1","name":"Chalk Lines","description":"You draw simple ritual circles with steady precision.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"ritualist_circle_2","name":"Runic Geometry","description":"Your circles incorporate runes that enhance ritual stability.","bonuses":{"refineQuality":0.05},"requires":"ritualist_circle_1"},
+        {"id":"ritualist_circle_3","name":"Sacred Symmetry","description":"Your geometric mastery strengthens all ritual outcomes.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"ritualist_circle_2"}
+      ],
+      "symbolic_components":[
+        {"id":"ritualist_symbol_1","name":"Basic Offerings","description":"You prepare simple symbolic components for rituals.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"ritualist_symbol_2","name":"Anointed Materials","description":"You bless and prepare components with improved potency.","bonuses":{"craftQuality":0.03},"requires":"ritualist_symbol_1"},
+        {"id":"ritualist_symbol_3","name":"Consecrated Symbols","description":"Your symbolic components channel powerful ritual energy.","bonuses":{"craftQuality":0.05,"rareYield":0.03},"requires":"ritualist_symbol_2"}
+      ],
+      "ceremonial_mastery":[
+        {"id":"ritualist_ceremony_1","name":"Steady Chant","description":"You maintain focus during long ceremonies.","bonuses":{"craftYield":0.05},"requires":null},
+        {"id":"ritualist_ceremony_2","name":"Harmonic Resonance","description":"Your chants align with ritual energies, improving results.","bonuses":{"refineQuality":0.05},"requires":"ritualist_ceremony_1"},
+        {"id":"ritualist_ceremony_3","name":"Grand Invocation","description":"Your ceremonial mastery empowers even the most complex rites.","bonuses":{"craftYield":0.05,"refineQuality":0.05},"requires":"ritualist_ceremony_2"}
+      ]
+    },"capstone":{
+      "id":"ritualist_capstone","name":"Master Ritualist","description":"Your mastery of circles, symbols, and ceremony produces extraordinary ritual outcomes.","bonuses":{"refineQuality":0.10,"rareYield":0.05,"craftYield":0.05,"special":"ritualist_masterwork_rite"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "rogue": {
+    "tier1": {"branches":{
+      "agility_mastery":[
+        {"id":"rogue_agility_1","name":"Lightfoot","description":"Your nimble footwork improves your mobility.","bonuses":{"speedMult":0.03},"requires":null},
+        {"id":"rogue_agility_2","name":"Evasive Twist","description":"You slip away from danger with practiced ease.","bonuses":{"evadeChance":0.03},"requires":"rogue_agility_1"},
+        {"id":"rogue_agility_3","name":"Shadowstep","description":"You dart through openings with uncanny speed.","bonuses":{"speedMult":0.03,"critChance":0.01},"requires":"rogue_agility_2"}
+      ],
+      "opportunistic_strikes":[
+        {"id":"rogue_opportunity_1","name":"Quick Jab","description":"A fast strike that exploits small openings.","bonuses":{"atkMult":0.02},"requires":null},
+        {"id":"rogue_opportunity_2","name":"Weak Point Targeting","description":"You learn to strike where it hurts most.","bonuses":{"critChance":0.02},"requires":"rogue_opportunity_1"},
+        {"id":"rogue_opportunity_3","name":"Exploit Opening","description":"Your attacks deal extra damage to distracted or weakened foes.","bonuses":{"critDamage":0.05,"special":"bonus_damage_vs_debuffed"},"requires":"rogue_opportunity_2"}
+      ],
+      "trickery_and_feints":[
+        {"id":"rogue_trick_1","name":"Feint","description":"A deceptive maneuver that throws enemies off balance.","bonuses":{"special":"minor_enemy_weaken"},"requires":null},
+        {"id":"rogue_trick_2","name":"Distracting Flourish","description":"Your flashy movements create openings for follow‑up attacks.","bonuses":{"atkMult":0.02,"confusionChance":0.02},"requires":"rogue_trick_1"},
+        {"id":"rogue_trick_3","name":"Cunning Gambit","description":"Your trickery becomes dangerously effective.","bonuses":{"chaosFactor":0.03,"critChance":0.01},"requires":"rogue_trick_2"}
+      ]
+    },"capstone":{
+      "id":"rogue_capstone","name":"Master of Guile","description":"You become a whirlwind of deception and precision, striking before foes can react.","bonuses":{"speedMult":0.04,"critChance":0.03,"atkMult":0.03,"special":"rogue_ambush_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "rot": {
+    "tier1": {"branches":{
+      "decay_mastery":[
+        {"id":"rot_decay_1","name":"Fetid Touch","description":"Your attacks carry a trace of putrefying decay.","bonuses":{"dotPower":0.03,"elementalBoost":{"poison":0.02}},"requires":null},
+        {"id":"rot_decay_2","name":"Rotting Wound","description":"Your decay seeps deeper, worsening over time.","bonuses":{"dotPower":0.05,"special":"stacking_decay_dot"},"requires":"rot_decay_1"},
+        {"id":"rot_decay_3","name":"Putrefaction Surge","description":"Your decay erupts violently when it reaches critical mass.","bonuses":{"elementalBoost":{"poison":0.05},"special":"decay_burst_on_threshold"},"requires":"rot_decay_2"}
+      ],
+      "disease_spread":[
+        {"id":"rot_disease_1","name":"Blighted Breath","description":"A faint miasma surrounds you, weakening nearby foes.","bonuses":{"special":"minor_enemy_weaken","chaosFactor":0.02},"requires":null},
+        {"id":"rot_disease_2","name":"Virulent Spores","description":"Your decay spreads through airborne spores.","bonuses":{"special":"chance_to_spread_dot","dotPower":0.03},"requires":"rot_disease_1"},
+        {"id":"rot_disease_3","name":"Plague Bloom","description":"Your diseases erupt outward, infecting multiple enemies.","bonuses":{"elementalBoost":{"poison":0.05},"special":"aoe_plague_spread"},"requires":"rot_disease_2"}
+      ],
+      "withering_body":[
+        {"id":"rot_withering_1","name":"Hollow Vitality","description":"Your body adapts to decay, reducing its toll on you.","bonuses":{"dotPower":-0.02,"defMult":0.02},"requires":null},
+        {"id":"rot_withering_2","name":"Necrotic Resilience","description":"Your corrupted form becomes unnervingly durable.","bonuses":{"defMult":0.03,"hpRegen":0.01},"requires":"rot_withering_1"},
+        {"id":"rot_withering_3","name":"Withered Endurance","description":"Decay strengthens your resolve, hardening your form.","bonuses":{"defMult":0.04,"special":"reduced_poison_damage_taken"},"requires":"rot_withering_2"}
+      ]
+    },"capstone":{
+      "id":"rot_capstone","name":"Avatar of Decay","description":"You embody pure rot, spreading unstoppable decay with every action.","bonuses":{"dotPower":0.12,"elementalBoost":{"poison":0.06,"dark":0.04},"chaosFactor":0.04,"special":"rot_decay_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "shaman": {
+    "tier1": {"branches":{
+      "elemental_channeling":[
+        {"id":"shaman_element_1","name":"Spark of the Storm","description":"You channel a flicker of elemental lightning.","bonuses":{"elementalBoost":{"lightning":0.03}},"requires":null},
+        {"id":"shaman_element_2","name":"Earthen Pulse","description":"You draw strength from the earth, empowering your spells.","bonuses":{"elementalBoost":{"earth":0.03},"atkMult":0.02},"requires":"shaman_element_1"},
+        {"id":"shaman_element_3","name":"Stormcaller’s Harmony","description":"Your mastery of elemental balance amplifies your magic.","bonuses":{"elementalBoost":{"lightning":0.04,"earth":0.04},"critChance":0.02},"requires":"shaman_element_2"}
+      ],
+      "ancestral_spirits":[
+        {"id":"shaman_spirit_1","name":"Whisper of Ancestors","description":"You hear faint guidance from ancestral spirits.","bonuses":{"manaMult":0.03},"requires":null},
+        {"id":"shaman_spirit_2","name":"Spirit Shield","description":"Ancestral spirits protect you from harm.","bonuses":{"defMult":0.03,"special":"minor_spirit_shield"},"requires":"shaman_spirit_1"},
+        {"id":"shaman_spirit_3","name":"Ancestral Surge","description":"Spirits empower your magic with ancient strength.","bonuses":{"atkMult":0.03,"manaMult":0.03},"requires":"shaman_spirit_2"}
+      ],
+      "primal_rituals":[
+        {"id":"shaman_ritual_1","name":"Ritual of Embers","description":"A simple ritual that enhances your elemental affinity.","bonuses":{"elementalBoost":{"fire":0.03}},"requires":null},
+        {"id":"shaman_ritual_2","name":"Totemic Focus","description":"Your rituals become more stable and potent.","bonuses":{"resourceRegen":{"mana":0.03},"special":"reduced_ritual_cooldowns"},"requires":"shaman_ritual_1"},
+        {"id":"shaman_ritual_3","name":"Primal Convergence","description":"Your rituals call upon multiple primal forces at once.","bonuses":{"elementalBoost":{"fire":0.04,"lightning":0.04,"earth":0.04},"chaosFactor":0.02},"requires":"shaman_ritual_2"}
+      ]
+    },"capstone":{
+      "id":"shaman_capstone","name":"Avatar of the Storm","description":"You embody the fury of the elements, unleashing devastating primal power.","bonuses":{"elementalBoost":{"lightning":0.08,"earth":0.06,"fire":0.06},"atkMult":0.04,"special":"shaman_storm_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "spelunker": {
+    "tier1": {"branches":{
+      "cave_navigation":[
+        {"id":"spelunker_nav_1","name":"Stone Sense","description":"You read cave formations and navigate tight passages with ease.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"spelunker_nav_2","name":"Pathfinding Instinct","description":"You identify safe routes and avoid dead ends.","bonuses":{"resourceEfficiency":0.05},"requires":"spelunker_nav_1"},
+        {"id":"spelunker_nav_3","name":"Echo Mapping","description":"You use sound and intuition to map cavern layouts.","bonuses":{"rareYield":0.03,"gatherYield":0.03},"requires":"spelunker_nav_2"}
+      ],
+      "hazard_mitigation":[
+        {"id":"spelunker_hazard_1","name":"Stable Footing","description":"You move confidently across uneven and slippery surfaces.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"spelunker_hazard_2","name":"Trap Awareness","description":"You recognize natural hazards and avoid collapses.","bonuses":{"resourceEfficiency":0.05},"requires":"spelunker_hazard_1"},
+        {"id":"spelunker_hazard_3","name":"Cave Safety Protocols","description":"Your expertise minimizes risk and improves expedition outcomes.","bonuses":{"craftYield":0.05,"refineQuality":0.05},"requires":"spelunker_hazard_2"}
+      ],
+      "subterranean_discovery":[
+        {"id":"spelunker_discovery_1","name":"Glint Spotter","description":"You notice mineral glimmers and hidden crevices.","bonuses":{"rareYield":0.03},"requires":null},
+        {"id":"spelunker_discovery_2","name":"Fossil Finder","description":"You uncover ancient remains and rare cavern materials.","bonuses":{"refineQuality":0.05},"requires":"spelunker_discovery_1"},
+        {"id":"spelunker_discovery_3","name":"Deep Delver","description":"Your mastery of subterranean exploration yields exceptional finds.","bonuses":{"rareYield":0.05,"craftQuality":0.03},"requires":"spelunker_discovery_2"}
+      ]
+    },"capstone":{
+      "id":"spelunker_capstone","name":"Master Spelunker","description":"Your deep‑cave expertise yields rare discoveries and exceptional expedition results.","bonuses":{"rareYield":0.05,"refineQuality":0.10,"gatherYield":0.05,"special":"spelunker_masterwork_discovery"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "thief": {
+    "tier1": {"branches":{
+      "nimble_footwork":[
+        {"id":"thief_nimble_1","name":"Streetstep","description":"Years of slipping through crowds make you naturally elusive.","bonuses":{"evadeChance":0.03},"requires":null},
+        {"id":"thief_nimble_2","name":"Quick Getaway","description":"You’re faster when danger spikes, darting out of reach.","bonuses":{"speedMult":0.03},"requires":"thief_nimble_1"},
+        {"id":"thief_nimble_3","name":"Slip the Net","description":"You wriggle free from tight spots with uncanny ease.","bonuses":{"evadeChance":0.03,"special":"reduced_cc_duration_small"},"requires":"thief_nimble_2"}
+      ],
+      "opportunistic_theft":[
+        {"id":"thief_theft_1","name":"Light Fingers","description":"You’re adept at snatching valuables mid‑scrap.","bonuses":{"special":"minor_bonus_gold_or_loot"},"requires":null},
+        {"id":"thief_theft_2","name":"Cutpurse","description":"You profit more from every encounter.","bonuses":{"special":"increased_loot_quality_small"},"requires":"thief_theft_1"},
+        {"id":"thief_theft_3","name":"Master Pilferer","description":"Your thefts are bold, precise, and strangely lucky.","bonuses":{"chaosFactor":0.03,"special":"chance_to_steal_extra_item"},"requires":"thief_theft_2"}
+      ],
+      "dirty_tricks":[
+        {"id":"thief_tricks_1","name":"Pocket Sand","description":"A quick, dirty trick to blind and disorient foes.","bonuses":{"confusionChance":0.03},"requires":null},
+        {"id":"thief_tricks_2","name":"Low Blow","description":"You strike where it hurts most, staggering enemies.","bonuses":{"special":"minor_stagger_chance","atkMult":0.02},"requires":"thief_tricks_1"},
+        {"id":"thief_tricks_3","name":"Cheap Shot","description":"Your dirtiest tricks open enemies up for brutal follow‑ups.","bonuses":{"critChance":0.02,"critDamage":0.04},"requires":"thief_tricks_2"}
+      ]
+    },"capstone":{
+      "id":"thief_capstone","name":"King of Cutpurses","description":"You turn every fight into profit, slipping through danger while lining your pockets.","bonuses":{"evadeChance":0.04,"speedMult":0.03,"special":"thief_loot_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "tinkerer": {
+    "tier1": {"branches":{
+      "gadget_engineering":[
+        {"id":"tinkerer_gadget_1","name":"Basic Gears","description":"You assemble simple gadgets with reliable function.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"tinkerer_gadget_2","name":"Precision Components","description":"Your gadgets use higher‑quality parts.","bonuses":{"refineQuality":0.05},"requires":"tinkerer_gadget_1"},
+        {"id":"tinkerer_gadget_3","name":"Advanced Mechanisms","description":"You construct complex gadgets with improved efficiency.","bonuses":{"rareYield":0.03,"craftSpeed":0.03},"requires":"tinkerer_gadget_2"}
+      ],
+      "automation":[
+        {"id":"tinkerer_auto_1","name":"Clockwork Basics","description":"You understand simple automated motion.","bonuses":{"gadgetEfficiency":0.05},"requires":null},
+        {"id":"tinkerer_auto_2","name":"Mechanical Rhythm","description":"Your automated tools operate more smoothly.","bonuses":{"craftYield":0.05},"requires":"tinkerer_auto_1"},
+        {"id":"tinkerer_auto_3","name":"Autonomous Systems","description":"Your gadgets perform tasks with minimal oversight.","bonuses":{"gadgetEfficiency":0.05,"special":"tinkerer_auto_boost"},"requires":"tinkerer_auto_2"}
+      ],
+      "workshop_efficiency":[
+        {"id":"tinkerer_workshop_1","name":"Organized Bench","description":"A tidy workspace improves your crafting flow.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"tinkerer_workshop_2","name":"Batch Assembly","description":"You assemble multiple components efficiently.","bonuses":{"craftYield":0.05},"requires":"tinkerer_workshop_1"},
+        {"id":"tinkerer_workshop_3","name":"Workshop Optimization","description":"Your entire tinkering process becomes exceptionally efficient.","bonuses":{"resourceEfficiency":0.05,"craftYield":0.03},"requires":"tinkerer_workshop_2"}
+      ]
+    },"capstone":{
+      "id":"tinkerer_capstone","name":"Master Tinkerer","description":"Your mastery of gadgets and automation produces extraordinary mechanical creations.","bonuses":{"gadgetEfficiency":0.10,"rareYield":0.05,"special":"tinkerer_masterwork_device"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "trainee": {
+    "tier1": {"branches":{
+      "basic_training":[
+        {"id":"trainee_basic_1","name":"Firm Stance","description":"You learn the fundamentals of balance and posture.","bonuses":{"defMult":0.02},"requires":null},
+        {"id":"trainee_basic_2","name":"Steady Grip","description":"Your weapon handling improves with practice.","bonuses":{"atkMult":0.02},"requires":"trainee_basic_1"},
+        {"id":"trainee_basic_3","name":"Disciplined Form","description":"Your training begins to show in your overall performance.","bonuses":{"atkMult":0.02,"defMult":0.02},"requires":"trainee_basic_2"}
+      ],
+      "physical_conditioning":[
+        {"id":"trainee_condition_1","name":"Light Exercise","description":"Basic conditioning improves your stamina.","bonuses":{"hpRegen":0.01},"requires":null},
+        {"id":"trainee_condition_2","name":"Endurance Drills","description":"You push your limits, building resilience.","bonuses":{"defMult":0.02},"requires":"trainee_condition_1"},
+        {"id":"trainee_condition_3","name":"Conditioned Body","description":"Your physical training yields noticeable improvements.","bonuses":{"hpRegen":0.01,"defMult":0.02},"requires":"trainee_condition_2"}
+      ],
+      "combat_fundamentals":[
+        {"id":"trainee_combat_1","name":"Basic Strike","description":"You practice simple but effective attack patterns.","bonuses":{"atkMult":0.02},"requires":null},
+        {"id":"trainee_combat_2","name":"Focused Effort","description":"You learn to commit fully to your attacks.","bonuses":{"critChance":0.01},"requires":"trainee_combat_1"},
+        {"id":"trainee_combat_3","name":"Combat Readiness","description":"Your training sharpens your instincts.","bonuses":{"speedMult":0.02,"atkMult":0.02},"requires":"trainee_combat_2"}
+      ]
+    },"capstone":{
+      "id":"trainee_capstone","name":"Ready for Anything","description":"Your foundational training prepares you for any future specialization.","bonuses":{"atkMult":0.03,"defMult":0.03,"speedMult":0.02,"special":"trainee_all_rounder"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "trickster": {
+    "tier1": {"branches":{
+      "illusion_weaving":[
+        {"id":"trickster_illusion_1","name":"Mirage Flicker","description":"You distort your outline, making attacks less likely to land cleanly.","bonuses":{"evadeChance":0.03},"requires":null},
+        {"id":"trickster_illusion_2","name":"Phantom Double","description":"You conjure a brief illusory duplicate to confuse enemies.","bonuses":{"confusionChance":0.03,"special":"minor_decoy_proc"},"requires":"trickster_illusion_1"},
+        {"id":"trickster_illusion_3","name":"Hall of Mirrors","description":"Your illusions multiply, creating unpredictable openings.","bonuses":{"critChance":0.02,"chaosFactor":0.03},"requires":"trickster_illusion_2"}
+      ],
+      "chaos_magic":[
+        {"id":"trickster_chaos_1","name":"Wild Spark","description":"You channel a flicker of unstable magical energy.","bonuses":{"elementalBoost":{"arcane":0.03}},"requires":null},
+        {"id":"trickster_chaos_2","name":"Unstable Surge","description":"Your chaotic magic lashes out unpredictably.","bonuses":{"chaosFactor":0.03,"special":"chance_for_random_effect_small"},"requires":"trickster_chaos_1"},
+        {"id":"trickster_chaos_3","name":"Reality Fracture","description":"Your magic briefly warps the battlefield around you.","bonuses":{"elementalBoost":{"arcane":0.05},"special":"random_buff_or_debuff"},"requires":"trickster_chaos_2"}
+      ],
+      "mischief_and_mayhem":[
+        {"id":"trickster_mischief_1","name":"Lucky Break","description":"Fortune bends slightly in your favor.","bonuses":{"critChance":0.02},"requires":null},
+        {"id":"trickster_mischief_2","name":"Jinx","description":"You subtly curse your foes with bad luck.","bonuses":{"special":"minor_enemy_misfortune","chaosFactor":0.02},"requires":"trickster_mischief_1"},
+        {"id":"trickster_mischief_3","name":"Pandemonium","description":"Your presence becomes a catalyst for unpredictable outcomes.","bonuses":{"critDamage":0.04,"chaosFactor":0.04},"requires":"trickster_mischief_2"}
+      ]
+    },"capstone":{
+      "id":"trickster_capstone","name":"Master of Mischief","description":"You twist fate, perception, and probability itself to your advantage.","bonuses":{"chaosFactor":0.08,"evadeChance":0.04,"critChance":0.03,"special":"trickster_fatebend_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "void": {
+    "tier1": {"branches":{
+      "entropy_mastery":[
+        {"id":"void_entropy_1","name":"Fractured Essence","description":"You channel a sliver of entropy, unraveling stability.","bonuses":{"chaosFactor":0.03,"elementalBoost":{"dark":0.02}},"requires":null},
+        {"id":"void_entropy_2","name":"Entropy Lash","description":"Your attacks tear at the structure of matter.","bonuses":{"atkMult":0.02,"special":"minor_armor_unravel"},"requires":"void_entropy_1"},
+        {"id":"void_entropy_3","name":"Collapse Point","description":"You create micro‑singularities that destabilize enemies.","bonuses":{"chaosFactor":0.04,"special":"void_implosion_proc"},"requires":"void_entropy_2"}
+      ],
+      "void_magic":[
+        {"id":"void_magic_1","name":"Null Spark","description":"A flicker of void energy disrupts magical flow.","bonuses":{"elementalBoost":{"void":0.03},"special":"minor_mana_burn"},"requires":null},
+        {"id":"void_magic_2","name":"Anti‑Weave","description":"Your void magic interferes with spellcasting structures.","bonuses":{"special":"chance_to_disrupt_magic","manaMult":0.02},"requires":"void_magic_1"},
+        {"id":"void_magic_3","name":"Void Surge","description":"You unleash a surge of pure void, erasing magical stability.","bonuses":{"elementalBoost":{"void":0.05},"special":"void_surge_overload"},"requires":"void_magic_2"}
+      ],
+      "spatial_distortion":[
+        {"id":"void_space_1","name":"Warp Step","description":"You bend space slightly, shifting unpredictably.","bonuses":{"evadeChance":0.03},"requires":null},
+        {"id":"void_space_2","name":"Spatial Shear","description":"Your attacks slice through warped space, bypassing defenses.","bonuses":{"critChance":0.02,"special":"minor_defense_bypass"},"requires":"void_space_1"},
+        {"id":"void_space_3","name":"Event Horizon","description":"You distort space around you, pulling enemies toward collapse.","bonuses":{"critDamage":0.05,"chaosFactor":0.03},"requires":"void_space_2"}
+      ]
+    },"capstone":{
+      "id":"void_capstone","name":"Avatar of the Void","description":"You embody cosmic emptiness, unraveling matter, magic, and will.","bonuses":{"elementalBoost":{"void":0.08,"dark":0.04},"chaosFactor":0.06,"special":"void_collapse_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "warlock": {
+    "tier1": {"branches":{
+      "eldritch_fire":[
+        {"id":"warlock_fire_1","name":"Cinder Hex","description":"You curse foes with a flicker of eldritch flame.","bonuses":{"elementalBoost":{"fire":0.03},"dotPower":0.02},"requires":null},
+        {"id":"warlock_fire_2","name":"Hellbrand","description":"Your cursed flames burn hotter and cling longer.","bonuses":{"dotPower":0.04,"special":"minor_burn_extension"},"requires":"warlock_fire_1"},
+        {"id":"warlock_fire_3","name":"Infernal Surge","description":"Your eldritch fire erupts violently when empowered.","bonuses":{"elementalBoost":{"fire":0.05},"critChance":0.02},"requires":"warlock_fire_2"}
+      ],
+      "forbidden_pacts":[
+        {"id":"warlock_pact_1","name":"Whispered Bargain","description":"A faint pact grants you a sliver of forbidden power.","bonuses":{"manaMult":0.03},"requires":null},
+        {"id":"warlock_pact_2","name":"Blood Oath","description":"You trade vitality for greater magical potency.","bonuses":{"atkMult":0.03,"special":"minor_hp_to_mana_conversion"},"requires":"warlock_pact_1"},
+        {"id":"warlock_pact_3","name":"Eldritch Covenant","description":"Your pact deepens, granting immense but unstable power.","bonuses":{"chaosFactor":0.04,"manaMult":0.03},"requires":"warlock_pact_2"}
+      ],
+      "hexcraft":[
+        {"id":"warlock_hex_1","name":"Weakening Hex","description":"You curse enemies, sapping their strength.","bonuses":{"special":"minor_enemy_weaken"},"requires":null},
+        {"id":"warlock_hex_2","name":"Agony Curse","description":"Your hexes inflict lingering torment.","bonuses":{"dotPower":0.03,"elementalBoost":{"dark":0.03}},"requires":"warlock_hex_1"},
+        {"id":"warlock_hex_3","name":"Hexstorm","description":"Your curses erupt in a wave of eldritch torment.","bonuses":{"critDamage":0.05,"special":"aoe_hex_pulse"},"requires":"warlock_hex_2"}
+      ]
+    },"capstone":{
+      "id":"warlock_capstone","name":"Harbinger of the Eldritch","description":"You channel the full might of your pacts, unleashing devastating forbidden magic.","bonuses":{"elementalBoost":{"fire":0.06,"dark":0.06},"chaosFactor":0.05,"manaMult":0.05,"special":"warlock_eldritch_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "warrior": {
+    "tier1": {"branches":{
+      "weapon_mastery":[
+        {"id":"warrior_weapon_1","name":"Sharpened Technique","description":"You refine your weapon handling, improving strike efficiency.","bonuses":{"atkMult":0.03},"requires":null},
+        {"id":"warrior_weapon_2","name":"Heavy Swing","description":"Your blows land with greater force and momentum.","bonuses":{"critDamage":0.04},"requires":"warrior_weapon_1"},
+        {"id":"warrior_weapon_3","name":"Masterful Strikes","description":"Your mastery of weapon combat allows devastating precision.","bonuses":{"atkMult":0.03,"critChance":0.02},"requires":"warrior_weapon_2"}
+      ],
+      "battle_hardened":[
+        {"id":"warrior_battle_1","name":"Iron Body","description":"Your training toughens your body against harm.","bonuses":{"defMult":0.03},"requires":null},
+        {"id":"warrior_battle_2","name":"Enduring Spirit","description":"You push through pain with sheer determination.","bonuses":{"hpRegen":0.01,"defMult":0.02},"requires":"warrior_battle_1"},
+        {"id":"warrior_battle_3","name":"Battle Tempered","description":"Your resilience in combat becomes legendary.","bonuses":{"defMult":0.04,"special":"minor_damage_reduction"},"requires":"warrior_battle_2"}
+      ],
+      "disciplined_assault":[
+        {"id":"warrior_assault_1","name":"Forward Momentum","description":"You press the attack relentlessly.","bonuses":{"speedMult":0.02},"requires":null},
+        {"id":"warrior_assault_2","name":"Punishing Blows","description":"Your disciplined strikes punish enemy openings.","bonuses":{"critChance":0.02,"atkMult":0.02},"requires":"warrior_assault_1"},
+        {"id":"warrior_assault_3","name":"Relentless Advance","description":"You become unstoppable, driving through enemy defenses.","bonuses":{"speedMult":0.03,"special":"minor_armor_pierce"},"requires":"warrior_assault_2"}
+      ]
+    },"capstone":{
+      "id":"warrior_capstone","name":"Champion of Battle","description":"You embody martial perfection, overwhelming foes with unmatched strength and discipline.","bonuses":{"atkMult":0.05,"defMult":0.05,"critChance":0.03,"special":"warrior_battle_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "weaver": {
+    "tier1": {"branches":{
+      "fiber_preparation":[
+        {"id":"weaver_fiber_1","name":"Basic Carding","description":"You clean and align fibers with minimal waste.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"weaver_fiber_2","name":"Fine Spinning","description":"You spin fibers into consistent, high‑quality threads.","bonuses":{"refineQuality":0.05},"requires":"weaver_fiber_1"},
+        {"id":"weaver_fiber_3","name":"Thread Mastery","description":"Your thread preparation yields premium textile materials.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"weaver_fiber_2"}
+      ],
+      "loomcraft":[
+        {"id":"weaver_loom_1","name":"Basic Loomwork","description":"You operate a loom with steady, reliable technique.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"weaver_loom_2","name":"Pattern Weaving","description":"You weave structured patterns that improve textile strength.","bonuses":{"itemDurability":0.05},"requires":"weaver_loom_1"},
+        {"id":"weaver_loom_3","name":"Master Loomcraft","description":"Your weaving produces exceptionally fine and durable cloth.","bonuses":{"craftQuality":0.03,"itemDurability":0.05},"requires":"weaver_loom_2"}
+      ],
+      "workshop_efficiency":[
+        {"id":"weaver_workshop_1","name":"Organized Spools","description":"A tidy workspace improves your weaving flow.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"weaver_workshop_2","name":"Batch Looming","description":"You produce multiple textile segments efficiently.","bonuses":{"craftYield":0.05},"requires":"weaver_workshop_1"},
+        {"id":"weaver_workshop_3","name":"Workshop Optimization","description":"Your entire weaving process becomes streamlined and productive.","bonuses":{"resourceEfficiency":0.05,"craftYield":0.03},"requires":"weaver_workshop_2"}
+      ]
+    },"capstone":{
+      "id":"weaver_capstone","name":"Master Weaver","description":"Your mastery of fibers and loomcraft produces exceptional textiles prized across the land.","bonuses":{"refineQuality":0.10,"itemDurability":0.10,"rareYield":0.05,"special":"weaver_masterwork_cloth"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "witch": {
+    "tier1": {"branches":{
+      "hexcraft":[
+        {"id":"witch_hex_1","name":"Evil Eye","description":"A baleful glare that subtly weakens your foe.","bonuses":{"special":"minor_enemy_weaken","chaosFactor":0.02},"requires":null},
+        {"id":"witch_hex_2","name":"Binding Curse","description":"Your hexes restrict movement and sap vitality.","bonuses":{"dotPower":0.03,"speedMult":-0.01},"requires":"witch_hex_1"},
+        {"id":"witch_hex_3","name":"Witchfire Hex","description":"Your curses ignite with eerie flame, intensifying their effect.","bonuses":{"elementalBoost":{"fire":0.04,"dark":0.03},"special":"hex_burst_proc"},"requires":"witch_hex_2"}
+      ],
+      "ritual_magic":[
+        {"id":"witch_ritual_1","name":"Circle of Focus","description":"A simple ritual that steadies your magical flow.","bonuses":{"manaMult":0.03},"requires":null},
+        {"id":"witch_ritual_2","name":"Blood‑Ink Sigil","description":"Your rituals gain potency through forbidden markings.","bonuses":{"atkMult":0.02,"special":"reduced_ritual_cooldowns"},"requires":"witch_ritual_1"},
+        {"id":"witch_ritual_3","name":"Grand Rite","description":"Your rituals channel immense, unstable magical force.","bonuses":{"chaosFactor":0.03,"manaMult":0.03,"elementalBoost":{"dark":0.04}},"requires":"witch_ritual_2"}
+      ],
+      "brews_and_concoctions":[
+        {"id":"witch_brew_1","name":"Soothing Draught","description":"A simple brew that enhances your restorative magic.","bonuses":{"healingPower":0.03},"requires":null},
+        {"id":"witch_brew_2","name":"Toxic Tincture","description":"A foul concoction that infuses your spells with venom.","bonuses":{"elementalBoost":{"poison":0.03},"dotPower":0.02},"requires":"witch_brew_1"},
+        {"id":"witch_brew_3","name":"Cauldron Mastery","description":"Your brews become potent catalysts for magical effects.","bonuses":{"healingPower":0.03,"chaosFactor":0.02,"special":"brew_enhancement_proc"},"requires":"witch_brew_2"}
+      ]
+    },"capstone":{
+      "id":"witch_capstone","name":"Grand Witch of the Coven","description":"You command ancient sorcery, weaving hexes, rituals, and brews into overwhelming power.","bonuses":{"elementalBoost":{"dark":0.06,"fire":0.04,"poison":0.04},"manaMult":0.05,"chaosFactor":0.05,"special":"witch_coven_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  }
 }
