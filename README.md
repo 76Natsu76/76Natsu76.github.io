@@ -1,91 +1,302 @@
-# 76Natsu76.github.io
+# S3ven RPG — 76Natsu76.github.io
 
+A fully data‑driven, Twitch‑integrated RPG engine built on JSON definitions and modular JavaScript systems.
 
-race list:
-humanoid
-elf
-dwarf
-orc
-goblinoid
-beastkin
-draconian
-undead
-demonborn
-voidborn
+The project is designed so that **almost everything** — enemies, loot, professions, races, subraces, abilities, regions, merchants — is defined in data files, with resolvers and engines reading from those definitions.
 
-celestialborn
-spiritborn
-elementalborn
-titanborn
-giantkin
-colossus
-fae
-chimera
-construct
-plantfolk
-				part 2
-slimeborn
-insectoids
-arachnids
-supernatural
-astralborn
-chaosborn
-dragonkin
-aberration
-eldritch
-lich
+---
 
-mimic
-beast
-amorphous
-techborn
-machina
-dragon
-wyrm
-spirit
-mythic_beast
-divinity
-				part 3
-celestial
-fiend
-primordial
-ethereal
-titan
-outer_god
-planar_entity
-anomaly (where plink is :3)
-legendary_boss_template (specifically will be applied to world bosses)
-paragon
+## High-level architecture
 
-hybrid
-forgotten_race
-cosmic_construct
-metaphysical_phenomenon
-parasite
-cosmic_fauna
-mythic_undead
-hivemind
-living_location
-artificial_life
-				part 4
-temporal_entity
-divine_beast
-meta_entity
-narrative_construct
-emotional
-paradox_god
-multiversal_paragon
+### Core concepts
 
-total = 67
+- **Players**  
+  - Stored in `players.json`  
+  - Runtime helpers in `player-registry.js`, `player-storage.js`  
+  - UI in `character.html`, `inventory.html`, `levelup.html`, `player-inspector.html`
 
+- **Enemies**  
+  - Canonical data in:
+    - `enemies.json`
+    - `enemy-variants.json`
+    - `enemy-subrace.json`
+    - `enemy-tags.json`
+    - `enemy-abilities.json`
+    - `enemy-ultimates.json`
+    - `enemy-families.json`
+    - `enemy-regions.json`
+  - Runtime helpers in:
+    - `enemy-database.js`
+    - `enemy-registry.js`
+    - `resolveEnemy.js`
 
+- **Races & Subraces**  
+  - Races in `race-definitions.json`  
+  - Race tiers in `race-tier-index.json`  
+  - Subrace mapping in `subrace-race-index.json`  
+  - Subrace stat profiles in `subrace-stat-profiles.json`  
+  - Subrace abilities in `subrace-ability-definitions.json`
 
+- **Professions**  
+  - Definitions in `profession-definitions.json`  
+  - Talent trees in `profession-talent-trees.json`  
+  - Synergies in:
+    - `profession-synergies.json`
+    - `profession-biome-bonuses.json`
+    - `profession-weather-synergies.json`  
+  - Starter kits in `profession-starter-kits.json`
 
+- **Abilities & Status**  
+  - Profession abilities in `ability-definitions.json`  
+  - Subrace abilities in `subrace-ability-definitions.json`  
+  - Enemy abilities in `enemy-abilities.json`  
+  - Resolution in:
+    - `ability-resolver.js`
+    - `combat-engine.js`
+    - `combat-flow.js`
+    - `damage-helpers.js`
+    - `status-effects.js`
+    - `status-engine.js`
+    - `dot-hot-engine.js`
+    - `shield-engine.js`
+    - `cleanse-engine.js`
 
+- **World & Regions**  
+  - Regions in `regions.json`  
+  - Region → biome mapping in `region-to-biome.js`  
+  - Region biomes in `region-biomes.js`  
+  - Region encounter tables in `region-encounter-tables.json`  
+  - Region loot tables in `region-loot-tables.json`  
+  - Region tier bands in `region-tier-bands.json`  
+  - Region race pools in `region-race-pools.json`  
+  - Region modifiers in `region-modifiers.js`  
+  - World data in `world-data.js`  
+  - Biomes in `biomes.json` and `biome-presets.js`  
+  - Weather in `weatherTable.js`  
+  - World admin UIs in `world-admin.html`, `world-map-admin.html`, `region-controls.html`
 
-Note -- world tick counter exists
+- **Loot & Items**  
+  - Items in `items.json`  
+  - Item registry in `item-registry.js`  
+  - Global loot tables in `loot-tables.json`  
+  - Boss loot in `boss-loot-tables.json`  
+  - Region loot in `region-loot-tables.json`  
+  - Rarity weights in `rarity-weights.json`
 
-Shops -- global shop ... player based daily shop ... travelling merchant ... seasonal shop-ware
+- **Shops & Merchants**  
+  - Shop pools in `shop-pool.json`  
+  - Shop engine in `shop-engine.js`, `shop.js`, `shop-ui.js`  
+  - Merchant types in `merchant-types.json`  
+  - Merchant personalities in `merchant-personalities.json`  
+  - Merchant instances in `merchant-instances.json`  
+  - Merchant inventory in `merchant-inventory.json`  
+  - Merchant resolver in `merchant-resolver.js`  
+  - Shop UIs in `global-shop.html`, `daily-shop.html`, `shop-pool-editor.html`
 
-Time -- world tick ... minutes counted ... seasons will be 1 week rotational ... seasons matter
+- **Twitch / API**  
+  - API endpoints in `api.js`  
+  - Login / redirect flows in `login.html`, `index.html`, `landing.html`  
+  - Various UIs in `action-cases.html`, `enemy.html`, `encounter.html`, `fight-interactive.html`, etc.
 
+---
+
+## Race taxonomy
+
+Races are defined in `race-definitions.json` and indexed in `race-tier-index.json`.
+
+The canonical race list (67 total):
+
+- **Part 1**  
+  humanoid, elf, dwarf, orc, goblinoid, beastkin, draconian, undead, demonborn, voidborn,  
+  celestialborn, spiritborn, elementalborn, titanborn, giantkin, colossus, fae, chimera, construct, plantfolk
+
+- **Part 2**  
+  slimeborn, insectoids, arachnids, supernatural, astralborn, chaosborn, dragonkin, aberration, eldritch, lich,  
+  mimic, beast, amorphous, techborn, machina, dragon, wyrm, spirit, mythic_beast, divinity
+
+- **Part 3**  
+  celestial, fiend, primordial, ethereal, titan, outer_god, planar_entity, anomaly, legendary_boss_template, paragon,  
+  hybrid, forgotten_race, cosmic_construct, metaphysical_phenomenon, parasite, cosmic_fauna, mythic_undead, hivemind, living_location, artificial_life
+
+- **Part 4**  
+  temporal_entity, divine_beast, meta_entity, narrative_construct, emotional, paradox_god, multiversal_paragon
+
+Subraces are mapped in `subrace-race-index.json` and their stat/ability profiles live in:
+
+- `subrace-stat-profiles.json`
+- `subrace-ability-definitions.json`
+
+---
+
+## How to add a new enemy
+
+1. **Define the enemy base entry**  
+   - Add a new entry in `enemies.json` with:
+     - `key`
+     - `name`
+     - `race`
+     - `subrace`
+     - `profession` (if applicable)
+     - base stats (hp, atk, def, etc.)
+
+2. **Assign variants (optional)**  
+   - Add variant entries in `enemy-variants.json` if this enemy has multiple difficulty tiers or flavors.
+
+3. **Assign subrace & tags**  
+   - Ensure the `subrace` exists in `subrace-race-index.json` and `subrace-stat-profiles.json`.  
+   - Add any thematic tags in `enemy-tags.json` (e.g. `["undead", "elite", "fire"]`).
+
+4. **Hook into regions**  
+   - Add the enemy key to appropriate region pools in `enemy-regions.json` and/or `region-encounter-tables.json`.
+
+5. **Assign abilities**  
+   - Add ability keys in `enemy-abilities.json` and `enemy-ultimates.json` (if it has an ultimate).  
+   - Make sure those ability keys exist in `ability-definitions.json` or `enemy-abilities.json`.
+
+6. **Verify in runtime**  
+   - `enemy-database.js` / `enemy-registry.js` / `resolveEnemy.js` will pull the data together.  
+   - Test via `encounter.html` / `fight-interactive.html`.
+
+---
+
+## How to add loot
+
+1. **Add the item**  
+   - Create a new item entry in `items.json` with:
+     - `id`
+     - `name`
+     - `type` (weapon, armor, consumable, etc.)
+     - `rarity`
+     - any stat modifiers or special effects
+
+2. **Register the item**  
+   - Ensure `item-registry.js` can resolve it by `id`.
+
+3. **Add to loot tables**  
+   - Global drops: `loot-tables.json`  
+   - Region-specific: `region-loot-tables.json`  
+   - Boss-specific: `boss-loot-tables.json`  
+   - Merchant stock: `merchant-inventory.json`, `merchant-tables.json`
+
+4. **Balance rarity**  
+   - Adjust `rarity-weights.json` if you introduce a new rarity or want to rebalance drop chances.
+
+---
+
+## How to add a profession
+
+1. **Define the profession**  
+   - Add a new entry in `profession-definitions.json`:
+     - base stats
+     - resource type (mana, rage, etc.)
+     - flavor text
+
+2. **Starter kit**  
+   - Add a starter kit entry in `profession-starter-kits.json`:
+     - starting equipment IDs (must exist in `items.json`)
+     - starting consumables, if any
+
+3. **Abilities**  
+   - Add abilities for this profession in `ability-definitions.json` under the profession key.  
+   - Each ability should define:
+     - `key`, `name`
+     - `basePower`, `scalingPerLevel`
+     - `manaCost`, `cooldown`
+     - `combatTags`
+     - `statusEffects` (if any)
+     - `description`
+
+4. **Talent tree**  
+   - Add a talent tree entry in `profession-talent-trees.json`:
+     - nodes, prerequisites, bonuses  
+   - Hook into `talent-modifiers.js` if you want talents to affect damage or other combat behavior.
+
+5. **Synergies**  
+   - Add profession-specific synergies in:
+     - `profession-synergies.json`
+     - `profession-biome-bonuses.json`
+     - `profession-weather-synergies.json`
+
+---
+
+## How to add a race
+
+1. **Add race definition**  
+   - Add a new race entry in `race-definitions.json`:
+     - `key`
+     - `name`
+     - base flavor and any global modifiers
+
+2. **Tier index**  
+   - Add the race to `race-tier-index.json` with its tier (e.g. common, rare, mythic, cosmic).
+
+3. **Subraces**  
+   - Add subraces for this race in `subrace-race-index.json`.  
+   - Define their stat profiles in `subrace-stat-profiles.json`.  
+   - Define their abilities in `subrace-ability-definitions.json`.
+
+4. **Region pools**  
+   - Add the race to appropriate region pools in `region-race-pools.json`.
+
+---
+
+## How to add a subrace
+
+1. **Map the subrace to a race**  
+   - In `subrace-race-index.json`, add:
+     ```json
+     "wolfkin": "beastkin"
+     ```
+
+2. **Define stat profile**  
+   - In `subrace-stat-profiles.json`, add:
+     ```json
+     "wolfkin": {
+       "hpMult": 1.1,
+       "atkMult": 1.1,
+       "defMult": 1.0,
+       "speedMult": 1.1
+     }
+     ```
+
+3. **Define subrace abilities**  
+   - In `subrace-ability-definitions.json`, add:
+     ```json
+     "beastkin": {
+       "wolfkin": {
+         "howl_of_the_pack": { ... ability object ... }
+       }
+     }
+     ```
+
+4. **Use in enemies**  
+   - In `enemies.json`, set `subrace: "wolfkin"` for any enemy that uses it.
+
+---
+
+## How to add an ability
+
+1. **Decide the owner**  
+   - Profession ability → `ability-definitions.json`  
+   - Subrace ability → `subrace-ability-definitions.json`  
+   - Enemy-only ability → `enemy-abilities.json`
+
+2. **Define the ability object**  
+   Example (profession ability):
+
+   ```json
+   "acolyte": {
+     "minor_heal": {
+       "key": "minor_heal",
+       "name": "Minor Heal",
+       "basePower": 0.0,
+       "scalingPerLevel": 0.05,
+       "manaCost": 10,
+       "cooldown": 1,
+       "combatTags": ["holy", "heal", "support"],
+       "statusEffects": [
+         { "type": "heal_flat", "power": 12, "duration": 0, "stack": "add" }
+       ],
+       "description": "A simple prayer restores a small amount of health."
+     }
+   }
