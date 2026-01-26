@@ -1,8 +1,19 @@
 // world-data.js
-// Full region definitions ported from the original REGION_DEFINITIONS.
-// Used by encounters.js and world-map.html
+// Canonical region definitions for world simulation, encounters, and UI.
+// Fully client-side, GitHub-native ES module.
 
-const WORLD_DATA = {
+export const WORLD_DATA = {
+  version: "1.0.0",
+
+  // Global world settings (expand later if needed)
+  worldSettings: {
+    defaultEncounterRate: 1.0,
+    defaultLootModifier: 1.0,
+    defaultRareSpawnMult: 1.0,
+    dayNightCycle: true,
+    weatherSystem: true
+  },
+
   regions: {
 
     forest: {
@@ -42,7 +53,10 @@ const WORLD_DATA = {
         enemyDEFMult: 1.0,
         elementBias: { nature: +0.10 },
         notes: "A calm but living forest where nature magic subtly strengthens local creatures."
-      }
+      },
+
+      travelLinks: ["plains", "cavern"],
+      worldBoss: "giant_boar"
     },
 
     plains: {
@@ -82,7 +96,10 @@ const WORLD_DATA = {
         enemyDEFMult: 0.95,
         critChanceAdd: +0.01,
         notes: "Open fields favor swift movement and precise strikes."
-      }
+      },
+
+      travelLinks: ["forest", "ruins"],
+      worldBoss: "centaur_lancer"
     },
 
     cavern: {
@@ -122,7 +139,10 @@ const WORLD_DATA = {
         enemyDEFMult: 1.10,
         accuracyMult: 0.95,
         notes: "Echoing tunnels distort sound and empower subterranean creatures."
-      }
+      },
+
+      travelLinks: ["forest", "ruins"],
+      worldBoss: "minotaur"
     },
 
     ruins: {
@@ -163,7 +183,10 @@ const WORLD_DATA = {
         elementBias: { shadow: +0.10, arcane: +0.05 },
         specialRules: { unstableTerrain: true },
         notes: "Ancient magic lingers among the rubble, empowering arcane and shadow forces."
-      }
+      },
+
+      travelLinks: ["plains", "swamp"],
+      worldBoss: "necromancer_adept"
     },
 
     swamp: {
@@ -203,7 +226,10 @@ const WORLD_DATA = {
         enemyDEFMult: 1.05,
         statusEffectChanceMult: 1.15,
         notes: "Toxic mists and sinking ground empower decay and poison."
-      }
+      },
+
+      travelLinks: ["ruins", "desert"],
+      worldBoss: "banshee"
     },
 
     desert: {
@@ -244,7 +270,10 @@ const WORLD_DATA = {
         elementBias: { fire: +0.15 },
         specialRules: { reducedHealing: true },
         notes: "Scorching heat empowers fire and drains endurance."
-      }
+      },
+
+      travelLinks: ["swamp", "tundra"],
+      worldBoss: "serpent_guardian"
     },
 
     tundra: {
@@ -285,7 +314,10 @@ const WORLD_DATA = {
         elementBias: { ice: +0.15 },
         accuracyMult: 0.95,
         notes: "Frigid winds slow movement and empower ice‑aligned creatures."
-      }
+      },
+
+      travelLinks: ["desert", "mountains"],
+      worldBoss: "frost_wyrm"
     },
 
     mountains: {
@@ -325,10 +357,13 @@ const WORLD_DATA = {
         enemyDEFMult: 1.05,
         critDamageMult: 1.10,
         notes: "High altitude sharpens strikes and empowers wind and earth."
-      }
+      },
+
+      travelLinks: ["tundra", "void"],
+      worldBoss: "storm_drake"
     },
 
-        void: {
+    void: {
       key: "void",
       name: "Void-Touched Expanse",
       biome: "void_realm",
@@ -367,10 +402,13 @@ const WORLD_DATA = {
         accuracyMult: 0.90,
         specialRules: { voidPressure: true },
         notes: "Reality bends; void energy crushes defenses."
-      }
+      },
+
+      travelLinks: ["mountains", "abyssal_scar"],
+      worldBoss: "void_reaver"
     },
 
-    celestial: {
+        celestial: {
       key: "celestial",
       name: "Celestial Verge",
       biome: "celestial",
@@ -408,7 +446,10 @@ const WORLD_DATA = {
         elementBias: { holy: +0.15, light: +0.10 },
         critChanceAdd: +0.02,
         notes: "Radiant energies empower holy magic and precision."
-      }
+      },
+
+      travelLinks: ["mountains", "celestial_expanse"],
+      worldBoss: "radiant_seraph"
     },
 
     abyssal_scar: {
@@ -451,7 +492,10 @@ const WORLD_DATA = {
         accuracyMult: 0.85,
         specialRules: { voidPressure: true },
         notes: "A wound in reality where void corruption thrives."
-      }
+      },
+
+      travelLinks: ["void", "void_frontier"],
+      worldBoss: "abyssal_overlord"
     },
 
     arcane_rift: {
@@ -494,7 +538,10 @@ const WORLD_DATA = {
         critChanceAdd: +0.03,
         specialRules: { empoweredMagic: true },
         notes: "Arcane turbulence amplifies magic and destabilizes defenses."
-      }
+      },
+
+      travelLinks: ["mountains", "astral_nexus"],
+      worldBoss: "rift_archon"
     },
 
     celestial_expanse: {
@@ -535,7 +582,10 @@ const WORLD_DATA = {
         elementBias: { holy: +0.20, light: +0.10 },
         critChanceAdd: +0.03,
         notes: "A radiant realm where celestial forces dominate."
-      }
+      },
+
+      travelLinks: ["celestial", "eternal_citadel"],
+      worldBoss: "stellar_titan"
     },
 
     primordial_grove: {
@@ -577,7 +627,10 @@ const WORLD_DATA = {
         elementBias: { nature: +0.20, earth: +0.10 },
         hotPowerMult: 1.10,
         notes: "Ancient life force strengthens nature and regeneration."
-      }
+      },
+
+      travelLinks: ["forest", "worldbreaker_horizon"],
+      worldBoss: "ancient_treant"
     },
 
     void_frontier: {
@@ -619,7 +672,10 @@ const WORLD_DATA = {
         accuracyMult: 0.90,
         specialRules: { voidPressure: true },
         notes: "The edge of the void where reality frays."
-      }
+      },
+
+      travelLinks: ["abyssal_scar", "astral_nexus"],
+      worldBoss: "void_colossus"
     },
 
     eternal_citadel: {
@@ -659,7 +715,10 @@ const WORLD_DATA = {
         enemyDEFMult: 1.05,
         elementBias: { holy: +0.10, arcane: +0.10 },
         notes: "A bastion of ancient power where magic and order converge."
-      }
+      },
+
+      travelLinks: ["celestial_expanse", "astral_nexus"],
+      worldBoss: "eternal_warden"
     },
 
     worldbreaker_horizon: {
@@ -673,14 +732,14 @@ const WORLD_DATA = {
       encounterRateMult: 1.25,
       rareSpawnMult: 1.45,
       flavor: "A shattered frontier where titanic forces reshape the land.",
-    
+
       enemyFamilies: [
         { id: "elemental", weight: 40 },
         { id: "beast",     weight: 30 },
         { id: "dragon",    weight: 20 },
         { id: "construct", weight: 10 }
       ],
-    
+
       rarityWeights: [
         { id: "common",    weight: 30 },
         { id: "uncommon",  weight: 32 },
@@ -691,7 +750,7 @@ const WORLD_DATA = {
         { id: "legendary", weight: 0.5 },
         { id: "ancient",   weight: 0.2 }
       ],
-    
+
       combatModifiers: {
         playerATKMult: 1.0,
         playerDEFMult: 0.90,
@@ -700,7 +759,10 @@ const WORLD_DATA = {
         elementBias: { fire: +0.20, earth: +0.10 },
         specialRules: { reducedHealing: true },
         notes: "A cataclysmic landscape shaped by titanic forces."
-      }
+      },
+
+      travelLinks: ["primordial_grove", "astral_nexus"],
+      worldBoss: "worldbreaker_titan"
     },
 
     astral_nexus: {
@@ -714,7 +776,7 @@ const WORLD_DATA = {
       encounterRateMult: 1.30,
       rareSpawnMult: 1.60,
       flavor: "A convergence point of countless timelines and cosmic energies.",
-    
+
       enemyFamilies: [
         { id: "spirit",    weight: 35 },
         { id: "elemental", weight: 25 },
@@ -722,7 +784,7 @@ const WORLD_DATA = {
         { id: "dragon",    weight: 10 },
         { id: "humanoid",  weight: 10 }
       ],
-    
+
       rarityWeights: [
         { id: "common",    weight: 28 },
         { id: "uncommon",  weight: 30 },
@@ -733,7 +795,7 @@ const WORLD_DATA = {
         { id: "legendary", weight: 0.5 },
         { id: "ancient",   weight: 0.2 }
       ],
-    
+
       combatModifiers: {
         playerATKMult: 1.05,
         playerDEFMult: 0.95,
@@ -743,7 +805,11 @@ const WORLD_DATA = {
         critChanceAdd: +0.03,
         specialRules: { empoweredMagic: true },
         notes: "A convergence point of cosmic energies where magic surges wildly."
-      }
+      },
+
+      travelLinks: ["arcane_rift", "void_frontier", "eternal_citadel", "worldbreaker_horizon"],
+      worldBoss: "astral_paragon"
     }
+
   }
 };
