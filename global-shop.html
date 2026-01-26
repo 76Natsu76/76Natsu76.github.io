@@ -151,7 +151,11 @@
 
   <script type="module">
     import { loadMerchantFromDOM } from "./js/shop.js";
-    import { initUserShopUI, initGlobalShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
+    import { initGlobalShopUI, promptForToken, startShopCountdown } from "./shop-ui.js"; 
+    
+    await loadMerchantFromDOM(); 
+    initGlobalShopUI(); 
+    startShopCountdown("globalShopTimer");
 
     // Username display
     const username = sessionStorage.getItem("twitch_username");
@@ -165,18 +169,6 @@
     document.getElementById("toggleInventoryBtn").onclick = () => {
       document.getElementById("inventoryPanel").classList.toggle("hidden");
     };
-
-    // Load merchant inventory
-    await loadMerchantFromDOM();
-
-    // Load user gold + inventory
-    initUserShopUI();
-
-    // Global shop-specific UI
-    initGlobalShopUI();
-
-    // Countdown timer
-    startShopCountdown("globalShopTimer");
 
     function goToMap() { window.location.href = "world-map.html"; }
     function goToInventory() { window.location.href = "inventory.html"; }
