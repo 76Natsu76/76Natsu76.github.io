@@ -1,0 +1,481 @@
+{
+  "acolyte": {
+    "tier1": {"branches": {
+      "foundations_of_faith":[
+        {"id":"acolyte_faith_1","name":"Gentle Restoration","description":"You learn the first steps of mending wounds.","bonuses":{"healingPower":0.03},"requires":null},
+        {"id":"acolyte_faith_2","name":"Sacred Focus","description":"Your prayers sharpen your concentration.","bonuses":{"manaMult":0.02,"resourceRegen":{"mana":0.02}},"requires":"acolyte_faith_1"},
+        {"id":"acolyte_faith_3","name":"Blessing of Light","description":"A faint holy aura strengthens your restorative magic.","bonuses":{"healingPower":0.05,"elementalBoost":{"holy":0.03}},"requires":"acolyte_faith_2"}
+      ],
+      "discipline_and_devotion":[
+        {"id":"acolyte_devotion_1","name":"Calm Spirit","description":"You steady your breath and center your spirit.","bonuses":{"resourceRegen":{"mana":0.03}},"requires":null},
+        {"id":"acolyte_devotion_2","name":"Devout Posture","description":"Your training grants you a more resilient stance.","bonuses":{"defMult":0.02,"blockChance":0.02},"requires":"acolyte_devotion_1"},
+        {"id":"acolyte_devotion_3","name":"Purifying Pulse","description":"Your holy energy weakens lingering corruption.","bonuses":{"dotPower":-0.03,"special":"minor_cleanse_on_heal"},"requires":"acolyte_devotion_2"}
+      ],
+      "aspirant_of_the_light":[
+        {"id":"acolyte_light_1","name":"Radiant Spark","description":"A flicker of holy fire ignites within you.","bonuses":{"elementalBoost":{"holy":0.03}},"requires":null},
+        {"id":"acolyte_light_2","name":"Smite Training","description":"You learn to channel holy force into basic attacks.","bonuses":{"atkMult":0.02,"critChance":0.01},"requires":"acolyte_light_1"},
+        {"id":"acolyte_light_3","name":"Light’s Rebuke","description":"Your holy strikes punish the wicked.","bonuses":{"elementalBoost":{"holy":0.05},"special":"bonus_damage_vs_dark"},"requires":"acolyte_light_2"}
+      ]
+    },"capstone":{
+      "id":"acolyte_capstone","name":"Acolyte’s Benediction","description":"Your devotion culminates in a radiant blessing that empowers your allies.","bonuses":{"healingPower":0.10,"resourceRegen":{"mana":0.05},"special":"party_minor_regen_aura"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "adept": {
+    "tier1": {"branches":{
+      "arcane_foundations":[
+        {"id":"adept_arcane_1","name":"Arcane Whisper","description":"You attune yourself to faint currents of magical energy.","bonuses":{"manaMult":0.02,"elementalBoost":{"arcane":0.02}},"requires":null},
+        {"id":"adept_arcane_2","name":"Focused Channeling","description":"Your control over raw mana improves, reducing waste.","bonuses":{"resourceRegen":{"mana":0.03}},"requires":"adept_arcane_1"},
+        {"id":"adept_arcane_3","name":"Arcane Pulse","description":"Your spells carry a faint pulse of extra arcane force.","bonuses":{"elementalBoost":{"arcane":0.05}},"requires":"adept_arcane_2"}
+      ],
+      "discipline_of_the_mind":[
+        {"id":"adept_mind_1","name":"Mental Clarity","description":"You clear your thoughts, improving your magical efficiency.","bonuses":{"manaMult":0.02},"requires":null},
+        {"id":"adept_mind_2","name":"Meditative Focus","description":"Deep breathing techniques enhance your mana recovery.","bonuses":{"resourceRegen":{"mana":0.03}},"requires":"adept_mind_1"},
+        {"id":"adept_mind_3","name":"Inner Balance","description":"Your mind stabilizes, reducing the impact of magical backlash.","bonuses":{"dotPower":-0.03,"special":"reduced_magic_damage_taken"},"requires":"adept_mind_2"}
+      ],
+      "novice_spellcraft":[
+        {"id":"adept_spell_1","name":"Spellform Basics","description":"You learn the fundamentals of shaping magical projectiles.","bonuses":{"atkMult":0.02},"requires":null},
+        {"id":"adept_spell_2","name":"Mana Infusion","description":"You infuse your basic spells with additional mana.","bonuses":{"critChance":0.01,"elementalBoost":{"arcane":0.03}},"requires":"adept_spell_1"},
+        {"id":"adept_spell_3","name":"Spell Precision","description":"Your spell accuracy improves, enhancing your offensive potential.","bonuses":{"critDamage":0.05},"requires":"adept_spell_2"}
+      ]
+    },"capstone":{
+      "id":"adept_capstone","name":"Adept’s Awakening","description":"Your early training culminates in a surge of arcane insight.","bonuses":{"manaMult":0.05,"resourceRegen":{"mana":0.05},"elementalBoost":{"arcane":0.05},"special":"adept_arcane_overflow"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "alchemist": {
+    "tier1": {"branches":{
+      "reagent_mastery":[
+        {"id":"alchemist_reagent_1","name":"Herbal Familiarity","description":"You recognize common reagents and their basic properties.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"alchemist_reagent_2","name":"Reagent Purification","description":"You refine raw ingredients more effectively.","bonuses":{"refineQuality":0.05},"requires":"alchemist_reagent_1"},
+        {"id":"alchemist_reagent_3","name":"Rare Extracts","description":"You can extract potent essences from uncommon materials.","bonuses":{"rareYield":0.03},"requires":"alchemist_reagent_2"}
+      ],
+      "potion_crafting":[
+        {"id":"alchemist_potion_1","name":"Basic Brewing","description":"You learn the fundamentals of potion brewing.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"alchemist_potion_2","name":"Stabilized Mixtures","description":"Your potions become more reliable and effective.","bonuses":{"potionPotency":0.05},"requires":"alchemist_potion_1"},
+        {"id":"alchemist_potion_3","name":"Catalyzed Reactions","description":"You unlock advanced brewing techniques that enhance potency.","bonuses":{"potionPotency":0.05,"craftSpeed":0.03},"requires":"alchemist_potion_2"}
+      ],
+      "laboratory_efficiency":[
+        {"id":"alchemist_lab_1","name":"Organized Workspace","description":"A tidy lab improves your workflow.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"alchemist_lab_2","name":"Batch Brewing","description":"You produce potions in efficient batches.","bonuses":{"craftYield":0.05},"requires":"alchemist_lab_1"},
+        {"id":"alchemist_lab_3","name":"Alchemical Optimization","description":"Your entire process becomes streamlined and cost‑effective.","bonuses":{"resourceEfficiency":0.05,"craftYield":0.03},"requires":"alchemist_lab_2"}
+      ]
+    },"capstone":{
+      "id":"alchemist_capstone","name":"Master Alchemist","description":"Your mastery of reagents and brewing yields exceptional potions.","bonuses":{"potionPotency":0.10,"rareYield":0.05,"special":"alchemist_masterwork_brew"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "apocalypse": {
+    "tier1": {"branches":{
+      "ruinous_power":[
+        {"id":"apoc_ruin_1","name":"Embers of Ruin","description":"You tap into destructive energies that scorch everything nearby.","bonuses":{"dotPower":0.03,"elementalBoost":{"fire":0.02}},"requires":null},
+        {"id":"apoc_ruin_2","name":"Chaotic Surge","description":"Unstable power flows through you, amplifying your destructive spells.","bonuses":{"atkMult":0.03,"chaosFactor":0.02},"requires":"apoc_ruin_1"},
+        {"id":"apoc_ruin_3","name":"Ashen Devastation","description":"Your destructive magic leaves lingering burning effects.","bonuses":{"dotPower":0.05,"special":"burn_on_spell_hit"},"requires":"apoc_ruin_2"}
+      ],
+      "entropy_mastery":[
+        {"id":"apoc_entropy_1","name":"Entropy Touch","description":"Your attacks carry a trace of entropic decay.","bonuses":{"elementalBoost":{"dark":0.03}},"requires":null},
+        {"id":"apoc_entropy_2","name":"Fractured Reality","description":"Reality bends around your presence, destabilizing enemy defenses.","bonuses":{"defMult":-0.02,"special":"reduce_enemy_resistance_small"},"requires":"apoc_entropy_1"},
+        {"id":"apoc_entropy_3","name":"Entropy Cascade","description":"Your entropic magic cascades into additional minor effects.","bonuses":{"chaosFactor":0.03,"special":"chance_for_secondary_dot"},"requires":"apoc_entropy_2"}
+      ],
+      "herald_of_calamity":[
+        {"id":"apoc_calamity_1","name":"Omen of Collapse","description":"Your presence heralds disaster, weakening enemy resolve.","bonuses":{"critChance":0.02,"special":"minor_enemy_weaken"},"requires":null},
+        {"id":"apoc_calamity_2","name":"Calamity Pulse","description":"A pulse of chaotic force erupts from your spells.","bonuses":{"elementalBoost":{"fire":0.03,"dark":0.03}},"requires":"apoc_calamity_1"},
+        {"id":"apoc_calamity_3","name":"Doomsayer’s Wrath","description":"Your destructive magic becomes wildly unpredictable and more potent.","bonuses":{"atkMult":0.04,"chaosFactor":0.04},"requires":"apoc_calamity_2"}
+      ]
+    },"capstone":{
+      "id":"apoc_capstone","name":"Apocalyptic Ascension","description":"You ascend as a living conduit of destruction, unleashing catastrophic power.","bonuses":{"dotPower":0.10,"elementalBoost":{"fire":0.05,"dark":0.05},"chaosFactor":0.05,"special":"apocalypse_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "apprentice": {
+    "tier1": {"branches":{
+      "arcane_basics":[
+        {"id":"apprentice_arcane_1","name":"Mana Trickling","description":"You learn to draw small amounts of mana more efficiently.","bonuses":{"manaMult":0.02,"resourceRegen":{"mana":0.02}},"requires":null},
+        {"id":"apprentice_arcane_2","name":"Spellform Practice","description":"Your spell shapes become more stable and predictable.","bonuses":{"atkMult":0.02,"elementalBoost":{"arcane":0.02}},"requires":"apprentice_arcane_1"},
+        {"id":"apprentice_arcane_3","name":"Arcane Stability","description":"You reduce the chance of magical misfires and instability.","bonuses":{"chaosFactor":-0.02,"special":"reduced_spell_variance"},"requires":"apprentice_arcane_2"}
+      ],
+      "disciplined_learning":[
+        {"id":"apprentice_learn_1","name":"Focused Study","description":"Your dedication to learning improves your magical fundamentals.","bonuses":{"learningBoost":0.05},"requires":null},
+        {"id":"apprentice_learn_2","name":"Mental Posture","description":"You adopt a mental stance that improves your concentration.","bonuses":{"resourceRegen":{"mana":0.02},"defMult":0.01},"requires":"apprentice_learn_1"},
+        {"id":"apprentice_learn_3","name":"Beginner’s Insight","description":"Your growing understanding enhances your spell consistency.","bonuses":{"critChance":0.01,"critDamage":0.03},"requires":"apprentice_learn_2"}
+      ],
+      "novice_offense":[
+        {"id":"apprentice_offense_1","name":"Spark Bolt","description":"You learn to conjure a small but reliable offensive spell.","bonuses":{"atkMult":0.02},"requires":null},
+        {"id":"apprentice_offense_2","name":"Mana-Infused Strikes","description":"Your offensive spells gain a slight mana infusion.","bonuses":{"elementalBoost":{"arcane":0.03}},"requires":"apprentice_offense_1"},
+        {"id":"apprentice_offense_3","name":"Spell Accuracy","description":"Your aim improves, increasing the potency of your spell hits.","bonuses":{"critChance":0.02},"requires":"apprentice_offense_2"}
+      ]
+    },"capstone":{
+      "id":"apprentice_capstone","name":"Apprentice’s Breakthrough","description":"Your early training culminates in a surge of magical clarity.","bonuses":{"manaMult":0.05,"resourceRegen":{"mana":0.05},"elementalBoost":{"arcane":0.05},"special":"apprentice_arcane_clarity"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "archer": {
+    "tier1": {"branches":{
+      "precision_mastery":[
+        {"id":"archer_precision_1","name":"Steady Aim","description":"You steady your breathing, improving your accuracy.","bonuses":{"critChance":0.02},"requires":null},
+        {"id":"archer_precision_2","name":"Sharpened Arrows","description":"Your arrows strike with greater precision and force.","bonuses":{"atkMult":0.03},"requires":"archer_precision_1"},
+        {"id":"archer_precision_3","name":"Deadeye Focus","description":"Your focus sharpens, increasing your critical damage.","bonuses":{"critDamage":0.05},"requires":"archer_precision_2"}
+      ],
+      "agility_and_mobility":[
+        {"id":"archer_agility_1","name":"Quickstep","description":"You move lightly on your feet, improving your mobility.","bonuses":{"speedMult":0.03},"requires":null},
+        {"id":"archer_agility_2","name":"Evasive Footwork","description":"Your agile movements make you harder to hit.","bonuses":{"evadeChance":0.03},"requires":"archer_agility_1"},
+        {"id":"archer_agility_3","name":"Windrunner","description":"You flow with the wind, enhancing both speed and accuracy.","bonuses":{"speedMult":0.03,"critChance":0.01},"requires":"archer_agility_2"}
+      ],
+      "nature_alignment":[
+        {"id":"archer_nature_1","name":"Forest Instincts","description":"Your senses sharpen, attuned to the natural world.","bonuses":{"elementalBoost":{"nature":0.03}},"requires":null},
+        {"id":"archer_nature_2","name":"Hunter’s Patience","description":"You learn to wait for the perfect moment to strike.","bonuses":{"critChance":0.02,"atkMult":0.01},"requires":"archer_nature_1"},
+        {"id":"archer_nature_3","name":"Nature’s Guidance","description":"Nature guides your arrows, enhancing their potency.","bonuses":{"elementalBoost":{"nature":0.05},"special":"bonus_damage_vs_beasts"},"requires":"archer_nature_2"}
+      ]
+    },"capstone":{
+      "id":"archer_capstone","name":"Arrowstorm","description":"You unleash a devastating flurry of arrows with unmatched precision.","bonuses":{"atkMult":0.05,"critChance":0.03,"speedMult":0.03,"special":"archer_arrowstorm_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "artificer": {
+    "tier1": {"branches":{
+      "component_engineering":[
+        {"id":"artificer_components_1","name":"Basic Mechanisms","description":"You understand simple gears, springs, and mechanical linkages.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"artificer_components_2","name":"Precision Fabrication","description":"Your components are crafted with improved accuracy and reliability.","bonuses":{"refineQuality":0.05},"requires":"artificer_components_1"},
+        {"id":"artificer_components_3","name":"Advanced Assemblies","description":"You construct complex multi‑part mechanisms with ease.","bonuses":{"rareYield":0.03,"craftSpeed":0.03},"requires":"artificer_components_2"}
+      ],
+      "arcane_infusion":[
+        {"id":"artificer_infusion_1","name":"Minor Infusion","description":"You imbue crafted items with faint magical properties.","bonuses":{"infusionPotency":0.05},"requires":null},
+        {"id":"artificer_infusion_2","name":"Stabilized Enchantments","description":"Your infusions become more stable and consistent.","bonuses":{"infusionPotency":0.05,"resourceEfficiency":0.03},"requires":"artificer_infusion_1"},
+        {"id":"artificer_infusion_3","name":"Dual‑Channel Infusion","description":"You can safely combine multiple magical effects in a single item.","bonuses":{"infusionPotency":0.05,"special":"artificer_dual_infusion"},"requires":"artificer_infusion_2"}
+      ],
+      "workshop_efficiency":[
+        {"id":"artificer_workshop_1","name":"Organized Tools","description":"A well‑arranged workshop improves your crafting flow.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"artificer_workshop_2","name":"Assembly Line","description":"You streamline repetitive tasks for faster production.","bonuses":{"craftSpeed":0.05},"requires":"artificer_workshop_1"},
+        {"id":"artificer_workshop_3","name":"Workshop Optimization","description":"Your entire crafting process becomes exceptionally efficient.","bonuses":{"resourceEfficiency":0.05,"craftYield":0.03},"requires":"artificer_workshop_2"}
+      ]
+    },"capstone":{
+      "id":"artificer_capstone","name":"Master Artificer","description":"Your mastery of engineering and infusion produces extraordinary devices.","bonuses":{"infusionPotency":0.10,"rareYield":0.05,"special":"artificer_masterwork_device"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "assassin": {
+    "tier1": {"branches":{
+      "shadow_mastery":[
+        {"id":"assassin_shadow_1","name":"Fade Into Darkness","description":"You learn to slip partially into shadow, becoming harder to detect.","bonuses":{"evadeChance":0.03},"requires":null},
+        {"id":"assassin_shadow_2","name":"Shadow Veil","description":"A cloak of darkness surrounds you, enhancing your stealth.","bonuses":{"special":"reduced_enemy_detection","speedMult":0.02},"requires":"assassin_shadow_1"},
+        {"id":"assassin_shadow_3","name":"Nightfall Step","description":"You move with supernatural swiftness when emerging from shadows.","bonuses":{"speedMult":0.03,"critChance":0.02},"requires":"assassin_shadow_2"}
+      ],
+      "precision_and_lethality":[
+        {"id":"assassin_precision_1","name":"Sharpened Blades","description":"Your blades strike with greater accuracy and force.","bonuses":{"atkMult":0.03},"requires":null},
+        {"id":"assassin_precision_2","name":"Critical Edge","description":"Your strikes target vital points with deadly precision.","bonuses":{"critChance":0.03},"requires":"assassin_precision_1"},
+        {"id":"assassin_precision_3","name":"Executioner’s Focus","description":"Your killing intent sharpens your critical damage.","bonuses":{"critDamage":0.06},"requires":"assassin_precision_2"}
+      ],
+      "poisons_and_bleeds":[
+        {"id":"assassin_bleed_1","name":"Wounding Cuts","description":"Your attacks inflict minor bleeding wounds.","bonuses":{"dotPower":0.03,"special":"apply_minor_bleed"},"requires":null},
+        {"id":"assassin_bleed_2","name":"Toxic Coating","description":"You coat your blades with a weak poison.","bonuses":{"elementalBoost":{"poison":0.03},"special":"apply_minor_poison"},"requires":"assassin_bleed_1"},
+        {"id":"assassin_bleed_3","name":"Venomous Precision","description":"Your poisons and bleeds strike with greater potency.","bonuses":{"dotPower":0.05,"critChance":0.01},"requires":"assassin_bleed_2"}
+      ]
+    },"capstone":{
+      "id":"assassin_capstone","name":"Assassin’s Creed","description":"Emerging from stealth empowers your next strike with overwhelming lethality.","bonuses":{"critChance":0.10,"critDamage":0.15,"special":"stealth_crit_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "berserker": {
+    "tier1": {"branches":{
+      "fury_unleashed":[
+        {"id":"berserker_fury_1","name":"Rising Rage","description":"Your anger fuels your strength, increasing your attack power.","bonuses":{"atkMult":0.03},"requires":null},
+        {"id":"berserker_fury_2","name":"Blood Ignition","description":"Taking damage stokes your fury, empowering your next strikes.","bonuses":{"critChance":0.02,"special":"minor_damage_taken_buff"},"requires":"berserker_fury_1"},
+        {"id":"berserker_fury_3","name":"Rage Overflow","description":"Your fury spills over, amplifying your offensive might.","bonuses":{"atkMult":0.04,"critDamage":0.05},"requires":"berserker_fury_2"}
+      ],
+      "reckless_assault":[
+        {"id":"berserker_reckless_1","name":"Wild Swing","description":"You strike with reckless abandon, increasing your damage output.","bonuses":{"atkMult":0.03},"requires":null},
+        {"id":"berserker_reckless_2","name":"Unstable Momentum","description":"Your attacks grow stronger the longer you stay in combat.","bonuses":{"speedMult":0.02,"special":"stacking_attack_buff"},"requires":"berserker_reckless_1"},
+        {"id":"berserker_reckless_3","name":"Frenzied Blows","description":"Your relentless assault overwhelms your foes.","bonuses":{"critChance":0.02,"atkMult":0.03},"requires":"berserker_reckless_2"}
+      ],
+      "bloodthirst":[
+        {"id":"berserker_blood_1","name":"Taste of Battle","description":"Landing hits invigorates you, restoring a sliver of vitality.","bonuses":{"special":"minor_lifesteal"},"requires":null},
+        {"id":"berserker_blood_2","name":"Blood Frenzy","description":"Your bloodlust intensifies, increasing your ferocity.","bonuses":{"atkMult":0.03,"dotPower":0.02},"requires":"berserker_blood_1"},
+        {"id":"berserker_blood_3","name":"Crimson Rampage","description":"Your rage becomes unstoppable, empowering your killing blows.","bonuses":{"critDamage":0.06,"special":"execute_bonus_damage"},"requires":"berserker_blood_2"}
+      ]
+    },"capstone":{
+      "id":"berserker_capstone","name":"Avatar of Fury","description":"You become a living embodiment of rage, unleashing devastating power.","bonuses":{"atkMult":0.08,"speedMult":0.05,"critChance":0.03,"special":"berserker_fury_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "blacksmith": {
+    "tier1": {"branches":{
+      "metalworking":[
+        {"id":"blacksmith_metal_1","name":"Ore Familiarity","description":"You understand the properties of common metals and alloys.","bonuses":{"refineQuality":0.05},"requires":null},
+        {"id":"blacksmith_metal_2","name":"Smelting Efficiency","description":"You smelt ores with improved yield and reduced waste.","bonuses":{"resourceEfficiency":0.05},"requires":"blacksmith_metal_1"},
+        {"id":"blacksmith_metal_3","name":"Alloy Expertise","description":"You create advanced alloys with superior properties.","bonuses":{"rareYield":0.03,"refineQuality":0.05},"requires":"blacksmith_metal_2"}
+      ],
+      "forging_technique":[
+        {"id":"blacksmith_forge_1","name":"Basic Forging","description":"You learn the fundamentals of shaping metal.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"blacksmith_forge_2","name":"Reinforced Strikes","description":"Your forging technique improves the durability of crafted items.","bonuses":{"itemDurability":0.05},"requires":"blacksmith_forge_1"},
+        {"id":"blacksmith_forge_3","name":"Master Hammerwork","description":"Your craftsmanship produces exceptionally strong and reliable gear.","bonuses":{"itemDurability":0.05,"craftQuality":0.03},"requires":"blacksmith_forge_2"}
+      ],
+      "workshop_craftsmanship":[
+        {"id":"blacksmith_workshop_1","name":"Organized Smithy","description":"A tidy forge improves your workflow and reduces waste.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"blacksmith_workshop_2","name":"Heat Management","description":"You maintain optimal temperatures for efficient forging.","bonuses":{"craftSpeed":0.05},"requires":"blacksmith_workshop_1"},
+        {"id":"blacksmith_workshop_3","name":"Smithy Optimization","description":"Your entire workshop runs at peak efficiency.","bonuses":{"resourceEfficiency":0.05,"craftYield":0.03},"requires":"blacksmith_workshop_2"}
+      ]
+    },"capstone":{
+      "id":"blacksmith_capstone","name":"Master Blacksmith","description":"Your mastery of metal and forge produces exceptional weapons and armor.","bonuses":{"craftQuality":0.10,"itemDurability":0.10,"rareYield":0.05,"special":"blacksmith_masterwork_forge"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "bozo": {
+    "tier1": {"branches":{
+      "chaotic_mischief":[
+        {"id":"bozo_mischief_1","name":"Slippery Fool","description":"Your unpredictable movements make you harder to hit.","bonuses":{"evadeChance":0.03},"requires":null},
+        {"id":"bozo_mischief_2","name":"Banana Peel Technique","description":"Your clumsy antics occasionally trip up enemies.","bonuses":{"special":"chance_to_trip_enemy","speedMult":0.02},"requires":"bozo_mischief_1"},
+        {"id":"bozo_mischief_3","name":"Chaotic Footwork","description":"Your erratic movement confuses foes and opens attack windows.","bonuses":{"confusionChance":0.03,"critChance":0.01},"requires":"bozo_mischief_2"}
+      ],
+      "comedic_combat":[
+        {"id":"bozo_combat_1","name":"Clownish Strikes","description":"Your silly attacks somehow hit harder than expected.","bonuses":{"atkMult":0.02},"requires":null},
+        {"id":"bozo_combat_2","name":"Rubber Mallet Smash","description":"Your oversized mallet delivers surprisingly painful blows.","bonuses":{"critDamage":0.04},"requires":"bozo_combat_1"},
+        {"id":"bozo_combat_3","name":"Slapstick Momentum","description":"Your comedic timing enhances your attack rhythm.","bonuses":{"atkMult":0.03,"speedMult":0.02},"requires":"bozo_combat_2"}
+      ],
+      "unpredictable_trickery":[
+        {"id":"bozo_trickery_1","name":"Jester’s Feint","description":"You fake out your opponent with a goofy misdirection.","bonuses":{"critChance":0.02},"requires":null},
+        {"id":"bozo_trickery_2","name":"Confetti Burst","description":"A burst of confetti distracts enemies mid‑combat.","bonuses":{"confusionChance":0.04,"special":"confetti_distraction"},"requires":"bozo_trickery_1"},
+        {"id":"bozo_trickery_3","name":"Prankster’s Gambit","description":"Your pranks become dangerously effective.","bonuses":{"chaosFactor":0.04,"critDamage":0.03},"requires":"bozo_trickery_2"}
+      ]
+    },"capstone":{
+      "id":"bozo_capstone","name":"Clown Prince of Chaos","description":"You fully embrace the absurd, unleashing unpredictable and devastating antics.","bonuses":{"chaosFactor":0.08,"confusionChance":0.05,"speedMult":0.03,"special":"bozo_ultimate_chaos_mode"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "carpenter": {
+    "tier1": {"branches":{
+      "woodcraft_basics":[
+        {"id":"carpenter_wood_1","name":"Lumber Familiarity","description":"You understand the strengths and weaknesses of common woods.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"carpenter_wood_2","name":"Efficient Cutting","description":"You process raw lumber with reduced waste.","bonuses":{"resourceEfficiency":0.05},"requires":"carpenter_wood_1"},
+        {"id":"carpenter_wood_3","name":"Grain Mastery","description":"You work with wood grain expertly, improving material quality.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"carpenter_wood_2"}
+      ],
+      "construction_technique":[
+        {"id":"carpenter_construct_1","name":"Basic Joinery","description":"You learn simple joints and structural connections.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"carpenter_construct_2","name":"Reinforced Frames","description":"Your constructions become sturdier and longer‑lasting.","bonuses":{"itemDurability":0.05},"requires":"carpenter_construct_1"},
+        {"id":"carpenter_construct_3","name":"Master Joiner","description":"Your advanced joinery techniques produce exceptional structural integrity.","bonuses":{"itemDurability":0.05,"craftQuality":0.03},"requires":"carpenter_construct_2"}
+      ],
+      "workshop_efficiency":[
+        {"id":"carpenter_workshop_1","name":"Organized Tools","description":"A well‑arranged workshop improves your workflow.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"carpenter_workshop_2","name":"Batch Cutting","description":"You process multiple components efficiently.","bonuses":{"craftYield":0.05},"requires":"carpenter_workshop_1"},
+        {"id":"carpenter_workshop_3","name":"Workshop Optimization","description":"Your entire carpentry process becomes streamlined and cost‑effective.","bonuses":{"resourceEfficiency":0.05,"craftYield":0.03},"requires":"carpenter_workshop_2"}
+      ]
+    },"capstone":{
+      "id":"carpenter_capstone","name":"Master Carpenter","description":"Your craftsmanship produces exceptional wooden structures and components.","bonuses":{"craftQuality":0.10,"itemDurability":0.10,"rareYield":0.05,"special":"carpenter_masterwork_structure"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "chef": {
+    "tier1": {"branches":{
+      "ingredient_handling":[
+        {"id":"chef_ingredients_1","name":"Fresh Selection","description":"You identify and select the best ingredients.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"chef_ingredients_2","name":"Efficient Prep","description":"You prepare ingredients with minimal waste.","bonuses":{"resourceEfficiency":0.05},"requires":"chef_ingredients_1"},
+        {"id":"chef_ingredients_3","name":"Flavor Extraction","description":"You extract deeper flavors and nutrients from ingredients.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"chef_ingredients_2"}
+      ],
+      "cooking_technique":[
+        {"id":"chef_cooking_1","name":"Basic Cooking","description":"You learn foundational cooking techniques.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"chef_cooking_2","name":"Seasoned Touch","description":"Your dishes gain improved flavor and effectiveness.","bonuses":{"foodBuffPotency":0.05},"requires":"chef_cooking_1"},
+        {"id":"chef_cooking_3","name":"Culinary Precision","description":"Your refined technique enhances both quality and consistency.","bonuses":{"foodBuffPotency":0.05,"craftQuality":0.03},"requires":"chef_cooking_2"}
+      ],
+      "kitchen_efficiency":[
+        {"id":"chef_kitchen_1","name":"Organized Kitchen","description":"A clean and structured kitchen improves workflow.","bonuses":{"craftYield":0.05},"requires":null},
+        {"id":"chef_kitchen_2","name":"Batch Cooking","description":"You prepare multiple servings efficiently.","bonuses":{"craftSpeed":0.05},"requires":"chef_kitchen_1"},
+        {"id":"chef_kitchen_3","name":"Kitchen Optimization","description":"Your entire cooking process becomes streamlined and cost‑effective.","bonuses":{"resourceEfficiency":0.05,"craftYield":0.03},"requires":"chef_kitchen_2"}
+      ]
+    },"capstone":{
+      "id":"chef_capstone","name":"Master Chef","description":"Your culinary mastery produces dishes of exceptional quality and potency.","bonuses":{"foodBuffPotency":0.10,"rareYield":0.05,"craftQuality":0.05,"special":"chef_masterwork_meal"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "cleric": {
+    "tier1": {"branches":{
+      "sacred_restoration":[
+        {"id":"cleric_restore_1","name":"Soothing Light","description":"A gentle radiance enhances your basic healing spells.","bonuses":{"healingPower":0.04},"requires":null},
+        {"id":"cleric_restore_2","name":"Blessed Hands","description":"Your touch carries divine warmth, improving your healing efficiency.","bonuses":{"healingPower":0.05,"manaMult":0.02},"requires":"cleric_restore_1"},
+        {"id":"cleric_restore_3","name":"Radiant Mend","description":"Your healing spells emit a faint holy pulse.","bonuses":{"healingPower":0.06,"elementalBoost":{"holy":0.03},"special":"minor_aoe_heal_pulse"},"requires":"cleric_restore_2"}
+      ],
+      "divine_protection":[
+        {"id":"cleric_protect_1","name":"Shield of Faith","description":"A protective blessing bolsters your defenses.","bonuses":{"defMult":0.03},"requires":null},
+        {"id":"cleric_protect_2","name":"Holy Barrier","description":"You conjure a faint barrier of divine energy.","bonuses":{"blockChance":0.03,"special":"small_damage_shield"},"requires":"cleric_protect_1"},
+        {"id":"cleric_protect_3","name":"Sanctified Fortitude","description":"Your divine resilience strengthens your protective magic.","bonuses":{"defMult":0.04,"healingPower":0.03},"requires":"cleric_protect_2"}
+      ],
+      "holy_judgment":[
+        {"id":"cleric_judgment_1","name":"Smite Training","description":"You learn to channel holy force into offensive spells.","bonuses":{"atkMult":0.02,"elementalBoost":{"holy":0.03}},"requires":null},
+        {"id":"cleric_judgment_2","name":"Judgment Bolt","description":"Your holy strikes become more precise and punishing.","bonuses":{"critChance":0.02,"elementalBoost":{"holy":0.04}},"requires":"cleric_judgment_1"},
+        {"id":"cleric_judgment_3","name":"Wrath of the Divine","description":"Your holy power intensifies, smiting evil with righteous fury.","bonuses":{"critDamage":0.05,"elementalBoost":{"holy":0.05},"special":"bonus_damage_vs_dark"},"requires":"cleric_judgment_2"}
+      ]
+    },"capstone":{
+      "id":"cleric_capstone","name":"Divine Intervention","description":"You channel pure divine power, shielding allies and smiting foes.","bonuses":{"healingPower":0.10,"defMult":0.05,"elementalBoost":{"holy":0.08},"special":"cleric_intervention_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "corrupted": {
+    "tier1": {"branches":{
+      "toxic_affliction":[
+        {"id":"corrupted_toxic_1","name":"Venomous Touch","description":"Your attacks carry a trace of toxic corruption.","bonuses":{"elementalBoost":{"poison":0.03},"dotPower":0.02},"requires":null},
+        {"id":"corrupted_toxic_2","name":"Corrosive Rot","description":"Your poison begins to erode enemy defenses.","bonuses":{"dotPower":0.04,"special":"minor_armor_reduction_on_dot"},"requires":"corrupted_toxic_1"},
+        {"id":"corrupted_toxic_3","name":"Toxic Bloom","description":"Your poisons erupt into spreading corruption.","bonuses":{"elementalBoost":{"poison":0.05},"special":"chance_for_aoe_poison_spread"},"requires":"corrupted_toxic_2"}
+      ],
+      "dark_mutation":[
+        {"id":"corrupted_mutation_1","name":"Twisted Flesh","description":"Your corrupted form grants unnatural resilience.","bonuses":{"defMult":0.02,"hpRegen":0.01},"requires":null},
+        {"id":"corrupted_mutation_2","name":"Mutated Reflexes","description":"Your warped body reacts unpredictably to danger.","bonuses":{"evadeChance":0.02,"chaosFactor":0.02},"requires":"corrupted_mutation_1"},
+        {"id":"corrupted_mutation_3","name":"Aberrant Growth","description":"Corruption strengthens your body in disturbing ways.","bonuses":{"atkMult":0.03,"defMult":0.03},"requires":"corrupted_mutation_2"}
+      ],
+      "void_decay":[
+        {"id":"corrupted_decay_1","name":"Whispers of Decay","description":"A faint aura of decay weakens nearby foes.","bonuses":{"special":"minor_enemy_weaken","elementalBoost":{"dark":0.03}},"requires":null},
+        {"id":"corrupted_decay_2","name":"Rotting Pulse","description":"Your corrupted energy pulses outward, spreading decay.","bonuses":{"dotPower":0.04,"special":"decay_pulse_on_hit"},"requires":"corrupted_decay_1"},
+        {"id":"corrupted_decay_3","name":"Hollowing Influence","description":"Your presence hollows the vitality of your enemies.","bonuses":{"elementalBoost":{"dark":0.05},"chaosFactor":0.03},"requires":"corrupted_decay_2"}
+      ]
+    },"capstone":{
+      "id":"corrupted_capstone","name":"Avatar of Corruption","description":"You become a living conduit of decay, spreading corruption with every action.","bonuses":{"dotPower":0.10,"elementalBoost":{"poison":0.05,"dark":0.05},"chaosFactor":0.05,"special":"corruption_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "druid": {
+    "tier1": {"branches":{
+      "natural_restoration":[
+        {"id":"druid_restore_1","name":"Verdant Touch","description":"Your healing draws strength from the natural world.","bonuses":{"healingPower":0.04},"requires":null},
+        {"id":"druid_restore_2","name":"Blooming Renewal","description":"Your healing spells encourage natural regeneration.","bonuses":{"healingPower":0.05,"hpRegen":0.01},"requires":"druid_restore_1"},
+        {"id":"druid_restore_3","name":"Flourish of Life","description":"Your restorative magic spreads to nearby allies.","bonuses":{"healingPower":0.06,"elementalBoost":{"nature":0.03},"special":"minor_aoe_regen_pulse"},"requires":"druid_restore_2"}
+      ],
+      "harmony_with_nature":[
+        {"id":"druid_harmony_1","name":"Nature’s Balance","description":"You attune yourself to the ebb and flow of natural energy.","bonuses":{"manaMult":0.03,"resourceRegen":{"mana":0.02}},"requires":null},
+        {"id":"druid_harmony_2","name":"Earthen Resilience","description":"The strength of the earth bolsters your defenses.","bonuses":{"defMult":0.03},"requires":"druid_harmony_1"},
+        {"id":"druid_harmony_3","name":"Spirit of the Wilds","description":"You channel the spirits of nature to empower your magic.","bonuses":{"elementalBoost":{"nature":0.05},"special":"reduced_nature_damage_taken"},"requires":"druid_harmony_2"}
+      ],
+      "primal_wrath":[
+        {"id":"druid_wrath_1","name":"Thornstrike","description":"Your attacks carry a sting of natural retaliation.","bonuses":{"atkMult":0.02,"special":"minor_thorn_damage"},"requires":null},
+        {"id":"druid_wrath_2","name":"Wild Growth Surge","description":"Nature surges through you, enhancing your offensive spells.","bonuses":{"elementalBoost":{"nature":0.04}},"requires":"druid_wrath_1"},
+        {"id":"druid_wrath_3","name":"Wrath of the Grove","description":"Your nature magic erupts with primal fury.","bonuses":{"atkMult":0.03,"critChance":0.02,"elementalBoost":{"nature":0.05}},"requires":"druid_wrath_2"}
+      ]
+    },"capstone":{
+      "id":"druid_capstone","name":"Avatar of the Wilds","description":"You embody the full power of nature, radiating vitality and primal force.","bonuses":{"healingPower":0.10,"elementalBoost":{"nature":0.08},"hpRegen":0.03,"special":"druid_nature_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "fisherman": {
+    "tier1": {"branches":{
+      "fishing_technique":[
+        {"id":"fisherman_tech_1","name":"Basic Casting","description":"You learn the fundamentals of casting and reeling.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"fisherman_tech_2","name":"Line Control","description":"You manage line tension expertly, reducing lost catches.","bonuses":{"resourceEfficiency":0.05},"requires":"fisherman_tech_1"},
+        {"id":"fisherman_tech_3","name":"Precision Hooking","description":"Your technique improves catch quality and consistency.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"fisherman_tech_2"}
+      ],
+      "aquatic_knowledge":[
+        {"id":"fisherman_aqua_1","name":"Water Sense","description":"You read water movement and fish behavior.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"fisherman_aqua_2","name":"Habitat Insight","description":"You identify the best fishing spots and times.","bonuses":{"rareYield":0.03},"requires":"fisherman_aqua_1"},
+        {"id":"fisherman_aqua_3","name":"Master Angler’s Instinct","description":"Your deep understanding of aquatic life improves all catches.","bonuses":{"refineQuality":0.05,"gatherYield":0.03},"requires":"fisherman_aqua_2"}
+      ],
+      "processing_and_preservation":[
+        {"id":"fisherman_process_1","name":"Basic Cleaning","description":"You clean and prepare fish with minimal waste.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"fisherman_process_2","name":"Salt & Smoke","description":"You preserve fish effectively, improving quality.","bonuses":{"craftQuality":0.03},"requires":"fisherman_process_1"},
+        {"id":"fisherman_process_3","name":"Master Filleting","description":"Your processing yields premium cuts and materials.","bonuses":{"craftYield":0.05,"refineQuality":0.05},"requires":"fisherman_process_2"}
+      ]
+    },"capstone":{
+      "id":"fisherman_capstone","name":"Master Fisherman","description":"Your mastery of aquatic life yields exceptional catches and premium materials.","bonuses":{"rareYield":0.05,"refineQuality":0.10,"craftYield":0.05,"special":"fisherman_masterwork_catch"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "guardian": {
+    "tier1": {"branches":{
+      "bulwark_training":[
+        {"id":"guardian_bulwark_1","name":"Iron Stance","description":"You adopt a fortified stance that enhances your defenses.","bonuses":{"defMult":0.04},"requires":null},
+        {"id":"guardian_bulwark_2","name":"Shield Discipline","description":"Your mastery of shield technique improves your blocking ability.","bonuses":{"blockChance":0.04},"requires":"guardian_bulwark_1"},
+        {"id":"guardian_bulwark_3","name":"Unyielding Guard","description":"Your defensive posture becomes nearly unbreakable.","bonuses":{"defMult":0.05,"special":"minor_damage_reduction"},"requires":"guardian_bulwark_2"}
+      ],
+      "protective_aegis":[
+        {"id":"guardian_aegis_1","name":"Guardian’s Resolve","description":"Your determination strengthens your protective instincts.","bonuses":{"hpRegen":0.01,"defMult":0.02},"requires":null},
+        {"id":"guardian_aegis_2","name":"Aegis Pulse","description":"You emit a faint protective pulse that shields nearby allies.","bonuses":{"special":"minor_ally_shield_pulse"},"requires":"guardian_aegis_1"},
+        {"id":"guardian_aegis_3","name":"Sanctuary Field","description":"Your presence forms a protective field that reduces incoming damage.","bonuses":{"special":"small_aoe_damage_reduction","defMult":0.03},"requires":"guardian_aegis_2"}
+      ],
+      "retaliatory_defense":[
+        {"id":"guardian_retaliate_1","name":"Defensive Riposte","description":"Your blocks and parries open opportunities for counterattacks.","bonuses":{"atkMult":0.02,"special":"minor_counterattack_chance"},"requires":null},
+        {"id":"guardian_retaliate_2","name":"Thorned Shield","description":"Your shield retaliates with force when struck.","bonuses":{"special":"reflect_small_damage","dotPower":0.02},"requires":"guardian_retaliate_1"},
+        {"id":"guardian_retaliate_3","name":"Retribution Strike","description":"Your counterattacks become significantly more punishing.","bonuses":{"atkMult":0.03,"critChance":0.02},"requires":"guardian_retaliate_2"}
+      ]
+    },"capstone":{
+      "id":"guardian_capstone","name":"Wall of the Righteous","description":"You become an immovable bastion, shielding allies and enduring overwhelming force.","bonuses":{"defMult":0.10,"blockChance":0.08,"hpRegen":0.03,"special":"guardian_fortress_mode"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "healer": {
+    "tier1": {"branches":{
+      "restorative_mastery":[
+        {"id":"healer_restore_1","name":"Gentle Radiance","description":"A soft healing glow enhances your basic restorative spells.","bonuses":{"healingPower":0.05},"requires":null},
+        {"id":"healer_restore_2","name":"Warmth of Life","description":"Your healing magic restores vitality more efficiently.","bonuses":{"healingPower":0.06,"manaMult":0.02},"requires":"healer_restore_1"},
+        {"id":"healer_restore_3","name":"Overflowing Grace","description":"Your healing spills over, granting minor regeneration to allies.","bonuses":{"healingPower":0.07,"special":"minor_party_regen"},"requires":"healer_restore_2"}
+      ],
+      "cleansing_light":[
+        {"id":"healer_cleanse_1","name":"Purity Spark","description":"Your healing magic carries a faint cleansing effect.","bonuses":{"special":"small_cleanse_chance"},"requires":null},
+        {"id":"healer_cleanse_2","name":"Sanctified Breath","description":"Your restorative spells weaken harmful effects.","bonuses":{"dotPower":-0.03,"special":"reduced_debuff_duration"},"requires":"healer_cleanse_1"},
+        {"id":"healer_cleanse_3","name":"Light of Purification","description":"Your healing magic can purge significant corruption.","bonuses":{"healingPower":0.04,"special":"major_cleanse_on_big_heal"},"requires":"healer_cleanse_2"}
+      ],
+      "radiant_support":[
+        {"id":"healer_support_1","name":"Beacon of Hope","description":"Your presence inspires allies, improving their resilience.","bonuses":{"defMult":0.02},"requires":null},
+        {"id":"healer_support_2","name":"Guiding Light","description":"Your supportive magic strengthens your allies’ resolve.","bonuses":{"speedMult":0.02,"special":"minor_ally_buff"},"requires":"healer_support_1"},
+        {"id":"healer_support_3","name":"Radiant Uplift","description":"Your healing magic invigorates allies, enhancing their combat performance.","bonuses":{"atkMult":0.02,"healingPower":0.03},"requires":"healer_support_2"}
+      ]
+    },"capstone":{
+      "id":"healer_capstone","name":"Wellspring of Life","description":"You become a living font of healing energy, sustaining allies with overwhelming restorative power.","bonuses":{"healingPower":0.12,"manaMult":0.05,"resourceRegen":{"mana":0.05},"special":"healer_wellspring_overdrive"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+
+  "herbalist": {
+    "tier1": {"branches":{
+      "plant_identification":[
+        {"id":"herbalist_identify_1","name":"Forager’s Eye","description":"You easily recognize common herbs and natural materials.","bonuses":{"gatherYield":0.05},"requires":null},
+        {"id":"herbalist_identify_2","name":"Botanical Insight","description":"You identify rarer plants and harvest them more effectively.","bonuses":{"rareYield":0.03},"requires":"herbalist_identify_1"},
+        {"id":"herbalist_identify_3","name":"Master Herbal Recognition","description":"Your deep botanical knowledge improves all plant gathering.","bonuses":{"gatherYield":0.05,"refineQuality":0.05},"requires":"herbalist_identify_2"}
+      ],
+      "preparation_and_drying":[
+        {"id":"herbalist_prep_1","name":"Basic Drying","description":"You dry herbs with minimal loss of potency.","bonuses":{"resourceEfficiency":0.05},"requires":null},
+        {"id":"herbalist_prep_2","name":"Careful Sorting","description":"You sort herbs by quality, improving refinement.","bonuses":{"refineQuality":0.05},"requires":"herbalist_prep_1"},
+        {"id":"herbalist_prep_3","name":"Potency Preservation","description":"Your preparation techniques preserve the strongest essences.","bonuses":{"refineQuality":0.05,"rareYield":0.03},"requires":"herbalist_prep_2"}
+      ],
+      "natural_essence_extraction":[
+        {"id":"herbalist_extract_1","name":"Simple Infusions","description":"You extract mild essences from common herbs.","bonuses":{"craftSpeed":0.05},"requires":null},
+        {"id":"herbalist_extract_2","name":"Concentrated Essences","description":"Your extraction methods yield stronger, more potent materials.","bonuses":{"craftQuality":0.03},"requires":"herbalist_extract_1"},
+        {"id":"herbalist_extract_3","name":"Pure Botanical Extracts","description":"You produce high‑grade essences prized by alchemists and chefs.","bonuses":{"craftQuality":0.05,"craftYield":0.05},"requires":"herbalist_extract_2"}
+      ]
+    },"capstone":{
+      "id":"herbalist_capstone","name":"Master Herbalist","description":"Your botanical mastery yields exceptional herbs and potent natural extracts.","bonuses":{"rareYield":0.05,"refineQuality":0.10,"craftYield":0.05,"special":"herbalist_masterwork_extract"}
+    }},
+    "tier2": {},
+    "tier3": {}
+  },
+}
