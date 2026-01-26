@@ -20,6 +20,9 @@
   <script type="module">
     import { PlayerStorage } from "./player-storage.js";
 
+    const CLIENT_ID = "j58ocpqo1vtbl730atkdn0jtpjy8z3";
+    const REDIRECT_URI = "https://76natsu76.github.io/redirect.html";
+
     const logBox = document.getElementById("log");
     function log(msg) {
       console.log(msg);
@@ -52,9 +55,9 @@
       log("Exchanging code for token…");
 
       const body = new URLSearchParams({
-        client_id: "j58ocpqo1vtbl730atkdn0jtpjy8z3",
+        client_id: CLIENT_ID,
         grant_type: "authorization_code",
-        redirect_uri: "https://76natsu76.github.io/redirect.html",
+        redirect_uri: REDIRECT_URI,
         code: code,
         code_verifier: codeVerifier
       });
@@ -79,7 +82,7 @@
       const userRes = await fetch("https://api.twitch.tv/helix/users", {
         headers: {
           "Authorization": "Bearer " + json.access_token,
-          "Client-Id": "j58ocpqo1vtbl730atkdn0jtpjy8z3"
+          "Client-Id": CLIENT_ID
         }
       });
 
