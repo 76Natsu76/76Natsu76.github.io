@@ -6,104 +6,62 @@
 
   <style>
     body {
-      background:#0d0f14;
-      color:#e8e8e8;
-      font-family:system-ui, sans-serif;
-      padding:24px;
+      background: #0d0f14;
+      color: #e8e8e8;
+      font-family: system-ui, sans-serif;
+      padding: 24px;
     }
 
     h1 {
-      color:#7fffd4;
-      margin-bottom:4px;
+      color: #7fffd4;
+      margin-bottom: 4px;
     }
 
-    #usernameDisplay {
-      opacity:0.8;
-      margin-bottom:16px;
+    #filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
-    .controls {
-      display:flex;
-      gap:12px;
-      margin-bottom:20px;
-      flex-wrap:wrap;
-    }
-
-    input, select {
-      background:#1a1d24;
-      color:#eee;
-      border:1px solid #444;
-      padding:8px;
-      border-radius:4px;
-      font-size:14px;
+    select, input {
+      padding: 6px;
+      background: #1a1d24;
+      border: 1px solid #333;
+      color: #eee;
+      border-radius: 4px;
     }
 
     .enemy-card {
-      padding:12px;
-      margin:10px 0;
-      background:#1a1d24;
-      border-radius:6px;
-      border:1px solid #333;
-      cursor:pointer;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      transition:0.15s;
+      background: #11141c;
+      border: 1px solid #262a36;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      gap: 16px;
     }
 
-    .enemy-card:hover {
-      background:#222832;
+    .enemy-card img {
+      width: 96px;
+      height: 96px;
+      border-radius: 6px;
+      border: 1px solid #333;
+      object-fit: cover;
     }
 
-    .enemy-main {
-      display:flex;
-      flex-direction:column;
+    .enemy-info h2 {
+      margin: 0;
+      color: #9af7ff;
     }
 
-    .enemy-name {
-      font-size:16px;
-      font-weight:600;
-      color:#9af7ff;
-    }
-
-    .enemy-sub {
-      font-size:13px;
-      opacity:0.8;
-    }
-
-    .rarity-pill {
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:11px;
-      border:1px solid #444;
-      text-transform:uppercase;
-      letter-spacing:0.05em;
-    }
-
-    .rarity-common { color:#bfbfbf; border-color:#555; }
-    .rarity-uncommon { color:#7fff7f; border-color:#3a7f3a; }
-    .rarity-rare { color:#7fcfff; border-color:#3a5f7f; }
-    .rarity-epic { color:#c77fff; border-color:#6a3a7f; }
-    .rarity-legendary { color:#ffbf5f; border-color:#7f5a2a; }
-
-    .btn {
-      margin-top:16px;
-      padding:8px 12px;
-      border-radius:4px;
-      border:1px solid #444;
-      background:#1a1d24;
-      color:#eee;
-      cursor:pointer;
-    }
-
-    .btn:hover {
-      background:#222832;
-    }
-
-    .sync-indicator {
-      font-size:12px;
-      opacity:0.7;
-      margin-bottom:8px;
+    .tag {
+      display: inline-block;
+      padding: 2px 6px;
+      background: #1a1d24;
+      border: 1px solid #333;
+      border-radius: 4px;
+      margin-right: 4px;
+      font-size: 12px;
     }
   </style>
 </head>
@@ -111,145 +69,208 @@
 <body>
 
   <h1>Bestiary</h1>
-  <div id="usernameDisplay"></div>
-  <div class="sync-indicator" id="syncIndicator">Loading enemies...</div>
 
-  <div class="controls">
-    <input id="searchBox" placeholder="Search enemies..." oninput="filterList()">
-    <select id="filterFamily" onchange="filterList()">
-      <option value="">All Families</option>
-    </select>
-    <select id="filterRarity" onchange="filterList()">
-      <option value="">All Rarities</option>
-    </select>
-    <select id="filterRegion" onchange="filterList()">
+  <div id="filters">
+    <select id="regionFilter">
       <option value="">All Regions</option>
     </select>
+
+    <select id="biomeFilter">
+      <option value="">All Biomes</option>
+    </select>
+
+    <select id="familyFilter">
+      <option value="">All Families</option>
+    </select>
+
+    <select id="rarityFilter">
+      <option value="">All Rarities</option>
+      <option>Common</option>
+      <option>Uncommon</option>
+      <option>Rare</option>
+      <option>Epic</option>
+      <option>Elite</option>
+      <option>Mythical</option>
+      <option>Legendary</option>
+      <option>Ancient</option>
+    </select>
+
+    <input id="searchBox" placeholder="Search enemies...">
   </div>
 
-  <div id="enemyContainer">Loading...</div>
+  <div id="bestiaryContainer">Loading...</div>
 
-  <button class="btn" onclick="goToMap()">World Map</button>
+  <button class="btn" onclick="goBack()">Back</button>
 
-  <script>
-    const username = sessionStorage.getItem("twitch_username");
-    document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
+  <script type="module">
+    import { WORLD_DATA } from "./world-data.js";
+    import { BIOMES } from "./biomes.js";
+    import { REGION_TO_BIOME } from "./region-to-biome.js";
+    import { EnemyRegistry } from "./enemy-registry.js";
+    import enemyRegions from "./enemy-regions.json" assert { type: "json" };
+    import enemyTags from "./enemy-tags.json" assert { type: "json" };
 
-    let allEnemies = [];
+    const container = document.getElementById("bestiaryContainer");
 
-    async function loadEnemies() {
-      const container = document.getElementById("enemyContainer");
-      const sync = document.getElementById("syncIndicator");
+    // ------------------------------------------------------------
+    // INITIALIZE FILTERS
+    // ------------------------------------------------------------
+    const regionFilter = document.getElementById("regionFilter");
+    const biomeFilter = document.getElementById("biomeFilter");
+    const familyFilter = document.getElementById("familyFilter");
+    const rarityFilter = document.getElementById("rarityFilter");
+    const searchBox = document.getElementById("searchBox");
 
-      try {
-        sync.textContent = "Loading enemies from data/enemies.json...";
-        const res = await fetch("data/enemies.json", { cache: "no-store" });
+    // Populate region filter
+    for (const key in WORLD_DATA.regions) {
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = WORLD_DATA.regions[key].name;
+      regionFilter.appendChild(opt);
+    }
 
-        if (!res.ok) {
-          container.textContent = "Failed to load enemies.";
-          sync.textContent = "Sync failed.";
-          return;
+    // Populate biome filter
+    for (const key in BIOMES) {
+      const opt = document.createElement("option");
+      opt.value = key;
+      opt.textContent = format(key);
+      biomeFilter.appendChild(opt);
+    }
+
+    // Populate family filter
+    const families = new Set(EnemyRegistry.enemies.map(e => e.family));
+    families.forEach(f => {
+      const opt = document.createElement("option");
+      opt.value = f;
+      opt.textContent = format(f);
+      familyFilter.appendChild(opt);
+    });
+
+    // ------------------------------------------------------------
+    // RENDER BESTIARY
+    // ------------------------------------------------------------
+    function render() {
+      const regionVal = regionFilter.value;
+      const biomeVal = biomeFilter.value;
+      const familyVal = familyFilter.value;
+      const rarityVal = rarityFilter.value.toLowerCase();
+      const searchVal = searchBox.value.toLowerCase();
+
+      const out = [];
+
+      for (const e of EnemyRegistry.enemies) {
+        // REGION FILTER
+        if (regionVal) {
+          const allowed = enemyRegions[e.key];
+          if (!allowed || !allowed.includes(regionVal)) continue;
         }
 
-        allEnemies = await res.json();
-        populateFilters(allEnemies);
-        renderList(allEnemies);
-        sync.textContent = "Enemies loaded.";
-      } catch (err) {
-        container.textContent = "Network error: " + err.message;
-        sync.textContent = "Sync failed.";
-      }
-    }
+        // BIOME FILTER
+        if (biomeVal) {
+          const tags = enemyTags[e.key] || [];
+          if (!isEnemyAllowedInBiome(tags, biomeVal)) continue;
+        }
 
-    function populateFilters(list) {
-      const families = new Set();
-      const rarities = new Set();
-      const regions = new Set();
+        // FAMILY FILTER
+        if (familyVal && e.family !== familyVal) continue;
 
-      list.forEach(e => {
-        if (e.family) families.add(e.family);
-        if (e.rarity) rarities.add(e.rarity);
-        if (e.region) regions.add(e.region);
-      });
+        // RARITY FILTER
+        if (rarityVal && e.rarity.toLowerCase() !== rarityVal) continue;
 
-      fillSelect("filterFamily", families);
-      fillSelect("filterRarity", rarities);
-      fillSelect("filterRegion", regions);
-    }
+        // SEARCH FILTER
+        if (searchVal && !e.name.toLowerCase().includes(searchVal)) continue;
 
-    function fillSelect(id, values) {
-      const sel = document.getElementById(id);
-      [...values].sort().forEach(v => {
-        const opt = document.createElement("option");
-        opt.value = v;
-        opt.textContent = format(v);
-        sel.appendChild(opt);
-      });
-    }
+        // Build template
+        const template = EnemyRegistry.buildEnemyTemplate(e.key);
 
-    function filterList() {
-      const search = document.getElementById("searchBox").value.toLowerCase();
-      const fam = document.getElementById("filterFamily").value;
-      const rar = document.getElementById("filterRarity").value;
-      const reg = document.getElementById("filterRegion").value;
+        out.push(`
+          <div class="enemy-card">
+            <img src="/assets/enemies/${template.key}.png">
 
-      const filtered = allEnemies.filter(e => {
-        return (
-          (!search || (e.name || "").toLowerCase().includes(search)) &&
-          (!fam || e.family === fam) &&
-          (!rar || e.rarity === rar) &&
-          (!reg || e.region === reg)
-        );
-      });
+            <div class="enemy-info">
+              <h2>${template.name}</h2>
 
-      renderList(filtered);
-    }
+              <div><strong>Family:</strong> ${format(template.family)}</div>
+              <div><strong>Rarity:</strong> ${format(template.rarity)}</div>
 
-    function renderList(list) {
-      const container = document.getElementById("enemyContainer");
+              <div><strong>Allowed Regions:</strong> ${
+                (enemyRegions[e.key] || []).map(format).join(", ") || "Any"
+              }</div>
 
-      if (!list.length) {
-        container.innerHTML = "<div>No enemies found.</div>";
-        return;
-      }
+              <div><strong>Tags:</strong> ${
+                (enemyTags[e.key] || [])
+                  .map(t => `<span class="tag">${format(t)}</span>`)
+                  .join("") || "None"
+              }</div>
 
-      container.innerHTML = list
-        .map(e => {
-          const rarityClass = "rarity-" + (String(e.rarity || "common").toLowerCase());
-          return `
-            <div class="enemy-card" onclick="viewEnemy('${encodeURIComponent(e.key)}')">
-              <div class="enemy-main">
-                <div class="enemy-name">${e.name}</div>
-                <div class="enemy-sub">
-                  ${format(e.family)} — ${format(e.variant)} — ${format(e.region || "Unknown Region")}
-                </div>
-              </div>
-              <div class="rarity-pill ${rarityClass}">
-                ${format(e.rarity || "common")}
+              <div class="event" style="margin-top:10px;">
+                ${template.flavor || "No flavor text."}
               </div>
             </div>
-          `;
-        })
-        .join("");
+          </div>
+        `);
+      }
+
+      container.innerHTML = out.join("") || "<p>No enemies found.</p>";
     }
 
-    function viewEnemy(key) {
-      window.location.href = `enemy.html?key=${key}`;
+    // ------------------------------------------------------------
+    // BIOME TAG CHECK
+    // ------------------------------------------------------------
+    function isEnemyAllowedInBiome(tags, biomeKey) {
+      if (!tags.length) return true;
+
+      if (tags.includes("ice")) {
+        return biomeKey === "tundra" ||
+               biomeKey === "frozen-expanse" ||
+               biomeKey === "crystalline-tundra";
+      }
+
+      if (tags.includes("fire")) {
+        return biomeKey === "volcano" ||
+               biomeKey === "molten-crest" ||
+               biomeKey === "magma";
+      }
+
+      if (tags.includes("void")) {
+        return biomeKey === "void" ||
+               biomeKey === "void-wastes" ||
+               biomeKey === "void-realm";
+      }
+
+      if (tags.includes("arcane")) {
+        return biomeKey === "arcane" ||
+               biomeKey === "arcane-rift";
+      }
+
+      if (tags.includes("astral")) {
+        return biomeKey === "astral-plane" ||
+               biomeKey === "astral-nexus";
+      }
+
+      return true;
     }
 
+    // ------------------------------------------------------------
+    // HELPERS
+    // ------------------------------------------------------------
     function format(str) {
       return String(str)
-        .toLowerCase()
         .replace(/_/g, " ")
+        .replace(/-/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
 
-    function goToMap() {
-      window.location.href = "world-map.html";
-    }
+    window.goBack = () => window.location.href = "world-map.html";
 
-    loadEnemies();
+    // Attach listeners
+    regionFilter.onchange = render;
+    biomeFilter.onchange = render;
+    familyFilter.onchange = render;
+    rarityFilter.onchange = render;
+    searchBox.oninput = render;
+
+    render();
   </script>
 
 </body>
