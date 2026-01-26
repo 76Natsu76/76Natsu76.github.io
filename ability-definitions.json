@@ -1,0 +1,1236 @@
+{
+  "acolyte": {
+    "minor_heal": {
+      "key": "minor_heal",
+      "name": "Minor Heal",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.05,
+      "manaCost": 10,
+      "cooldown": 1,
+      "combatTags": ["holy", "heal", "support"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 12, "duration": 0, "stack": "add" }
+      ],
+      "description": "A simple prayer restores a small amount of health."
+    },
+    "prayer_bolt": {
+      "key": "prayer_bolt",
+      "name": "Prayer Bolt",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.06,
+      "manaCost": 12,
+      "cooldown": 1,
+      "combatTags": ["holy", "magic", "ranged"],
+      "statusEffects": [],
+      "description": "A bolt of divine energy strikes the target."
+    },
+    "consecration": {
+      "key": "consecration",
+      "name": "Consecration",
+      "basePower": 0.4,
+      "scalingPerLevel": 0.04,
+      "manaCost": 18,
+      "cooldown": 3,
+      "combatTags": ["holy", "magic", "dot"],
+      "statusEffects": [
+        { "type": "burn", "duration": 3, "value": 6, "stack": "add" }
+      ],
+      "description": "Sanctified ground burns the enemy over time."
+    },
+    "divine_barrier": {
+      "key": "divine_barrier",
+      "name": "Divine Barrier",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 20,
+      "cooldown": 4,
+      "combatTags": ["holy", "support", "shield"],
+      "statusEffects": [
+        { "type": "shield", "duration": 3, "value": 25, "stack": "replace" }
+      ],
+      "description": "A radiant barrier absorbs incoming damage."
+    },
+    "acolyte_ultimate": {
+      "key": "acolyte_ultimate",
+      "name": "Rite of Restoration",
+      "isUltimate": true,
+      "chargeRequired": 100,
+      "usesPerCombat": 1,
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 25,
+      "cooldown": 0,
+      "combatTags": ["holy", "support", "heal", "cleanse"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 40, "duration": 0 },
+        { "type": "cleanse", "remove": ["burn", "poison", "corrupted", "bleed"] }
+      ],
+      "description": "A powerful rite restores health and cleanses harmful effects."
+    }
+  },
+  "adept": {
+    "arcane_burst": {
+      "key": "arcane_burst",
+      "name": "Arcane Burst",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.08,
+      "manaCost": 14,
+      "cooldown": 1,
+      "combatTags": ["arcane", "magic"],
+      "statusEffects": [],
+      "description": "A focused blast of arcane energy."
+    },
+    "mana_surge": {
+      "key": "mana_surge",
+      "name": "Mana Surge",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 0,
+      "cooldown": 4,
+      "combatTags": ["arcane", "support"],
+      "statusEffects": [
+        { "type": "mana_regen", "duration": 3, "value": 5 }
+      ],
+      "description": "You channel energy to restore mana over time."
+    },
+    "arcane_chain": {
+      "key": "arcane_chain",
+      "name": "Arcane Chain",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.07,
+      "manaCost": 16,
+      "cooldown": 2,
+      "combatTags": ["arcane", "magic", "control"],
+      "statusEffects": [
+        { "type": "chilled", "duration": 2 }
+      ],
+      "description": "Arcane bindings slow the target."
+    },
+    "unstable_blast": {
+      "key": "unstable_blast",
+      "name": "Unstable Blast",
+      "basePower": 1.4,
+      "scalingPerLevel": 0.1,
+      "manaCost": 20,
+      "cooldown": 3,
+      "combatTags": ["arcane", "magic"],
+      "statusEffects": [
+        { "type": "burn", "duration": 2, "value": 8 }
+      ],
+      "description": "A volatile explosion that may ignite the target."
+    },
+    "adept_ultimate": {
+      "key": "adept_ultimate",
+      "name": "Arcane Cataclysm",
+      "isUltimate": true,
+      "chargeRequired": 100,
+      "usesPerCombat": 1,
+      "basePower": 1.8,
+      "scalingPerLevel": 0.12,
+      "manaCost": 30,
+      "cooldown": 0,
+      "combatTags": ["arcane", "magic"],
+      "statusEffects": [
+        { "type": "burn", "duration": 3, "value": 10 },
+        { "type": "debuff_def", "duration": 2, "valuePerTurn": -3 }
+      ],
+      "description": "A devastating arcane eruption that weakens and burns the target."
+    }
+  },
+  "apocalypse": {
+    "doom_slam": {
+      "key": "doom_slam",
+      "name": "Doom Slam",
+      "basePower": 1.6,
+      "scalingPerLevel": 0.12,
+      "manaCost": 20,
+      "cooldown": 3,
+      "combatTags": ["physical", "melee", "cataclysm"],
+      "statusEffects": [
+        { "type": "stun", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A devastating slam that shakes the battlefield and stuns the target."
+    },
+    "end_times": {
+      "key": "end_times",
+      "name": "End Times",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.1,
+      "manaCost": 25,
+      "cooldown": 4,
+      "combatTags": ["cataclysm", "magic", "aoe"],
+      "statusEffects": [
+        { "type": "fear", "duration": 2, "stack": "replace" }
+      ],
+      "description": "You invoke apocalyptic visions, overwhelming enemies with terror."
+    }
+  },
+  "apprentice": {
+    "spark": {
+      "key": "spark",
+      "name": "Spark",
+      "basePower": 0.7,
+      "scalingPerLevel": 0.05,
+      "manaCost": 6,
+      "cooldown": 1,
+      "combatTags": ["arcane", "magic"],
+      "statusEffects": [],
+      "description": "A small spark of magical energy."
+    },
+    "arcane_push": {
+      "key": "arcane_push",
+      "name": "Arcane Push",
+      "basePower": 0.6,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 2,
+      "combatTags": ["arcane", "magic", "control"],
+      "statusEffects": [
+        { "type": "knockback", "duration": 0, "stack": "replace" }
+      ],
+      "description": "A burst of force pushes the target back."
+    }
+  },
+  "archer": {
+    "piercing_arrow": {
+      "key": "piercing_arrow",
+      "name": "Piercing Arrow",
+      "basePower": 1.3,
+      "scalingPerLevel": 0.1,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["physical", "ranged", "pierce"],
+      "statusEffects": [
+        { "type": "debuff_def", "valuePerTurn": -10, "duration": 2, "stack": "add" }
+      ],
+      "description": "A precisely aimed shot that pierces armor and weakens defenses."
+    },
+    "volley_shot": {
+      "key": "volley_shot",
+      "name": "Volley Shot",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.08,
+      "manaCost": 14,
+      "cooldown": 3,
+      "combatTags": ["physical", "ranged", "pierce", "aoe"],
+      "statusEffects": [],
+      "description": "A spread of arrows rains down in a controlled arc."
+    }
+  },
+  "assassin": {
+    "shadow_slash": {
+      "key": "shadow_slash",
+      "name": "Shadow Slash",
+      "basePower": 1.4,
+      "scalingPerLevel": 0.12,
+      "manaCost": 14,
+      "cooldown": 2,
+      "combatTags": ["physical", "shadow", "slash"],
+      "statusEffects": [
+        { "type": "buff_evasion", "valuePerTurn": 10, "duration": 1, "stack": "add" }
+      ],
+      "description": "A swift, shadow-infused strike that increases your evasiveness."
+    },
+    "bleed_strike": {
+      "key": "bleed_strike",
+      "name": "Bleed Strike",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.1,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["physical", "pierce", "bleed"],
+      "statusEffects": [
+        { "type": "bleed", "value": 8, "duration": 3, "stack": "add" }
+      ],
+      "description": "A precise puncture that causes heavy bleeding over time."
+    }
+  },
+  "berserker": {
+    "frenzy_slash": {
+      "key": "frenzy_slash",
+      "name": "Frenzy Slash",
+      "basePower": 1.3,
+      "scalingPerLevel": 0.1,
+      "manaCost": 10,
+      "cooldown": 1,
+      "combatTags": ["physical", "slash"],
+      "statusEffects": [
+        { "type": "buff_atk", "valuePerTurn": 10, "duration": 1, "stack": "add" }
+      ],
+      "description": "A wild slash that fuels your rage and boosts attack."
+    },
+    "blood_howl": {
+      "key": "blood_howl",
+      "name": "Blood Howl",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 15,
+      "cooldown": 4,
+      "combatTags": ["buff", "rage"],
+      "statusEffects": [
+        { "type": "buff_atk", "valuePerTurn": 15, "duration": 2, "stack": "add" },
+        { "type": "buff_speed", "valuePerTurn": 10, "duration": 2, "stack": "add" }
+      ],
+      "description": "A primal howl that increases attack and speed."
+    }
+  },
+  "bozo": {
+    "slip_and_smack": {
+      "key": "slip_and_smack",
+      "name": "Slip and Smack",
+      "basePower": 0.6,
+      "scalingPerLevel": 0.05,
+      "manaCost": 5,
+      "cooldown": 1,
+      "combatTags": ["physical", "blunt", "clumsy"],
+      "statusEffects": [
+        { "type": "self_stun", "duration": 1, "stack": "replace" }
+      ],
+      "description": "You slip, smack the enemy… and mostly yourself."
+    },
+    "balloon_bonk": {
+      "key": "balloon_bonk",
+      "name": "Balloon Bonk",
+      "basePower": 0.4,
+      "scalingPerLevel": 0.04,
+      "manaCost": 6,
+      "cooldown": 1,
+      "combatTags": ["physical", "blunt", "silly"],
+      "statusEffects": [
+        { "type": "debuff_atk", "valuePerTurn": -5, "duration": 1, "stack": "add" },
+        { "type": "self_debuff_atk", "valuePerTurn": -10, "duration": 1, "stack": "add" }
+      ],
+      "description": "You bonk the enemy with a balloon. It squeaks. Everyone is embarrassed."
+    }
+  },
+  "cleric": {
+    "smite": {
+      "key": "smite",
+      "name": "Smite",
+      "basePower": 1.3,
+      "scalingPerLevel": 0.1,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["holy", "magic"],
+      "statusEffects": [
+        { "type": "debuff_atk", "valuePerTurn": -10, "duration": 2, "stack": "add" }
+      ],
+      "description": "A radiant burst weakens the target’s offensive power."
+    },
+    "holy_mend": {
+      "key": "holy_mend",
+      "name": "Holy Mend",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 14,
+      "cooldown": 3,
+      "combatTags": ["holy", "heal", "cleanse"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 20, "duration": 0 },
+        { "type": "cleanse", "remove": ["burn", "poison", "bleed", "corrupted"] }
+      ],
+      "description": "A surge of holy light restores health and purifies harmful effects."
+    }
+  },
+  "corrupted": {
+    "corrupt_strike": {
+      "key": "corrupt_strike",
+      "name": "Corrupt Strike",
+      "basePower": 1.1,
+      "scalingPerLevel": 0.08,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["dark", "melee"],
+      "statusEffects": [
+        { "type": "poison", "value": 5, "duration": 3, "stack": "add" }
+      ],
+      "description": "A twisted strike that infects the target with corruption."
+    },
+    "dark_pulse": {
+      "key": "dark_pulse",
+      "name": "Dark Pulse",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.07,
+      "manaCost": 14,
+      "cooldown": 3,
+      "combatTags": ["dark", "magic", "aoe"],
+      "statusEffects": [],
+      "description": "A wave of corrupted energy radiates outward."
+    }
+  },
+  "druid": {
+    "thorn_whip": {
+      "key": "thorn_whip",
+      "name": "Thorn Whip",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.1,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["nature", "physical", "pierce"],
+      "statusEffects": [
+        { "type": "bleed", "value": 5, "duration": 2, "stack": "add" }
+      ],
+      "description": "A lash of thorned vines tears into the target."
+    },
+    "rejuvenating_bloom": {
+      "key": "rejuvenating_bloom",
+      "name": "Rejuvenating Bloom",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 16,
+      "cooldown": 3,
+      "combatTags": ["nature", "heal"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 18, "duration": 0 },
+        { "type": "hot_percent", "value": 5, "duration": 2, "stack": "add" }
+      ],
+      "description": "A burst of natural life heals and nurtures regeneration."
+    }
+  },
+  "guardian": {
+    "shield_slam": {
+      "key": "shield_slam",
+      "name": "Shield Slam",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.08,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["physical", "blunt", "control"],
+      "statusEffects": [
+        { "type": "stun", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A crushing shield blow that briefly stuns the enemy."
+    },
+    "bulwark_guard": {
+      "key": "bulwark_guard",
+      "name": "Bulwark Guard",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 18,
+      "cooldown": 4,
+      "combatTags": ["holy", "defense", "buff"],
+      "statusEffects": [
+        { "type": "buff_def", "valuePerTurn": 25, "duration": 2, "stack": "add" },
+        { "type": "buff_resist", "valuePerTurn": 15, "duration": 2, "stack": "add" }
+      ],
+      "description": "You raise an impenetrable guard, greatly increasing defenses."
+    }
+  },
+  "healer": {
+    "soothing_light": {
+      "key": "soothing_light",
+      "name": "Soothing Light",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 12,
+      "cooldown": 1,
+      "combatTags": ["holy", "heal"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 22, "duration": 0 }
+      ],
+      "description": "A gentle wave of holy light restores health."
+    },
+    "purity_wave": {
+      "key": "purity_wave",
+      "name": "Purity Wave",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 16,
+      "cooldown": 3,
+      "combatTags": ["holy", "heal", "cleanse"],
+      "statusEffects": [
+        { "type": "cleanse", "remove": ["burn", "poison", "bleed", "corrupted"] },
+        { "type": "heal_percent", "value": 8, "duration": 0 }
+      ],
+      "description": "A cleansing surge removes harmful effects and restores health."
+    }
+  },
+  "mage": {
+    "fireball": {
+      "key": "fireball",
+      "name": "Fireball",
+      "basePower": 1.4,
+      "scalingPerLevel": 0.12,
+      "manaCost": 14,
+      "cooldown": 2,
+      "combatTags": ["magic", "fire"],
+      "statusEffects": [
+        { "type": "burn", "value": 6, "duration": 2, "stack": "add" }
+      ],
+      "description": "A blazing sphere of fire explodes on impact, scorching the target with lingering flames."
+    },
+    "frost_nova": {
+      "key": "frost_nova",
+      "name": "Frost Nova",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.1,
+      "manaCost": 16,
+      "cooldown": 3,
+      "combatTags": ["magic", "ice", "aoe", "control"],
+      "statusEffects": [
+        { "type": "chilled", "duration": 2, "stack": "replace" }
+      ],
+      "description": "A burst of freezing energy radiates outward, chilling all nearby foes and slowing their movements."
+    }
+  },
+  "monk": {
+    "chi_strike": {
+      "key": "chi_strike",
+      "name": "Chi Strike",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.1,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "blunt", "chi"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 5, "duration": 0 }
+      ],
+      "description": "A focused palm strike infused with chi, dealing damage and restoring a small amount of health."
+    },
+    "tranquility_palm": {
+      "key": "tranquility_palm",
+      "name": "Tranquility Palm",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.08,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["physical", "control", "chi"],
+      "statusEffects": [
+        { "type": "stun", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A serene, perfectly timed palm strike that disrupts the enemy’s flow and briefly stuns them."
+    }
+  },
+  "necromancer": {
+    "soul_drain": {
+      "key": "soul_drain",
+      "name": "Soul Drain",
+      "basePower": 1.1,
+      "scalingPerLevel": 0.1,
+      "manaCost": 14,
+      "cooldown": 2,
+      "combatTags": ["dark", "magic", "lifesteal"],
+      "statusEffects": [
+        { "type": "lifesteal_percent", "value": 25, "duration": 0 }
+      ],
+      "description": "You siphon a fragment of the target’s soul, dealing dark damage and restoring your own vitality."
+    },
+    "bone_spike": {
+      "key": "bone_spike",
+      "name": "Bone Spike",
+      "basePower": 1.3,
+      "scalingPerLevel": 0.1,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["dark", "pierce", "magic"],
+      "statusEffects": [
+        { "type": "bleed", "value": 6, "duration": 3, "stack": "add" }
+      ],
+      "description": "Jagged bone erupts from beneath the enemy, impaling them and causing lingering bleeding."
+    }
+  },
+  "paladin": {
+    "righteous_strike": {
+      "key": "righteous_strike",
+      "name": "Righteous Strike",
+      "basePower": 1.3,
+      "scalingPerLevel": 0.1,
+      "manaCost": 10,
+      "cooldown": 1,
+      "combatTags": ["holy", "physical", "blunt"],
+      "statusEffects": [
+        { "type": "debuff_atk", "valuePerTurn": -10, "duration": 2, "stack": "add" }
+      ],
+      "description": "A holy-charged blow that weakens the enemy’s resolve and disrupts their strength."
+    },
+    "consecration": {
+      "key": "consecration",
+      "name": "Consecration",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.08,
+      "manaCost": 18,
+      "cooldown": 3,
+      "combatTags": ["holy", "aoe", "magic"],
+      "statusEffects": [
+        { "type": "burn", "value": 5, "duration": 2, "stack": "add" }
+      ],
+      "description": "You sanctify the ground beneath your foes, searing them with radiant holy fire."
+    }
+  },
+  "ranger": {
+    "nature_arrow": {
+      "key": "nature_arrow",
+      "name": "Nature Arrow",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.1,
+      "manaCost": 10,
+      "cooldown": 1,
+      "combatTags": ["physical", "pierce", "nature"],
+      "statusEffects": [
+        { "type": "poison", "value": 5, "duration": 2, "stack": "add" }
+      ],
+      "description": "An arrow infused with natural energy, lightly poisoning the target."
+    },
+    "entangling_shot": {
+      "key": "entangling_shot",
+      "name": "Entangling Shot",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.08,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["physical", "control", "nature"],
+      "statusEffects": [
+        { "type": "chilled", "duration": 2, "stack": "replace" }
+      ],
+      "description": "A vine-wrapped arrow that slows the target as roots coil around their legs."
+    }
+  },
+  "rogue": {
+    "cheap_shot": {
+      "key": "cheap_shot",
+      "name": "Cheap Shot",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.06,
+      "manaCost": 8,
+      "cooldown": 2,
+      "combatTags": ["physical", "stealth"],
+      "statusEffects": [
+        { "type": "stun", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A dirty strike that briefly stuns the target."
+    },
+    "evasive_roll": {
+      "key": "evasive_roll",
+      "name": "Evasive Roll",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 6,
+      "cooldown": 2,
+      "combatTags": ["physical", "defense"],
+      "statusEffects": [
+        { "type": "buff_evasion", "valuePerTurn": 30, "duration": 1, "stack": "replace" }
+      ],
+      "description": "You roll away, increasing your chance to dodge attacks."
+    }
+  },
+  "rot": {
+    "rot_touch": {
+      "key": "rot_touch",
+      "name": "Rot Touch",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.06,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["decay", "melee"],
+      "statusEffects": [
+        { "type": "poison", "value": 10, "duration": 3, "stack": "add" }
+      ],
+      "description": "A decaying touch infects the target with rot."
+    },
+    "blight_cloud": {
+      "key": "blight_cloud",
+      "name": "Blight Cloud",
+      "basePower": 0.7,
+      "scalingPerLevel": 0.05,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["decay", "aoe"],
+      "statusEffects": [
+        { "type": "poison", "value": 8, "duration": 2, "stack": "add" }
+      ],
+      "description": "A cloud of blight spreads, poisoning nearby enemies."
+    }
+  },
+  "shaman": {
+    "lightning_spear": {
+      "key": "lightning_spear",
+      "name": "Lightning Spear",
+      "basePower": 1.3,
+      "scalingPerLevel": 0.1,
+      "manaCost": 14,
+      "cooldown": 2,
+      "combatTags": ["magic", "lightning"],
+      "statusEffects": [
+        { "type": "shock", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A spear of condensed lightning jolts the target, briefly shocking them."
+    },
+    "spirit_mend": {
+      "key": "spirit_mend",
+      "name": "Spirit Mend",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 16,
+      "cooldown": 3,
+      "combatTags": ["heal", "spirit"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 20, "duration": 0 },
+        { "type": "hot_percent", "value": 5, "duration": 2, "stack": "add" }
+      ],
+      "description": "Ancestral spirits mend wounds, restoring health instantly and over time."
+    }
+  },
+  "thief": {
+    "backstab": {
+      "key": "backstab",
+      "name": "Backstab",
+      "basePower": 1.5,
+      "scalingPerLevel": 0.12,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["physical", "pierce", "crit"],
+      "statusEffects": [
+        { "type": "crit_chance_up", "valuePerTurn": 15, "duration": 1, "stack": "add" }
+      ],
+      "description": "A precise strike from the shadows that heightens your killing intent."
+    },
+    "poison_dagger": {
+      "key": "poison_dagger",
+      "name": "Poison Dagger",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.08,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "pierce", "poison"],
+      "statusEffects": [
+        { "type": "poison", "value": 6, "duration": 3, "stack": "add" }
+      ],
+      "description": "A venom-laced stab that inflicts lingering poison."
+    }
+  },
+  "trainee": {
+    "basic_strike": {
+      "key": "basic_strike",
+      "name": "Basic Strike",
+      "basePower": 0.6,
+      "scalingPerLevel": 0.04,
+      "manaCost": 0,
+      "cooldown": 0,
+      "combatTags": ["physical", "training"],
+      "statusEffects": [],
+      "description": "A simple strike taught to all trainees."
+    },
+    "guard_stance": {
+      "key": "guard_stance",
+      "name": "Guard Stance",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 4,
+      "cooldown": 2,
+      "combatTags": ["defense", "training"],
+      "statusEffects": [
+        { "type": "shield", "value": 20, "duration": 1, "stack": "replace" }
+      ],
+      "description": "A defensive stance that reduces incoming damage."
+    }
+  },
+  "trickster": {
+    "feint_strike": {
+      "key": "feint_strike",
+      "name": "Feint Strike",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.06,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "illusion"],
+      "statusEffects": [
+        { "type": "confuse", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A deceptive strike that leaves the target uncertain of your next move."
+    },
+    "trick_step": {
+      "key": "trick_step",
+      "name": "Trick Step",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 6,
+      "cooldown": 2,
+      "combatTags": ["illusion", "defense"],
+      "statusEffects": [
+        { "type": "buff_evasion", "valuePerTurn": 25, "duration": 1, "stack": "replace" }
+      ],
+      "description": "A sudden misstep creates an illusion, increasing your chance to evade attacks."
+    }
+  },
+  "void": {
+    "void_bolt": {
+      "key": "void_bolt",
+      "name": "Void Bolt",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.08,
+      "manaCost": 14,
+      "cooldown": 2,
+      "combatTags": ["void", "magic", "ranged"],
+      "statusEffects": [
+        { "type": "silence", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A concentrated bolt of void energy that damages and briefly silences the target."
+    },
+    "rift_step": {
+      "key": "rift_step",
+      "name": "Rift Step",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["void", "mobility", "support"],
+      "statusEffects": [
+        { "type": "teleport", "duration": 0 }
+      ],
+      "description": "You step through a rift in space, instantly repositioning yourself."
+    }
+  },
+  "warrior": {
+    "power_strike": {
+      "key": "power_strike",
+      "name": "Power Strike",
+      "basePower": 1.4,
+      "scalingPerLevel": 0.1,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "blunt"],
+      "statusEffects": [],
+      "description": "A heavy overhead blow that channels raw strength into a crushing strike."
+    },
+    "shield_bash": {
+      "key": "shield_bash",
+      "name": "Shield Bash",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.08,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["physical", "blunt", "control"],
+      "statusEffects": [
+        { "type": "stun", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A forceful bash with your shield that deals damage and briefly stuns the target."
+    }
+  },
+  "warlock": {
+    "hellfire_bolt": {
+      "key": "hellfire_bolt",
+      "name": "Hellfire Bolt",
+      "basePower": 1.3,
+      "scalingPerLevel": 0.1,
+      "manaCost": 14,
+      "cooldown": 2,
+      "combatTags": ["fire", "dark", "magic"],
+      "statusEffects": [
+        { "type": "burn", "value": 6, "duration": 2, "stack": "add" }
+      ],
+      "description": "A searing bolt of infernal flame that scorches the target with lingering hellfire."
+    },
+    "soul_shackle": {
+      "key": "soul_shackle",
+      "name": "Soul Shackle",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.08,
+      "manaCost": 16,
+      "cooldown": 3,
+      "combatTags": ["dark", "curse", "magic", "control"],
+      "statusEffects": [
+        { "type": "chilled", "duration": 2, "stack": "replace" },
+        { "type": "curse", "value": 10, "duration": 2, "stack": "add" }
+      ],
+      "description": "You bind the enemy’s soul with cursed chains, slowing their movements and afflicting them with dark magic."
+    }
+  },
+  "witch": {
+    "hex_bolt": {
+      "key": "hex_bolt",
+      "name": "Hex Bolt",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.1,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["magic", "dark", "curse"],
+      "statusEffects": [
+        { "type": "curse", "value": 10, "duration": 2, "stack": "add" }
+      ],
+      "description": "A crackling bolt of malefic energy that inflicts a weakening curse on the target."
+    },
+    "life_siphon": {
+      "key": "life_siphon",
+      "name": "Life Siphon",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.1,
+      "manaCost": 14,
+      "cooldown": 2,
+      "combatTags": ["magic", "dark", "lifesteal"],
+      "statusEffects": [
+        { "type": "lifesteal_percent", "value": 20, "duration": 0 }
+      ],
+      "description": "You drain the target’s vitality, dealing damage and restoring a portion of your own health."
+    }
+  },
+  "alchemist": {
+    "restorative_draught": {
+      "key": "restorative_draught",
+      "name": "Restorative Draught",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["alchemy", "heal", "support"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 18, "duration": 0 },
+        { "type": "cleanse", "remove": ["burn", "poison", "bleed", "corrupted"] }
+      ],
+      "description": "A potent alchemical brew that restores health and purifies a minor affliction."
+    },
+    "volatile_flask": {
+      "key": "volatile_flask",
+      "name": "Volatile Flask",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.06,
+      "manaCost": 12,
+      "cooldown": 3,
+      "combatTags": ["alchemy", "fire", "acid"],
+      "statusEffects": [
+        { "type": "burn", "value": 4, "duration": 2, "stack": "add" },
+        { "type": "acid", "value": 3, "duration": 2, "stack": "add" }
+      ],
+      "description": "A reactive flask bursts into flame and corrosive fumes, inflicting layered damage over time."
+    }
+  },
+  "artificer": {
+    "arcane_capacitor": {
+      "key": "arcane_capacitor",
+      "name": "Arcane Capacitor",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 12,
+      "cooldown": 3,
+      "combatTags": ["crafting", "magic", "buff"],
+      "statusEffects": [
+        { "type": "team_buff_atk", "valuePerTurn": 10, "duration": 2, "stack": "add" }
+      ],
+      "description": "You overload a compact arcane device, releasing stored energy that empowers your allies’ attacks."
+    },
+    "kinetic_bolt": {
+      "key": "kinetic_bolt",
+      "name": "Kinetic Bolt",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.06,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["physical", "magic", "crafting"],
+      "statusEffects": [
+        { "type": "stagger", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A compressed kinetic charge fires from your gauntlet, striking the target with a concussive blast."
+    }
+  },
+  "blacksmith": {
+    "temper_armor": {
+      "key": "temper_armor",
+      "name": "Temper Armor",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["crafting", "buff", "metal"],
+      "statusEffects": [
+        { "type": "team_buff_defense", "valuePerTurn": 15, "duration": 2, "stack": "add" }
+      ],
+      "description": "You rapidly heat-treat an ally’s armor, reinforcing its structure and increasing their defense."
+    },
+    "forge_spark": {
+      "key": "forge_spark",
+      "name": "Forge Spark",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["fire", "crafting", "magic"],
+      "statusEffects": [
+        { "type": "burn", "value": 4, "duration": 2, "stack": "add" }
+      ],
+      "description": "A burst of forge-kindled flame leaps from your hammer, lightly scorching the target."
+    }
+  },
+  "carpenter": {
+    "wooden_bulwark": {
+      "key": "wooden_bulwark",
+      "name": "Wooden Bulwark",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["crafting", "defense", "wood"],
+      "statusEffects": [
+        { "type": "team_shield_flat", "value": 18, "duration": 0, "stack": "add" }
+      ],
+      "description": "You rapidly assemble a sturdy wooden barrier, granting an ally a protective shield."
+    },
+    "hammer_knock": {
+      "key": "hammer_knock",
+      "name": "Hammer Knock",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "blunt", "crafting"],
+      "statusEffects": [
+        { "type": "stagger", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A solid hammer strike that disrupts the target’s balance with a sharp wooden thud."
+    }
+  },
+  "chef": {
+    "hearty_stew": {
+      "key": "hearty_stew",
+      "name": "Hearty Stew",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 12,
+      "cooldown": 3,
+      "combatTags": ["cooking", "heal", "support"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 20, "duration": 0 },
+        { "type": "team_buff_resist", "valuePerTurn": 10, "duration": 2, "stack": "add" }
+      ],
+      "description": "A warm, nourishing stew that restores health and fortifies the body with comforting resilience."
+    },
+    "sizzling_panstrike": {
+      "key": "sizzling_panstrike",
+      "name": "Sizzling Panstrike",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.06,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["fire", "physical", "cooking"],
+      "statusEffects": [
+        { "type": "burn", "value": 4, "duration": 2, "stack": "add" }
+      ],
+      "description": "A fiery skillet swing that sears the target with a burst of sizzling heat."
+    }
+  },
+  "fisherman": {
+    "tidal_refresh": {
+      "key": "tidal_refresh",
+      "name": "Tidal Refresh",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["water", "support", "gathering"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 14, "duration": 0 },
+        { "type": "team_buff_speed", "valuePerTurn": 10, "duration": 1, "stack": "add" }
+      ],
+      "description": "You splash an invigorating wave over an ally, restoring vitality and giving them a brief surge of agility."
+    },
+    "hook_snare": {
+      "key": "hook_snare",
+      "name": "Hook Snare",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "control", "gathering"],
+      "statusEffects": [
+        { "type": "pull", "duration": 0 },
+        { "type": "slow", "valuePerTurn": 20, "duration": 1, "stack": "replace" }
+      ],
+      "description": "You cast a hooked line that yanks the target toward you, briefly slowing their movements."
+    }
+  },
+  "herbalist": {
+    "soothing_tincture": {
+      "key": "soothing_tincture",
+      "name": "Soothing Tincture",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 2,
+      "combatTags": ["nature", "heal", "support"],
+      "statusEffects": [
+        { "type": "heal_flat", "value": 16, "duration": 0 },
+        { "type": "hot_percent", "value": 3, "duration": 2, "stack": "add" }
+      ],
+      "description": "A calming herbal mixture that restores health and promotes gentle, sustained recovery."
+    },
+    "binding_roots": {
+      "key": "binding_roots",
+      "name": "Binding Roots",
+      "basePower": 0.7,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["nature", "control", "support"],
+      "statusEffects": [
+        { "type": "slow", "valuePerTurn": 25, "duration": 2, "stack": "replace" }
+      ],
+      "description": "You command creeping roots to entangle the target, restricting their movement."
+    }
+  },
+  "leatherworker": {
+    "reinforce_hide": {
+      "key": "reinforce_hide",
+      "name": "Reinforce Hide",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["crafting", "buff", "leather"],
+      "statusEffects": [
+        { "type": "team_buff_evasion", "valuePerTurn": 15, "duration": 2, "stack": "add" }
+      ],
+      "description": "You tighten and reinforce an ally’s leather gear, improving their evasiveness."
+    },
+    "binding_straps": {
+      "key": "binding_straps",
+      "name": "Binding Straps",
+      "basePower": 0.7,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "control", "leather"],
+      "statusEffects": [
+        { "type": "slow", "valuePerTurn": 20, "duration": 2, "stack": "replace" }
+      ],
+      "description": "You lash the target with tough leather straps, restricting their movement."
+    }
+  },
+  "miner": {
+    "grit_fortify": {
+      "key": "grit_fortify",
+      "name": "Grit Fortify",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["earth", "support", "crafting"],
+      "statusEffects": [
+        { "type": "team_buff_defense", "valuePerTurn": 12, "duration": 2, "stack": "add" }
+      ],
+      "description": "You brace an ally with hardened resolve, channeling the toughness of stone to bolster their defenses."
+    },
+    "debris_shower": {
+      "key": "debris_shower",
+      "name": "Debris Shower",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["earth", "physical", "control"],
+      "statusEffects": [
+        { "type": "stagger", "duration": 1, "stack": "replace" }
+      ],
+      "description": "You strike the ground, sending loose debris flying and disrupting the target’s footing."
+    }
+  },
+  "ritualist": {
+    "binding_sigils": {
+      "key": "binding_sigils",
+      "name": "Binding Sigils",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 12,
+      "cooldown": 2,
+      "combatTags": ["ritual", "control", "magic"],
+      "statusEffects": [
+        { "type": "slow", "valuePerTurn": 25, "duration": 2, "stack": "replace" }
+      ],
+      "description": "You inscribe glowing sigils that constrict the target’s movements with ritual force."
+    },
+    "spirit_murmur": {
+      "key": "spirit_murmur",
+      "name": "Spirit Murmur",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["ritual", "support", "magic"],
+      "statusEffects": [
+        { "type": "team_buff_resist", "valuePerTurn": 12, "duration": 2, "stack": "add" }
+      ],
+      "description": "You whisper an invocation that calls unseen spirits to shield your allies from harm."
+    }
+  },
+  "spelunker": {
+    "cave_lantern": {
+      "key": "cave_lantern",
+      "name": "Cave Lantern",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 8,
+      "cooldown": 2,
+      "combatTags": ["light", "support", "exploration"],
+      "statusEffects": [
+        { "type": "team_buff_evasion", "valuePerTurn": 10, "duration": 2, "stack": "add" }
+      ],
+      "description": "You raise a bright lantern that cuts through the darkness, helping allies move with clarity and agility."
+    },
+    "rockslide_tap": {
+      "key": "rockslide_tap",
+      "name": "Rockslide Tap",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "control", "earth"],
+      "statusEffects": [
+        { "type": "stagger", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A precise strike dislodges loose stones, sending a cascade that disrupts the target’s footing."
+    }
+  },
+  "tinkerer": {
+    "springloaded_boost": {
+      "key": "springloaded_boost",
+      "name": "Springloaded Boost",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["crafting", "buff", "mechanical"],
+      "statusEffects": [
+        { "type": "team_buff_speed", "valuePerTurn": 15, "duration": 2, "stack": "add" }
+      ],
+      "description": "You deploy a spring-powered device that launches an ally forward, increasing their speed and momentum."
+    },
+    "whirring_gizmo": {
+      "key": "whirring_gizmo",
+      "name": "Whirring Gizmo",
+      "basePower": 0.8,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["physical", "mechanical", "crafting"],
+      "statusEffects": [
+        { "type": "disorient", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A noisy, unpredictable contraption darts toward the target, striking them and causing brief disorientation."
+    }
+  },
+  "weaver": {
+    "warding_stitch": {
+      "key": "warding_stitch",
+      "name": "Warding Stitch",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 10,
+      "cooldown": 3,
+      "combatTags": ["crafting", "buff", "cloth"],
+      "statusEffects": [
+        { "type": "team_buff_resist", "valuePerTurn": 15, "duration": 2, "stack": "add" }
+      ],
+      "description": "You weave a quick protective pattern into an ally’s garments, enhancing their resistance to incoming damage."
+    },
+    "threadbind": {
+      "key": "threadbind",
+      "name": "Threadbind",
+      "basePower": 0.7,
+      "scalingPerLevel": 0.05,
+      "manaCost": 8,
+      "cooldown": 1,
+      "combatTags": ["magic", "control", "cloth"],
+      "statusEffects": [
+        { "type": "slow", "valuePerTurn": 20, "duration": 2, "stack": "replace" }
+      ],
+      "description": "Enchanted threads lash out and entangle the target, restricting their movement."
+    }
+  }
+}
