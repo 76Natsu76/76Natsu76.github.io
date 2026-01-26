@@ -405,4 +405,4 @@ Almost everything is defined in JSON and resolved by modular JS engines.
  - World modifiers → world-modifiers.js
 
    
-## Welcome to the multiversal canon.
+# Welcome to the multiversal canon.
