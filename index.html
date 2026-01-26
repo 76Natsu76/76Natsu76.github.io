@@ -54,17 +54,7 @@
     async function exchangeCode() {
       log("Exchanging code for token…");
 
-      const res = await fetch("https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLiGgUEYI3rvfOhztxSbtGHT6O_KPcEWMKrvKcuTMEetz0wtiL85fzmpnnpvzKZVutxffEYlqiRjWiusbe4t3DQ6_MaHkGl1fCxBR7EaOugF5kEOrdiE4aU8ev8cPRs_Ce-6PRYith0UA5qFvoeQLra0rwSe5pIXfJQ1wNB3l0ecbofxoYNwkYtg0GEKh3uWlQWNcPJxEgz039rSWcmDtabuYbrVDDAFnS5QjdQtzCEc9liWtBcJhveR3UANgjAySkRP3JVGM-Gx9Wd4TNogRbMxWhOHx1fG-fgFXSqu&lib=M3dMWXKZTwvRutoIlDzpz9fVdZcLuuoRV", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams({
-            code: code,
-            code_verifier: codeVerifier,
-            client_id: CLIENT_ID,
-            redirect_uri: REDIRECT_URI
-          }).toString()   // ⭐ FIXED: force body to be a string
-        }
-      );
+      const WORKER_URL = "https://twitch-rpg-worker.godeaterspersona.workers.dev/";
 
       const json = await res.json();
       log("Token response: " + JSON.stringify(json));
