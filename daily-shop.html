@@ -150,8 +150,8 @@
 
   <script type="module">
     import { loadMerchantFromDOM } from "./js/shop.js";
-    import { promptForToken, startShopCountdown, initUserShopUI } from "./shop-ui.js";
-
+    import { initUserShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
+    
     const username = sessionStorage.getItem("twitch_username");
     document.getElementById("usernameDisplay").textContent =
       username ? "Logged in as: " + username : "No user logged in";
