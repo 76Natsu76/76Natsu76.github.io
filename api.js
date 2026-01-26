@@ -1,127 +1,78 @@
-// api.js
-// Unified API wrapper for your Google Apps Script backend
-// Fully compatible with combat engine, inventory, character, and use-item pages
+// api.js (GitHub-native)
+// Replaces Apps Script calls with local PlayerStorage operations.
 
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbyqqCpcGmg_k3d4Zo6bmkiYZ3AzMWhjgaKEqYrGz-Ii/exec";
-
-async function apiRequest(payload) {
-  const res = await fetch(
-    `${API_URL}?origin=${encodeURIComponent(location.origin)}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }
-  );
-
-  let json;
-  try {
-    json = await res.json();
-  } catch (err) {
-    throw new Error("Invalid JSON response from server");
-  }
-
-  if (json.error) {
-    throw new Error(json.error);
-  }
-
-  return json;
-}
+import { PlayerStorage } from "./player-storage.js";
 
 export const api = {
-  /* ============================================================
-     PLAYER LOADING
-     ============================================================ */
-
-  async getPlayer(userId) {
-    const url =
-      `${API_URL}?cmd=getPlayer&userId=${encodeURIComponent(userId)}&origin=${encodeURIComponent(location.origin)}`;
-
-    const res = await fetch(url);
-    const json = await res.json();
-
-    if (json.error) throw new Error(json.error);
-    return json.player || json;
-  },
-
-  /* ============================================================
-     ITEM USAGE (OUT OF COMBAT)
-     ============================================================ */
-
-  async useItem(userId, itemId) {
-    return await apiRequest({
-      cmd: "useItem",
-      userId,
-      itemId
-    });
-  },
-
-  /* ============================================================
-     ITEM USAGE (IN COMBAT)
-     ============================================================ */
-
-  async useItemInCombat(userId, itemId) {
-    return await apiRequest({
-      cmd: "useItemInCombat",
-      userId,
-      itemId
-    });
-  },
-
-  /* ============================================================
-     EQUIPMENT MANAGEMENT
-     ============================================================ */
-
-  async equipItem(userId, itemId) {
-    return await apiRequest({
-      cmd: "equipItem",
-      userId,
-      itemId
-    });
-  },
-
-  async unequipItem(userId, slot) {
-    return await apiRequest({
-      cmd: "unequipItem",
-      userId,
-      slot
-    });
-  },
-
-  /* ============================================================
-     SAVE / UPDATE PLAYER
-     ============================================================ */
-
-  async savePlayer(userId, data) {
-    return await apiRequest({
-      cmd: "savePlayer",
-      userId,
-      data
-    });
-  },
-
-  async updateField(userId, field, value) {
-    return await apiRequest({
-      cmd: "updateField",
-      userId,
-      field,
-      value
-    });
-  },
-
-  /* ============================================================
-     LOGGING
-     ============================================================ */
-
-  async appendLog(userId, message) {
-    return await apiRequest({
-      cmd: "appendLog",
-      userId,
-      message
-    });
-  }
+  getPlayer,
+  savePlayer,
+  updateField,
+  useItem,
+  equipItem,
+  unequipItem
 };
 
-// Expose globally for browser pages
-window.api = api;
+async function getPlayer(username) {
+  return PlayerStorage.load(username);
+}
+
+async function savePlayer(username, data) {
+  PlayerStorage.save(username, data);
+  return { ok: true };
+}
+
+async function updateField(username, field, value) {
+  PlayerStorage.updateField(username, field, value);
+  return { ok: true };
+}
+
+async function useItem(username, itemId) {
+  const p = PlayerStorage.load(username);
+  const item = p.inventory.find(i => i.id === itemId);
+  if (!item) return { ok: false, error: "Item not found" };
+
+  if (item.type !== "consumable")
+    return { ok: false, error: "Item is not consumable" };
+
+  if (item.restoreHP) {
+    p.hp = Math.min(p.hpMax, p.hp + item.restoreHP);
+  }
+
+  item.quantity -= 1;
+  if (item.quantity <= 0) {
+    p.inventory = p.inventory.filter(i => i.id !== itemId);
+  }
+
+  PlayerStorage.save(username, p);
+  return { ok: true, message: "Item used." };
+}
+
+async function equipItem(username, itemId) {
+  const p = PlayerStorage.load(username);
+  const item = p.inventory.find(i => i.id === itemId);
+  if (!item || !item.slot) return { ok: false, error: "Cannot equip" };
+
+  const slot = item.slot;
+
+  if (p.equipment[slot]) {
+    p.inventory.push(p.equipment[slot]);
+  }
+
+  p.equipment[slot] = item;
+  p.inventory = p.inventory.filter(i => i.id !== itemId);
+
+  PlayerStorage.save(username, p);
+  return { ok: true, message: "Equipped " + item.name };
+}
+
+async function unequipItem(username, slot) {
+  const p = PlayerStorage.load(username);
+  const item = p.equipment[slot];
+  if (!item) return { ok: false, error: "Nothing equipped" };
+
+  p.inventory.push(item);
+  delete p.equipment[slot];
+
+  PlayerStorage.save(username, p);
+  return { ok: true, message: "Unequipped " + item.name };
+}
