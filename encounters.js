@@ -1,15 +1,19 @@
 // encounters.js
 // GitHub‑native Encounter Engine
 // Uses WORLD_DATA (region metadata), BIOMES (biome metadata),
-// and REGION_TO_BIOME (region → biome mapping).
+// REGION_TO_BIOME (region → biome mapping),
+// EnemyRegistry (enemy templates),
+// enemy-regions.json (region restrictions),
+// enemy-tags.json (biome restrictions).
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
+import enemyRegions from "./enemy-regions.json" assert { type: "json" };
+import enemyTags from "./enemy-tags.json" assert { type: "json" };
 
-
-// Expose public API
+// Public API
 export const EncounterEngine = {
   generate,
   loadFromSession,
@@ -28,51 +32,41 @@ function generate(regionKey, username, enemyOverride = null) {
   const biome = BIOMES[biomeKey];
   if (!biome) throw new Error(`Biome not found: ${biomeKey}`);
 
-  // ------------------------------------------------------------
   // WEATHER
-  // Region weather overrides biome weather if present
   const weatherPool = region.weatherPool?.length
     ? region.weatherPool
     : biome.weatherPool || [];
-
   const weather = pickFromArray(weatherPool);
 
-  // ------------------------------------------------------------
   // EVENTS
   const eventPool = region.eventPool || [];
   const event = pickFromArray(eventPool);
 
-  // ------------------------------------------------------------
   // HAZARDS (biome-level)
   const hazardPool = biome.hazards || [];
   const hazard = pickHazard(hazardPool);
 
-  // ------------------------------------------------------------
   // VARIANTS (region-level)
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
 
-  // ------------------------------------------------------------
   // RARITY (region-level)
   const rarity = pickWeighted(region.rarityWeights);
 
-  // ------------------------------------------------------------
-  // ENEMY FAMILY (biome-level)
+  // FAMILY (biome-level)
   const family = pickWeightedObject(biome.encounterWeights);
 
-  // ------------------------------------------------------------
   // PICK ENEMY TEMPLATE
   const template = enemyOverride
-    ? ENEMY_TEMPLATES[enemyOverride]
-    : pickEnemyTemplate(family, rarity);
+    ? EnemyRegistry.buildEnemyTemplate(enemyOverride)
+    : pickEnemyTemplate(regionKey, biomeKey, family, rarity);
 
   if (!template) {
     throw new Error(
-      `No enemy template found for family=${family}, rarity=${rarity}`
+      `No enemy template found for family=${family}, rarity=${rarity}, region=${regionKey}, biome=${biomeKey}`
     );
   }
 
-  // ------------------------------------------------------------
   // BUILD ENEMY INSTANCE
   const enemy = buildEnemyInstance(
     template,
@@ -85,7 +79,6 @@ function generate(regionKey, username, enemyOverride = null) {
     variant
   );
 
-  // ------------------------------------------------------------
   // FINAL ENCOUNTER OBJECT
   const encounter = {
     region: regionKey,
@@ -108,9 +101,7 @@ function generate(regionKey, username, enemyOverride = null) {
     }
   };
 
-  // Save to sessionStorage
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
-
   return encounter;
 }
 
@@ -124,6 +115,119 @@ function loadFromSession() {
 
 function clear() {
   sessionStorage.removeItem("currentEncounter");
+}
+
+// ------------------------------------------------------------
+// ENEMY TEMPLATE PICKER (Logic D)
+// ------------------------------------------------------------
+function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
+  const all = EnemyRegistry.enemies || [];
+
+  // STEP 1 — strict filter: family + rarity + region + biome
+  let candidates = all.filter(e =>
+    e.family === family &&
+    e.rarity.toLowerCase() === rarity.toLowerCase() &&
+    isEnemyAllowedInRegion(e.key, regionKey) &&
+    isEnemyAllowedInBiome(e.key, biomeKey)
+  );
+
+  if (candidates.length) return chooseTemplate(candidates);
+
+  // STEP 2 — fallback: family + rarity + biome
+  candidates = all.filter(e =>
+    e.family === family &&
+    e.rarity.toLowerCase() === rarity.toLowerCase() &&
+    isEnemyAllowedInBiome(e.key, biomeKey)
+  );
+
+  if (candidates.length) return chooseTemplate(candidates);
+
+  // STEP 3 — fallback: family + rarity
+  candidates = all.filter(e =>
+    e.family === family &&
+    e.rarity.toLowerCase() === rarity.toLowerCase()
+  );
+
+  if (candidates.length) return chooseTemplate(candidates);
+
+  // STEP 4 — fallback: rarity only
+  candidates = all.filter(e =>
+    e.rarity.toLowerCase() === rarity.toLowerCase()
+  );
+
+  if (candidates.length) return chooseTemplate(candidates);
+
+  // STEP 5 — fallback: any enemy in level range
+  candidates = all.filter(e =>
+    e.level >= WORLD_DATA.regions[regionKey].levelRange[0] &&
+    e.level <= WORLD_DATA.regions[regionKey].levelRange[1]
+  );
+
+  if (candidates.length) return chooseTemplate(candidates);
+
+  // STEP 6 — absolute fallback: any enemy
+  return chooseTemplate(all);
+}
+
+function chooseTemplate(list) {
+  const chosen = list[Math.floor(Math.random() * list.length)];
+  return EnemyRegistry.buildEnemyTemplate(chosen.key);
+}
+
+// ------------------------------------------------------------
+// REGION + BIOME RESTRICTION HELPERS
+// ------------------------------------------------------------
+function isEnemyAllowedInRegion(enemyKey, regionKey) {
+  const allowed = enemyRegions[enemyKey];
+  if (!allowed) return true; // no restriction
+  return allowed.includes(regionKey);
+}
+
+function isEnemyAllowedInBiome(enemyKey, biomeKey) {
+  const tags = enemyTags[enemyKey];
+  if (!tags) return true; // no restriction
+
+  // Example: "ice" tag → only ice biomes
+  if (tags.includes("ice")) {
+    return (
+      biomeKey === "tundra" ||
+      biomeKey === "frozen-expanse" ||
+      biomeKey === "crystalline-tundra"
+    );
+  }
+
+  if (tags.includes("fire")) {
+    return (
+      biomeKey === "volcano" ||
+      biomeKey === "molten-crest" ||
+      biomeKey === "magma"
+    );
+  }
+
+  if (tags.includes("void")) {
+    return (
+      biomeKey === "void" ||
+      biomeKey === "void-wastes" ||
+      biomeKey === "void-realm"
+    );
+  }
+
+  if (tags.includes("arcane")) {
+    return (
+      biomeKey === "arcane" ||
+      biomeKey === "arcane-rift"
+    );
+  }
+
+  if (tags.includes("astral")) {
+    return (
+      biomeKey === "astral-plane" ||
+      biomeKey === "astral-nexus"
+    );
+  }
+
+  // Default: allowed everywhere
+  return true;
 }
 
 // ------------------------------------------------------------
@@ -274,20 +378,6 @@ function pickWeightedObject(obj) {
   return entries[entries.length - 1][0];
 }
 
-function pickEnemyTemplate(family, rarity) {
-  const all = EnemyRegistry.enemies || [];
-
-  const candidates = all.filter(e =>
-    e.family === family &&
-    e.rarity.toLowerCase() === rarity.toLowerCase()
-  );
-
-  if (!candidates.length) return null;
-
-  const chosen = candidates[Math.floor(Math.random() * candidates.length)];
-  return EnemyRegistry.buildEnemyTemplate(chosen.key);
-}
-
 function rollLevel([min, max]) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -307,8 +397,7 @@ function rarityScaling(rarity) {
 }
 
 // ------------------------------------------------------------
-// WEATHER / EVENT / HAZARD / VARIANT MODIFIERS
-// (You can expand these as needed)
+// MODIFIER TABLES (expand as needed)
 // ------------------------------------------------------------
 const WEATHER_MODIFIERS = {
   rain: { icon: "rain.png", text: "Rain: +10% lightning damage" },
