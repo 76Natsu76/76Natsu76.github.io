@@ -1,0 +1,41 @@
+{
+  "draugr_the_dwarf": {
+    "type": "blacksmith",
+    "personality": "dwarven_smith",
+    "minItems": 4,
+    "maxItems": 6,
+    "guaranteed": ["iron_ingot", "steel_ingot"],
+    "overrides": ["reinforced_plate"],
+    "banned": []
+  },
+
+  "ellion_the_long_ear": {
+    "type": "nature_merchant",
+    "personality": "elven_naturalist",
+    "minItems": 4,
+    "maxItems": 6,
+    "guaranteed": ["fresh_herbs", "moonfruit"],
+    "overrides": [],
+    "banned": []
+  },
+
+  "silas_the_shade": {
+    "type": "shady_dealer",
+    "personality": "shady_operator",
+    "minItems": 2,
+    "maxItems": 4,
+    "guaranteed": ["shadow_plate"],
+    "overrides": ["abyssal_scale"],
+    "banned": ["radiant_blessing_seal"]
+  },
+
+  "marwyn_the_wanderer": {
+    "type": "traveling_merchant",
+    "personality": "wandering_scholar",
+    "minItems": 5,
+    "maxItems": 7,
+    "guaranteed": ["quartz_shard"],
+    "overrides": ["glyph_of_precision"],
+    "banned": []
+  }
+}
