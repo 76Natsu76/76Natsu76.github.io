@@ -1,79 +1,52 @@
-// merchant-inventory-store.js
+// /js/merchant-inventory-store.js
 
-import fs from 'fs';
-import path from 'path';
-import { generateMerchantInventory } from './merchant-resolver.js';
+import { initMerchantData, generateMerchantInventorySync } from './merchant-resolver.js';
 
-const STORE_PATH = path.resolve('./merchant-inventory.json');
+const STORAGE_KEY = 'merchant_inventory_v1';
 
-/**
- * Load the current merchant inventory store from disk.
- */
 function loadStore() {
   try {
-    const raw = fs.readFileSync(STORE_PATH, 'utf8');
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
     return JSON.parse(raw);
-  } catch (err) {
-    return {}; // empty store
+  } catch {
+    return {};
   }
 }
 
-/**
- * Save the store back to disk.
- */
 function saveStore(store) {
-  fs.writeFileSync(STORE_PATH, JSON.stringify(store, null, 2), 'utf8');
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
 }
 
-/**
- * Get inventory for a merchant.
- * If expired or missing, regenerate.
- */
-export function getMerchantInventory(merchantId, options = {}) {
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+}
+
+export async function getMerchantInventory(merchantId, options = {}) {
+  await initMerchantData();
+
   const store = loadStore();
-  const now = Date.now();
+  const todayKey = getTodayKey();
 
   const entry = store[merchantId];
 
-  const refreshInterval = options.refreshInterval ?? 24 * 60 * 60 * 1000; // default: 24h
-
   const needsRefresh =
     !entry ||
-    !entry.timestamp ||
-    now - entry.timestamp > refreshInterval ||
+    entry.day !== todayKey ||
     options.forceRefresh;
 
   if (needsRefresh) {
-    const newInventory = generateMerchantInventory(merchantId, options);
+    const generated = generateMerchantInventorySync(merchantId, options);
 
     store[merchantId] = {
-      timestamp: now,
-      inventory: newInventory.items
+      day: todayKey,
+      inventory: generated.items
     };
 
     saveStore(store);
-
     return store[merchantId];
   }
 
   return entry;
-}
-
-/**
- * Force-refresh all merchants.
- */
-export function refreshAllMerchants(options = {}) {
-  const store = loadStore();
-  const now = Date.now();
-
-  for (const merchantId of Object.keys(store)) {
-    const newInventory = generateMerchantInventory(merchantId, options);
-    store[merchantId] = {
-      timestamp: now,
-      inventory: newInventory.items
-    };
-  }
-
-  saveStore(store);
-  return store;
 }
