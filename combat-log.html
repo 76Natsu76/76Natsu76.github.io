@@ -95,30 +95,27 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
-    /* ============================================================
-       LOAD LOGS
-       ============================================================ */
     async function loadLogs() {
       const container = document.getElementById("logContainer");
+  
+      if (!username) {
+        container.textContent = "Error: No username found.";
+        return;
+      }
   
       container.textContent = "Loading combat logs...";
   
       try {
-        const logs = await api.getCombatLogs(token);
+        const logs = await api.getCombatLogs(username);
         renderLogs(logs);
       } catch (err) {
         container.textContent = "Network error: " + err.message;
       }
     }
   
-    /* ============================================================
-       RENDER LOGS
-       ============================================================ */
     function renderLogs(logs) {
       const container = document.getElementById("logContainer");
   
@@ -138,12 +135,13 @@
             format(log.enemyKey),
             log.enemyVariant ? `(${format(log.enemyVariant)})` : "",
             `— ${log.outcome}`
-          ].join(" ").replace(/\s+/g, " ");
+          ]
+            .join(" ")
+            .replace(/\s+/g, " ");
   
-          const lootText =
-            log.rewards?.loot?.length
-              ? log.rewards.loot.map(l => `${l.quantity}x ${l.name}`).join(", ")
-              : "None";
+          const lootText = log.rewards?.loot?.length
+            ? log.rewards.loot.map(l => `${l.quantity}x ${l.name}`).join(", ")
+            : "None";
   
           const body = [
             `Outcome: ${log.outcome}`,
@@ -177,9 +175,6 @@
         .join("");
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
     function toggleBody(i) {
       const el = document.getElementById(`body-${i}`);
       el.style.display = el.style.display === "block" ? "none" : "block";
@@ -190,8 +185,10 @@
   
       switch (entry.type) {
         case "attack":
-          return `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg` +
-                 (entry.crit ? " (CRIT!)" : "");
+          return (
+            `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg` +
+            (entry.crit ? " (CRIT!)" : "")
+          );
         case "block":
           return `${entry.target} blocks ${entry.amount} damage`;
         case "ability":
@@ -226,6 +223,7 @@
   
     loadLogs();
   </script>
+
 
 </body>
 </html>
