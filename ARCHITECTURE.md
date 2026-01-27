@@ -367,3 +367,26 @@ DUNGEONS:
                                │
                                ▼
                            EXIT / REWARD
+
+
+GUILDS:
+
+                        PLAYER
+                          │
+                          ▼
+                        JOIN GUILD
+                          │
+                          ▼
+                        GUILD DASHBOARD
+                          │
+                          ├──► Guild Boss
+                          │       │
+                          │       └──► Multi-player Combat Engine
+                          │
+                          ├──► Guild Events
+                          │       └──► Event Resolver
+                          │
+                          ├──► Guild PvP Arena
+                          │       └──► PvP Combat Engine
+                          │
+                          └──► Guild Buffs / Bank / Achievements
