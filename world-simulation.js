@@ -119,6 +119,8 @@ function tick() {
   }
 
   saveState(state);
+  import { WorldBossAnnouncements } from "./world-boss-announcements.js";
+  WorldBossAnnouncements.checkForAnnouncements(state);
   return state;
 }
 
