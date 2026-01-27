@@ -133,3 +133,11 @@ export function detectConflict(local, remote) {
 
   return "match";
 }
+
+export async function autoSync(username) {
+  const p = PlayerStorage.load(username);
+  if (!p) return;
+
+  // Fire-and-forget KV push
+  savePlayerToKV(username, p).catch(() => {});
+}
