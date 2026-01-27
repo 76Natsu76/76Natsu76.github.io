@@ -67,7 +67,7 @@
     logBox.textContent += "\n" + msg;
   }
 
-  window.runMigration = async () => {
+  window.runMigration = async function runMigration() {
     logBox.textContent = "Starting migration...\n";
 
     if (!window.old) {
