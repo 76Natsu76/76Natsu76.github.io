@@ -3,7 +3,7 @@
  ************************************************************/
 
 import { WorldBossEngine } from './world-boss-engine.js';
-import { WORLD_BOSSES } from './world-boss-templates.json';
+import WORLD_BOSSES from './world-boss-templates.json' assert { type: "json"};
 import { getPlayerById } from './player-registry.js';
 
 let currentPlayer = null;
