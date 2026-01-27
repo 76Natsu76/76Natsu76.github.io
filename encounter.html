@@ -131,23 +131,25 @@
   <script src="encounters.js"></script>
   <script src="encounter.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
     const region =
       new URLSearchParams(window.location.search).get("region") ||
       "VERDANT_WILDS";
-
+  
     let encounter = null;
-
+  
     startEncounter();
-
+  
     /* ============================================================
        MAIN FLOW
        ============================================================ */
@@ -155,23 +157,23 @@
       try {
         // GitHub-native encounter engine
         encounter = EncounterEngine.generate(region, username);
-
+  
         // Save for fight-interactive.html
         sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
-
+  
         renderEncounter();
       } catch (err) {
         document.getElementById("encounterPanel").textContent =
           "Encounter error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RENDER ENCOUNTER
        ============================================================ */
     function renderEncounter() {
       const e = encounter.enemy;
-
+  
       let modifiersHTML = "";
       if (e.modifiers?.length) {
         modifiersHTML = `
@@ -191,33 +193,33 @@
           </div>
         `;
       }
-
+  
       document.getElementById("encounterPanel").innerHTML = `
         <div class="portrait-frame portrait-${e.rarity.toLowerCase()}">
           <img class="portrait-img" src="${e.portrait}"
               onerror="this.src='/assets/enemies/default.png'">
         </div>
-
+  
         <h2 style="text-align:center; margin-top:12px;">
           ${format(e.name)} (Lv ${e.level})
         </h2>
-
+  
         <div style="text-align:center; opacity:0.8;">
           Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(e.rarity)}</span>
         </div>
-
+  
         <div style="margin-top:10px; opacity:0.8; text-align:center;">
           ${e.flavor || ""}
         </div>
-
+  
         ${modifiersHTML}
-
+  
         <button class="btn" onclick="inspect()">Inspect</button>
         <button class="btn primary" onclick="fight()">Fight</button>
         <button class="btn" onclick="goToMap()">Flee</button>
       `;
     }
-
+  
     /* ============================================================
        BUTTON ACTIONS
        ============================================================ */
@@ -229,15 +231,15 @@
         (e.flavor || "")
       );
     }
-
+  
     function fight() {
       window.location.href = "fight-interactive.html";
     }
-
+  
     function goToMap() {
       window.location.href = "world-map.html";
     }
-
+  
     /* ============================================================
        HELPERS
        ============================================================ */
@@ -248,6 +250,5 @@
         .replace(/\b\w/g, (c) => c.toUpperCase());
     }
   </script>
-
 </body>
 </html>
