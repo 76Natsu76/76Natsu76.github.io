@@ -1,0 +1,138 @@
+/************************************************************
+ * arena.css — Styling for arena.html
+ ************************************************************/
+
+body {
+  background: #0d0d0d;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#arena-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 0 14px rgba(0,0,0,0.6);
+}
+
+h1, h2, h3 {
+  color: #ffcc66;
+  margin-bottom: 10px;
+}
+
+#arena-menu {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#arena-menu button {
+  padding: 10px 16px;
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #ffcc66;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#arena-menu button:hover {
+  background: #3a3a3a;
+}
+
+#arena-content {
+  margin-top: 20px;
+  padding: 15px;
+  background: #222;
+  border-radius: 6px;
+}
+
+/************************************************************
+ * Buttons
+ ************************************************************/
+button {
+  padding: 8px 14px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #ffcc66;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #444;
+}
+
+/************************************************************
+ * Leaderboards
+ ************************************************************/
+.arena-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.arena-table th, .arena-table td {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.arena-table th {
+  background: #333;
+  color: #ffcc66;
+}
+
+.arena-table tr:hover {
+  background: #2a2a2a;
+}
+
+/************************************************************
+ * Match History
+ ************************************************************/
+.history-list {
+  list-style: none;
+  padding: 0;
+}
+
+.history-list li {
+  padding: 8px;
+  border-bottom: 1px solid #444;
+}
+
+.history-list li:hover {
+  background: #2a2a2a;
+}
+
+/************************************************************
+ * Mode Buttons
+ ************************************************************/
+.mode-button {
+  display: inline-block;
+  margin: 6px 0;
+  padding: 10px 16px;
+  background: #262626;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #ffcc66;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mode-button:hover {
+  background: #333;
+}
+
+/************************************************************
+ * Rating Highlight
+ ************************************************************/
+.rating-highlight {
+  color: #ffd86b;
+  font-weight: bold;
+  font-size: 1.2em;
+}
