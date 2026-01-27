@@ -880,431 +880,485 @@
         TURN-BASED COMBAT WIRING
   ============================= -->
   <script type="module">
-    import { requireSession } from "./session-guard.js";
-    const session = requireSession();
-    if (!session) return;
-    
-    import { startCombat, runCombatRound } from "./combat-flow.js";
-    
-    const username = session.username;
-    document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-    
-    const logBox = document.getElementById("combatLog");
-    const actionPanel = document.getElementById("actionPanel");
-    const abilityPanel = document.getElementById("abilityPanel");
-    const itemModal = document.getElementById("itemModal");
-    
-    let combat = null;
-    let autoBattle = false;
-    
-    /* ============================================================
-       BASIC LOGGING
-    ============================================================ */
-    function addLog(line) {
-      const div = document.createElement("div");
-      div.innerHTML = formatLog(line);
-      logBox.appendChild(div);
-      logBox.scrollTop = logBox.scrollHeight;
+  import { requireSession } from "./session-guard.js";
+  import { EncounterEngine } from "./encounters.js";
+  import { api, loadFromKVAndLocal, detectConflict } from "./api.js";
+  import { PlayerStorage } from "./player-storage.js";
+  import { startCombat, runCombatRound } from "./combat-flow.js";
+
+  /* ============================================================
+     SESSION + LOAD PLAYER + LOAD ENCOUNTER
+  ============================================================ */
+
+  await requireSession();
+
+  const { local, remote, conflict, username } = window.syncState;
+
+  document.getElementById("usernameDisplay").textContent =
+    "Logged in as: " + username;
+
+  // Choose player version
+  let player = null;
+  if (conflict === "remote-only") player = remote;
+  else if (conflict === "local-only") player = local;
+  else if (conflict === "match") player = local || remote;
+  else if (conflict === "conflict") player = remote || local;
+  else player = local || remote;
+
+  if (!player) {
+    alert("No player data found.");
+    window.location.href = "world-map.html";
+  }
+
+  // Cache locally for combat-flow
+  PlayerStorage.save(username, player);
+
+  // Load encounter from session
+  const encounter = EncounterEngine.loadFromSession();
+  if (!encounter) {
+    alert("No encounter found. Returning to map.");
+    window.location.href = "world-map.html";
+  }
+
+  /* ============================================================
+     COMBAT STATE
+  ============================================================ */
+
+  let combat = null;
+  let autoBattle = false;
+
+  const logBox = document.getElementById("combatLog");
+  const actionPanel = document.getElementById("actionPanel");
+  const abilityPanel = document.getElementById("abilityPanel");
+  const itemModal = document.getElementById("itemModal");
+
+  /* ============================================================
+     LOGGING
+  ============================================================ */
+
+  function addLog(line) {
+    const div = document.createElement("div");
+    div.innerHTML = formatLog(line);
+    logBox.appendChild(div);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  function renderLogs(logs) {
+    for (const line of logs) addLog(line);
+  }
+
+  /* ============================================================
+     HUD RENDERING
+  ============================================================ */
+
+  function renderPanels() {
+    if (!combat) return;
+    renderPlayerPanel(combat.playerState);
+    renderEnemyPanel(combat.enemyState);
+  }
+
+  function renderPlayerPanel(p) {
+    if (!p) return;
+
+    document.getElementById("playerName").textContent = p.name || "Player";
+    document.getElementById("playerLevel").textContent = "Lv " + (p.level || 1);
+
+    updateHPBar("playerHpFill", "playerHpText", p.hpCurrent, p.hpMax);
+    updateManaBar("playerManaFill", "playerManaText", p.manaCurrent, p.manaMax);
+    updateUltimateBar(p);
+  }
+
+  function renderEnemyPanel(e) {
+    if (!e) return;
+
+    document.getElementById("enemyName").textContent = e.name || "Enemy";
+    document.getElementById("enemyLevel").textContent = "Lv " + (e.level || 1);
+
+    updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
+    updateManaBar("enemyManaFill", "enemyManaText", e.manaCurrent || 0, e.manaMax || 0);
+  }
+
+  function updateHPBar(fillId, textId, current, max) {
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
+
+    current = current || 0;
+    max = max || 1;
+
+    const pct = Math.max(0, Math.min(100, (current / max) * 100));
+
+    if (fill) fill.style.width = pct + "%";
+    if (text) text.textContent = `HP ${current} / ${max}`;
+  }
+
+  function updateManaBar(fillId, textId, current, max) {
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
+
+    current = current || 0;
+    max = max || 0;
+
+    const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
+
+    if (fill) fill.style.width = pct + "%";
+    if (text) text.textContent = `MP ${current} / ${max}`;
+  }
+
+  function updateUltimateBar(playerState) {
+    const fill = document.getElementById("playerUltFill");
+    const text = document.getElementById("playerUltText");
+
+    const charge = playerState.ultimateCharge || 0;
+    const required = playerState.ultimateChargeRequired || 100;
+
+    const pct = Math.max(0, Math.min(100, (charge / required) * 100));
+
+    if (fill) fill.style.width = pct + "%";
+    if (text) text.textContent = `ULT ${Math.round(pct)}%`;
+  }
+
+  /* ============================================================
+     START FIGHT
+  ============================================================ */
+
+  async function beginFight() {
+    logBox.innerHTML = "";
+
+    combat = startCombat(username, encounter.region);
+
+    renderLogs(combat.logs);
+    renderPanels();
+
+    if (combat.outcome) {
+      addLog("Combat ended immediately: " + combat.outcome);
+      endCombat(combat.outcome);
+      return;
     }
-    
-    function renderLogs(logs) {
-      for (const line of logs) addLog(line);
+
+    showCinematicIntro(combat.enemyState);
+    showActionPanel();
+  }
+
+  /* ============================================================
+     RUN ROUND
+  ============================================================ */
+
+  async function runRound(playerAction) {
+    hideActionPanel();
+
+    const result = runCombatRound(combat, playerAction);
+
+    combat.playerState = result.playerState;
+    combat.enemyState = result.enemyState;
+    combat.context = result.context;
+
+    renderLogs(result.logs);
+    renderPanels();
+
+    if (result.outcome) {
+      addLog("Combat ended: " + result.outcome.toUpperCase());
+      await finalizeRewards(result.outcome);
+      endCombat(result.outcome);
+      return;
     }
-    
-    /* ============================================================
-       HUD RENDERING
-    ============================================================ */
-    function renderPanels() {
-      if (!combat) return;
-      renderPlayerPanel(combat.playerState);
-      renderEnemyPanel(combat.enemyState);
-    }
-    
-    function renderPlayerPanel(p) {
-      if (!p) return;
-    
-      document.getElementById("playerName").textContent = p.name || "Player";
-      document.getElementById("playerLevel").textContent = "Lv " + (p.level || 1);
-    
-      updateHPBar("playerHpFill", "playerHpText", p.hpCurrent, p.hpMax);
-      updateManaBar("playerManaFill", "playerManaText", p.manaCurrent, p.manaMax);
-      updateUltimateBar(p);
-    }
-    
-    function renderEnemyPanel(e) {
-      if (!e) return;
-    
-      document.getElementById("enemyName").textContent = e.name || "Enemy";
-      document.getElementById("enemyLevel").textContent = "Lv " + (e.level || 1);
-    
-      updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
-      updateManaBar("enemyManaFill", "enemyManaText", e.manaCurrent || 0, e.manaMax || 0);
-    }
-    
-    function updateHPBar(fillId, textId, current, max) {
-      const fill = document.getElementById(fillId);
-      const text = document.getElementById(textId);
-    
-      current = current || 0;
-      max = max || 1;
-    
-      const pct = Math.max(0, Math.min(100, (current / max) * 100));
-    
-      if (fill) fill.style.width = pct + "%";
-      if (text) text.textContent = `HP ${current} / ${max}`;
-    }
-    
-    function updateManaBar(fillId, textId, current, max) {
-      const fill = document.getElementById(fillId);
-      const text = document.getElementById(textId);
-    
-      current = current || 0;
-      max = max || 0;
-    
-      const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
-    
-      if (fill) fill.style.width = pct + "%";
-      if (text) text.textContent = `MP ${current} / ${max}`;
-    }
-    
-    function updateUltimateBar(playerState) {
-      const fill = document.getElementById("playerUltFill");
-      const text = document.getElementById("playerUltText");
-    
-      const charge = playerState.ultimateCharge || 0;
-      const required = playerState.ultimateChargeRequired || 100;
-    
-      const pct = Math.max(0, Math.min(100, (charge / required) * 100));
-    
-      if (fill) fill.style.width = pct + "%";
-      if (text) text.textContent = `ULT ${Math.round(pct)}%`;
-    }
-    
-    /* ============================================================
-       START FIGHT / ROUND FLOW
-    ============================================================ */
-    async function beginFight() {
-      logBox.innerHTML = "";
-    
-      const rawPlayer = JSON.parse(localStorage.getItem("playerData"));
-      if (!rawPlayer) {
-        addLog("No player loaded.");
-        return;
-      }
-    
-      const regionKey = document.getElementById("regionSelect").value;
-    
-      combat = startCombat(rawPlayer.username, regionKey);
-    
-      renderLogs(combat.logs);
-      renderPanels();
-    
-      if (combat.outcome) {
-        addLog("Combat ended immediately: " + combat.outcome);
-        endCombat(combat.outcome);
-        return;
-      }
-    
-      showCinematicIntro(combat.enemyState);
+
+    if (autoBattle) {
+      autoLoop();
+    } else {
       showActionPanel();
     }
-    
-    async function runRound(playerAction) {
-      hideActionPanel();
-    
-      const result = runCombatRound(combat, playerAction);
-    
-      combat.playerState = result.playerState;
-      combat.enemyState = result.enemyState;
-      combat.context = result.context;
-    
-      renderLogs(result.logs);
-      renderPanels();
-    
-      if (result.outcome) {
-        addLog("Combat ended: " + result.outcome.toUpperCase());
-        endCombat(result.outcome);
-        return;
-      }
-    
-      if (autoBattle) {
-        autoLoop();
-      } else {
-        showActionPanel();
-      }
+  }
+
+  /* ============================================================
+     FINALIZE REWARDS (KV + LOCAL SAVE)
+  ============================================================ */
+
+  async function finalizeRewards(outcome) {
+    if (outcome !== "victory") return;
+
+    const p = PlayerStorage.load(username);
+    if (!p) return;
+
+    // Example reward logic — expand later
+    p.xp = (p.xp || 0) + 10;
+    p.gold = (p.gold || 0) + 5;
+
+    PlayerStorage.save(username, p);
+    await api.savePlayer(username, p); // auto-sync included
+  }
+
+  /* ============================================================
+     PLAYER ACTIONS
+  ============================================================ */
+
+  async function chooseBasicAttack() {
+    await runRound({ type: "basic" });
+  }
+
+  async function chooseAbility(key) {
+    closeAbilityMenu();
+    await runRound({ type: "ability", key });
+  }
+
+  async function chooseUltimate() {
+    const p = combat.playerState;
+    if ((p.ultimateCharge || 0) < (p.ultimateChargeRequired || 100)) {
+      addLog("Ultimate not ready!");
+      return;
     }
-    
-    /* ============================================================
-       PLAYER ACTIONS
-    ============================================================ */
-    async function chooseBasicAttack() {
-      await runRound({ type: "basic" });
+    await runRound({ type: "ultimate" });
+  }
+
+  async function chooseItem(itemId) {
+    closeItemModal();
+    await runRound({ type: "item", itemId });
+  }
+
+  async function chooseFlee() {
+    await runRound({ type: "flee" });
+  }
+
+  /* ============================================================
+     AUTO-BATTLE
+  ============================================================ */
+
+  async function toggleAutoBattle() {
+    autoBattle = !autoBattle;
+    addLog("Auto-battle: " + (autoBattle ? "ON" : "OFF"));
+    if (autoBattle) autoLoop();
+  }
+
+  async function autoLoop() {
+    if (!autoBattle) return;
+    const action = pickAutoAction(combat.playerState);
+    await runRound(action);
+  }
+
+  function pickAutoAction() {
+    return { type: "basic" };
+  }
+
+  /* ============================================================
+     ITEM SYSTEM
+  ============================================================ */
+
+  function openItemModal() {
+    itemModal.classList.remove("hidden");
+    loadCombatItems();
+  }
+
+  function closeItemModal() {
+    itemModal.classList.add("hidden");
+  }
+
+  function loadCombatItems() {
+    const list = document.getElementById("itemList");
+    list.innerHTML = "";
+
+    const inv = combat.playerState.inventory || [];
+
+    if (!inv.length) {
+      list.innerHTML = "<div>No usable items.</div>";
+      return;
     }
-    
-    async function chooseAbility(key) {
-      closeAbilityMenu();
-      await runRound({ type: "ability", key });
+
+    inv.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "btn item-btn";
+      btn.textContent = `${item.name} (${item.qty})`;
+      btn.onclick = () => chooseItem(item.id);
+      list.appendChild(btn);
+    });
+  }
+
+  /* ============================================================
+     ABILITY MENU
+  ============================================================ */
+
+  function openAbilityMenu() {
+    const list = document.getElementById("abilityList");
+    list.innerHTML = "";
+
+    const abilities = combat.playerState.abilities || [];
+
+    abilities.forEach(a => {
+      const btn = document.createElement("button");
+      btn.className = "btn ability-btn";
+      btn.textContent = a.name;
+      btn.onclick = () => chooseAbility(a.key);
+      list.appendChild(btn);
+    });
+
+    abilityPanel.style.display = "block";
+  }
+
+  function closeAbilityMenu() {
+    abilityPanel.style.display = "none";
+  }
+
+  /* ============================================================
+     VFX
+  ============================================================ */
+
+  function screenShake(intensity = 5, duration = 150) {
+    const root = document.body;
+    root.classList.add("screen-shake");
+    setTimeout(() => root.classList.remove("screen-shake"), duration);
+  }
+
+  function critFlash() {
+    logBox.classList.add("crit-flash");
+    setTimeout(() => logBox.classList.remove("crit-flash"), 200);
+  }
+
+  function elementalPulse(element) {
+    const hud = document.getElementById("combatHud");
+    hud.classList.add(`pulse-${element}`);
+    setTimeout(() => hud.classList.remove(`pulse-${element}`), 300);
+  }
+
+  function applyVFX(event) {
+    if (!event || !event.type) return;
+
+    switch (event.type) {
+      case "crit":
+        critFlash();
+        break;
+      case "big_hit":
+        screenShake();
+        break;
+      case "elemental_hit":
+        if (event.payload?.element) elementalPulse(event.payload.element);
+        break;
     }
-    
-    async function chooseUltimate() {
-      const p = combat.playerState;
-      if ((p.ultimateCharge || 0) < (p.ultimateChargeRequired || 100)) {
-        addLog("Ultimate not ready!");
-        return;
-      }
-      await runRound({ type: "ultimate" });
-    }
-    
-    async function chooseItem(itemId) {
-      closeItemModal();
-      await runRound({ type: "item", itemId });
-    }
-    
-    async function chooseFlee() {
-      await runRound({ type: "flee" });
-    }
-    
-    async function toggleAutoBattle() {
-      autoBattle = !autoBattle;
-      addLog("Auto-battle: " + (autoBattle ? "ON" : "OFF"));
-      if (autoBattle) autoLoop();
-    }
-    
-    async function autoLoop() {
-      if (!autoBattle) return;
-      const action = pickAutoAction(combat.playerState);
-      await runRound(action);
-    }
-    
-    function pickAutoAction() {
-      return { type: "basic" };
-    }
-    
-    /* ============================================================
-       ITEM SYSTEM
-    ============================================================ */
-    function openItemModal() {
-      itemModal.classList.remove("hidden");
-      loadCombatItems();
-    }
-    
-    function closeItemModal() {
-      itemModal.classList.add("hidden");
-    }
-    
-    function loadCombatItems() {
-      const list = document.getElementById("itemList");
-      list.innerHTML = "";
-    
-      const inv = combat.playerState.inventory || [];
-    
-      if (!inv.length) {
-        list.innerHTML = "<div>No usable items.</div>";
-        return;
-      }
-    
-      inv.forEach(item => {
-        const btn = document.createElement("button");
-        btn.className = "btn item-btn";
-        btn.textContent = `${item.name} (${item.qty})`;
-        btn.onclick = () => chooseItem(item.id);
-        list.appendChild(btn);
-      });
-    }
-    
-    /* ============================================================
-       ABILITY MENU
-    ============================================================ */
-    function openAbilityMenu() {
-      const list = document.getElementById("abilityList");
-      list.innerHTML = "";
-    
-      const abilities = combat.playerState.abilities || [];
-    
-      abilities.forEach(a => {
-        const btn = document.createElement("button");
-        btn.className = "btn ability-btn";
-        btn.textContent = a.name;
-        btn.onclick = () => chooseAbility(a.key);
-        list.appendChild(btn);
-      });
-    
-      abilityPanel.style.display = "block";
-    }
-    
-    function closeAbilityMenu() {
-      abilityPanel.style.display = "none";
-    }
-    
-    /* ============================================================
-       VFX
-    ============================================================ */
-    function screenShake(intensity = 5, duration = 150) {
-      const root = document.body;
-      root.classList.add("screen-shake");
-      setTimeout(() => root.classList.remove("screen-shake"), duration);
-    }
-    
-    function critFlash() {
-      logBox.classList.add("crit-flash");
-      setTimeout(() => logBox.classList.remove("crit-flash"), 200);
-    }
-    
-    function elementalPulse(element) {
-      const hud = document.getElementById("combatHud");
-      hud.classList.add(`pulse-${element}`);
-      setTimeout(() => hud.classList.remove(`pulse-${element}`), 300);
-    }
-    
-    function applyVFX(event) {
-      if (!event || !event.type) return;
-    
-      switch (event.type) {
-        case "crit":
-          critFlash();
-          break;
-        case "big_hit":
-          screenShake();
-          break;
-        case "elemental_hit":
-          if (event.payload?.element) elementalPulse(event.payload.element);
-          break;
-      }
-    }
-    
-    /* ============================================================
-       CINEMATIC INTRO
-    ============================================================ */
-    function showCinematicIntro(enemy) {
-      const intro = document.getElementById("cinematicIntro");
-      const name = document.getElementById("cinematicName");
-    
-      name.textContent = enemy.name || "Unknown Foe";
-    
-      intro.style.display = "flex";
+  }
+
+  /* ============================================================
+     CINEMATIC INTRO
+  ============================================================ */
+
+  function showCinematicIntro(enemy) {
+    const intro = document.getElementById("cinematicIntro");
+    const name = document.getElementById("cinematicName");
+
+    name.textContent = enemy.name || "Unknown Foe";
+
+    intro.style.display = "flex";
+    intro.style.opacity = 0;
+
+    setTimeout(() => {
+      intro.style.opacity = 1;
+    }, 50);
+
+    setTimeout(() => {
       intro.style.opacity = 0;
-    
-      setTimeout(() => {
-        intro.style.opacity = 1;
-      }, 50);
-    
-      setTimeout(() => {
-        intro.style.opacity = 0;
-        setTimeout(() => (intro.style.display = "none"), 300);
-      }, 2000);
+      setTimeout(() => (intro.style.display = "none"), 300);
+    }, 2000);
+  }
+
+  /* ============================================================
+     INSPECT ENEMY
+  ============================================================ */
+
+  function inspectEnemy() {
+    const e = combat.enemyState;
+    alert(
+      `${e.name}\n` +
+      `Level: ${e.level}\n` +
+      `HP: ${e.hpCurrent}/${e.hpMax}\n` +
+      `ATK: ${e.atk}\n` +
+      `DEF: ${e.def}\n` +
+      `Element: ${e.element}`
+    );
+  }
+
+  /* ============================================================
+     END COMBAT / REWARDS
+  ============================================================ */
+
+  function endCombat(outcome) {
+    hideActionPanel();
+
+    const rewardPanel = document.createElement("div");
+    rewardPanel.className = "reward-panel";
+
+    let lootHtml = "";
+
+    if (outcome === "victory") {
+      lootHtml = `
+        <h2>Victory!</h2>
+        <p>You defeated ${combat.enemyState.name}!</p>
+        <div class="loot-box">Loot goes here…</div>
+        <button class="btn" onclick="continueExploring()">Continue Exploring</button>
+        <button class="btn" onclick="goToMap()">Return to Map</button>
+      `;
+    } else if (outcome === "defeat") {
+      lootHtml = `
+        <h2>Defeat…</h2>
+        <p>You were defeated by ${combat.enemyState.name}.</p>
+        <button class="btn" onclick="goToMap()">Return to Map</button>
+      `;
+    } else {
+      lootHtml = `
+        <h2>Battle Over</h2>
+        <button class="btn" onclick="goToMap()">Return to Map</button>
+      `;
     }
-    
-    /* ============================================================
-       INSPECT ENEMY
-    ============================================================ */
-    function inspectEnemy() {
-      const e = combat.enemyState;
-      alert(
-        `${e.name}\n` +
-        `Level: ${e.level}\n` +
-        `HP: ${e.hpCurrent}/${e.hpMax}\n` +
-        `ATK: ${e.atk}\n` +
-        `DEF: ${e.def}\n` +
-        `Element: ${e.element}`
-      );
-    }
-    
-    /* ============================================================
-       END COMBAT / REWARDS
-    ============================================================ */
-    function endCombat(outcome) {
-      hideActionPanel();
-    
-      const rewardPanel = document.createElement("div");
-      rewardPanel.className = "reward-panel";
-    
-      let lootHtml = "";
-    
-      if (outcome === "victory") {
-        lootHtml = `
-          <h2>Victory!</h2>
-          <p>You defeated ${combat.enemyState.name}!</p>
-          <div class="loot-box">Loot goes here…</div>
-          <button class="btn" onclick="continueExploring()">Continue Exploring</button>
-          <button class="btn" onclick="goToMap()">Return to Map</button>
-        `;
-      } else if (outcome === "defeat") {
-        lootHtml = `
-          <h2>Defeat…</h2>
-          <p>You were defeated by ${combat.enemyState.name}.</p>
-          <button class="btn" onclick="goToMap()">Return to Map</button>
-        `;
-      } else {
-        lootHtml = `
-          <h2>Battle Over</h2>
-          <button class="btn" onclick="goToMap()">Return to Map</button>
-        `;
-      }
-    
-      rewardPanel.innerHTML = lootHtml;
-      document.body.appendChild(rewardPanel);
-    }
-    
-    function continueExploring() {
-      window.location.href = "world-map.html";
-    }
-    
-    function goToMap() {
-      window.location.href = "world-map.html";
-    }
-    
-    /* ============================================================
-       FORMATTING HELPERS
-    ============================================================ */
-    function format(num) {
-      return Number(num).toLocaleString();
-    }
-    
-    function formatLog(text) {
-      return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    }
-    
-    /* ============================================================
-       ACTION PANEL VISIBILITY
-    ============================================================ */
-    function showActionPanel() {
-      actionPanel.style.display = "block";
-    }
-    
-    function hideActionPanel() {
-      actionPanel.style.display = "none";
-    }
-    
-    /* ============================================================
-       START / RESUME FIGHT
-    ============================================================ */
-    function startNewFight() {
-      beginFight();
-    }
-    
-    function resumeFight() {
-      alert("Resume fight not implemented yet.");
-    }
-    
-    /* ============================================================
-       BUTTON BINDINGS
-    ============================================================ */
-    document.getElementById("startFightBtn").onclick = beginFight;
-    document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
-    document.getElementById("ultimateBtn").onclick = chooseUltimate;
-    document.getElementById("fleeBtn").onclick = chooseFlee;
-    document.getElementById("autoBtn").onclick = toggleAutoBattle;
-    document.getElementById("openItemBtn").onclick = openItemModal;
-    document.getElementById("openAbilitiesBtn").onclick = openAbilityMenu;
-    document.getElementById("inspectEnemyBtn").onclick = inspectEnemy;
-    
-    window.chooseAbility = chooseAbility;
-    window.chooseItem = chooseItem;
-    window.continueExploring = continueExploring;
-    window.goToMap = goToMap;
-    window.startNewFight = startNewFight;
-    window.resumeFight = resumeFight;
-  </script>
+
+    rewardPanel.innerHTML = lootHtml;
+    document.body.appendChild(rewardPanel);
+  }
+
+  function continueExploring() {
+    window.location.href = "world-map.html";
+  }
+
+  function goToMap() {
+    window.location.href = "world-map.html";
+  }
+
+  /* ============================================================
+     HELPERS
+  ============================================================ */
+
+  function format(num) {
+    return Number(num).toLocaleString();
+  }
+
+  function formatLog(text) {
+    return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  }
+
+  /* ============================================================
+     ACTION PANEL VISIBILITY
+  ============================================================ */
+
+  function showActionPanel() {
+    actionPanel.style.display = "block";
+  }
+
+  function hideActionPanel() {
+    actionPanel.style.display = "none";
+  }
+
+  /* ============================================================
+     BUTTON BINDINGS
+  ============================================================ */
+
+  document.getElementById("startFightBtn").onclick = beginFight;
+  document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
+  document.getElementById("ultimateBtn").onclick = chooseUltimate;
+  document.getElementById("fleeBtn").onclick = chooseFlee;
+  document.getElementById("autoBtn").onclick = toggleAutoBattle;
+  document.getElementById("openItemBtn").onclick = openItemModal;
+  document.getElementById("openAbilitiesBtn").onclick = openAbilityMenu;
+  document.getElementById("inspectEnemyBtn").onclick = inspectEnemy;
+
+  window.chooseAbility = chooseAbility;
+  window.chooseItem = chooseItem;
+  window.continueExploring = continueExploring;
+  window.goToMap = goToMap;
+  window.startNewFight = beginFight;
+</script>
 </body>
 </html>
