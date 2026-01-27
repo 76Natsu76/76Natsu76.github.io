@@ -1,0 +1,8 @@
+{
+  "guildUnlocks": {
+    "guildId": {
+      "cavern": true,
+      "ruins": false
+    }
+  }
+}
