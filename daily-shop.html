@@ -152,29 +152,31 @@
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
+  
     import { loadMerchantFromDOM } from "./js/shop.js";
     import { initUserShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
     document.getElementById("setTokenBtn").onclick = promptForToken;
-
+  
     document.getElementById("toggleInventoryBtn").onclick = () => {
       document.getElementById("inventoryPanel").classList.toggle("hidden");
     };
-
+  
     // Load merchant inventory
     await loadMerchantFromDOM();
-
+  
     // Load user inventory + gold
-    initUserShopUI();
-
+    initUserShopUI(token);
+  
     // Daily reset countdown
     startShopCountdown("dailyShopTimer");
-
+  
     function goToMap() { window.location.href = "world-map.html"; }
     function goToInventory() { window.location.href = "inventory.html"; }
   </script>
