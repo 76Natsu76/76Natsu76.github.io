@@ -149,21 +149,16 @@
     if (!session) return;
   
     const admin = session.username;
-    const token = session.token;
-  
     document.getElementById("adminDisplay").textContent =
-      "Admin: " + admin;
+      admin ? "Admin: " + admin : "Not logged in";
   
     function toast(msg) {
       const t = document.getElementById("toast");
       t.textContent = msg;
       t.style.opacity = 1;
-      setTimeout(() => t.style.opacity = 0, 2500);
+      setTimeout(() => (t.style.opacity = 0), 2500);
     }
   
-    /* ============================================================
-       SEARCH
-       ============================================================ */
     async function searchPlayers() {
       const params = {};
   
@@ -182,7 +177,7 @@
       if (prof) params.profession = prof;
   
       try {
-        const list = await api.admin.searchPlayers(token, params);
+        const list = await api.admin.searchPlayers(params);
         renderResults(list);
         toast("Search complete");
       } catch (err) {
@@ -192,9 +187,6 @@
       }
     }
   
-    /* ============================================================
-       RENDER RESULTS
-       ============================================================ */
     function renderResults(list) {
       const container = document.getElementById("resultsContainer");
   
@@ -204,7 +196,8 @@
       }
   
       container.innerHTML = list
-        .map(p => `
+        .map(
+          p => `
           <div class="player-card">
             <strong>${p.username}</strong><br>
             Level ${p.level} — ${format(p.profession)}<br>
@@ -218,13 +211,11 @@
             <a href="combat-log.html?user=${p.username}">Combat Log</a> |
             <a href="purchase-log.html?user=${p.username}">Purchases</a>
           </div>
-        `)
+        `
+        )
         .join("");
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
@@ -236,7 +227,6 @@
       window.location.href = "admin-dashboard.html";
     }
   </script>
-
 
 </body>
 </html>
