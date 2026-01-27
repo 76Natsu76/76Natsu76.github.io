@@ -110,66 +110,61 @@
 
   <script src="api.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
     let player = null;
-
+  
     loadPlayer();
-
+  
     /* ============================================================
        LOAD PLAYER DATA
-    ============================================================ */
-
+       ============================================================ */
     async function loadPlayer() {
       const container = document.getElementById("levelContainer");
-
-      if (!username) {
-        container.textContent = "Error: No Twitch username found.";
-        return;
-      }
-
+  
       try {
-        player = await api.getPlayer(username);
+        player = await api.getPlayer(token);
         renderLevelUI(player);
       } catch (err) {
         container.textContent = "Network error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RENDER LEVEL UI
-    ============================================================ */
-
+       ============================================================ */
     function renderLevelUI(player) {
       const container = document.getElementById("levelContainer");
-
+  
       const xpPercent = player.xpRequired > 0
         ? Math.min(100, Math.floor((player.xp / player.xpRequired) * 100))
         : 0;
-
+  
       container.innerHTML = `
         <div class="section">
           <h2>Level Progress</h2>
-
+  
           <div class="stat-row"><span>Level</span><span>${player.level}</span></div>
           <div class="stat-row"><span>XP</span><span>${player.xp} / ${player.xpRequired}</span></div>
-
+  
           <div class="xp-bar">
             <div class="xp-fill" id="xpFill" style="width:${xpPercent}%"></div>
           </div>
-
+  
           <button class="btn" onclick="attemptLevelUp()">Level Up</button>
-
+  
           <div id="levelupMessage"></div>
         </div>
-
+  
         <div class="section">
           <h2>Stats</h2>
           ${
@@ -182,47 +177,46 @@
         </div>
       `;
     }
-
+  
     /* ============================================================
        ATTEMPT LEVEL UP
-    ============================================================ */
-
+       ============================================================ */
     async function attemptLevelUp() {
       try {
-        const result = await api.levelUp(username);
-
+        const result = await api.levelUp(token);
+  
         const msg = document.getElementById("levelupMessage");
         msg.textContent = result.message || "Level Up!";
         msg.style.display = "block";
-
+  
         await loadPlayer();
-
+  
       } catch (err) {
         const msg = document.getElementById("levelupMessage");
         msg.textContent = "Error: " + err.message;
         msg.style.display = "block";
       }
     }
-
+  
     /* ============================================================
        HELPERS
-    ============================================================ */
-
+       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     function goToCharacter() {
       window.location.href = "character.html";
     }
-
+  
     function goToMap() {
       window.location.href = "world-map.html";
     }
   </script>
+
 
 </body>
 </html>
