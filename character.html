@@ -210,6 +210,11 @@
   <h1>Character</h1>
   <div id="usernameDisplay"></div>
   <div id="syncIndicator">Syncing with server…</div>
+  <div id="conflictModal" style="display:none;">
+    <h3>Cloud and Local Data Differ</h3>
+    <button id="useCloud">Use Cloud Version</button>
+    <button id="useLocal">Use Local Version</button>
+  </div>
 
   <button class="btn" onclick="refreshCharacter()">Refresh</button>
   <button class="btn" onclick="pushToKV()">Push to KV</button>
@@ -221,12 +226,35 @@
 
   <!-- MODULE SCRIPT -->
   <script type="module">
-    import { requireSession } from "./session-guard.js";
     import { api } from "./api.js";
-    import { savePlayerToKV } from "./api.js";
     import { migrateAndSave } from "./migration.js";
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { savePlayerToKV } from "./api.js";
     
+    await requireSession();
+    
+    const { local, remote, conflict, username } = window.syncState;
+    
+    if (conflict === "remote-only") {
+      PlayerStorage.save(username, remote);
+      loadCharacterUI(remote);
+    }
+    
+    else if (conflict === "local-only") {
+      await savePlayerToKV(username, local);
+      loadCharacterUI(local);
+    }
+    
+    else if (conflict === "match") {
+      loadCharacterUI(local); // both are same
+    }
+    
+    else if (conflict === "conflict") {
+      showConflictModal(local, remote);
+    }
 
+    
     window.pushToKV = async () => {
       const p = JSON.parse(localStorage.getItem("player_" + window.username));
       if (!p) {
@@ -261,6 +289,24 @@
        LOAD + REFRESH
     ============================================================ */
     loadCharacter();
+
+    function showConflictModal(local, remote) {
+      const modal = document.getElementById("conflictModal");
+      modal.style.display = "block";
+    
+      document.getElementById("useCloud").onclick = () => {
+        PlayerStorage.save(username, remote);
+        loadCharacterUI(remote);
+        modal.style.display = "none";
+      };
+    
+      document.getElementById("useLocal").onclick = async () => {
+        await savePlayerToKV(username, local);
+        loadCharacterUI(local);
+        modal.style.display = "none";
+      };
+    }
+
 
     async function refreshCharacter() {
       document.getElementById("syncIndicator").textContent = "Syncing with server…";
