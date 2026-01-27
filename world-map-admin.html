@@ -163,29 +163,29 @@
 
   <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
     document.getElementById("adminDisplay").textContent =
       admin ? "Admin: " + admin : "Not logged in";
-
+  
     let regions = [];
     let selectedKey = null;
-
+  
     async function loadMap() {
       const listEl = document.getElementById("regionList");
       listEl.textContent = "Loading regions...";
-
+  
       try {
-        const res = await fetch("/api/admin/world/map", { cache:"no-store" });
+        const res = await fetch("/api/admin/world/map", { cache: "no-store" });
         if (!res.ok) {
           listEl.textContent = "Failed to load regions.";
           return;
         }
-
+  
         const data = await res.json();
         regions = data.regions || [];
         renderRegionList();
@@ -193,53 +193,57 @@
         listEl.textContent = "Network error: " + err.message;
       }
     }
-
+  
     function renderRegionList() {
       const listEl = document.getElementById("regionList");
-
+  
       if (!regions.length) {
         listEl.innerHTML = "<div>No regions defined.</div>";
         return;
       }
-
-      listEl.innerHTML = regions.map(r => `
-        <div class="region-card ${r.key === selectedKey ? "active" : ""}"
-             onclick="selectRegion('${r.key}')">
-          <strong>${format(r.key)}</strong><br>
-          <span class="pill">${format(r.biome || "Unknown Biome")}</span>
-          <span class="pill">Lvl ${r.minLevel ?? "?"}–${r.maxLevel ?? "?"}</span>
-          <span class="pill">${format(r.difficulty || "Normal")}</span>
-        </div>
-      `).join("");
+  
+      listEl.innerHTML = regions
+        .map(
+          (r) => `
+          <div class="region-card ${r.key === selectedKey ? "active" : ""}"
+               onclick="selectRegion('${r.key}')">
+            <strong>${format(r.key)}</strong><br>
+            <span class="pill">${format(r.biome || "Unknown Biome")}</span>
+            <span class="pill">Lvl ${r.minLevel ?? "?"}–${r.maxLevel ?? "?"}</span>
+            <span class="pill">${format(r.difficulty || "Normal")}</span>
+          </div>
+        `
+        )
+        .join("");
     }
-
-    function selectRegion(key) {
+  
+    window.selectRegion = function (key) {
       selectedKey = key;
       renderRegionList();
-
-      const region = regions.find(r => r.key === key);
+  
+      const region = regions.find((r) => r.key === key);
       if (!region) {
         document.getElementById("regionDetails").textContent = "Region not found.";
         return;
       }
-
+  
       renderRegionDetails(region);
-    }
-
+    };
+  
     function renderRegionDetails(r) {
       const details = document.getElementById("regionDetails");
-
+  
       details.innerHTML = `
         <div class="field-row">
           <label>Region Key</label>
           <input id="regionKey" value="${r.key}" disabled>
         </div>
-
+  
         <div class="field-row">
           <label>Display Name</label>
           <input id="regionName" value="${r.name || format(r.key)}">
         </div>
-
+  
         <div class="field-row inline-row">
           <div>
             <label>Biome</label>
@@ -252,7 +256,7 @@
             </select>
           </div>
         </div>
-
+  
         <div class="field-row inline-row">
           <div>
             <label>Min Level</label>
@@ -263,38 +267,42 @@
             <input id="regionMaxLevel" type="number" value="${r.maxLevel ?? 100}">
           </div>
         </div>
-
+  
         <div class="field-row">
           <label>Flavor Text</label>
           <textarea id="regionFlavor" placeholder="Short description shown on world map.">${r.flavorText || ""}</textarea>
         </div>
-
+  
         <div class="field-row">
           <label>Encounter Tags (comma-separated)</label>
           <input id="regionTags" value="${(r.tags || []).join(", ")}" placeholder="e.g. goblin, undead, bandit">
         </div>
-
+  
         <div class="field-row">
           <label>Weather Pattern (optional)</label>
           <input id="regionWeather" value="${r.weatherPattern || ""}" placeholder="e.g. STORMY, CLEAR, FOGGY">
         </div>
-
+  
         <button onclick="saveRegion()">Save Region</button>
       `;
     }
-
+  
     function difficultyOptions(selected) {
       const options = ["EASY", "NORMAL", "HARD", "BRUTAL"];
-      return options.map(o => `
+      return options
+        .map(
+          (o) => `
         <option value="${o}" ${o === (selected || "NORMAL") ? "selected" : ""}>
           ${format(o)}
         </option>
-      `).join("");
+      `
+        )
+        .join("");
     }
-
-    async function saveRegion() {
+  
+    window.saveRegion = async function () {
       if (!selectedKey) return;
-
+  
       const payload = {
         admin,
         key: document.getElementById("regionKey").value,
@@ -304,27 +312,28 @@
         minLevel: Number(document.getElementById("regionMinLevel").value),
         maxLevel: Number(document.getElementById("regionMaxLevel").value),
         flavorText: document.getElementById("regionFlavor").value.trim(),
-        tags: document.getElementById("regionTags").value
-          .split(",")
-          .map(t => t.trim())
+        tags: document
+          .getElementById("regionTags")
+          .value.split(",")
+          .map((t) => t.trim())
           .filter(Boolean),
-        weatherPattern: document.getElementById("regionWeather").value.trim()
+        weatherPattern: document.getElementById("regionWeather").value.trim(),
       };
-
+  
       const status = document.getElementById("statusMessage");
       status.textContent = "Saving...";
-
+  
       try {
         const res = await fetch("/api/admin/world/map/update", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify(payload)
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
-
+  
         const data = await res.json();
         status.textContent = data.message || "Region saved.";
-
-        const idx = regions.findIndex(r => r.key === payload.key);
+  
+        const idx = regions.findIndex((r) => r.key === payload.key);
         if (idx !== -1) {
           regions[idx] = { ...regions[idx], ...payload };
           renderRegionList();
@@ -332,19 +341,17 @@
       } catch (err) {
         status.textContent = "Error saving region: " + err.message;
       }
-    }
-
+    };
+  
     function format(str) {
       return String(str)
         .toLowerCase()
-        .replace(/_/g," ")
-        .replace(/\b\w/g,c=>c.toUpperCase());
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase());
     }
-
-    function goAdmin() {
-      window.location.href = "admin-dashboard.html";
-    }
-
+  
+    window.goAdmin = () => (window.location.href = "admin-dashboard.html");
+  
     loadMap();
   </script>
 
