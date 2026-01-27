@@ -129,7 +129,6 @@
        ============================================================ -->
   <script src="world-data.js"></script>
   <script src="encounters.js"></script>
-  <script src="encounter.js"></script>
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
@@ -137,10 +136,8 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
     const region =
       new URLSearchParams(window.location.search).get("region") ||
@@ -150,17 +147,10 @@
   
     startEncounter();
   
-    /* ============================================================
-       MAIN FLOW
-       ============================================================ */
     function startEncounter() {
       try {
-        // GitHub-native encounter engine
         encounter = EncounterEngine.generate(region, username);
-  
-        // Save for fight-interactive.html
         sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
-  
         renderEncounter();
       } catch (err) {
         document.getElementById("encounterPanel").textContent =
@@ -168,9 +158,6 @@
       }
     }
   
-    /* ============================================================
-       RENDER ENCOUNTER
-       ============================================================ */
     function renderEncounter() {
       const e = encounter.enemy;
   
@@ -181,7 +168,7 @@
             <h3 style="margin-bottom:6px;">Modifiers</h3>
             ${e.modifiers
               .map(
-                (m) => `
+                m => `
               <div class="modifier-row">
                 <img class="modifier-icon" src="/assets/modifiers/${m.icon}"
                     onerror="this.src='/assets/modifiers/default.png'">
@@ -205,7 +192,9 @@
         </h2>
   
         <div style="text-align:center; opacity:0.8;">
-          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(e.rarity)}</span>
+          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(
+            e.rarity
+          )}</span>
         </div>
   
         <div style="margin-top:10px; opacity:0.8; text-align:center;">
@@ -220,15 +209,12 @@
       `;
     }
   
-    /* ============================================================
-       BUTTON ACTIONS
-       ============================================================ */
     function inspect() {
       const e = encounter.enemy;
       alert(
         `${e.name} (Lv ${e.level})\n` +
-        `Rarity: ${e.rarity}\n\n` +
-        (e.flavor || "")
+          `Rarity: ${e.rarity}\n\n` +
+          (e.flavor || "")
       );
     }
   
@@ -240,15 +226,13 @@
       window.location.href = "world-map.html";
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
+        .replace(/\b\w/g, c => c.toUpperCase());
     }
   </script>
+
 </body>
 </html>
