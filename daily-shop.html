@@ -154,13 +154,15 @@
     if (!session) return;
   
     import { loadMerchantFromDOM } from "./js/shop.js";
-    import { initUserShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
+    import {
+      initUserShopUI,
+      promptForToken,
+      startShopCountdown
+    } from "./shop-ui.js";
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
     document.getElementById("setTokenBtn").onclick = promptForToken;
   
@@ -168,17 +170,16 @@
       document.getElementById("inventoryPanel").classList.toggle("hidden");
     };
   
-    // Load merchant inventory
     await loadMerchantFromDOM();
-  
-    // Load user inventory + gold
-    initUserShopUI(token);
-  
-    // Daily reset countdown
+    initUserShopUI();
     startShopCountdown("dailyShopTimer");
   
-    function goToMap() { window.location.href = "world-map.html"; }
-    function goToInventory() { window.location.href = "inventory.html"; }
+    function goToMap() {
+      window.location.href = "world-map.html";
+    }
+    function goToInventory() {
+      window.location.href = "inventory.html";
+    }
   </script>
 
 </body>
