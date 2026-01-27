@@ -880,6 +880,10 @@
         TURN-BASED COMBAT WIRING
   ============================= -->
   <script type="module">
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+    
     import { startCombat, runCombatRound } from "./combat-flow.js";
 
     const logBox = document.getElementById("combatLog");
