@@ -160,6 +160,29 @@ export const ArenaEngine = {
   }
 };
 
+resetSeason() {
+  const season = ARENA_CONFIG.seasons.currentSeason;
+  const cfg = ARENA_CONFIG.seasons.seasonConfig[season];
+
+  const resetTo = cfg.ratingResetTo ?? 1000;
+
+  // Reset all players
+  for (const p of getAllPlayers()) {
+    p.arenaRating = resetTo;
+    savePlayer(p);
+  }
+
+  // Reset all guilds
+  for (const g of Object.values(GUILDS)) {
+    g.pvp.rating = resetTo;
+    g.pvp.wins = 0;
+    g.pvp.losses = 0;
+  }
+
+  // Advance season
+  ARENA_CONFIG.seasons.currentSeason++;
+}
+
 /************************************************************
  * Helpers
  ************************************************************/
