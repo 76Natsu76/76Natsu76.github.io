@@ -6,6 +6,7 @@ import { ARENA_CONFIG } from './arena.json';
 import { GuildEngine } from './guild-engine.js';
 import { getPlayerById, savePlayer } from './player-registry.js';
 import { runPvPCombat } from './combat-engine.js'; // you’ll wire this
+import { api } from "./api.js";
 
 const queues = {}; // { modeKey: [ { playerId, guildId, joinedAt } ] }
 
@@ -102,7 +103,7 @@ export const ArenaEngine = {
 
       const newRating = Math.round(current + k * (score - expectedWin));
       p.arenaRating = newRating;
-      savePlayer(p);
+      api.savePlayer(player.id, player);
     }
   },
 
@@ -144,7 +145,7 @@ export const ArenaEngine = {
       player.xp = (player.xp ?? 0) + (reward.xp ?? 0);
       // items would be added via your inventory system
 
-      savePlayer(player);
+      api.savePlayer(player.id, player);
     };
 
     if (result.winner === 'A' || result.winner === 'B') {
@@ -169,7 +170,7 @@ resetSeason() {
   // Reset all players
   for (const p of getAllPlayers()) {
     p.arenaRating = resetTo;
-    savePlayer(p);
+    api.savePlayer(player.id, player);
   }
 
   // Reset all guilds
