@@ -163,54 +163,56 @@
 
   <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
+    const token = session.token;
+  
     document.getElementById("adminDisplay").textContent =
-      admin ? "Admin: " + admin : "Not logged in";
-
+      "Admin: " + admin;
+  
     function getTarget() {
       const username = document.getElementById("usernameInput").value.trim();
       const twitchId = document.getElementById("twitchIdInput").value.trim() || null;
       return { username, twitchId };
     }
-
+  
     /* ============================================================
        LOAD PLAYER SUMMARY
        ============================================================ */
     async function loadPlayer() {
       const { username } = getTarget();
       const summaryEl = document.getElementById("playerSummary");
-
+  
       if (!username) {
         summaryEl.textContent = "Username is required.";
         return;
       }
-
+  
       summaryEl.textContent = "Loading player...";
-
+  
       try {
         const res = await fetch(
           `/api/admin/player/summary?username=${encodeURIComponent(username)}`,
-          { cache:"no-store" }
+          { cache: "no-store" }
         );
-
+  
         if (!res.ok) {
           summaryEl.textContent = "Failed to load player.";
           return;
         }
-
+  
         const data = await res.json();
         if (!data || !data.player) {
           summaryEl.textContent = "Player not found.";
           return;
         }
-
+  
         const p = data.player;
-
+  
         summaryEl.textContent =
           `${p.username} — Level ${p.level} ${format(p.profession)} | ` +
           `Region: ${format(p.region)} | Gold: ${p.gold} | EXP: ${p.xp}`;
@@ -218,57 +220,64 @@
         summaryEl.textContent = "Error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RUN ADMIN ACTION
        ============================================================ */
     async function runAction(action) {
       const { username, twitchId } = getTarget();
       const resultBox = document.getElementById("resultBox");
-
+  
       if (!username) {
         resultBox.textContent = "Username is required.";
         return;
       }
-
-      const payload = { admin, username, twitchId, action };
-
+  
+      const payload = {
+        session_token: token,
+        admin,
+        username,
+        twitchId,
+        action
+      };
+  
       if (action === "teleport_region") {
         payload.region = document.getElementById("regionKeyInput").value.trim();
       }
-
+  
       if (action === "grant_item") {
         payload.itemKey = document.getElementById("itemKeyInput").value.trim();
         payload.quantity = Number(document.getElementById("itemQtyInput").value || "1");
       }
-
+  
       resultBox.textContent = "Running action: " + action + "...";
-
+  
       try {
         const res = await fetch("/api/admin/player/tools", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify(payload)
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-
+  
         const data = await res.json();
         resultBox.textContent = JSON.stringify(data, null, 2);
       } catch (err) {
         resultBox.textContent = "Error: " + err.message;
       }
     }
-
+  
     function format(str) {
       return String(str)
         .toLowerCase()
-        .replace(/_/g," ")
-        .replace(/\b\w/g,c=>c.toUpperCase());
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     function goAdmin() {
       window.location.href = "admin-dashboard.html";
     }
   </script>
+
 
 </body>
 </html>
