@@ -107,43 +107,40 @@
   <button class="btn" onclick="goToInventory()">Inventory</button>
   <button class="btn" onclick="goToMap()">World Map</button>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
     const PLAYER_API = "/api/player/get";
     const MYSTERY_API = "/api/mystery";
-
+  
     /* ============================================================
        LOAD PLAYER
        ============================================================ */
     async function loadPlayer() {
-      if (!username) {
-        document.getElementById("playerStats").textContent =
-          "Error: No Twitch username found.";
-        return;
-      }
-
       try {
-        const res = await fetch(
-          PLAYER_API + "?username=" + encodeURIComponent(username),
-          { cache:"no-store" }
-        );
-
+        const res = await fetch(PLAYER_API, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_token: token })
+        });
+  
         const data = await res.json();
         if (!data.success) {
           document.getElementById("playerStats").textContent =
             data.message || "Failed to load player.";
           return;
         }
-
+  
         const p = data.player;
-
+  
         document.getElementById("playerStats").innerHTML = `
           <div><strong>Gold:</strong> ${p.gold}</div>
           <div><strong>EXP:</strong> ${p.xp}</div>
@@ -153,59 +150,58 @@
           "Network error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        OPEN MYSTERY
        ============================================================ */
     async function openMystery() {
-      if (!username) return;
-
       const resultBox = document.getElementById("result");
       resultBox.style.display = "block";
       resultBox.textContent = "Opening mystery...";
-
+  
       try {
         const res = await fetch(MYSTERY_API, {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify({ username })
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_token: token })
         });
-
+  
         const data = await res.json();
-
+  
         if (!data.success) {
           resultBox.textContent = "Error: " + (data.message || "Unknown error");
           return;
         }
-
+  
         const gold = data.rewards?.gold ?? 0;
         const xp = data.rewards?.xp ?? 0;
-
+  
         resultBox.textContent =
           `Mystery Opened!\n\n` +
           `Gold Gained: ${gold}\n` +
           `EXP Gained:  ${xp}\n\n` +
           (data.message || "");
-
+  
         loadPlayer();
       } catch (err) {
         resultBox.textContent = "Network error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        NAVIGATION
        ============================================================ */
     function goToInventory() {
       window.location.href = "inventory.html";
     }
-
+  
     function goToMap() {
       window.location.href = "world-map.html";
     }
-
+  
     loadPlayer();
   </script>
+
 
 </body>
 </html>
