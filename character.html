@@ -220,8 +220,7 @@
   <button class="btn" onclick="goToInventory()">Inventory</button>
   <button class="btn" onclick="goToMap()">World Map</button>
 
-  <script src="api.js"></script>
-  <script type="module">
+  <script type="module" src="api.js">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
