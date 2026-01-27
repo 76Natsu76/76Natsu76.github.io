@@ -4,7 +4,7 @@
 
 import { ARENA_CONFIG } from './arena.json';
 import { GuildEngine } from './guild-engine.js';
-import { getPlayerById, savePlayer } from './player-registry.js';
+import { getPlayerById} from './player-registry.js';
 import { runPvPCombat } from './combat-engine.js'; // you’ll wire this
 import { api } from "./api.js";
 
