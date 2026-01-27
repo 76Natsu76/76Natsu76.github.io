@@ -103,6 +103,10 @@
   <button class="btn" onclick="goBack()">Back</button>
 
   <script type="module">
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+    
     import { WORLD_DATA } from "./world-data.js";
     import { BIOMES } from "./biomes.js";
     import { REGION_TO_BIOME } from "./region-to-biome.js";
