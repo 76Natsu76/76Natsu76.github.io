@@ -104,49 +104,51 @@
 
   <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
+    const token = session.token;
+  
     document.getElementById("adminDisplay").textContent =
-      admin ? "Admin: " + admin : "Not logged in";
-
+      "Admin: " + admin;
+  
     /* ============================================================
        LOAD REGIONS
        ============================================================ */
     async function loadRegions() {
       const container = document.getElementById("regionsContainer");
       container.textContent = "Loading regions...";
-
+  
       try {
-        const res = await fetch("/api/admin/regions", { cache:"no-store" });
+        const res = await fetch("/api/admin/regions", { cache: "no-store" });
         if (!res.ok) {
           container.textContent = "Failed to load regions.";
           return;
         }
-
+  
         const regions = await res.json();
         renderRegions(regions);
       } catch (err) {
         container.textContent = "Network error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RENDER REGIONS
        ============================================================ */
     function renderRegions(list) {
       const container = document.getElementById("regionsContainer");
-
+  
       if (!list || !list.length) {
         container.innerHTML = "<div>No regions found.</div>";
         return;
       }
-
+  
       const rows = [];
-
+  
       rows.push(`
         <div class="region-row header">
           <div>Region</div>
@@ -158,35 +160,35 @@
           <div>Actions</div>
         </div>
       `);
-
+  
       for (const r of list) {
         rows.push(`
           <div class="region-row">
             <div>${format(r.key)}</div>
-
+  
             <div>
               <select id="enabled-${r.key}">
                 <option value="true" ${r.enabled ? "selected" : ""}>Enabled</option>
                 <option value="false" ${!r.enabled ? "selected" : ""}>Disabled</option>
               </select>
             </div>
-
+  
             <div>
               <input id="danger-${r.key}" type="number" step="0.1" value="${r.dangerMultiplier ?? 1}">
             </div>
-
+  
             <div>
               <input id="boost-${r.key}" type="number" step="0.1" value="${r.encounterBoost ?? 0}">
             </div>
-
+  
             <div>
               <input id="weather-${r.key}" placeholder="auto or WEATHER_KEY" value="${r.weatherOverride ?? ""}">
             </div>
-
+  
             <div>
               <input id="bless-${r.key}" placeholder="auto or BLESSING_KEY" value="${r.blessingOverride ?? ""}">
             </div>
-
+  
             <div>
               <button onclick="saveRegion('${r.key}')">Save</button>
               <button onclick="refreshRegion('${r.key}')">Refresh</button>
@@ -194,10 +196,10 @@
           </div>
         `);
       }
-
+  
       container.innerHTML = rows.join("");
     }
-
+  
     /* ============================================================
        SAVE REGION
        ============================================================ */
@@ -207,8 +209,9 @@
       const boost = Number(document.getElementById(`boost-${key}`).value);
       const weather = document.getElementById(`weather-${key}`).value.trim() || null;
       const blessing = document.getElementById(`bless-${key}`).value.trim() || null;
-
+  
       const payload = {
+        session_token: token,
         admin,
         key,
         enabled,
@@ -217,14 +220,14 @@
         weatherOverride: weather === "" ? null : weather,
         blessingOverride: blessing === "" ? null : blessing
       };
-
+  
       try {
         const res = await fetch("/api/admin/regions/update", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify(payload)
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-
+  
         const data = await res.json();
         document.getElementById("statusMessage").textContent =
           data.message || "Region updated.";
@@ -233,20 +236,24 @@
           "Error updating region: " + err.message;
       }
     }
-
+  
     /* ============================================================
        FORCE REFRESH
        ============================================================ */
     async function refreshRegion(key) {
-      const payload = { admin, key };
-
+      const payload = {
+        session_token: token,
+        admin,
+        key
+      };
+  
       try {
         const res = await fetch("/api/admin/regions/refresh", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify(payload)
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-
+  
         const data = await res.json();
         document.getElementById("statusMessage").textContent =
           data.message || "Region refreshed.";
@@ -255,23 +262,24 @@
           "Error refreshing region: " + err.message;
       }
     }
-
+  
     /* ============================================================
        HELPERS
        ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
-        .replace(/_/g," ")
-        .replace(/\b\w/g,c=>c.toUpperCase());
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     function goAdmin() {
       window.location.href = "admin-dashboard.html";
     }
-
+  
     loadRegions();
   </script>
+
 
 </body>
 </html>
