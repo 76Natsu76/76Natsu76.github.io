@@ -1,1 +1,38 @@
-
+{
+  "$schema": "S3VEN_RPG_DUNGEON_SCHEMA_V1",
+  "dungeons": {
+    "DUNGEON_KEY": {
+      "name": "String",
+      "recommendedLevel": 1,
+      "floors": [
+        {
+          "floorIndex": 1,
+          "type": "normal | elite | boss",
+          "encounterTable": ["enemy_key_1", "enemy_key_2"],
+          "events": ["event_key_1", "event_key_2"],
+          "lootTable": "loot_table_key",
+          "modifiers": {
+            "biome": "forest",
+            "weather": "rain",
+            "globalBuffs": ["buff_key"],
+            "globalDebuffs": ["debuff_key"]
+          }
+        }
+      ],
+      "boss": {
+        "enemyKey": "enemy_key",
+        "lootTable": "boss_loot_key"
+      },
+      "dungeonModifiers": {
+        "noHealing": false,
+        "doubleLoot": false,
+        "enemyScaling": 1.0
+      },
+      "rewards": {
+        "xp": 100,
+        "gold": 50,
+        "items": ["item_key_1"]
+      }
+    }
+  }
+}
