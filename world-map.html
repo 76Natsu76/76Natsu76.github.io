@@ -117,7 +117,7 @@
     async function loadPlayer() {
       const player = PlayerStorage.load(username);
       playerLevel = Number(player.level || 1);
-      sessionStorage.setItem("player", JSON.stringify(player));
+      localStorage.setItem("player", JSON.stringify(player));
       loadWorld();
     }
 
@@ -240,7 +240,7 @@
       if (locked) return;
   
       const encounter = EncounterEngine.generate(regionKey, username);
-      sessionStorage.setItem("current_encounter", JSON.stringify(encounter));
+      localStorage.setItem("current_encounter", JSON.stringify(encounter));
       window.location.href = "fight-interactive.html";
     };
   
