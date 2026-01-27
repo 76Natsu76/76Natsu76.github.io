@@ -224,6 +224,8 @@
     import { requireSession } from "./session-guard.js";
     import { api } from "./api.js";
     import { savePlayerToKV } from "./api.js";
+    import { migrateAndSave } from "./migration.js";
+    
 
     window.pushToKV = async () => {
       const p = JSON.parse(localStorage.getItem("player_" + window.username));
@@ -235,6 +237,9 @@
       const res = await savePlayerToKV(p.username, p);
       alert("Saved to KV!");
     };
+
+    window.migrateAndSave = migrateAndSave;
+    window.savePlayerToKV = savePlayerToKV;
 
 
     /* ============================================================
