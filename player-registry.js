@@ -82,7 +82,7 @@ export const ENEMY_CHARGE_RULES = {
 
 // If api.js exposes a generic callApi, we can wire it here.
 // Adjust these imports to match your actual api.js.
-import { callApi } from "./api.js";
+import { api } from "./api.js";
 
 export const PlayerRegistry = {
   currentPlayer: null,
@@ -92,7 +92,7 @@ export const PlayerRegistry = {
    * Returns a normalized player object.
    */
   async loadPlayer(username) {
-    const raw = await callApi("getPlayer", { username });
+    const raw = await api.getPlayer(username);
     const player = this.normalizePlayer(raw);
     this.currentPlayer = player;
     return player;
@@ -104,7 +104,7 @@ export const PlayerRegistry = {
    */
   async savePlayer(player) {
     // You can strip any client-only fields here if needed.
-    await callApi("updatePlayer", { player });
+    await api.savePlayer(player.username, player);
     this.currentPlayer = player;
   },
 
