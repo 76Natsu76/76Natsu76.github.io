@@ -1,1 +1,79 @@
+{
+  "order_dawnforge": {
+    "name": "Order of the Dawnforge",
+    "createdAt": 1730000000,
+    "members": [],
+    "bank": {
+      "gold": 500,
+      "items": ["iron_ingot", "holy_water"]
+    },
+    "buffs": ["guild_xp_boost_1"],
+    "achievements": [],
+    "worldBossProgress": {
+      "bossKey": "celestial_herald",
+      "hpRemaining": 500000,
+      "phase": 1
+    },
+    "events": {
+      "activeEvents": [],
+      "completedEvents": []
+    },
+    "pvp": {
+      "rating": 1020,
+      "wins": 3,
+      "losses": 1
+    }
+  },
 
+  "riftbound_collective": {
+    "name": "The Riftbound Collective",
+    "createdAt": 1730500000,
+    "members": [],
+    "bank": {
+      "gold": 1200,
+      "items": ["void_fragment", "rift_dust"]
+    },
+    "buffs": ["guild_mana_regen_1"],
+    "achievements": ["first_rift_boss"],
+    "worldBossProgress": {
+      "bossKey": "void_monarch",
+      "hpRemaining": 2000000,
+      "phase": 2
+    },
+    "events": {
+      "activeEvents": ["rift_instability"],
+      "completedEvents": []
+    },
+    "pvp": {
+      "rating": 1100,
+      "wins": 10,
+      "losses": 4
+    }
+  },
+
+  "sthreeven_fellowship": {
+    "name": "Sthreeven’s Chaotic Fellowship",
+    "createdAt": 1731000000,
+    "members": [],
+    "bank": {
+      "gold": 76,
+      "items": ["chaos_orb"]
+    },
+    "buffs": ["guild_luck_boost_1"],
+    "achievements": [],
+    "worldBossProgress": {
+      "bossKey": "Chaos-Spiral Sovereign",
+      "hpRemaining": 999999,
+      "phase": 1
+    },
+    "events": {
+      "activeEvents": ["chaos_flux"],
+      "completedEvents": []
+    },
+    "pvp": {
+      "rating": 900,
+      "wins": 1,
+      "losses": 7
+    }
+  }
+}
