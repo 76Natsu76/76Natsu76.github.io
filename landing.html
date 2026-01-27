@@ -50,7 +50,7 @@
 
   <button id="enterBtn" style="display:none;">Enter the World</button>
 
-  <script type="module">
+  <script type="module" data-v="1">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
@@ -87,8 +87,6 @@
     });
 
     loadPlayer();
-</script>
-
-
+  </script>
 </body>
 </html>
