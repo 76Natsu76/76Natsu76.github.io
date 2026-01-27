@@ -31,10 +31,13 @@
     <div id="guild-content"></div>
   </div>
 
-  <script src="guild-ui.js">
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
   </script>
+  
+  <script src="guild-ui.js"></script>
+
 </body>
 </html>
