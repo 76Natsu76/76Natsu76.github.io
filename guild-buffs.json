@@ -1,0 +1,25 @@
+{
+  "guild_xp_boost_1": {
+    "name": "Guild XP Boost I",
+    "description": "All guild members gain +5% XP from all sources.",
+    "effects": [
+      { "type": "xp", "value": 5 }
+    ]
+  },
+
+  "guild_void_resist_1": {
+    "name": "Void Resistance I",
+    "description": "Members gain +10% resistance to void damage.",
+    "effects": [
+      { "type": "resist", "value": 10 }
+    ]
+  },
+
+  "guild_luck_boost_1": {
+    "name": "Guild Luck Boost I",
+    "description": "Members gain +3% increased rare drop chance.",
+    "effects": [
+      { "type": "drop_rate", "value": 3 }
+    ]
+  }
+}
