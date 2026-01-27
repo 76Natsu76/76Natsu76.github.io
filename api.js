@@ -76,3 +76,14 @@ async function unequipItem(username, slot) {
   PlayerStorage.save(username, p);
   return { ok: true, message: "Unequipped " + item.name };
 }
+
+export async function savePlayerToKV(username, data) {
+  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/savePlayer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, data })
+  });
+
+  return res.json();
+}
+
