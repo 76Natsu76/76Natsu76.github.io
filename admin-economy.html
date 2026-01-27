@@ -196,10 +196,8 @@
     if (!session) return;
   
     const admin = session.username;
-    const token = session.token;
-  
     document.getElementById("adminDisplay").textContent =
-      "Admin: " + admin;
+      admin ? "Admin: " + admin : "Not logged in";
   
     // ============================
     // LOAD ECONOMY
@@ -226,7 +224,7 @@
     // ============================
     async function saveEconomy() {
       const payload = {
-        session_token: token,
+        admin,
         xpMultiplier: Number(document.getElementById("xpMultiplier").value),
         goldMultiplier: Number(document.getElementById("goldMultiplier").value),
         dropRateMultiplier: Number(document.getElementById("dropRateMultiplier").value),
@@ -255,7 +253,7 @@
     // ============================
     async function saveShop() {
       const payload = {
-        session_token: token,
+        admin,
         shopPriceScale: Number(document.getElementById("shopPriceScale").value),
         dailyRefreshHour: Number(document.getElementById("dailyRefreshHour").value)
       };
@@ -287,7 +285,7 @@
       const res = await fetch("/api/admin/gold/gift", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_token: token, target, amount })
+        body: JSON.stringify({ admin, target, amount })
       });
   
       const data = await res.json();
@@ -302,7 +300,7 @@
       const res = await fetch("/api/admin/exp/gift", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_token: token, target, amount })
+        body: JSON.stringify({ admin, target, amount })
       });
   
       const data = await res.json();
@@ -318,7 +316,7 @@
       const res = await fetch("/api/admin/items/grant", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ session_token: token, target, itemKey, quantity })
+        body: JSON.stringify({ admin, target, itemKey, quantity })
       });
   
       const data = await res.json();
@@ -331,7 +329,6 @@
   
     loadEconomy();
   </script>
-
 
 </body>
 </html>
