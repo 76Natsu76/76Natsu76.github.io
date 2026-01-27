@@ -1,27 +1,54 @@
 // migration.js
-// Converts old Apps Script player rows into the new GitHub-native schema.
+// 1) Apps Script row → legacy KV-ish player (migrateAndSave)
+// 2) Legacy KV player → full modern schema (resolveLegacyPlayer)
 
 import { PlayerStorage } from "./player-storage.js";
 
-// Safely parse JSON fields that might be strings or objects
+import raceDefs from "./race-definitions.json" assert { type: "json" };
+import subraceProfiles from "./subrace-stat-profiles.json" assert { type: "json" };
+import professionDefs from "./profession-definitions.json" assert { type: "json" };
+import abilityDefs from "./ability-definitions.json" assert { type: "json" };
+
+// -----------------------------
+// Helpers
+// -----------------------------
 function safeParse(value, fallback) {
   try {
     if (typeof value === "string") return JSON.parse(value);
-    if (typeof value === "object") return value;
+    if (typeof value === "object" && value !== null) return value;
     return fallback;
   } catch {
     return fallback;
   }
 }
 
+function computeXpRequired(level) {
+  // Simple quadratic curve; adjust if you want your original formula
+  return Math.floor(100 * Math.pow(level || 1, 2));
+}
+
+function detectPrimaryElement(affinity) {
+  if (!affinity || typeof affinity !== "object") return "none";
+  const entries = Object.entries(affinity);
+  if (!entries.length) return "none";
+  return entries.sort((a, b) => b[1] - a[1])[0][0];
+}
+
+function formatAbilityName(key) {
+  if (!key) return "Unknown";
+  return key
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+// -----------------------------
+// 1) Apps Script row → legacy KV-ish player
+// -----------------------------
 export function migrateAndSave(old) {
   if (!old || !old.username) {
     throw new Error("Invalid old player object");
   }
 
-  // -----------------------------
-  // Parse old JSON fields
-  // -----------------------------
   const computed = safeParse(old.computedStatsJSON, {});
   const equipment = safeParse(old.equipment, {});
   const inventory = safeParse(old.inventoryEquipment, []);
@@ -32,9 +59,6 @@ export function migrateAndSave(old) {
   const talentTree = safeParse(old.talentTreeJSON, []);
   const regionMeta = safeParse(old.regionMetaJSON, {});
 
-  // -----------------------------
-  // Build new canonical player object
-  // -----------------------------
   const migrated = {
     username: old.username,
     level: old.level || 1,
@@ -83,123 +107,154 @@ export function migrateAndSave(old) {
     regionMeta
   };
 
-  // -----------------------------
-  // Save to localStorage
-  // -----------------------------
   PlayerStorage.save(migrated.username, migrated);
-
   return migrated;
 }
 
 // ============================================================
-// MIGRATION RESOLVER
-// Converts legacy KV player → modern canonical player schema
+// 2) Legacy KV player → full modern canonical schema
 // ============================================================
+
+function computeBaseStatsFromDefs(old) {
+  const race = raceDefs[old.race] || {};
+  const subrace = subraceProfiles[old.subrace] || {};
+  const prof = professionDefs[old.profession] || {};
+
+  const raceStats = race.baseStats || race.stats || {};
+  const subraceStats = subrace.stats || subrace.baseStats || {};
+  const profStats = prof.baseStats || prof.stats || prof.bonuses || {};
+
+  const stats = {
+    hp: 0,
+    atk: 0,
+    def: 0,
+    speed: 0,
+    crit: 0,
+    critDmg: 1.5,
+    ...raceStats,
+    ...subraceStats
+  };
+
+  for (const [k, v] of Object.entries(profStats)) {
+    stats[k] = (stats[k] || 0) + v;
+  }
+
+  return stats;
+}
+
+function computeEquipmentBonuses(equipment) {
+  const bonuses = { hp: 0, atk: 0, def: 0, speed: 0, crit: 0, critDmg: 0 };
+  if (!equipment || typeof equipment !== "object") return bonuses;
+
+  for (const slot of Object.keys(equipment)) {
+    const item = equipment[slot];
+    if (!item || !item.bonuses) continue;
+    for (const [k, v] of Object.entries(item.bonuses)) {
+      bonuses[k] = (bonuses[k] || 0) + v;
+    }
+  }
+  return bonuses;
+}
+
+function computeDerivedStats(p) {
+  return {
+    evade: (p.speed || 0) * 0.002,
+    block: (p.def || 0) * 0.001,
+    critChance: p.crit || 0,
+    critDamage: p.critDmg || 1.5,
+    powerScore: Math.floor((p.atk || 0) * 1.5 + (p.def || 0) * 1.2 + (p.hpMax || 0) * 0.3)
+  };
+}
+
+function resolveAbilities(old) {
+  const out = [];
+  if (!old.abilities || typeof old.abilities !== "object") return out;
+
+  for (const slot of Object.keys(old.abilities)) {
+    const key = old.abilities[slot];
+    if (!key) continue;
+
+    const def = abilityDefs[key];
+
+    if (!def) {
+      out.push({
+        key,
+        name: formatAbilityName(key),
+        description: "(Unknown legacy ability)",
+        cooldown: old.cooldowns?.[key] ?? 0,
+        icon: "/assets/abilities/default.png"
+      });
+      continue;
+    }
+
+    out.push({
+      key,
+      name: def.name || formatAbilityName(key),
+      description: def.description || "",
+      cooldown: def.cooldown ?? (old.cooldowns?.[key] ?? 0),
+      icon: def.icon || `/assets/abilities/${key}.png`,
+      type: def.type,
+      scaling: def.scaling
+    });
+  }
+
+  return out;
+}
 
 export function resolveLegacyPlayer(old) {
   if (!old) return null;
 
   const p = {};
 
-  // ------------------------------------------------------------
-  // BASIC IDENTITY
-  // ------------------------------------------------------------
+  // Identity
   p.username = old.username;
   p.level = old.level ?? 1;
-  p.race = old.race ?? null;
+  p.race = old.race ?? "human";
   p.subrace = old.subrace ?? null;
-  p.profession = old.profession ?? null;
-  p.family = old.family ?? null;
-  p.element = old.element ?? null;
+  p.profession = old.profession ?? "adventurer";
 
-  // ------------------------------------------------------------
-  // XP / PROGRESSION
-  // ------------------------------------------------------------
+  // XP
   p.xp = old.exp ?? old.xp ?? 0;
-  p.xpRequired = old.xpRequired ?? 0; // You can compute this later
+  p.xpRequired = computeXpRequired(p.level);
 
-  // ------------------------------------------------------------
-  // HP / MANA
-  // ------------------------------------------------------------
-  p.hpCurrent = old.hp ?? old.hpCurrent ?? 1;
-  p.hpMax = old.hpMax ?? p.hpCurrent;
-  p.manaCurrent = old.mana ?? old.manaCurrent ?? 0;
-  p.manaMax = old.manaMax ?? p.manaCurrent;
-
-  // ------------------------------------------------------------
-  // CORE COMBAT STATS
-  // ------------------------------------------------------------
-  p.atk = old.atk ?? 1;
-  p.def = old.def ?? 0;
-  p.speed = old.speed ?? 1;
-  p.critChance = old.critChance ?? 0.05;
-  p.critDamage = old.critDamage ?? 1.5;
+  // Element + family
   p.elementAffinity = old.elementAffinity ?? {};
+  p.element = detectPrimaryElement(p.elementAffinity);
+  p.family = old.family ?? old.regionMeta?.family ?? null;
 
-  // ------------------------------------------------------------
-  // EQUIPMENT (convert stats → bonuses)
-  // ------------------------------------------------------------
+  // Equipment (normalize stats → bonuses)
   p.equipment = {};
   if (old.equipment && typeof old.equipment === "object") {
     for (const slot of Object.keys(old.equipment)) {
       const item = old.equipment[slot];
       if (!item) continue;
-
       p.equipment[slot] = {
         name: item.name,
         rarity: item.rarity ?? "common",
         level: item.level ?? 1,
-        bonuses: item.stats ?? {}, // rename stats → bonuses
+        bonuses: item.bonuses || item.stats || {}
       };
     }
   }
 
-  // ------------------------------------------------------------
-  // INVENTORY
-  // ------------------------------------------------------------
+  // Inventory
   p.inventory = Array.isArray(old.inventory) ? old.inventory : [];
 
-  // ------------------------------------------------------------
-  // ABILITIES (convert slot map → array)
-  // ------------------------------------------------------------
-  p.abilities = [];
+  // Abilities
+  p.abilities = resolveAbilities(old);
 
-  if (old.abilities && typeof old.abilities === "object") {
-    for (const slot of Object.keys(old.abilities)) {
-      const key = old.abilities[slot];
-
-      p.abilities.push({
-        key,
-        name: formatAbilityName(key),
-        icon: `/assets/abilities/${key}.png`,
-        description: "(No description available — legacy ability)",
-        cooldown: old.cooldowns?.[key] ?? 0,
-      });
-    }
-  }
-
-  // ------------------------------------------------------------
-  // ULTIMATE (legacy KV has none)
-  // ------------------------------------------------------------
-  p.ultimate = null;
-  p.ultimateCharge = 0;
-  p.ultimateChargeRequired = 100;
-
-  // ------------------------------------------------------------
-  // STATUS EFFECTS
-  // ------------------------------------------------------------
+  // Status Effects
   p.statusEffects = [];
-
   if (Array.isArray(old.status)) {
-    p.statusEffects = old.status.map(s => ({
-      name: s.name ?? "Unknown",
-      duration: s.duration ?? 0,
-      stacks: s.stacks ?? 1,
-      description: s.description ?? "",
-    }));
+    p.statusEffects.push(
+      ...old.status.map((s) => ({
+        name: s.name ?? "Unknown",
+        duration: s.duration ?? 0,
+        stacks: s.stacks ?? 1,
+        description: s.description ?? ""
+      }))
+    );
   }
-
-  // activeEffects (object) → merge into statusEffects
   if (old.activeEffects && typeof old.activeEffects === "object") {
     for (const key of Object.keys(old.activeEffects)) {
       const eff = old.activeEffects[key];
@@ -207,59 +262,64 @@ export function resolveLegacyPlayer(old) {
         name: key,
         duration: eff.duration ?? 0,
         stacks: eff.stacks ?? 1,
-        description: eff.description ?? "",
+        description: eff.description ?? ""
       });
     }
   }
 
-  // ------------------------------------------------------------
-  // TALENT TREE
-  // ------------------------------------------------------------
+  // Talent Tree
   p.talentTree = Array.isArray(old.talentTree) ? old.talentTree : [];
   p.talentPoints = old.talentPoints ?? 0;
 
-  // ------------------------------------------------------------
-  // REGION PROGRESS (regionMeta → regionProgress)
-  // ------------------------------------------------------------
+  // Region Progress
   p.regionProgress = {};
-
   if (old.regionMeta?.visitedRegions) {
     for (const region of Object.keys(old.regionMeta.visitedRegions)) {
-      p.regionProgress[region] = 100; // visited = 100%
+      p.regionProgress[region] = 100;
     }
   }
 
-  // ------------------------------------------------------------
-  // ADAPTIVE PROFILE (legacy has none)
-  // ------------------------------------------------------------
+  // Base stats from race/subrace/profession
+  const base = computeBaseStatsFromDefs(old);
+
+  // Equipment bonuses
+  const eq = computeEquipmentBonuses(p.equipment);
+
+  // Final stats
+  p.hpMax = (old.hpMax ?? base.hp ?? 10) + (eq.hp ?? 0);
+  p.hpCurrent = Math.min(old.hp ?? p.hpMax, p.hpMax);
+
+  p.atk = (old.atk ?? base.atk ?? 1) + (eq.atk ?? 0);
+  p.def = (old.def ?? base.def ?? 0) + (eq.def ?? 0);
+  p.speed = (old.speed ?? base.speed ?? 1) + (eq.speed ?? 0);
+
+  p.crit = (old.critChance ?? base.crit ?? 0) + (eq.crit ?? 0);
+  p.critDmg = (old.critDamage ?? base.critDmg ?? 1.5) + (eq.critDmg ?? 0);
+
+  // Derived stats
+  p.stats = {
+    hp: p.hpMax,
+    atk: p.atk,
+    def: p.def,
+    speed: p.speed,
+    crit: p.crit,
+    critDmg: p.critDmg
+  };
+  p.derived = computeDerivedStats(p);
+
+  // Adaptive profile (fresh for legacy)
   p.adaptiveProfile = {
     playerHeals: 0,
     playerBuffs: 0,
     playerShields: 0,
     playerDOTsApplied: 0,
-    playerCCsApplied: 0,
+    playerCCsApplied: 0
   };
 
-  // ------------------------------------------------------------
-  // DERIVED STATS (legacy has none)
-  // ------------------------------------------------------------
-  p.stats = {};
-  p.derived = {};
-
-  // ------------------------------------------------------------
-  // MISC
-  // ------------------------------------------------------------
+  // Misc
   p.gold = old.gold ?? 0;
   p.hardcore = old.hardcore ?? false;
   p.transcension = old.transcension ?? false;
 
   return p;
-}
-
-// Helper: turn "backstab" → "Backstab"
-function formatAbilityName(key) {
-  if (!key) return "Unknown";
-  return key
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, c => c.toUpperCase());
 }
