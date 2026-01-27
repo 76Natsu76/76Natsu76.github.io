@@ -113,24 +113,24 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
     const PLAYER_API = "/api/player/get";
     const MYSTERY_API = "/api/mystery";
   
-    /* ============================================================
-       LOAD PLAYER
-       ============================================================ */
     async function loadPlayer() {
+      if (!username) {
+        document.getElementById("playerStats").textContent =
+          "Error: No username found.";
+        return;
+      }
+  
       try {
-        const res = await fetch(PLAYER_API, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ session_token: token })
-        });
+        const res = await fetch(
+          PLAYER_API + "?username=" + encodeURIComponent(username),
+          { cache: "no-store" }
+        );
   
         const data = await res.json();
         if (!data.success) {
@@ -151,10 +151,9 @@
       }
     }
   
-    /* ============================================================
-       OPEN MYSTERY
-       ============================================================ */
     async function openMystery() {
+      if (!username) return;
+  
       const resultBox = document.getElementById("result");
       resultBox.style.display = "block";
       resultBox.textContent = "Opening mystery...";
@@ -163,7 +162,7 @@
         const res = await fetch(MYSTERY_API, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ session_token: token })
+          body: JSON.stringify({ username })
         });
   
         const data = await res.json();
@@ -188,9 +187,6 @@
       }
     }
   
-    /* ============================================================
-       NAVIGATION
-       ============================================================ */
     function goToInventory() {
       window.location.href = "inventory.html";
     }
@@ -201,7 +197,6 @@
   
     loadPlayer();
   </script>
-
 
 </body>
 </html>
