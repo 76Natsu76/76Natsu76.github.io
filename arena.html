@@ -24,10 +24,11 @@
     <div id="arena-content"></div>
   </div>
 
-  <script src="arena-ui.js">
-    import { requireSession } from "./session-guard.js";
-    const session = requireSession();
-    if (!session) return;
+ <script type="module">
+   import { requireSession } from "./session-guard.js";
+   const session = requireSession();
+   if (!session) return;
   </script>
+  <script src="arena-ui.js"></script>
 </body>
 </html>
