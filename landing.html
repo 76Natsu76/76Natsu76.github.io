@@ -52,16 +52,13 @@
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+  
     const session = requireSession();
     if (!session) return;
   
-    import { PlayerStorage } from "./player-storage.js";
-  
-    const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      "Logged in as: " + session.username;
   
     const statusBox = document.getElementById("status");
     const enterBtn = document.getElementById("enterBtn");
@@ -71,15 +68,22 @@
       statusBox.textContent += "\n" + msg;
     }
   
+    const username = session.username;
+  
+    if (!username) {
+      statusBox.textContent = "Missing login info — redirecting to login…";
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 1500);
+    }
+  
     log("Logged in as: " + username);
   
     async function loadPlayer() {
       log("Loading local player data…");
   
-      // Load or create player locally (GitHub-native)
       const player = PlayerStorage.load(username);
   
-      // Store player for other pages
       sessionStorage.setItem("player", JSON.stringify(player));
   
       statusBox.textContent = `Welcome, ${username}!`;
