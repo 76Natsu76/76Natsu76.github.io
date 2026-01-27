@@ -99,16 +99,29 @@ export async function loadPlayer(username) {
   return { local, remote };
 }
 
-function detectConflict(local, remote) {
-  if (!remote) return "no-remote";
-  if (!local) return "no-local";
+export async function loadFromKVAndLocal(username) {
+  const local = PlayerStorage.load(username);
 
-  // Compare timestamps or XP or level
+  let remote = null;
+  try {
+    remote = await getPlayerFromKV(username);
+    if (remote?.error) remote = null;
+  } catch {
+    remote = null;
+  }
+
+  return { local, remote };
+}
+
+export function detectConflict(local, remote) {
+  if (!remote && local) return "local-only";
+  if (!local && remote) return "remote-only";
+  if (!local && !remote) return "none";
+
+  // Compare meaningful fields
   if (local.exp !== remote.exp || local.level !== remote.level) {
     return "conflict";
   }
 
   return "match";
 }
-
-
