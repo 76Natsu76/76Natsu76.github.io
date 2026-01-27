@@ -1,4 +1,4 @@
-DUNGEONDS:
+DUNGEONS:
 
           +------------------------------------------------------+
           |                CAVERNS OF THE FIRST ECHO             |
