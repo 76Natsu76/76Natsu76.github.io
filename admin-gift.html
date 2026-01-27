@@ -117,16 +117,14 @@
     if (!session) return;
   
     const admin = session.username;
-    const token = session.token;
-  
     document.getElementById("adminDisplay").textContent =
-      "Logged in as Admin: " + admin;
+      admin ? "Logged in as Admin: " + admin : "Not logged in";
   
     function toast(msg) {
       const t = document.getElementById("toast");
       t.textContent = msg;
       t.style.opacity = 1;
-      setTimeout(() => t.style.opacity = 0, 2500);
+      setTimeout(() => (t.style.opacity = 0), 2500);
     }
   
     function showResult(text) {
@@ -146,7 +144,7 @@
       }
   
       try {
-        const result = await api.admin.giftGold(token, target, amount);
+        const result = await api.admin.giftGold(admin, target, amount);
   
         if (!result.success) {
           showResult("Error: " + (result.message || "Unknown error"));
@@ -156,10 +154,10 @@
   
         showResult(
           `Gold Gift Successful!\n\n` +
-          `Admin: ${admin}\n` +
-          `Target: ${target}\n` +
-          `Gold Amount: ${amount}\n\n` +
-          result.message
+            `Admin: ${admin}\n` +
+            `Target: ${target}\n` +
+            `Gold Amount: ${amount}\n\n` +
+            result.message
         );
   
         toast("Gold gifted");
@@ -182,7 +180,7 @@
       }
   
       try {
-        const result = await api.admin.giftExp(token, target, amount);
+        const result = await api.admin.giftExp(admin, target, amount);
   
         if (!result.success) {
           showResult("Error: " + (result.message || "Unknown error"));
@@ -192,10 +190,10 @@
   
         showResult(
           `EXP Gift Successful!\n\n` +
-          `Admin: ${admin}\n` +
-          `Target: ${target}\n` +
-          `EXP Amount: ${amount}\n\n` +
-          result.message
+            `Admin: ${admin}\n` +
+            `Target: ${target}\n` +
+            `EXP Amount: ${amount}\n\n` +
+            result.message
         );
   
         toast("EXP gifted");
@@ -219,7 +217,7 @@
       }
   
       try {
-        const result = await api.admin.grantItem(token, target, itemKey, quantity);
+        const result = await api.admin.grantItem(admin, target, itemKey, quantity);
   
         if (!result.success) {
           showResult("Error: " + (result.message || "Unknown error"));
@@ -229,11 +227,11 @@
   
         showResult(
           `Item Granted!\n\n` +
-          `Admin: ${admin}\n` +
-          `Target: ${target}\n` +
-          `Item: ${itemKey}\n` +
-          `Quantity: ${quantity}\n\n` +
-          result.message
+            `Admin: ${admin}\n` +
+            `Target: ${target}\n` +
+            `Item: ${itemKey}\n` +
+            `Quantity: ${quantity}\n\n` +
+            result.message
         );
   
         toast("Item granted");
