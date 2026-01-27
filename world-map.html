@@ -92,27 +92,51 @@
   <button class="btn" onclick="goToInventory()">Inventory</button>
   <button class="btn" onclick="goToBestiary()">Bestiary</button>
 
-  <!-- Load modules -->
   <script type="module">
     import { WORLD_DATA } from "./world-data.js";
     import { BIOMES } from "./biomes.js";
     import { REGION_TO_BIOME } from "./region-to-biome.js";
     import { EncounterEngine } from "./encounters.js";
     import { WorldSim } from "./world-simulation.js";
-
+  
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
   
-    const username = sessionStorage.getItem("twitch_username");
-    const userId = sessionStorage.getItem("twitch_user_id");
+    const username = session.username;
   
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
+      "Logged in as: " + username;
   
-    // Load player data
-    let player = JSON.parse(sessionStorage.getItem("player_data") || "{}");
-    let playerLevel = Number(player.level || 1);
+    // ------------------------------------------------------------
+    // LOAD PLAYER DATA (from backend, not Twitch)
+    // ------------------------------------------------------------
+    let player = null;
+    let playerLevel = 1;
+  
+    async function loadPlayer() {
+      try {
+        const res = await fetch("/api/player/get?username=" + encodeURIComponent(username), {
+          cache: "no-store"
+        });
+  
+        const data = await res.json();
+        if (!data.success) {
+          console.warn("Failed to load player:", data.message);
+          return;
+        }
+  
+        player = data.player;
+        playerLevel = Number(player.level || 1);
+  
+        // Save locally for other pages
+        sessionStorage.setItem("player", JSON.stringify(player));
+  
+        loadWorld();
+      } catch (err) {
+        console.error("Player load error:", err);
+      }
+    }
   
     // ------------------------------------------------------------
     // LOAD WORLD
@@ -144,7 +168,7 @@
         // Global unlock (world boss progression)
         const globallyUnlocked = state.unlocked;
   
-        // World boss lock (region sealed until boss defeated)
+        // World boss lock
         const bossActive = !!state.worldBoss;
         const bossLocked = !globallyUnlocked;
   
@@ -159,9 +183,10 @@
         const regionFlavor = region.flavor || "";
   
         // Weather preview
-        const weatherPreview = region.weatherPool?.join(", ") ||
-                               biome?.weatherPool?.join(", ") ||
-                               "Unknown";
+        const weatherPreview =
+          region.weatherPool?.join(", ") ||
+          biome?.weatherPool?.join(", ") ||
+          "Unknown";
   
         // Hazards
         const hazards = biome?.hazards?.length
@@ -250,7 +275,9 @@
     window.goToInventory = () => window.location.href = "inventory.html";
     window.goToBestiary = () => window.location.href = "bestiary.html";
   
-    loadWorld();
+    // Start
+    loadPlayer();
   </script>
+
 </body>
 </html>
