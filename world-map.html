@@ -115,28 +115,12 @@
     let playerLevel = 1;
   
     async function loadPlayer() {
-      try {
-        const res = await fetch("/api/player/get?username=" + encodeURIComponent(username), {
-          cache: "no-store"
-        });
-  
-        const data = await res.json();
-        if (!data.success) {
-          console.warn("Failed to load player:", data.message);
-          return;
-        }
-  
-        player = data.player;
-        playerLevel = Number(player.level || 1);
-  
-        // Save locally for other pages
-        sessionStorage.setItem("player", JSON.stringify(player));
-  
-        loadWorld();
-      } catch (err) {
-        console.error("Player load error:", err);
-      }
+      const player = PlayerStorage.load(username);
+      playerLevel = Number(player.level || 1);
+      sessionStorage.setItem("player", JSON.stringify(player));
+      loadWorld();
     }
+
   
     // ------------------------------------------------------------
     // LOAD WORLD
