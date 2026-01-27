@@ -23,7 +23,7 @@
     const WORKER_BASE = "https://auth-worker.godeaterspersona.workers.dev";
   
     const logEl = document.getElementById("log");
-    const log = msg => logEl.textContent = msg;
+    const log = msg => (logEl.textContent = msg);
   
     document.getElementById("loginBtn").addEventListener("click", async () => {
       const username = document.getElementById("username").value.trim();
