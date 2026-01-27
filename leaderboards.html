@@ -103,68 +103,67 @@
 
   <script src="api.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "Not logged in";
-
+      "Logged in as: " + username;
+  
     let currentTab = "global";
-
+  
     /* ============================================================
        TAB SWITCHING
        ============================================================ */
-
     function switchTab(tab) {
       currentTab = tab;
-
+  
       document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
       document.getElementById("tab-" + tab).classList.add("active");
-
+  
       loadLeaderboard();
     }
-
+  
     /* ============================================================
        LOAD LEADERBOARD
        ============================================================ */
-
     async function loadLeaderboard() {
       const container = document.getElementById("leaderboardContainer");
       container.textContent = "Loading...";
-
+  
       try {
         let data = [];
-
+  
         if (currentTab === "global") {
           data = await api.getLeaderboardGlobal();
         } else if (currentTab === "hardcore") {
           data = await api.getLeaderboardHardcore();
         } else if (currentTab === "friends") {
-          data = await api.getLeaderboardFriends(username);
+          data = await api.getLeaderboardFriends(token);
         }
-
+  
         renderLeaderboard(data);
-
+  
       } catch (err) {
         container.textContent = "Error loading leaderboard: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RENDER LEADERBOARD
        ============================================================ */
-
     function renderLeaderboard(list) {
       const container = document.getElementById("leaderboardContainer");
-
+  
       if (!list || list.length === 0) {
         container.innerHTML = "<div>No data available.</div>";
         return;
       }
-
+  
       const header = `
         <div class="leaderboard-row header-row">
           <div>#</div>
@@ -174,7 +173,7 @@
           <div>Max HP</div>
         </div>
       `;
-
+  
       const rows = list
         .map((p, i) => `
           <div class="leaderboard-row">
@@ -186,28 +185,27 @@
           </div>
         `)
         .join("");
-
+  
       container.innerHTML = header + rows;
     }
-
+  
     /* ============================================================
        BUTTON ACTIONS
        ============================================================ */
-
     function refresh() {
       loadLeaderboard();
     }
-
+  
     function goToMap() {
       window.location.href = "world-map.html";
     }
-
+  
     /* ============================================================
        INITIAL LOAD
        ============================================================ */
-
     loadLeaderboard();
   </script>
+
 
 </body>
 </html>
