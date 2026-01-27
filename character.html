@@ -210,11 +210,12 @@
   <h1>Character</h1>
   <div id="usernameDisplay"></div>
   <div id="syncIndicator">Syncing with server…</div>
-  <div id="conflictModal" style="display:none;">
-    <h3>Cloud and Local Data Differ</h3>
-    <button id="useCloud">Use Cloud Version</button>
-    <button id="useLocal">Use Local Version</button>
+  <div id="conflictModal" style="display:none; background:#222; color:#eee; padding:10px; border-radius:6px; margin-top:10px;">
+    <p>Cloud and local data differ for this character. Which version do you want to use?</p>
+    <button id="useCloudBtn" class="btn">Use Cloud Version</button>
+    <button id="useLocalBtn" class="btn">Use Local Version</button>
   </div>
+
 
   <button class="btn" onclick="refreshCharacter()">Refresh</button>
   <button class="btn" onclick="pushToKV()">Push to KV</button>
@@ -226,123 +227,82 @@
 
   <!-- MODULE SCRIPT -->
   <script type="module">
-    import { api } from "./api.js";
-    import { migrateAndSave } from "./migration.js";
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
-    import { savePlayerToKV } from "./api.js";
-    
+    import { savePlayerToKV, loadFromKVAndLocal, detectConflict } from "./api.js";
+    import { api } from "./api.js";
+  
+    /* ============================================================
+       SESSION + LOAD ON LOGIN
+    ============================================================ */
+  
     await requireSession();
-    
+  
     const { local, remote, conflict, username } = window.syncState;
-    
-    if (conflict === "remote-only") {
-      PlayerStorage.save(username, remote);
-      loadCharacterUI(remote);
+    window.username = username;
+  
+    const conflictModal = document.getElementById("conflictModal");
+    const useCloudBtn = document.getElementById("useCloudBtn");
+    const useLocalBtn = document.getElementById("useLocalBtn");
+  
+    function loadCharacterUI(player) {
+      PlayerStorage.save(username, player);
+      renderCharacter(player);
+      document.getElementById("syncIndicator").textContent = "Synced ✔";
     }
-    
-    else if (conflict === "local-only") {
+  
+    function showConflictModal(localPlayer, remotePlayer) {
+      conflictModal.style.display = "block";
+  
+      useCloudBtn.onclick = () => {
+        PlayerStorage.save(username, remotePlayer);
+        loadCharacterUI(remotePlayer);
+        conflictModal.style.display = "none";
+      };
+  
+      useLocalBtn.onclick = async () => {
+        await savePlayerToKV(username, localPlayer);
+        loadCharacterUI(localPlayer);
+        conflictModal.style.display = "none";
+      };
+    }
+  
+    // Decide what to load on entry
+    if (conflict === "remote-only") {
+      loadCharacterUI(remote);
+    } else if (conflict === "local-only") {
       await savePlayerToKV(username, local);
       loadCharacterUI(local);
-    }
-    
-    else if (conflict === "match") {
-      loadCharacterUI(local); // both are same
-    }
-    
-    else if (conflict === "conflict") {
+    } else if (conflict === "match") {
+      loadCharacterUI(local || remote);
+    } else if (conflict === "conflict") {
       showConflictModal(local, remote);
+    } else if (conflict === "none") {
+      document.getElementById("characterContainer").textContent =
+        "No character data found.";
     }
-
-    
+  
+    /* ============================================================
+       PUSH TO KV BUTTON
+    ============================================================ */
     window.pushToKV = async () => {
-      const p = JSON.parse(localStorage.getItem("player_" + window.username));
+      const p = PlayerStorage.load(username);
       if (!p) {
         alert("No player loaded");
         return;
       }
-    
       const res = await savePlayerToKV(p.username, p);
       alert("Saved to KV!");
+      console.log("KV save result:", res);
     };
-
-    window.migrateAndSave = migrateAndSave;
-    window.savePlayerToKV = savePlayerToKV;
-
-
+  
     /* ============================================================
-       SESSION
-    ============================================================ */
-    const session = requireSession();
-    if (!session) {
-      // requireSession() already redirected
-      throw new Error("No session");
-    }
-
-    const username = session.username;
-    document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
-
-    let player = null;
-
-    /* ============================================================
-       LOAD + REFRESH
-    ============================================================ */
-    loadCharacter();
-
-    function showConflictModal(local, remote) {
-      const modal = document.getElementById("conflictModal");
-      modal.style.display = "block";
-    
-      document.getElementById("useCloud").onclick = () => {
-        PlayerStorage.save(username, remote);
-        loadCharacterUI(remote);
-        modal.style.display = "none";
-      };
-    
-      document.getElementById("useLocal").onclick = async () => {
-        await savePlayerToKV(username, local);
-        loadCharacterUI(local);
-        modal.style.display = "none";
-      };
-    }
-
-
-    async function refreshCharacter() {
-      document.getElementById("syncIndicator").textContent = "Syncing with server…";
-      const fresh = await api.getPlayer(username);
-      if (fresh) {
-        player = fresh;
-        sessionStorage.setItem("player", JSON.stringify(player));
-        renderCharacter(player);
-        document.getElementById("syncIndicator").textContent = "Synced ✔";
-      }
-    }
-
-    async function loadCharacter() {
-      const cached = sessionStorage.getItem("player");
-      if (cached) {
-        player = JSON.parse(cached);
-        renderCharacter(player);
-      }
-
-      const fresh = await api.getPlayer(username);
-      if (fresh) {
-        player = fresh;
-        sessionStorage.setItem("player", JSON.stringify(player));
-        renderCharacter(player);
-      }
-
-      document.getElementById("syncIndicator").textContent = "Synced ✔";
-    }
-
-    /* ============================================================
-       RENDER CHARACTER
+       RENDER CHARACTER (YOUR FULL RENDERER)
     ============================================================ */
     function renderCharacter(p) {
       const container = document.getElementById("characterContainer");
       const out = [];
-
+  
       /* OVERVIEW */
       out.push(`
         <div class="section collapsible">
@@ -350,32 +310,32 @@
             Overview <span class="collapse-arrow">▼</span>
           </h2>
           <div class="section-content">
-
+  
             <div class="portrait-frame portrait-${p.rarity?.toLowerCase() || "common"}">
               <img class="portrait-img"
                    src="${p.portrait || "/assets/portraits/default.png"}"
                    onerror="this.src='/assets/portraits/default.png'">
             </div>
-
+  
             <img class="profession-emblem"
                  src="/assets/professions/${p.profession?.toLowerCase() || "default"}.png"
                  onerror="this.src='/assets/professions/default.png'">
-
+  
             <h2 style="text-align:center; margin-top:12px;">${p.username}</h2>
-
+  
             <div class="stat-row"><span>Level</span><span>${p.level}</span></div>
             <div class="stat-row"><span>Profession</span><span>${format(p.profession)}</span></div>
             <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
             <div class="stat-row"><span>Element</span><span>${format(p.element)}</span></div>
             <div class="stat-row"><span>Family</span><span>${format(p.family)}</span></div>
-
+  
             <div style="margin-top:10px;">XP: ${p.xp} / ${p.xpRequired}</div>
             <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
-
+  
           </div>
         </div>
       `);
-
+  
       /* BASE STATS */
       out.push(`
         <div class="section collapsible">
@@ -395,7 +355,7 @@
           </div>
         </div>
       `);
-
+  
       /* DERIVED STATS */
       out.push(`
         <div class="section collapsible">
@@ -415,7 +375,7 @@
           </div>
         </div>
       `);
-
+  
       /* COMBAT PROFILE */
       out.push(`
         <div class="section collapsible">
@@ -437,7 +397,7 @@
           </div>
         </div>
       `);
-
+  
       /* EQUIPMENT */
       out.push(`
         <div class="section collapsible">
@@ -466,7 +426,7 @@
           </div>
         </div>
       `);
-
+  
       /* UNEQUIPPED GEAR */
       out.push(`
         <div class="section collapsible">
@@ -495,7 +455,7 @@
           </div>
         </div>
       `);
-
+  
       /* ABILITIES */
       out.push(`
         <div class="section collapsible">
@@ -529,7 +489,7 @@
           </div>
         </div>
       `);
-
+  
       /* ULTIMATE */
       out.push(`
         <div class="section collapsible">
@@ -559,7 +519,7 @@
           </div>
         </div>
       `);
-
+  
       /* TALENT TREE */
       out.push(`
         <div class="section collapsible">
@@ -589,7 +549,7 @@
           </div>
         </div>
       `);
-
+  
       /* REGION PROGRESS */
       out.push(`
         <div class="section collapsible">
@@ -614,7 +574,7 @@
           </div>
         </div>
       `);
-
+  
       /* STATUS EFFECTS */
       out.push(`
         <div class="section collapsible">
@@ -643,16 +603,16 @@
           </div>
         </div>
       `);
-
+  
       container.innerHTML = out.join("");
-
+  
       /* XP BAR ANIMATION */
       const pct = Math.min(100, (p.xp / p.xpRequired) * 100);
       setTimeout(() => {
         document.getElementById("xpFill").style.width = pct + "%";
       }, 50);
     }
-
+  
     /* ============================================================
        HELPERS
     ============================================================ */
@@ -660,26 +620,26 @@
       const section = header.parentElement;
       section.classList.toggle("collapsed");
     };
-
+  
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
         .replace(/\b\w/g, (c) => c.toUpperCase());
     }
-
+  
     function formatBonuses(b) {
       return Object.entries(b)
         .map(([k, v]) => `${format(k)}: +${v}`)
         .join("<br>");
     }
-
+  
     /* ============================================================
        NAVIGATION
     ============================================================ */
     window.goToInventory = () => (window.location.href = "inventory.html");
     window.goToMap = () => (window.location.href = "world-map.html");
-
+  
   </script>
 
 </body>
