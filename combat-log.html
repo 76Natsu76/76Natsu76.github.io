@@ -89,51 +89,48 @@
 
   <script src="api.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
     /* ============================================================
        LOAD LOGS
        ============================================================ */
     async function loadLogs() {
       const container = document.getElementById("logContainer");
-
-      if (!username) {
-        container.textContent = "Error: No Twitch username found.";
-        return;
-      }
-
+  
       container.textContent = "Loading combat logs...";
-
+  
       try {
-        const logs = await api.getCombatLogs(username);
+        const logs = await api.getCombatLogs(token);
         renderLogs(logs);
       } catch (err) {
         container.textContent = "Network error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RENDER LOGS
        ============================================================ */
     function renderLogs(logs) {
       const container = document.getElementById("logContainer");
-
+  
       if (!logs || logs.length === 0) {
         container.innerHTML = "<div>No combat logs found.</div>";
         return;
       }
-
+  
       container.innerHTML = logs
         .map((log, index) => {
           const timestamp = new Date(log.timestamp).toLocaleString();
-
+  
           const title = [
             format(log.region),
             log.biome ? `(${format(log.biome)})` : "",
@@ -142,12 +139,12 @@
             log.enemyVariant ? `(${format(log.enemyVariant)})` : "",
             `— ${log.outcome}`
           ].join(" ").replace(/\s+/g, " ");
-
+  
           const lootText =
             log.rewards?.loot?.length
               ? log.rewards.loot.map(l => `${l.quantity}x ${l.name}`).join(", ")
               : "None";
-
+  
           const body = [
             `Outcome: ${log.outcome}`,
             `Rounds: ${log.rounds}`,
@@ -159,18 +156,18 @@
             "=== Combat Log ===",
             ...log.log.map(formatEntry)
           ].join("\n");
-
+  
           return `
             <div class="log-entry">
               <div class="log-header">
                 <span>${timestamp}</span>
                 <span>${format(log.region)}</span>
               </div>
-
+  
               <div class="log-title" onclick="toggleBody(${index})">
                 ${title}
               </div>
-
+  
               <div class="log-body" id="body-${index}">
                 ${body}
               </div>
@@ -179,7 +176,7 @@
         })
         .join("");
     }
-
+  
     /* ============================================================
        HELPERS
        ============================================================ */
@@ -187,10 +184,10 @@
       const el = document.getElementById(`body-${i}`);
       el.style.display = el.style.display === "block" ? "none" : "block";
     }
-
+  
     function formatEntry(entry) {
       if (typeof entry === "string") return entry;
-
+  
       switch (entry.type) {
         case "attack":
           return `${entry.attacker} hits ${entry.target} for ${entry.damage} dmg` +
@@ -211,22 +208,22 @@
           return JSON.stringify(entry);
       }
     }
-
+  
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     function goToMap() {
       window.location.href = "world-map.html";
     }
-
+  
     function goToFight() {
       window.location.href = "fight-interactive.html";
     }
-
+  
     loadLogs();
   </script>
 
