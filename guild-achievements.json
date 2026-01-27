@@ -1,0 +1,67 @@
+{
+  "$schema": "S3VEN_RPG_GUILD_ACHIEVEMENTS_V1",
+  "achievements": {
+    "ACHIEVEMENT_KEY": {
+      "name": "String",
+      "description": "String",
+      "requirements": {
+        "type": "boss_kill | event_complete | pvp_rating | guild_level | resource",
+        "target": "string",
+        "amount": 0
+      },
+      "rewards": {
+        "guildBuffs": ["buff_key"],
+        "items": ["item_key"],
+        "gold": 0,
+        "xp": 0
+      }
+    },
+
+    "first_rift_conquerors": {
+      "name": "First Rift Conquerors",
+      "description": "Defeat your first guild world boss.",
+      "requirements": {
+        "type": "boss_kill",
+        "target": "any",
+        "amount": 1
+      },
+      "rewards": {
+        "guildBuffs": ["guild_xp_boost_1"],
+        "items": ["rift_dust"],
+        "gold": 200,
+        "xp": 300
+      }
+    },
+
+    "defenders_of_the_hall": {
+      "name": "Defenders of the Hall",
+      "description": "Complete 3 guild defense events.",
+      "requirements": {
+        "type": "event_complete",
+        "target": "defense",
+        "amount": 3
+      },
+      "rewards": {
+        "guildBuffs": ["guild_nature_resist_1"],
+        "items": ["thorn_fragment"],
+        "gold": 150,
+        "xp": 200
+      }
+    },
+
+  "arena_ascendants": {
+    "name": "Arena Ascendants",
+    "description": "Reach 1200 guild PvP rating.",
+    "requirements": {
+      "type": "pvp_rating",
+      "target": "guild",
+      "amount": 1200
+    },
+    "rewards": {
+      "guildBuffs": ["guild_luck_boost_1"],
+      "items": ["arena_token"],
+      "gold": 300,
+      "xp": 400
+    }
+  }
+}
