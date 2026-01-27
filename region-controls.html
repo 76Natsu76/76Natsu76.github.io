@@ -110,14 +110,9 @@
     if (!session) return;
   
     const admin = session.username;
-    const token = session.token;
-  
     document.getElementById("adminDisplay").textContent =
-      "Admin: " + admin;
+      admin ? "Admin: " + admin : "Not logged in";
   
-    /* ============================================================
-       LOAD REGIONS
-       ============================================================ */
     async function loadRegions() {
       const container = document.getElementById("regionsContainer");
       container.textContent = "Loading regions...";
@@ -136,9 +131,6 @@
       }
     }
   
-    /* ============================================================
-       RENDER REGIONS
-       ============================================================ */
     function renderRegions(list) {
       const container = document.getElementById("regionsContainer");
   
@@ -174,19 +166,27 @@
             </div>
   
             <div>
-              <input id="danger-${r.key}" type="number" step="0.1" value="${r.dangerMultiplier ?? 1}">
+              <input id="danger-${r.key}" type="number" step="0.1" value="${
+          r.dangerMultiplier ?? 1
+        }">
             </div>
   
             <div>
-              <input id="boost-${r.key}" type="number" step="0.1" value="${r.encounterBoost ?? 0}">
+              <input id="boost-${r.key}" type="number" step="0.1" value="${
+          r.encounterBoost ?? 0
+        }">
             </div>
   
             <div>
-              <input id="weather-${r.key}" placeholder="auto or WEATHER_KEY" value="${r.weatherOverride ?? ""}">
+              <input id="weather-${r.key}" placeholder="auto or WEATHER_KEY" value="${
+          r.weatherOverride ?? ""
+        }">
             </div>
   
             <div>
-              <input id="bless-${r.key}" placeholder="auto or BLESSING_KEY" value="${r.blessingOverride ?? ""}">
+              <input id="bless-${r.key}" placeholder="auto or BLESSING_KEY" value="${
+          r.blessingOverride ?? ""
+        }">
             </div>
   
             <div>
@@ -200,18 +200,19 @@
       container.innerHTML = rows.join("");
     }
   
-    /* ============================================================
-       SAVE REGION
-       ============================================================ */
     async function saveRegion(key) {
-      const enabled = document.getElementById(`enabled-${key}`).value === "true";
-      const danger = Number(document.getElementById(`danger-${key}`).value);
+      const enabled =
+        document.getElementById(`enabled-${key}`).value === "true";
+      const danger = Number(
+        document.getElementById(`danger-${key}`).value
+      );
       const boost = Number(document.getElementById(`boost-${key}`).value);
-      const weather = document.getElementById(`weather-${key}`).value.trim() || null;
-      const blessing = document.getElementById(`bless-${key}`).value.trim() || null;
+      const weather =
+        document.getElementById(`weather-${key}`).value.trim() || null;
+      const blessing =
+        document.getElementById(`bless-${key}`).value.trim() || null;
   
       const payload = {
-        session_token: token,
         admin,
         key,
         enabled,
@@ -237,15 +238,8 @@
       }
     }
   
-    /* ============================================================
-       FORCE REFRESH
-       ============================================================ */
     async function refreshRegion(key) {
-      const payload = {
-        session_token: token,
-        admin,
-        key
-      };
+      const payload = { admin, key };
   
       try {
         const res = await fetch("/api/admin/regions/refresh", {
@@ -263,9 +257,6 @@
       }
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
@@ -279,7 +270,6 @@
   
     loadRegions();
   </script>
-
 
 </body>
 </html>
