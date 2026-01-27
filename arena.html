@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Arena</title>
+  <link rel="stylesheet" href="arena.css" />
+  <script src="player-registry.js"></script>
+  <script src="arena-engine.js"></script>
+  <script src="arena-history.js"></script>
+  <script src="arena-leaderboard.js"></script>
+  <script src="arena.json" type="application/json"></script>
+</head>
+
+<body>
+  <div id="arena-container">
+    <h1>Arena</h1>
+
+    <div id="arena-menu">
+      <button onclick="showLobby()">Lobby</button>
+      <button onclick="showLeaderboards()">Leaderboards</button>
+      <button onclick="showHistory()">Match History</button>
+    </div>
+
+    <div id="arena-content"></div>
+  </div>
+
+  <script src="arena-ui.js"></script>
+</body>
+</html>
