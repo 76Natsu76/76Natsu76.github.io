@@ -229,8 +229,7 @@
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
-    import { savePlayerToKV, loadFromKVAndLocal, detectConflict } from "./api.js";
-    import { api } from "./api.js";
+    import { savePlayerToKV, loadFromKVAndLocal } from "./api.js";
   
     /* ============================================================
        SESSION + LOAD ON LOGIN
@@ -245,7 +244,40 @@
     const useCloudBtn = document.getElementById("useCloudBtn");
     const useLocalBtn = document.getElementById("useLocalBtn");
   
+    /* ============================================================
+       NORMALIZATION (prevents .map/.length crashes)
+    ============================================================ */
+  
+    function normalizePlayer(p) {
+      if (!p) return p;
+  
+      if (!Array.isArray(p.abilities)) p.abilities = [];
+      if (!Array.isArray(p.inventory)) p.inventory = [];
+      if (!Array.isArray(p.inventoryEquipment)) p.inventoryEquipment = [];
+      if (!Array.isArray(p.talentTree)) p.talentTree = [];
+      if (!Array.isArray(p.statusEffects)) p.statusEffects = [];
+      if (!Array.isArray(p.playerStatusEffects)) p.playerStatusEffects = [];
+  
+      // Prefer statusEffects, but if empty and playerStatusEffects exists, copy it
+      if ((!p.statusEffects || p.statusEffects.length === 0) && p.playerStatusEffects.length) {
+        p.statusEffects = p.playerStatusEffects;
+      }
+  
+      if (typeof p.equipment !== "object" || p.equipment === null) p.equipment = {};
+      if (typeof p.stats !== "object" || p.stats === null) p.stats = {};
+      if (typeof p.derived !== "object" || p.derived === null) p.derived = {};
+      if (typeof p.adaptiveProfile !== "object" || p.adaptiveProfile === null) p.adaptiveProfile = {};
+      if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
+  
+      return p;
+    }
+  
+    /* ============================================================
+       LOAD CHARACTER INTO UI
+    ============================================================ */
+  
     function loadCharacterUI(player) {
+      player = normalizePlayer(player);
       PlayerStorage.save(username, player);
       renderCharacter(player);
       document.getElementById("syncIndicator").textContent = "Synced ✔";
@@ -255,7 +287,6 @@
       conflictModal.style.display = "block";
   
       useCloudBtn.onclick = () => {
-        PlayerStorage.save(username, remotePlayer);
         loadCharacterUI(remotePlayer);
         conflictModal.style.display = "none";
       };
@@ -295,22 +326,20 @@
       alert("Saved to KV!");
       console.log("KV save result:", res);
     };
-
+  
     window.loadFromKV = async () => {
       document.getElementById("syncIndicator").textContent = "Loading from KV…";
       const { remote } = await loadFromKVAndLocal(username);
-    
+  
       if (!remote) {
         alert("No cloud data found for this character.");
         document.getElementById("syncIndicator").textContent = "No cloud data";
         return;
       }
-    
-      // Save cloud version locally
-      PlayerStorage.save(username, remote);
-    
-      // Hydrate UI
-      renderCharacter(remote);
+  
+      const normalized = normalizePlayer(remote);
+      PlayerStorage.save(username, normalized);
+      renderCharacter(normalized);
       document.getElementById("syncIndicator").textContent = "Loaded from KV ✔";
     };
   
@@ -402,7 +431,7 @@
           </h2>
           <div class="section-content">
             ${
-              p.adaptiveProfile
+              p.adaptiveProfile && Object.keys(p.adaptiveProfile).length
                 ? Object.entries(p.adaptiveProfile)
                     .map(([k, v]) => `
                       <div class="stat-row">
@@ -546,7 +575,7 @@
           </h2>
           <div class="section-content">
             ${
-              p.talentTree
+              p.talentTree && p.talentTree.length
                 ? p.talentTree
                     .map(
                       (node) => `
@@ -576,7 +605,7 @@
           </h2>
           <div class="section-content">
             ${
-              p.regionProgress
+              p.regionProgress && Object.keys(p.regionProgress).length
                 ? Object.entries(p.regionProgress)
                     .map(
                       ([region, progress]) => `
@@ -625,9 +654,10 @@
       container.innerHTML = out.join("");
   
       /* XP BAR ANIMATION */
-      const pct = Math.min(100, (p.xp / p.xpRequired) * 100);
+      const pct = p.xpRequired ? Math.min(100, (p.xp / p.xpRequired) * 100) : 0;
       setTimeout(() => {
-        document.getElementById("xpFill").style.width = pct + "%";
+        const xpFill = document.getElementById("xpFill");
+        if (xpFill) xpFill.style.width = pct + "%";
       }, 50);
     }
   
@@ -640,6 +670,7 @@
     };
   
     function format(str) {
+      if (str == null) return "—";
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
@@ -647,6 +678,7 @@
     }
   
     function formatBonuses(b) {
+      if (!b || typeof b !== "object") return "";
       return Object.entries(b)
         .map(([k, v]) => `${format(k)}: +${v}`)
         .join("<br>");
@@ -657,8 +689,8 @@
     ============================================================ */
     window.goToInventory = () => (window.location.href = "inventory.html");
     window.goToMap = () => (window.location.href = "world-map.html");
-  
   </script>
+
 
 </body>
 </html>
