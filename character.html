@@ -221,6 +221,7 @@
   <button class="btn" onclick="goToMap()">World Map</button>
 
   <script type="module">
+    import { api } from "./api.js";
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
