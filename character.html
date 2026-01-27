@@ -212,6 +212,7 @@
   <div id="syncIndicator">Syncing with server…</div>
 
   <button class="btn" onclick="refreshCharacter()">Refresh</button>
+  <button class="btn" onclick="pushToKV()">Push to KV</button>
 
   <div id="characterContainer">Loading...</div>
 
@@ -222,6 +223,15 @@
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { api } from "./api.js";
+    import { savePlayerToKV } from "./api.js";
+
+    window.pushToKV = async () => {
+      const p = JSON.parse(sessionStorage.getItem("player"));
+      if (!p) return alert("No player loaded");
+    
+      const res = await savePlayerToKV(p.username, p);
+      alert("Saved to KV!");
+    };
 
     /* ============================================================
        SESSION
