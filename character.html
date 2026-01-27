@@ -226,12 +226,16 @@
     import { savePlayerToKV } from "./api.js";
 
     window.pushToKV = async () => {
-      const p = JSON.parse(sessionStorage.getItem("player"));
-      if (!p) return alert("No player loaded");
+      const p = JSON.parse(localStorage.getItem("player_" + window.username));
+      if (!p) {
+        alert("No player loaded");
+        return;
+      }
     
       const res = await savePlayerToKV(p.username, p);
       alert("Saved to KV!");
     };
+
 
     /* ============================================================
        SESSION
