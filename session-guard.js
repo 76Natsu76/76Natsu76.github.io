@@ -1,7 +1,5 @@
 // session-guard.js
-import { SessionManager } from "./session-manager.js";
 import { loadFromKVAndLocal, detectConflict } from "./api.js";
-import { PlayerStorage } from "./player-storage.js";
 
 export async function requireSession() {
   const session = JSON.parse(localStorage.getItem("session"));
@@ -12,7 +10,6 @@ export async function requireSession() {
 
   const username = session.username;
 
-  // Load both versions
   const { local, remote } = await loadFromKVAndLocal(username);
   const conflict = detectConflict(local, remote);
 
