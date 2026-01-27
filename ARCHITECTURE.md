@@ -339,31 +339,31 @@ World tick in world-data.js
 
 
 
+DUNGEONS:
 
-
-ENTER DUNGEON
-     │
-     ▼
- ┌───────────┐
- │ FLOOR 1   │
- │ Encounter │──► Combat Engine
- │ Event     │──► Event Resolver
- │ Treasure  │──► Loot Resolver
- └─────┬─────┘
-       │
-       ▼
- ┌───────────┐
- │ FLOOR 2   │
- │ (Harder)  │
- └─────┬─────┘
-       │
-       ▼
-   ... repeat ...
-       │
-       ▼
- ┌──────────────┐
- │ BOSS FLOOR    │──► Legendary Boss Template
- └──────────────┘
-       │
-       ▼
-   EXIT / REWARD
+                        ENTER DUNGEON
+                             │
+                             ▼
+                         ┌───────────┐
+                         │ FLOOR 1   │
+                         │ Encounter │──► Combat Engine
+                         │ Event     │──► Event Resolver
+                         │ Treasure  │──► Loot Resolver
+                         └─────┬─────┘
+                               │
+                               ▼
+                         ┌───────────┐
+                         │ FLOOR 2   │
+                         │ (Harder)  │
+                         └─────┬─────┘
+                               │
+                               ▼
+                           ... repeat ...
+                               │
+                               ▼
+                         ┌──────────────┐
+                         │ BOSS FLOOR    │──► Legendary Boss Template
+                         └──────────────┘
+                               │
+                               ▼
+                           EXIT / REWARD
