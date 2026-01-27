@@ -2,89 +2,51 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Login with Twitch</title>
-
+  <title>Login</title>
   <style>
-    body {
-      background: #0d0d0d;
-      color: #e0e0e0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100px;
-      margin: 0;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #7fffd4;
-    }
-    button {
-      background: #6441a5;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      font-size: 18px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #7d5bbe;
-    }
+    body { background:#0d0d0d; color:#e0e0e0; font-family:Arial,sans-serif; padding:20px; }
+    input { display:block; margin:8px 0; padding:8px; width:240px; }
+    button { padding:8px 16px; margin-top:8px; }
+    #log { white-space:pre-wrap; margin-top:12px; font-size:13px; opacity:0.8; }
   </style>
 </head>
-
 <body>
+  <h1>Login</h1>
+  <input id="username" placeholder="Username" />
+  <input id="password" type="password" placeholder="Password" />
+  <button id="loginBtn">Login</button>
+  <div id="log"></div>
 
-  <h1>S3ven's RPG</h1>
-  <button id="loginBtn">Login with Twitch</button>
+  <script type="module">
+    import { SessionManager } from "./session-manager.js";
 
-  <script>
-    const CLIENT_ID = "akan5ymak8ah41ad9fh7x0ozd2npnf"; // or xqsb44bk14sw2jo2m2bgi3sz4et4e0
-    const REDIRECT_URI = "https://76natsu76.github.io/index.html";
+    const WORKER_BASE = "https://twitch-rpg-worker.godeaterspersona.workers.dev";
 
-    // PKCE helper: generate random string
-    function generateRandomString(length) {
-      const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let result = "";
-      for (let i = 0; i < length; i++) {
-        result += charset.charAt(Math.floor(Math.random() * charset.length));
-      }
-      return result;
-    }
-
-    // PKCE helper: SHA256 → base64url
-    async function sha256ToBase64URL(str) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(str);
-      const hash = await crypto.subtle.digest("SHA-256", data);
-      const bytes = new Uint8Array(hash);
-      let base64 = btoa(String.fromCharCode(...bytes));
-      return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-    }
+    const logEl = document.getElementById("log");
+    const log = msg => logEl.textContent = msg;
 
     document.getElementById("loginBtn").addEventListener("click", async () => {
-      const state = crypto.randomUUID();
-      const codeVerifier = generateRandomString(64);
-      const codeChallenge = await sha256ToBase64URL(codeVerifier);
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
 
-      sessionStorage.setItem("oauth_state", state);
-      sessionStorage.setItem("pkce_verifier", codeVerifier);
+      log("Logging in...");
 
-      const url =
-        `https://id.twitch.tv/oauth2/authorize` +
-        `?client_id=${CLIENT_ID}` +
-        `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
-        `&response_type=code` +
-        `&scope=user:read:email` +
-        `&state=${state}` +
-        `&code_challenge=${codeChallenge}` +
-        `&code_challenge_method=S256`;
+      const res = await fetch(WORKER_BASE + "/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
 
-      window.location.href = url + "&_=" + Date.now();
+      const json = await res.json();
+      if (json.status !== "success") {
+        log("Error: " + json.message);
+        return;
+      }
+
+      SessionManager.saveSession(json.username, json.session_token);
+      log("Logged in as " + json.username + ". Redirecting...");
+      window.location.href = "landing.html";
     });
   </script>
-
 </body>
 </html>
