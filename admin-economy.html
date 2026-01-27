@@ -191,6 +191,10 @@
   <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
 
   <script>
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+    
     const admin = sessionStorage.getItem("twitch_username");
     document.getElementById("adminDisplay").textContent =
       admin ? "Admin: " + admin : "Not logged in";
