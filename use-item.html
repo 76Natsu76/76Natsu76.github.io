@@ -131,28 +131,25 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
-    /* ============================================================
-       LOAD USABLE ITEMS
-       ============================================================ */
     async function loadUsableItems() {
       const container = document.getElementById("useItemContainer");
   
+      if (!username) {
+        container.textContent = "Error: No username found.";
+        return;
+      }
+  
       try {
-        const player = await api.getPlayer(token);
+        const player = await api.getPlayer(username);
         renderUsableItems(player);
       } catch (err) {
         container.textContent = "Network error: " + err.message;
       }
     }
   
-    /* ============================================================
-       RENDER ITEMS
-       ============================================================ */
     function renderUsableItems(player) {
       const container = document.getElementById("useItemContainer");
   
@@ -166,35 +163,40 @@
           ${
             usable.length === 0
               ? "<div>No usable items.</div>"
-              : usable.map(item => {
-                  const rarityClass = "rarity-" + (item.rarity || "common").toLowerCase();
-                  return `
-                    <div class="item">
-                      <div class="item-info">
-                        <div class="item-name ${rarityClass}">${item.name}</div>
-                        <div class="item-desc">${item.description || item.meta?.description || "No description"}</div>
-                        <div class="item-qty">x${item.quantity}</div>
+              : usable
+                  .map(item => {
+                    const rarityClass =
+                      "rarity-" + (item.rarity || "common").toLowerCase();
+                    return `
+                      <div class="item">
+                        <div class="item-info">
+                          <div class="item-name ${rarityClass}">${item.name}</div>
+                          <div class="item-desc">${
+                            item.description ||
+                            item.meta?.description ||
+                            "No description"
+                          }</div>
+                          <div class="item-qty">x${item.quantity}</div>
+                        </div>
+                        <div class="item-actions">
+                          <button onclick="useItem('${
+                            item.id || item._id
+                          }')">Use</button>
+                        </div>
                       </div>
-                      <div class="item-actions">
-                        <button onclick="useItem('${item.id || item._id}')">Use</button>
-                      </div>
-                    </div>
-                  `;
-                }).join("")
+                    `;
+                  })
+                  .join("")
           }
         </div>
       `;
     }
   
-    /* ============================================================
-       USE ITEM
-       ============================================================ */
     async function useItem(itemId) {
       try {
-        const result = await api.useItem(token, itemId);
+        const result = await api.useItem(username, itemId);
   
-        // Refresh stored player
-        const updated = await api.getPlayer(token);
+        const updated = await api.getPlayer(username);
         sessionStorage.setItem("player", JSON.stringify(updated));
   
         alert(result.message || "Item used.");
@@ -204,9 +206,6 @@
       }
     }
   
-    /* ============================================================
-       NAVIGATION
-       ============================================================ */
     function goToInventory() {
       window.location.href = "inventory.html";
     }
