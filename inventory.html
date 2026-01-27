@@ -181,12 +181,9 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
-    // Local cached player data (GitHub-native)
     let player = JSON.parse(sessionStorage.getItem("player") || "{}");
   
     loadInventory();
@@ -201,10 +198,6 @@
       renderInventory(player);
     }
   
-    /* ============================================================
-       RENDER INVENTORY
-       ============================================================ */
-  
     function renderInventory(p) {
       const container = document.getElementById("inventoryContainer");
       const out = [];
@@ -216,10 +209,18 @@
   
       for (const item of p.inventory || []) {
         switch (item.type) {
-          case "consumable": consumables.push(item); break;
-          case "material": materials.push(item); break;
-          case "quest": quest.push(item); break;
-          default: misc.push(item); break;
+          case "consumable":
+            consumables.push(item);
+            break;
+          case "material":
+            materials.push(item);
+            break;
+          case "quest":
+            quest.push(item);
+            break;
+          default:
+            misc.push(item);
+            break;
         }
       }
   
@@ -241,9 +242,14 @@
           <div class="section-content">
             ${
               Object.entries(p.equipment || {})
-                .map(([slot, item]) => `
-                  <div class="equipment-card rarity-${(item?.rarity || "common").toLowerCase()}">
-                    <img class="item-icon" src="${item?.icon || "/assets/items/default.png"}">
+                .map(
+                  ([slot, item]) => `
+                  <div class="equipment-card rarity-${(
+                    item?.rarity || "common"
+                  ).toLowerCase()}">
+                    <img class="item-icon" src="${
+                      item?.icon || "/assets/items/default.png"
+                    }">
   
                     <div class="item-info">
                       <div class="item-name">${item ? item.name : "—"}</div>
@@ -258,7 +264,8 @@
                         : ""
                     }
                   </div>
-                `)
+                `
+                )
                 .join("")
             }
           </div>
@@ -277,9 +284,14 @@
               items.length === 0
                 ? "<div>No items.</div>"
                 : items
-                    .map(item => `
-                      <div class="item-card rarity-${(item.rarity || "common").toLowerCase()}">
-                        <img class="item-icon" src="${item.icon || "/assets/items/default.png"}">
+                    .map(
+                      item => `
+                      <div class="item-card rarity-${(
+                        item.rarity || "common"
+                      ).toLowerCase()}">
+                        <img class="item-icon" src="${
+                          item.icon || "/assets/items/default.png"
+                        }">
   
                         <div class="item-info">
                           <div class="item-name">${item.name}</div>
@@ -299,17 +311,14 @@
                           }
                         </div>
                       </div>
-                    `)
+                    `
+                    )
                     .join("")
             }
           </div>
         </div>
       `;
     }
-  
-    /* ============================================================
-       ITEM ACTIONS (LOCAL ONLY)
-       ============================================================ */
   
     function useItem(itemId) {
       const item = player.inventory.find(i => i.id === itemId);
@@ -341,10 +350,6 @@
       refreshInventory();
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
-  
     function toggleSection(header) {
       header.parentElement.classList.toggle("collapsed");
     }
@@ -356,9 +361,10 @@
         .replace(/\b\w/g, c => c.toUpperCase());
     }
   
-    window.goToCharacter = () => window.location.href = "character.html";
-    window.goToMap = () => window.location.href = "world-map.html";
+    window.goToCharacter = () => (window.location.href = "character.html");
+    window.goToMap = () => (window.location.href = "world-map.html");
   </script>
+
 
 
 </body>
