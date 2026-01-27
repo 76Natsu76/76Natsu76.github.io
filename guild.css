@@ -1,0 +1,105 @@
+/************************************************************
+ * guild.css — Styling for guild.html
+ ************************************************************/
+
+body {
+  background: #0f0f0f;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#guild-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.5);
+}
+
+h1, h2, h3 {
+  color: #ffd86b;
+  margin-bottom: 10px;
+}
+
+.guild-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #222;
+  border-radius: 6px;
+}
+
+#guild-menu {
+  margin: 20px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#guild-menu button {
+  padding: 10px 16px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #ffd86b;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#guild-menu button:hover {
+  background: #444;
+}
+
+.guild-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.guild-table th, .guild-table td {
+  padding: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.guild-table th {
+  background: #333;
+  color: #ffd86b;
+}
+
+.guild-table tr:hover {
+  background: #2a2a2a;
+}
+
+.bank-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bank-actions input {
+  padding: 8px;
+  background: #111;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ffd86b;
+}
+
+.bank-actions button {
+  padding: 8px 14px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 6px;
+  color: #ffd86b;
+  cursor: pointer;
+}
+
+.bank-actions button:hover {
+  background: #444;
+}
+
+button {
+  cursor: pointer;
+}
