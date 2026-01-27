@@ -4,10 +4,19 @@
 
 import { PlayerStorage } from "./player-storage.js";
 
-import raceDefs from "./race-definitions.json" assert { type: "json" };
-import subraceProfiles from "./subrace-stat-profiles.json" assert { type: "json" };
-import professionDefs from "./profession-definitions.json" assert { type: "json" };
-import abilityDefs from "./ability-definitions.json" assert { type: "json" };
+// Universal JSON loader (works everywhere)
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error("Failed to load " + path);
+  return res.json();
+}
+
+// Load all game data JSONs
+const raceDefs = await loadJSON("./race-definitions.json");
+const subraceProfiles = await loadJSON("./subrace-stat-profiles.json");
+const professionDefs = await loadJSON("./profession-definitions.json");
+const abilityDefs = await loadJSON("./ability-definitions.json");
+
 
 // -----------------------------
 // Helpers
