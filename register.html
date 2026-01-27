@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    body { background:#0d0d0d; color:#e0e0e0; font-family:Arial,sans-serif; padding:20px; }
+    input { display:block; margin:8px 0; padding:8px; width:240px; }
+    button { padding:8px 16px; margin-top:8px; }
+    #log { white-space:pre-wrap; margin-top:12px; font-size:13px; opacity:0.8; }
+  </style>
+</head>
+<body>
+  <h1>Create Account</h1>
+  <input id="username" placeholder="Username (3-20 chars, a-z 0-9 _)" />
+  <input id="password" type="password" placeholder="Password (min 6 chars)" />
+  <button id="registerBtn">Register</button>
+  <div id="log"></div>
+
+  <script type="module">
+    import { SessionManager } from "./session-manager.js";
+
+    const WORKER_BASE = "https://twitch-rpg-worker.godeaterspersona.workers.dev";
+
+    const logEl = document.getElementById("log");
+    const log = msg => logEl.textContent = msg;
+
+    document.getElementById("registerBtn").addEventListener("click", async () => {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      log("Registering...");
+
+      const res = await fetch(WORKER_BASE + "/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+
+      const json = await res.json();
+      if (json.status !== "success") {
+        log("Error: " + json.message);
+        return;
+      }
+
+      SessionManager.saveSession(json.username, json.session_token);
+      log("Registered as " + json.username + ". Redirecting...");
+      window.location.href = "landing.html";
+    });
+  </script>
+</body>
+</html>
