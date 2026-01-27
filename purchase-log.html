@@ -131,20 +131,25 @@
       container.innerHTML = logs
         .slice()
         .reverse()
-        .map(log => `
+        .map(
+          log => `
           <div class="log-entry">
             <strong>${log.username}</strong> bought 
             <strong>${log.qty}x ${log.itemId}</strong><br>
             Cost: ${log.totalCost} gold<br>
             Shop: ${log.shopType}<br>
-            <span style="opacity:0.7;">${new Date(log.timestamp).toLocaleString()}</span>
+            <span style="opacity:0.7;">${new Date(
+              log.timestamp
+            ).toLocaleString()}</span>
           </div>
-        `)
+        `
+        )
         .join("");
     }
   
     loadLogs();
   </script>
+
 
 </body>
 </html>
