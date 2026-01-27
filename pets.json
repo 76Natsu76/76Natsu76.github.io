@@ -1,0 +1,90 @@
+{
+  "$schema": "S3VEN_RPG_PETS_V1",
+  "pets": {
+    "forest_sprite": {
+      "name": "Forest Sprite",
+      "rarity": "uncommon",
+      "element": "nature",
+      "description": "A tiny guardian spirit born from ancient trees.",
+      "passives": {
+        "bonusXp": 5,
+        "bonusLootChance": 2
+      },
+      "abilities": ["sprite_heal", "sprite_blessing"],
+      "statBonuses": {
+        "hp": 10,
+        "defense": 2
+      },
+      "evolvesTo": "forest_sprite_elder",
+      "obtain": {
+        "type": "drop",
+        "source": "forest_region",
+        "chance": 0.01
+      }
+    },
+
+    "gel_slime": {
+      "name": "Gel Slime",
+      "rarity": "uncommon",
+      "element": "water",
+      "description": "A playful but quirky slime that fits on your shoulder.",
+      "passives": {
+        "bonusDamage": 3,
+        "waterResist": 10
+      },
+      "abilities": ["slime_shot", "absorb"],
+      "statBonuses": {
+        "attack": 2,
+        "speed": 4
+      },
+      "evolvesTo": "slime",
+      "obtain": {
+        "type": "craft",
+        "recipe": "summon_gel_slime"
+      }
+    },
+
+    "ember_pup": {
+      "name": "Ember Pup",
+      "rarity": "rare",
+      "element": "fire",
+      "description": "A playful elemental hound with a burning heart.",
+      "passives": {
+        "bonusDamage": 3,
+        "fireResist": 10
+      },
+      "abilities": ["ember_bite", "flame_bark"],
+      "statBonuses": {
+        "attack": 4,
+        "speed": 2
+      },
+      "evolvesTo": "ember_hound",
+      "obtain": {
+        "type": "craft",
+        "recipe": "summon_ember_pup"
+      }
+    },
+
+    "voidling": {
+      "name": "Voidling",
+      "rarity": "epic",
+      "element": "void",
+      "description": "A fragment of the void given curious form.",
+      "passives": {
+        "bonusCrit": 3,
+        "voidResist": 15
+      },
+      "abilities": ["void_peck", "entropy_pulse"],
+      "statBonuses": {
+        "attack": 3,
+        "magic": 5
+      },
+      "evolvesTo": null,
+      "obtain": {
+        "type": "worldBoss",
+        "bossKey": "void_monarch",
+        "chance": 0.05
+      }
+    }
+  }
+}
