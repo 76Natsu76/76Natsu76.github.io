@@ -92,5 +92,23 @@ export async function savePlayerToKV(username, data) {
   return res.json();
 }
 
+export async function loadPlayer(username) {
+  const local = PlayerStorage.load(username);
+  const remote = await getPlayerFromKV(username).catch(() => null);
+
+  return { local, remote };
+}
+
+function detectConflict(local, remote) {
+  if (!remote) return "no-remote";
+  if (!local) return "no-local";
+
+  // Compare timestamps or XP or level
+  if (local.exp !== remote.exp || local.level !== remote.level) {
+    return "conflict";
+  }
+
+  return "match";
+}
 
 
