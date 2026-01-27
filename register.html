@@ -23,30 +23,32 @@
     const WORKER_BASE = "https://auth-worker.godeaterspersona.workers.dev";
   
     const logEl = document.getElementById("log");
-    const log = msg => logEl.textContent = msg;
+    const log = msg => (logEl.textContent = msg);
   
-    document.getElementById("registerBtn").addEventListener("click", async () => {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value;
+    document
+      .getElementById("registerBtn")
+      .addEventListener("click", async () => {
+        const username = document.getElementById("username").value.trim();
+        const password = document.getElementById("password").value;
   
-      log("Registering...");
+        log("Registering...");
   
-      const res = await fetch(WORKER_BASE + "/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
+        const res = await fetch(WORKER_BASE + "/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+  
+        const json = await res.json();
+        if (json.status !== "success") {
+          log("Error: " + json.message);
+          return;
+        }
+  
+        SessionManager.saveSession(json.username, json.session_token);
+        log("Registered as " + json.username + ". Redirecting...");
+        window.location.href = "landing.html";
       });
-  
-      const json = await res.json();
-      if (json.status !== "success") {
-        log("Error: " + json.message);
-        return;
-      }
-  
-      SessionManager.saveSession(json.username, json.session_token);
-      log("Registered as " + json.username + ". Redirecting...");
-      window.location.href = "landing.html";
-    });
   </script>
 
 </body>
