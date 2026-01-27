@@ -109,28 +109,22 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "Not logged in";
   
     let currentTab = "global";
   
-    /* ============================================================
-       TAB SWITCHING
-       ============================================================ */
     function switchTab(tab) {
       currentTab = tab;
   
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document
+        .querySelectorAll(".tab")
+        .forEach(t => t.classList.remove("active"));
       document.getElementById("tab-" + tab).classList.add("active");
   
       loadLeaderboard();
     }
   
-    /* ============================================================
-       LOAD LEADERBOARD
-       ============================================================ */
     async function loadLeaderboard() {
       const container = document.getElementById("leaderboardContainer");
       container.textContent = "Loading...";
@@ -143,19 +137,15 @@
         } else if (currentTab === "hardcore") {
           data = await api.getLeaderboardHardcore();
         } else if (currentTab === "friends") {
-          data = await api.getLeaderboardFriends(token);
+          data = await api.getLeaderboardFriends(username);
         }
   
         renderLeaderboard(data);
-  
       } catch (err) {
         container.textContent = "Error loading leaderboard: " + err.message;
       }
     }
   
-    /* ============================================================
-       RENDER LEADERBOARD
-       ============================================================ */
     function renderLeaderboard(list) {
       const container = document.getElementById("leaderboardContainer");
   
@@ -175,7 +165,8 @@
       `;
   
       const rows = list
-        .map((p, i) => `
+        .map(
+          (p, i) => `
           <div class="leaderboard-row">
             <div>${i + 1}</div>
             <div>${p.username}</div>
@@ -183,15 +174,13 @@
             <div>${p.hardcore ? "Yes" : "No"}</div>
             <div>${p.maxHP}</div>
           </div>
-        `)
+        `
+        )
         .join("");
   
       container.innerHTML = header + rows;
     }
   
-    /* ============================================================
-       BUTTON ACTIONS
-       ============================================================ */
     function refresh() {
       loadLeaderboard();
     }
@@ -200,12 +189,8 @@
       window.location.href = "world-map.html";
     }
   
-    /* ============================================================
-       INITIAL LOAD
-       ============================================================ */
     loadLeaderboard();
   </script>
-
 
 </body>
 </html>
