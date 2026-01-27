@@ -125,7 +125,6 @@
     const rarityFilter = document.getElementById("rarityFilter");
     const searchBox = document.getElementById("searchBox");
   
-    // Populate region filter
     for (const key in WORLD_DATA.regions) {
       const opt = document.createElement("option");
       opt.value = key;
@@ -133,7 +132,6 @@
       regionFilter.appendChild(opt);
     }
   
-    // Populate biome filter
     for (const key in BIOMES) {
       const opt = document.createElement("option");
       opt.value = key;
@@ -141,7 +139,6 @@
       biomeFilter.appendChild(opt);
     }
   
-    // Populate family filter
     const families = new Set(EnemyRegistry.enemies.map(e => e.family));
     families.forEach(f => {
       const opt = document.createElement("option");
@@ -163,28 +160,22 @@
       const out = [];
   
       for (const e of EnemyRegistry.enemies) {
-        // REGION FILTER
         if (regionVal) {
           const allowed = enemyRegions[e.key];
           if (!allowed || !allowed.includes(regionVal)) continue;
         }
   
-        // BIOME FILTER
         if (biomeVal) {
           const tags = enemyTags[e.key] || [];
           if (!isEnemyAllowedInBiome(tags, biomeVal)) continue;
         }
   
-        // FAMILY FILTER
         if (familyVal && e.family !== familyVal) continue;
   
-        // RARITY FILTER
         if (rarityVal && e.rarity.toLowerCase() !== rarityVal) continue;
   
-        // SEARCH FILTER
         if (searchVal && !e.name.toLowerCase().includes(searchVal)) continue;
   
-        // Build template
         const template = EnemyRegistry.buildEnemyTemplate(e.key);
   
         out.push(`
@@ -218,46 +209,44 @@
       container.innerHTML = out.join("") || "<p>No enemies found.</p>";
     }
   
-    // ------------------------------------------------------------
-    // BIOME TAG CHECK
-    // ------------------------------------------------------------
     function isEnemyAllowedInBiome(tags, biomeKey) {
       if (!tags.length) return true;
   
       if (tags.includes("ice")) {
-        return biomeKey === "tundra" ||
-               biomeKey === "frozen-expanse" ||
-               biomeKey === "crystalline-tundra";
+        return (
+          biomeKey === "tundra" ||
+          biomeKey === "frozen-expanse" ||
+          biomeKey === "crystalline-tundra"
+        );
       }
   
       if (tags.includes("fire")) {
-        return biomeKey === "volcano" ||
-               biomeKey === "molten-crest" ||
-               biomeKey === "magma";
+        return (
+          biomeKey === "volcano" ||
+          biomeKey === "molten-crest" ||
+          biomeKey === "magma"
+        );
       }
   
       if (tags.includes("void")) {
-        return biomeKey === "void" ||
-               biomeKey === "void-wastes" ||
-               biomeKey === "void-realm";
+        return (
+          biomeKey === "void" ||
+          biomeKey === "void-wastes" ||
+          biomeKey === "void-realm"
+        );
       }
   
       if (tags.includes("arcane")) {
-        return biomeKey === "arcane" ||
-               biomeKey === "arcane-rift";
+        return biomeKey === "arcane" || biomeKey === "arcane-rift";
       }
   
       if (tags.includes("astral")) {
-        return biomeKey === "astral-plane" ||
-               biomeKey === "astral-nexus";
+        return biomeKey === "astral-plane" || biomeKey === "astral-nexus";
       }
   
       return true;
     }
   
-    // ------------------------------------------------------------
-    // HELPERS
-    // ------------------------------------------------------------
     function format(str) {
       return String(str)
         .replace(/_/g, " ")
@@ -265,7 +254,7 @@
         .replace(/\b\w/g, c => c.toUpperCase());
     }
   
-    window.goBack = () => window.location.href = "world-map.html";
+    window.goBack = () => (window.location.href = "world-map.html");
   
     regionFilter.onchange = render;
     biomeFilter.onchange = render;
@@ -275,6 +264,7 @@
   
     render();
   </script>
+
 
 </body>
 </html>
