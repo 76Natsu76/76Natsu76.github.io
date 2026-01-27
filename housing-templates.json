@@ -1,0 +1,83 @@
+{
+  "$schema": "S3VEN_RPG_HOUSING_TEMPLATES_V1",
+  "homes": {
+    "starter_cabin": {
+      "name": "Starter Cabin",
+      "tier": 1,
+      "maxFurniture": 4,
+      "restBonus": {
+        "hpRegen": 10,
+        "xpBoost": 2
+      },
+      "upgradeTo": "woodland_house",
+      "requirements": {
+        "gold": 200,
+        "items": [
+          { "itemKey": "wood_plank", "quantity": 10 },
+          { "itemKey": "stone_block", "quantity": 5 }
+        ]
+      },
+      "themes": ["default", "forest"]
+    },
+
+    "woodland_house": {
+      "name": "Woodland House",
+      "tier": 2,
+      "maxFurniture": 8,
+      "restBonus": {
+        "hpRegen": 20,
+        "xpBoost": 4
+      },
+      "upgradeTo": "grand_estate",
+      "requirements": {
+        "gold": 500,
+        "items": [
+          { "itemKey": "wood_plank", "quantity": 20 },
+          { "itemKey": "iron_nail", "quantity": 10 }
+        ]
+      },
+      "themes": ["forest", "autumn"]
+    },
+
+    "grand_estate": {
+      "name": "Grand Estate",
+      "tier": 3,
+      "maxFurniture": 12,
+      "restBonus": {
+        "hpRegen": 40,
+        "xpBoost": 8,
+        "craftingBoost": 5
+      },
+      "upgradeTo": null,
+      "requirements": {
+        "gold": 1500,
+        "items": [
+          { "itemKey": "marble_block", "quantity": 10 },
+          { "itemKey": "enchanted_wood", "quantity": 5 }
+        ]
+      },
+      "themes": ["autumn", "winter", "arcane"]
+    }
+  },
+
+  "furniture": {
+    "simple_bed": {
+      "name": "Simple Bed",
+      "type": "bed",
+      "bonus": { "hpRegen": 5 },
+      "craftRecipe": "craft_simple_bed"
+    },
+    "alchemy_table": {
+      "name": "Alchemy Table",
+      "type": "station",
+      "bonus": { "craftingBoost": 3 },
+      "craftRecipe": "craft_alchemy_table"
+    },
+    "pet_perch": {
+      "name": "Pet Perch",
+      "type": "pet_slot",
+      "bonus": { "petAffinity": 5 },
+      "craftRecipe": "craft_pet_perch"
+    }
+  }
+}
