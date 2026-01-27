@@ -126,41 +126,34 @@
 
   <div id="toast"></div>
 
-  <script src="api.js">
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
+    const token = session.token;
+  
     document.getElementById("adminDisplay").textContent =
-      admin ? "Logged in as Admin: " + admin : "Not logged in";
-
-    /* ============================================================
-       TOAST SYSTEM
-    ============================================================ */
+      "Logged in as Admin: " + admin;
+  
     function toast(msg) {
       const t = document.getElementById("toast");
       t.textContent = msg;
       t.style.opacity = 1;
       setTimeout(() => t.style.opacity = 0, 2500);
     }
-
-    /* ============================================================
-       NAVIGATION
-    ============================================================ */
+  
     function goGift() { window.location.href = "admin-gift.html"; }
     function goDailyPool() { window.location.href = "shop-pool-editor.html"; }
     function goPurchaseLog() { window.location.href = "purchase-log.html"; }
     function goLeaderboards() { window.location.href = "leaderboards.html"; }
     function goWorld() { window.location.href = "world-map.html"; }
-
+  
     function comingSoon() {
       toast("Feature coming soon.");
     }
-
-    /* ============================================================
-       DIAGNOSTICS
-    ============================================================ */
+  
     async function pingBackend() {
       try {
         const res = await api.ping();
@@ -171,30 +164,30 @@
         console.error(err);
       }
     }
-
+  
     async function reloadCaches() {
       try {
-        const res = await api.admin.reloadCaches(admin);
+        const res = await api.admin.reloadCaches(token);
         toast(res.message || "Caches reloaded.");
       } catch (err) {
         toast("Error reloading caches");
         console.error(err);
       }
     }
-
+  
     async function reloadDailyShop() {
       try {
-        const res = await api.admin.reloadDailyShop(admin);
+        const res = await api.admin.reloadDailyShop(token);
         toast(res.message || "Daily shop reloaded.");
       } catch (err) {
         toast("Error reloading daily shop");
         console.error(err);
       }
     }
-
+  
     async function reloadWorld() {
       try {
-        const res = await api.admin.reloadWorld(admin);
+        const res = await api.admin.reloadWorld(token);
         toast(res.message || "World reloaded.");
       } catch (err) {
         toast("Error reloading world");
@@ -202,6 +195,5 @@
       }
     }
   </script>
-
 </body>
 </html>
