@@ -16,6 +16,20 @@
     <div id="worldboss-content"></div>
   </div>
 
-  <script src="world-boss-ui.js"></script>
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+  
+    const username = session.username;
+  
+    // Load UI module AFTER verifying session
+    import("./world-boss-ui.js").then(mod => {
+      if (mod && mod.initWorldBossUI) {
+        mod.initWorldBossUI(username);
+      }
+    });
+  </script>
+
 </body>
 </html>
