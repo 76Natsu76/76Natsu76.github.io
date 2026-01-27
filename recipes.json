@@ -1,0 +1,64 @@
+{
+  "$schema": "S3VEN_RPG_CRAFTING_RECIPES_V1",
+  "recipes": {
+    "iron_sword_basic": {
+      "name": "Iron Sword",
+      "category": "weapon",
+      "resultItem": "iron_sword",
+      "resultQuantity": 1,
+      "requiredProfession": "blacksmith",
+      "requiredProfessionLevel": 1,
+      "requiredPlayerLevel": 3,
+      "station": "forge",
+      "ingredients": [
+        { "itemKey": "iron_ore", "quantity": 4 },
+        { "itemKey": "wood_plank", "quantity": 1 }
+      ],
+      "goldCost": 25,
+      "baseSuccessChance": 0.95,
+      "critChance": 0.10,
+      "critResultItem": "iron_sword_fine",
+      "tags": ["starter", "melee"]
+    },
+
+    "healing_potion_minor": {
+      "name": "Minor Healing Potion",
+      "category": "potion",
+      "resultItem": "potion_heal_minor",
+      "resultQuantity": 2,
+      "requiredProfession": "alchemist",
+      "requiredProfessionLevel": 1,
+      "requiredPlayerLevel": 2,
+      "station": "alchemy_table",
+      "ingredients": [
+        { "itemKey": "herb_greenleaf", "quantity": 3 },
+        { "itemKey": "water_flask", "quantity": 1 }
+      ],
+      "goldCost": 10,
+      "baseSuccessChance": 0.98,
+      "critChance": 0.15,
+      "critResultItem": "potion_heal_minor_potent",
+      "tags": ["starter", "healing"]
+    },
+
+    "enchanted_cloth_robe": {
+      "name": "Enchanted Cloth Robe",
+      "category": "armor",
+      "resultItem": "robe_enchanted_cloth",
+      "resultQuantity": 1,
+      "requiredProfession": "tailor",
+      "requiredProfessionLevel": 5,
+      "requiredPlayerLevel": 10,
+      "station": "loom",
+      "ingredients": [
+        { "itemKey": "cloth_bolt", "quantity": 5 },
+        { "itemKey": "arcane_dust", "quantity": 2 }
+      ],
+      "goldCost": 80,
+      "baseSuccessChance": 0.85,
+      "critChance": 0.20,
+      "critResultItem": "robe_enchanted_cloth_fine",
+      "tags": ["caster", "midgame"]
+    }
+  }
+}
