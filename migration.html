@@ -1,0 +1,12 @@
+<script type="module">
+  import { migrateAndSave } from "./migration.js";
+  import { savePlayerToKV } from "./api.js";
+
+  window.migrateAndPush = async (oldData) => {
+    const migrated = migrateAndSave(oldData);
+    console.log("Migrated:", migrated);
+
+    const res = await savePlayerToKV(migrated.username, migrated);
+    console.log("KV Response:", res);
+  };
+</script>
