@@ -99,6 +99,10 @@
     import { REGION_TO_BIOME } from "./region-to-biome.js";
     import { EncounterEngine } from "./encounters.js";
     import { WorldSim } from "./world-simulation.js";
+
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
   
     const username = sessionStorage.getItem("twitch_username");
     const userId = sessionStorage.getItem("twitch_user_id");
