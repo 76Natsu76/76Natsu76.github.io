@@ -1,0 +1,130 @@
+{
+  "celestial_herald": {
+    "name": "Celestial Herald",
+    "subrace": "legendary_boss_template",
+    "recommendedLevel": 20,
+    "maxHP": 1500000,
+    "phases": [
+      {
+        "threshold": 0.75,
+        "abilities": ["radiant_smite", "solar_flare"],
+        "specialChance": 0.10,
+        "onEnter": ["herald_phase1"]
+      },
+      {
+        "threshold": 0.50,
+        "abilities": ["judgment_beam"],
+        "specialChance": 0.20,
+        "onEnter": ["herald_phase2"]
+      },
+      {
+        "threshold": 0.25,
+        "abilities": ["divine_collapse"],
+        "specialChance": 0.30,
+        "onEnter": ["herald_phase3"]
+      }
+    ],
+    "enrage": {
+      "turnLimit": 25,
+      "ability": "celestial_annihilation",
+      "flavor": "herald_enrage"
+    },
+    "lootTable": "celestial_worldboss_loot",
+    "spawnRules": {
+      "region": "skyreach",
+      "season": "any",
+      "chance": 0.01
+    },
+    "flavor": {
+      "intro": ["The heavens tremble as the Herald descends."],
+      "midFight": ["The Herald radiates divine fury."],
+      "death": ["The light fades… but will return."]
+    }
+  },
+
+  "void_monarch": {
+    "name": "Void Monarch",
+    "subrace": "legendary_boss_template",
+    "recommendedLevel": 30,
+    "maxHP": 2000000,
+    "phases": [
+      {
+        "threshold": 0.80,
+        "abilities": ["void_lash", "entropy_burst"],
+        "specialChance": 0.12,
+        "onEnter": ["monarch_phase1"]
+      },
+      {
+        "threshold": 0.55,
+        "abilities": ["reality_fracture"],
+        "specialChance": 0.22,
+        "onEnter": ["monarch_phase2"]
+      },
+      {
+        "threshold": 0.30,
+        "abilities": ["void_implosion"],
+        "specialChance": 0.35,
+        "onEnter": ["monarch_phase3"]
+      }
+    ],
+    "enrage": {
+      "turnLimit": 30,
+      "ability": "event_horizon",
+      "flavor": "monarch_enrage"
+    },
+    "lootTable": "void_worldboss_loot",
+    "spawnRules": {
+      "region": "riftlands",
+      "season": "any",
+      "chance": 0.008
+    },
+    "flavor": {
+      "intro": ["The void stirs… and the Monarch awakens."],
+      "midFight": ["Reality bends around the Monarch."],
+      "death": ["The void recoils… for now."]
+    }
+  },
+
+  "chaos_spiral_sovereign": {
+    "name": "Chaos-Spiral Sovereign",
+    "subrace": "legendary_boss_template",
+    "recommendedLevel": 40,
+    "maxHP": 2500000,
+    "phases": [
+      {
+        "threshold": 0.85,
+        "abilities": ["chaos_bolt", "spiral_slash"],
+        "specialChance": 0.15,
+        "onEnter": ["sovereign_phase1"]
+      },
+      {
+        "threshold": 0.60,
+        "abilities": ["entropy_wave"],
+        "specialChance": 0.25,
+        "onEnter": ["sovereign_phase2"]
+      },
+      {
+        "threshold": 0.35,
+        "abilities": ["chaos_storm"],
+        "specialChance": 0.40,
+        "onEnter": ["sovereign_phase3"]
+      }
+    ],
+    "enrage": {
+      "turnLimit": 20,
+      "ability": "spiral_cataclysm",
+      "flavor": "sovereign_enrage"
+    },
+    "lootTable": "chaos_worldboss_loot",
+    "spawnRules": {
+      "region": "chaoswastes",
+      "season": "any",
+      "chance": 0.005
+    },
+    "flavor": {
+      "intro": ["Chaos spirals into form…"],
+      "midFight": ["The Sovereign’s form destabilizes violently."],
+      "death": ["The spiral collapses into silence."]
+    }
+  }
+}
