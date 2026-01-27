@@ -19,34 +19,35 @@
 
   <script type="module">
     import { SessionManager } from "./session-manager.js";
-
+  
     const WORKER_BASE = "https://auth-worker.godeaterspersona.workers.dev";
-
+  
     const logEl = document.getElementById("log");
     const log = msg => logEl.textContent = msg;
-
+  
     document.getElementById("loginBtn").addEventListener("click", async () => {
       const username = document.getElementById("username").value.trim();
       const password = document.getElementById("password").value;
-
+  
       log("Logging in...");
-
+  
       const res = await fetch(WORKER_BASE + "/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
       });
-
+  
       const json = await res.json();
       if (json.status !== "success") {
         log("Error: " + json.message);
         return;
       }
-
+  
       SessionManager.saveSession(json.username, json.session_token);
       log("Logged in as " + json.username + ". Redirecting...");
       window.location.href = "landing.html";
     });
   </script>
+
 </body>
 </html>
