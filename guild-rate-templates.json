@@ -1,0 +1,33 @@
+{
+  "$schema": "S3VEN_RPG_GUILD_RAID_TEMPLATES_V1",
+  "raids": {
+    "void_citadel": {
+      "name": "Void Citadel",
+      "minGuildLevel": 3,
+      "recommendedPower": 1500,
+      "lockoutHours": 24,
+      "bosses": [
+        {
+          "key": "void_gatekeeper",
+          "name": "The Gatekeeper",
+          "hp": 50000,
+          "phases": 2,
+          "lootTable": "void_gatekeeper_raid_loot"
+        },
+        {
+          "key": "void_monarch",
+          "name": "The Void Monarch",
+          "hp": 120000,
+          "phases": 3,
+          "lootTable": "void_monarch_raid_loot"
+        }
+      ],
+      "rewards": {
+        "guildXp": 500,
+        "guildCurrency": 200,
+        "uniqueMount": "void_drake",
+        "uniquePet": "voidling"
+      }
+    }
+  }
+}
