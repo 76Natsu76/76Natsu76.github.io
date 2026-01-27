@@ -55,50 +55,41 @@
     const session = requireSession();
     if (!session) return;
   
-    document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + session.username;
-      
     import { PlayerStorage } from "./player-storage.js";
-
+  
+    const username = session.username;
+    const token = session.token;
+  
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+  
     const statusBox = document.getElementById("status");
     const enterBtn = document.getElementById("enterBtn");
-
+  
     function log(msg) {
       console.log(msg);
       statusBox.textContent += "\n" + msg;
     }
-
-    // Load identity from sessionStorage
-    const accessToken = sessionStorage.getItem("twitch_access_token");
-    const username = sessionStorage.getItem("twitch_username");
-    const userId = sessionStorage.getItem("twitch_user_id");
-
-    if (!accessToken || !username || !userId) {
-      statusBox.textContent = "Missing login info — redirecting to login…";
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 1500);
-    }
-
+  
     log("Logged in as: " + username);
-
+  
     async function loadPlayer() {
       log("Loading local player data…");
-
-      // Load or create player locally
+  
+      // Load or create player locally (GitHub-native)
       const player = PlayerStorage.load(username);
-
+  
       // Store player for other pages
       sessionStorage.setItem("player", JSON.stringify(player));
-
+  
       statusBox.textContent = `Welcome, ${username}!`;
       enterBtn.style.display = "block";
     }
-
+  
     enterBtn.addEventListener("click", () => {
       window.location.href = "world-map.html";
     });
-
+  
     loadPlayer();
   </script>
 
