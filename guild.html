@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Guild Management</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="player-registry.js"></script>
+  <script src="guild-engine.js"></script>
+  <script src="guilds.json" type="application/json"></script>
+</head>
+
+<body>
+  <div id="guild-container">
+    <h1 id="guild-name">Guild Name</h1>
+
+    <div id="guild-info">
+      <p><strong>Level:</strong> <span id="guild-level">1</span></p>
+      <p><strong>Members:</strong> <span id="guild-members-count">0</span></p>
+      <p><strong>Rating:</strong> <span id="guild-rating">1000</span></p>
+      <p><strong>Buffs:</strong> <span id="guild-buffs">None</span></p>
+    </div>
+
+    <div id="guild-menu">
+      <button onclick="showMembers()">Members</button>
+      <button onclick="showBank()">Bank</button>
+      <button onclick="showEvents()">Events</button>
+      <button onclick="showWorldBoss()">World Boss</button>
+      <button onclick="showPvP()">PvP</button>
+    </div>
+
+    <div id="guild-content"></div>
+  </div>
+
+  <script src="guild-ui.js"></script>
+</body>
+</html>
