@@ -98,23 +98,23 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
     let player = null;
   
     loadPage();
   
-    /* ============================================================
-       LOAD PLAYER + PROFESSIONS
-       ============================================================ */
     async function loadPage() {
       const container = document.getElementById("professionContainer");
   
+      if (!username) {
+        container.textContent = "Error: No username found.";
+        return;
+      }
+  
       try {
-        player = await api.getPlayer(token);
+        player = await api.getPlayer(username);
   
         document.getElementById("currentProfession").innerHTML = `
           <strong>Current Profession:</strong> ${format(player.profession)}
@@ -124,15 +124,11 @@
   
         const professions = await api.getProfessionList();
         renderProfessions(professions);
-  
       } catch (err) {
         container.textContent = "Error loading data: " + err.message;
       }
     }
   
-    /* ============================================================
-       RENDER PROFESSION CARDS
-       ============================================================ */
     function renderProfessions(list) {
       const container = document.getElementById("professionContainer");
       const out = [];
@@ -151,12 +147,18 @@
   
             <h3 style="margin-top:12px;">Bonuses</h3>
             ${Object.entries(prof.bonuses)
-              .map(([k, v]) => `<div class="bonus-row">${format(k)}: +${v}</div>`)
+              .map(
+                ([k, v]) =>
+                  `<div class="bonus-row">${format(k)}: +${v}</div>`
+              )
               .join("")}
   
             <h3 style="margin-top:12px;">Starter Kit</h3>
             ${prof.starterKit.items
-              .map(i => `<div class="starter-item">• ${i.name} (x${i.quantity})</div>`)
+              .map(
+                i =>
+                  `<div class="starter-item">• ${i.name} (x${i.quantity})</div>`
+              )
               .join("")}
   
             <button class="btn"
@@ -171,12 +173,9 @@
       container.innerHTML = out.join("");
     }
   
-    /* ============================================================
-       CHOOSE PROFESSION
-       ============================================================ */
     async function chooseProfession(key) {
       try {
-        const result = await api.chooseProfession(token, key);
+        const result = await api.chooseProfession(username, key);
         alert(result.message || "Profession selected.");
         loadPage();
       } catch (err) {
@@ -184,9 +183,6 @@
       }
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
@@ -198,6 +194,7 @@
       window.location.href = "character.html";
     }
   </script>
+
 
 </body>
 </html>
