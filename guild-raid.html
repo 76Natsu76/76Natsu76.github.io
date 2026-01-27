@@ -19,6 +19,10 @@
   <button class="btn" onclick="goToGuild()">Guild</button>
   <button class="btn" onclick="goToWorldMap()">World Map</button>
 
-  <script type="module" src="guild-raid-ui.js"></script>
+  <script type="module" src="guild-raid-ui.js">
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+  </script>
 </body>
 </html>
