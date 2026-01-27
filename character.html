@@ -216,7 +216,7 @@
     <button id="useLocalBtn" class="btn">Use Local Version</button>
   </div>
 
-
+  <button class="btn" onclick="loadFromKV()">Load from KV</button>
   <button class="btn" onclick="refreshCharacter()">Refresh</button>
   <button class="btn" onclick="pushToKV()">Push to KV</button>
 
@@ -283,7 +283,7 @@
     }
   
     /* ============================================================
-       PUSH TO KV BUTTON
+       TO KV BUTTON
     ============================================================ */
     window.pushToKV = async () => {
       const p = PlayerStorage.load(username);
@@ -294,6 +294,24 @@
       const res = await savePlayerToKV(p.username, p);
       alert("Saved to KV!");
       console.log("KV save result:", res);
+    };
+
+    window.loadFromKV = async () => {
+      document.getElementById("syncIndicator").textContent = "Loading from KV…";
+      const { remote } = await loadFromKVAndLocal(username);
+    
+      if (!remote) {
+        alert("No cloud data found for this character.");
+        document.getElementById("syncIndicator").textContent = "No cloud data";
+        return;
+      }
+    
+      // Save cloud version locally
+      PlayerStorage.save(username, remote);
+    
+      // Hydrate UI
+      renderCharacter(remote);
+      document.getElementById("syncIndicator").textContent = "Loaded from KV ✔";
     };
   
     /* ============================================================
