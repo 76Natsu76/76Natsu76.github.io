@@ -31,6 +31,10 @@
     <div id="guild-content"></div>
   </div>
 
-  <script src="guild-ui.js"></script>
+  <script src="guild-ui.js">
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+  </script>
 </body>
 </html>
