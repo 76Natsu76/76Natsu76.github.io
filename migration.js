@@ -4,22 +4,8 @@
 
 import { PlayerStorage } from "./player-storage.js";
 
-// Universal JSON loader (works everywhere)
-async function loadJSON(path) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error("Failed to load " + path);
-  return res.json();
-}
-
-// Load all game data JSONs
-const raceDefs = await loadJSON("./race-definitions.json");
-const subraceProfiles = await loadJSON("./subrace-stat-profiles.json");
-const professionDefs = await loadJSON("./profession-definitions.json");
-const abilityDefs = await loadJSON("./ability-definitions.json");
-
-
 // -----------------------------
-// Helpers
+// Generic helpers
 // -----------------------------
 function safeParse(value, fallback) {
   try {
@@ -33,7 +19,8 @@ function safeParse(value, fallback) {
 
 function computeXpRequired(level) {
   // Simple quadratic curve; adjust if you want your original formula
-  return Math.floor(100 * Math.pow(level || 1, 2));
+  const lvl = level || 1;
+  return Math.floor(100 * Math.pow(lvl, 2));
 }
 
 function detectPrimaryElement(affinity) {
@@ -51,8 +38,21 @@ function formatAbilityName(key) {
 }
 
 // -----------------------------
-// 1) Apps Script row → legacy KV-ish player
+// Ability definitions loader (JSON via fetch, cached)
 // -----------------------------
+let abilityDefsCache = null;
+
+async function getAbilityDefs() {
+  if (abilityDefsCache) return abilityDefsCache;
+  const res = await fetch("./ability-definitions.json");
+  if (!res.ok) throw new Error("Failed to load ability-definitions.json");
+  abilityDefsCache = await res.json();
+  return abilityDefsCache;
+}
+
+// ============================================================
+// 1) Apps Script row → legacy KV-ish player
+// ============================================================
 export function migrateAndSave(old) {
   if (!old || !old.username) {
     throw new Error("Invalid old player object");
@@ -124,33 +124,6 @@ export function migrateAndSave(old) {
 // 2) Legacy KV player → full modern canonical schema
 // ============================================================
 
-function computeBaseStatsFromDefs(old) {
-  const race = raceDefs[old.race] || {};
-  const subrace = subraceProfiles[old.subrace] || {};
-  const prof = professionDefs[old.profession] || {};
-
-  const raceStats = race.baseStats || race.stats || {};
-  const subraceStats = subrace.stats || subrace.baseStats || {};
-  const profStats = prof.baseStats || prof.stats || prof.bonuses || {};
-
-  const stats = {
-    hp: 0,
-    atk: 0,
-    def: 0,
-    speed: 0,
-    crit: 0,
-    critDmg: 1.5,
-    ...raceStats,
-    ...subraceStats
-  };
-
-  for (const [k, v] of Object.entries(profStats)) {
-    stats[k] = (stats[k] || 0) + v;
-  }
-
-  return stats;
-}
-
 function computeEquipmentBonuses(equipment) {
   const bonuses = { hp: 0, atk: 0, def: 0, speed: 0, crit: 0, critDmg: 0 };
   if (!equipment || typeof equipment !== "object") return bonuses;
@@ -171,13 +144,17 @@ function computeDerivedStats(p) {
     block: (p.def || 0) * 0.001,
     critChance: p.crit || 0,
     critDamage: p.critDmg || 1.5,
-    powerScore: Math.floor((p.atk || 0) * 1.5 + (p.def || 0) * 1.2 + (p.hpMax || 0) * 0.3)
+    powerScore: Math.floor(
+      (p.atk || 0) * 1.5 + (p.def || 0) * 1.2 + (p.hpMax || 0) * 0.3
+    )
   };
 }
 
-function resolveAbilities(old) {
+async function resolveAbilities(old) {
   const out = [];
   if (!old.abilities || typeof old.abilities !== "object") return out;
+
+  const abilityDefs = await getAbilityDefs();
 
   for (const slot of Object.keys(old.abilities)) {
     const key = old.abilities[slot];
@@ -210,7 +187,7 @@ function resolveAbilities(old) {
   return out;
 }
 
-export function resolveLegacyPlayer(old) {
+export async function resolveLegacyPlayer(old) {
   if (!old) return null;
 
   const p = {};
@@ -250,7 +227,7 @@ export function resolveLegacyPlayer(old) {
   p.inventory = Array.isArray(old.inventory) ? old.inventory : [];
 
   // Abilities
-  p.abilities = resolveAbilities(old);
+  p.abilities = await resolveAbilities(old);
 
   // Status Effects
   p.statusEffects = [];
@@ -288,24 +265,21 @@ export function resolveLegacyPlayer(old) {
     }
   }
 
-  // Base stats from race/subrace/profession
-  const base = computeBaseStatsFromDefs(old);
-
   // Equipment bonuses
   const eq = computeEquipmentBonuses(p.equipment);
 
-  // Final stats
-  p.hpMax = (old.hpMax ?? base.hp ?? 10) + (eq.hp ?? 0);
+  // Final stats (use legacy numeric stats as base truth)
+  p.hpMax = (old.hpMax ?? old.hp ?? 10) + (eq.hp ?? 0);
   p.hpCurrent = Math.min(old.hp ?? p.hpMax, p.hpMax);
 
-  p.atk = (old.atk ?? base.atk ?? 1) + (eq.atk ?? 0);
-  p.def = (old.def ?? base.def ?? 0) + (eq.def ?? 0);
-  p.speed = (old.speed ?? base.speed ?? 1) + (eq.speed ?? 0);
+  p.atk = (old.atk ?? 1) + (eq.atk ?? 0);
+  p.def = (old.def ?? 0) + (eq.def ?? 0);
+  p.speed = (old.speed ?? 1) + (eq.speed ?? 0);
 
-  p.crit = (old.critChance ?? base.crit ?? 0) + (eq.crit ?? 0);
-  p.critDmg = (old.critDamage ?? base.critDmg ?? 1.5) + (eq.critDmg ?? 0);
+  p.crit = (old.critChance ?? 0) + (eq.crit ?? 0);
+  p.critDmg = (old.critDamage ?? 1.5) + (eq.critDmg ?? 0);
 
-  // Derived stats
+  // Stats + derived
   p.stats = {
     hp: p.hpMax,
     atk: p.atk,
