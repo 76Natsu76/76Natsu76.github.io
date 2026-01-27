@@ -18,11 +18,13 @@
   <button class="btn" onclick="goToWorldMap()">World Map</button>
   <button class="btn" onclick="goToInventory()">Inventory</button>
 
-  <script type="module" src="housing-ui.js">
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
   </script>
+  
+  <script type="module" src="housing-ui.js"></script>
+
 </body>
 </html>
