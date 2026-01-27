@@ -1,0 +1,63 @@
+{
+  "modes": {
+    "solo_1v1": {
+      "name": "Solo Duel (1v1)",
+      "teamSize": 1,
+      "ratingType": "solo",
+      "minLevel": 1,
+      "maxLevel": 999,
+      "modifiers": {
+        "worldDisabled": true,
+        "consumablesAllowed": true,
+        "revivesAllowed": false
+      },
+      "rewards": {
+        "win": { "xp": 50, "gold": 25, "items": [] },
+        "loss": { "xp": 10, "gold": 5, "items": [] }
+      }
+    },
+    "team_2v2": {
+      "name": "Team Clash (2v2)",
+      "teamSize": 2,
+      "ratingType": "solo",
+      "minLevel": 5,
+      "maxLevel": 999,
+      "modifiers": {
+        "worldDisabled": true,
+        "consumablesAllowed": false,
+        "revivesAllowed": false
+      },
+      "rewards": {
+        "win": { "xp": 80, "gold": 40, "items": [] },
+        "loss": { "xp": 20, "gold": 10, "items": [] }
+      }
+    },
+    "guild_3v3": {
+      "name": "Guild Skirmish (3v3)",
+      "teamSize": 3,
+      "ratingType": "guild",
+      "minLevel": 10,
+      "maxLevel": 999,
+      "modifiers": {
+        "worldDisabled": true,
+        "consumablesAllowed": false,
+        "revivesAllowed": false
+      },
+      "rewards": {
+        "win": { "xp": 100, "gold": 60, "items": ["arena_token"] },
+        "loss": { "xp": 30, "gold": 15, "items": [] }
+      }
+    }
+  },
+  "seasons": {
+    "currentSeason": 1,
+    "seasonConfig": {
+      "1": {
+        "name": "Season of First Blood",
+        "startAt": 1730000000,
+        "endAt": 1732592000,
+        "ratingResetTo": 1000
+      }
+    }
+  }
+}
