@@ -51,6 +51,13 @@
   <button id="enterBtn" style="display:none;">Enter the World</button>
 
   <script type="module">
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+  
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + session.username;
+      
     import { PlayerStorage } from "./player-storage.js";
 
     const statusBox = document.getElementById("status");
