@@ -58,49 +58,50 @@
   <div id="log" class="log">Waiting…</div>
 
   <script type="module">
-  import { resolveLegacyPlayer } from "./migration-resolver.js";
-  import { api } from "./api.js";
-
-  const logBox = document.getElementById("log");
-
-  function log(msg) {
-    logBox.textContent += "\n" + msg;
-  }
-
-  window.runMigration = async function runMigration() {
-    logBox.textContent = "Starting migration...\n";
-
-    if (!window.old) {
-      log("❌ ERROR: window.old is not defined.");
-      log("Paste your old character first:");
-      log("window.old = { ... }");
-      return;
+    import { resolveLegacyPlayer } from "./migration.js";
+    import { api } from "./api.js";
+  
+    const logBox = document.getElementById("log");
+  
+    function log(msg) {
+      logBox.textContent += "\n" + msg;
     }
-
-    try {
-      log("Migrating player...");
-
-      // Convert legacy → modern schema
-      const migrated = resolveLegacyPlayer(window.old);
-
-      log("✔ Migration complete.");
-      log("Username: " + migrated.username);
-
-      log("Saving to KV...");
-      const res = await api.savePlayer(migrated.username, migrated);
-
-      log("✔ KV Response:");
-      log(JSON.stringify(res, null, 2));
-
-      log("\n🎉 DONE! Check Cloudflare KV for:");
-      log("player:" + migrated.username);
-
-    } catch (err) {
-      log("❌ ERROR during migration:");
-      log(err.toString());
-    }
-  };
-</script>
+  
+    // ⭐ EXPLICITLY ATTACH TO WINDOW (fixes your error)
+    window.runMigration = async function () {
+      logBox.textContent = "Starting migration...\n";
+  
+      if (!window.old) {
+        log("❌ ERROR: window.old is not defined.");
+        log("Paste your old character first:");
+        log("window.old = { ... }");
+        return;
+      }
+  
+      try {
+        log("Migrating player...");
+  
+        // Convert legacy → modern schema
+        const migrated = resolveLegacyPlayer(window.old);
+  
+        log("✔ Migration complete.");
+        log("Username: " + migrated.username);
+  
+        log("Saving to KV...");
+        const res = await api.savePlayer(migrated.username, migrated);
+  
+        log("✔ KV Response:");
+        log(JSON.stringify(res, null, 2));
+  
+        log("\n🎉 DONE! Check Cloudflare KV for:");
+        log("player:" + migrated.username);
+  
+      } catch (err) {
+        log("❌ ERROR during migration:");
+        log(err.toString());
+      }
+    };
+  </script>
 
 
 </body>
