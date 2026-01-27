@@ -37,7 +37,11 @@ export const WorldBossEngine = {
     // Track contribution
     boss.contributions[playerId] =
       (boss.contributions[playerId] || 0) + amount;
-
+/*
+    const guildId = getPlayerGuild(playerId);
+    boss.guildContributions[guildId] =
+      (boss.guildContributions[guildId] || 0) + amount;
+*/ 
     // Phase transitions
     this.checkPhaseTransition();
 
