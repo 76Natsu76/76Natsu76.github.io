@@ -46,8 +46,9 @@
   </p>
 
   <ol>
-    <li>Paste your old player object into DevTools:<br>
-      <code>window.old = { ... }</code>
+    <li>Open DevTools → Console</li>
+    <li>Paste your old player object as valid JS:<br>
+      <code>window.old = { "username": "s3ven_six", ... }</code>
     </li>
     <li>Click the button below</li>
     <li>Check Cloudflare KV for <code>player:&lt;username&gt;</code></li>
@@ -60,49 +61,52 @@
   <script type="module">
     import { resolveLegacyPlayer } from "./migration.js";
     import { api } from "./api.js";
-  
+
     const logBox = document.getElementById("log");
-  
+
     function log(msg) {
       logBox.textContent += "\n" + msg;
     }
-  
-    // ⭐ EXPLICITLY ATTACH TO WINDOW (fixes your error)
-    window.runMigration = async function runMigration() {
+
+    // Attach to window so the button can see it
+    window.runMigration = async function () {
       logBox.textContent = "Starting migration...\n";
-  
+
       if (!window.old) {
         log("❌ ERROR: window.old is not defined.");
         log("Paste your old character first:");
         log("window.old = { ... }");
         return;
       }
-  
+
       try {
         log("Migrating player...");
-  
-        // Convert legacy → modern schema
-        const migrated = resolveLegacyPlayer(window.old);
-  
+
+        const migrated = await resolveLegacyPlayer(window.old);
+
+        if (!migrated || !migrated.username) {
+          log("❌ Migration returned invalid player object.");
+          return;
+        }
+
         log("✔ Migration complete.");
         log("Username: " + migrated.username);
-  
+
         log("Saving to KV...");
         const res = await api.savePlayer(migrated.username, migrated);
-  
+
         log("✔ KV Response:");
         log(JSON.stringify(res, null, 2));
-  
+
         log("\n🎉 DONE! Check Cloudflare KV for:");
         log("player:" + migrated.username);
-  
+
       } catch (err) {
         log("❌ ERROR during migration:");
         log(err.toString());
       }
     };
   </script>
-
 
 </body>
 </html>
