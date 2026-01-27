@@ -5,6 +5,8 @@
 import { WORLD_BOSSES } from './world-boss-templates.json';
 import { rollLootTable } from './loot-tables.js';
 import { GuildEngine } from './guild-engine.js';
+import { REGION_UNLOCKS } from "./region-unlocks.json";
+import { saveRegionUnlocks } from "./region-unlocks.js"; // new helper
 
 export const WorldBossEngine = {
   activeBoss: null,
@@ -84,8 +86,12 @@ export const WorldBossEngine = {
     const boss = this.activeBoss;
     const template = boss.template;
 
+    // Unlock region globally 
+    const regionKey = template.spawnRules.region; 
+    REGION_UNLOCKS.unlocks[regionKey] = true; 
+    saveRegionUnlocks(REGION_UNLOCKS);
+    
     const loot = rollLootTable(template.lootTable);
-
     const contributions = boss.contributions;
 
     // Sort contributors
@@ -94,7 +100,8 @@ export const WorldBossEngine = {
 
     const rewards = {
       loot,
-      contributions: sorted
+      contributions: sorted, 
+      unlockedRegion: regionKey
     };
 
     this.activeBoss = null;
