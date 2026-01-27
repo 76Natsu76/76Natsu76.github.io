@@ -68,7 +68,7 @@
     }
   
     // ⭐ EXPLICITLY ATTACH TO WINDOW (fixes your error)
-    window.runMigration = async function () {
+    window.runMigration = async function runMigration() {
       logBox.textContent = "Starting migration...\n";
   
       if (!window.old) {
