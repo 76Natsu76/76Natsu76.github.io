@@ -122,84 +122,84 @@
 
   <script src="api.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
+    const token = session.token;
+  
     document.getElementById("adminDisplay").textContent =
-      admin ? "Admin: " + admin : "Not logged in";
-
+      "Admin: " + admin;
+  
     loadPool();
-
+  
     /* ============================================================
        LOAD POOL
        ============================================================ */
-
     async function loadPool() {
       const container = document.getElementById("poolContainer");
       container.textContent = "Loading...";
-
+  
       try {
-        const pool = await api.ShopPool().getAll();
+        const pool = await api.shopPool.getAll(token);
         renderPool(pool);
       } catch (err) {
         container.textContent = "Failed to load pool: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RENDER POOL
        ============================================================ */
-
     function renderPool(pool) {
       const out = [];
-
+  
       for (const item of pool) {
         out.push(`
           <div class="item-card">
             <h2>${item.name}</h2>
-
+  
             <div class="row">
               <input id="name-${item.id}" value="${item.name}">
               <select id="rarity-${item.id}">
                 ${rarityOptions(item.rarity)}
               </select>
             </div>
-
+  
             <div class="row">
               <input id="minQty-${item.id}" type="number" value="${item.minQty}">
               <input id="maxQty-${item.id}" type="number" value="${item.maxQty}">
             </div>
-
+  
             <div class="row">
               <input id="minPrice-${item.id}" type="number" value="${item.minPrice}">
               <input id="maxPrice-${item.id}" type="number" value="${item.maxPrice}">
             </div>
-
+  
             <button class="btn" onclick="saveItem('${item.id}')">Save</button>
             <button class="btn delete-btn" onclick="deleteItem('${item.id}')">Delete</button>
           </div>
         `);
       }
-
+  
       document.getElementById("poolContainer").innerHTML = out.join("");
     }
-
+  
     function rarityOptions(selected) {
       const rarities = ["common", "uncommon", "rare", "epic", "legendary"];
       return rarities
         .map(r => `<option value="${r}" ${r === selected ? "selected" : ""}>${format(r)}</option>`)
         .join("");
     }
-
+  
     /* ============================================================
        SAVE ITEM
        ============================================================ */
-
     async function saveItem(id) {
       const payload = {
+        session_token: token,
         id,
         name: document.getElementById(`name-${id}`).value,
         rarity: document.getElementById(`rarity-${id}`).value,
@@ -208,7 +208,7 @@
         minPrice: Number(document.getElementById(`minPrice-${id}`).value),
         maxPrice: Number(document.getElementById(`maxPrice-${id}`).value)
       };
-
+  
       try {
         const result = await api.shopPool.update(payload);
         alert(result.message || "Updated.");
@@ -217,27 +217,26 @@
         alert("Error: " + err.message);
       }
     }
-
+  
     /* ============================================================
        DELETE ITEM
        ============================================================ */
-
     async function deleteItem(id) {
       try {
-        const result = await api.shopPool.delete(id);
+        const result = await api.shopPool.delete(token, id);
         alert(result.message || "Deleted.");
         loadPool();
       } catch (err) {
         alert("Error: " + err.message);
       }
     }
-
+  
     /* ============================================================
        ADD ITEM
        ============================================================ */
-
     async function addItem() {
       const payload = {
+        session_token: token,
         name: document.getElementById("newName").value,
         rarity: document.getElementById("newRarity").value,
         minQty: Number(document.getElementById("newMinQty").value),
@@ -245,7 +244,7 @@
         minPrice: Number(document.getElementById("newMinPrice").value),
         maxPrice: Number(document.getElementById("newMaxPrice").value)
       };
-
+  
       try {
         const result = await api.shopPool.add(payload);
         alert(result.message || "Added.");
@@ -254,22 +253,22 @@
         alert("Error: " + err.message);
       }
     }
-
+  
     /* ============================================================
        HELPERS
        ============================================================ */
-
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     function goBack() {
       window.location.href = "admin-dashboard.html";
     }
   </script>
+
 
 </body>
 </html>
