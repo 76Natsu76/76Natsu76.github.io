@@ -98,123 +98,139 @@
     import { BIOMES } from "./biomes.js";
     import { REGION_TO_BIOME } from "./region-to-biome.js";
     import { EncounterEngine } from "./encounters.js";
-
+    import { WorldSim } from "./world-simulation.js";
+  
     const username = sessionStorage.getItem("twitch_username");
     const userId = sessionStorage.getItem("twitch_user_id");
-
+  
     document.getElementById("usernameDisplay").textContent =
       username ? "Logged in as: " + username : "No user logged in";
-
+  
     // Load player data
     let player = JSON.parse(sessionStorage.getItem("player_data") || "{}");
     let playerLevel = Number(player.level || 1);
-
+  
     // ------------------------------------------------------------
     // LOAD WORLD
     // ------------------------------------------------------------
     function loadWorld() {
-      renderWorld(WORLD_DATA);
+      const worldState = WorldSim.getState();
+      renderWorld(WORLD_DATA, worldState);
     }
-
+  
     // ------------------------------------------------------------
     // RENDER WORLD MAP
     // ------------------------------------------------------------
-    function renderWorld(world) {
+    function renderWorld(world, worldState) {
       const container = document.getElementById("mapContainer");
       const out = [];
-
+  
       for (const regionKey in world.regions) {
         const region = world.regions[regionKey];
-
+        const state = worldState[regionKey];
+  
         // Resolve biome
         const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
         const biome = BIOMES[biomeKey];
-
+  
         // Level range
         const [minLevel, maxLevel] = region.levelRange || [1, 999];
-        const locked = playerLevel < minLevel;
-
+        const levelLocked = playerLevel < minLevel;
+  
+        // Global unlock (world boss progression)
+        const globallyUnlocked = state.unlocked;
+  
+        // World boss lock (region sealed until boss defeated)
+        const bossActive = !!state.worldBoss;
+        const bossLocked = !globallyUnlocked;
+  
+        // Combined lock logic
+        const regionLocked = levelLocked || bossLocked;
+  
         // Flavor text
         const biomeFlavor = biome?.flavor
           ? biome.flavor[Math.floor(Math.random() * biome.flavor.length)]
           : "Unknown biome.";
-
+  
         const regionFlavor = region.flavor || "";
-
+  
         // Weather preview
         const weatherPreview = region.weatherPool?.join(", ") ||
                                biome?.weatherPool?.join(", ") ||
                                "Unknown";
-
+  
         // Hazards
         const hazards = biome?.hazards?.length
           ? biome.hazards.map(h => h.key).join(", ")
           : "None";
-
+  
         // Events
         const events = region.eventPool?.length
           ? region.eventPool.map(e => `<div class="event">${format(e)}</div>`).join("")
           : "<div class='event'>None</div>";
-
+  
+        // Lock message
+        let lockMessage = "";
+        if (levelLocked) lockMessage = `Requires Lv ${minLevel}`;
+        else if (bossLocked) lockMessage = `Locked — Defeat the World Boss`;
+  
         out.push(`
           <div class="region-card">
             <h2>${region.name}</h2>
-
+  
             <div class="stat-row"><span>Biome</span><span>${format(biomeKey)}</span></div>
             <div class="stat-row"><span>Weather</span><span>${weatherPreview}</span></div>
             <div class="stat-row"><span>Hazards</span><span>${hazards}</span></div>
             <div class="stat-row"><span>Danger</span><span>${region.danger || "Moderate"}</span></div>
             <div class="stat-row"><span>Blessing</span><span>${region.blessing || "None"}</span></div>
-
+  
             <div class="stat-row">
               <span>World Boss</span>
-              <span>${region.worldBoss ? "Active" : "None"}</span>
+              <span>${bossActive ? "Active" : globallyUnlocked ? "Defeated" : "Locked"}</span>
             </div>
-
+  
             <div class="stat-row">
               <span>Level Range</span>
               <span>${minLevel} - ${maxLevel}</span>
             </div>
-
+  
             <div class="section">
               <strong>Biome Flavor:</strong>
               <div class="event">${biomeFlavor}</div>
             </div>
-
+  
             <div class="section">
               <strong>Region Flavor:</strong>
               <div class="event">${regionFlavor}</div>
             </div>
-
+  
             <div class="section">
               <strong>Events:</strong>
               ${events}
             </div>
-
-            <button class="btn ${locked ? "disabled" : ""}"
-              onclick="enterRegion('${regionKey}', ${locked})">
-              ${locked ? `Locked (Requires Lv ${minLevel})` : "Enter Region"}
+  
+            <button class="btn ${regionLocked ? "disabled" : ""}"
+              onclick="enterRegion('${regionKey}', ${regionLocked})">
+              ${regionLocked ? lockMessage : "Enter Region"}
             </button>
           </div>
         `);
       }
-
+  
       container.innerHTML = out.join("");
     }
-
+  
     // ------------------------------------------------------------
     // ENTER REGION → GENERATE ENCOUNTER
     // ------------------------------------------------------------
     window.enterRegion = function(regionKey, locked) {
       if (locked) return;
-
+  
       const encounter = EncounterEngine.generate(regionKey, username);
-
       sessionStorage.setItem("current_encounter", JSON.stringify(encounter));
-
       window.location.href = "fight-interactive.html";
     };
-
+  
     // ------------------------------------------------------------
     // HELPERS
     // ------------------------------------------------------------
@@ -225,13 +241,12 @@
         .replace(/-/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     window.goToCharacter = () => window.location.href = "character.html";
     window.goToInventory = () => window.location.href = "inventory.html";
     window.goToBestiary = () => window.location.href = "bestiary.html";
-
+  
     loadWorld();
   </script>
-
 </body>
 </html>
