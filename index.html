@@ -51,12 +51,12 @@
 
     const codeVerifier = sessionStorage.getItem("pkce_verifier");
 
-    const WORKER_URL = "https://twitch-rpg-worker.godeaterspersona.workers.dev/";
+    const WORKER_BASE = "https://auth-worker.godeaterspersona.workers.dev";
     
     async function exchangeCode() {
       log("Exchanging code for token…");
     
-      const res = await fetch(WORKER_URL, {
+      const res = await fetch(WORKER_BASE, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
