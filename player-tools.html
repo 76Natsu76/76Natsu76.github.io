@@ -169,20 +169,16 @@
     if (!session) return;
   
     const admin = session.username;
-    const token = session.token;
-  
     document.getElementById("adminDisplay").textContent =
-      "Admin: " + admin;
+      admin ? "Admin: " + admin : "Not logged in";
   
     function getTarget() {
       const username = document.getElementById("usernameInput").value.trim();
-      const twitchId = document.getElementById("twitchIdInput").value.trim() || null;
+      const twitchId =
+        document.getElementById("twitchIdInput").value.trim() || null;
       return { username, twitchId };
     }
   
-    /* ============================================================
-       LOAD PLAYER SUMMARY
-       ============================================================ */
     async function loadPlayer() {
       const { username } = getTarget();
       const summaryEl = document.getElementById("playerSummary");
@@ -221,9 +217,6 @@
       }
     }
   
-    /* ============================================================
-       RUN ADMIN ACTION
-       ============================================================ */
     async function runAction(action) {
       const { username, twitchId } = getTarget();
       const resultBox = document.getElementById("resultBox");
@@ -233,21 +226,21 @@
         return;
       }
   
-      const payload = {
-        session_token: token,
-        admin,
-        username,
-        twitchId,
-        action
-      };
+      const payload = { admin, username, twitchId, action };
   
       if (action === "teleport_region") {
-        payload.region = document.getElementById("regionKeyInput").value.trim();
+        payload.region = document
+          .getElementById("regionKeyInput")
+          .value.trim();
       }
   
       if (action === "grant_item") {
-        payload.itemKey = document.getElementById("itemKeyInput").value.trim();
-        payload.quantity = Number(document.getElementById("itemQtyInput").value || "1");
+        payload.itemKey = document
+          .getElementById("itemKeyInput")
+          .value.trim();
+        payload.quantity = Number(
+          document.getElementById("itemQtyInput").value || "1"
+        );
       }
   
       resultBox.textContent = "Running action: " + action + "...";
@@ -277,7 +270,6 @@
       window.location.href = "admin-dashboard.html";
     }
   </script>
-
 
 </body>
 </html>
