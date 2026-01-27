@@ -78,7 +78,7 @@ async function unequipItem(username, slot) {
 }
 
 export async function getPlayerFromKV(username) {
-  const res = await fetch(`https://auth-worker.godeaterspersona.workers.dev/${username}`);
+  const res = await fetch(`https://auth-worker.godeaterspersona.workers.dev/player/${username}`);
   return res.json();
 }
 
