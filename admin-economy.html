@@ -190,25 +190,27 @@
 
   <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
+    const token = session.token;
+  
     document.getElementById("adminDisplay").textContent =
-      admin ? "Admin: " + admin : "Not logged in";
-
+      "Admin: " + admin;
+  
     // ============================
     // LOAD ECONOMY
     // ============================
     async function loadEconomy() {
       try {
-        const res = await fetch("/api/admin/economy", { cache:"no-store" });
+        const res = await fetch("/api/admin/economy", { cache: "no-store" });
         if (!res.ok) return;
-
+  
         const data = await res.json();
-
+  
         document.getElementById("xpMultiplier").value = data.xpMultiplier ?? 1;
         document.getElementById("goldMultiplier").value = data.goldMultiplier ?? 1;
         document.getElementById("dropRateMultiplier").value = data.dropRateMultiplier ?? 1;
@@ -218,27 +220,27 @@
         // silent
       }
     }
-
+  
     // ============================
     // SAVE ECONOMY
     // ============================
     async function saveEconomy() {
       const payload = {
-        admin,
+        session_token: token,
         xpMultiplier: Number(document.getElementById("xpMultiplier").value),
         goldMultiplier: Number(document.getElementById("goldMultiplier").value),
         dropRateMultiplier: Number(document.getElementById("dropRateMultiplier").value),
         shopPriceScale: Number(document.getElementById("shopPriceScale").value),
         dailyRefreshHour: Number(document.getElementById("dailyRefreshHour").value)
       };
-
+  
       try {
         const res = await fetch("/api/admin/economy/update", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify(payload)
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-
+  
         const data = await res.json();
         document.getElementById("statusMessage").textContent =
           data.message || "Economy settings saved.";
@@ -247,24 +249,24 @@
           "Error saving economy: " + err.message;
       }
     }
-
+  
     // ============================
     // SAVE SHOP SETTINGS
     // ============================
     async function saveShop() {
       const payload = {
-        admin,
+        session_token: token,
         shopPriceScale: Number(document.getElementById("shopPriceScale").value),
         dailyRefreshHour: Number(document.getElementById("dailyRefreshHour").value)
       };
-
+  
       try {
         const res = await fetch("/api/admin/economy/shop", {
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body:JSON.stringify(payload)
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
         });
-
+  
         const data = await res.json();
         document.getElementById("statusMessage").textContent =
           data.message || "Shop settings saved.";
@@ -273,7 +275,7 @@
           "Error saving shop settings: " + err.message;
       }
     }
-
+  
     // ============================
     // ADMIN ACTIONS
     // ============================
@@ -281,54 +283,55 @@
       const target = document.getElementById("targetUser").value.trim();
       const amount = Number(document.getElementById("goldAmount").value);
       const status = document.getElementById("statusMessage");
-
+  
       const res = await fetch("/api/admin/gold/gift", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ admin, target, amount })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_token: token, target, amount })
       });
-
+  
       const data = await res.json();
       status.textContent = data.message || "Gold gifted.";
     }
-
+  
     async function giftExp() {
       const target = document.getElementById("targetUser").value.trim();
       const amount = Number(document.getElementById("expAmount").value);
       const status = document.getElementById("statusMessage");
-
+  
       const res = await fetch("/api/admin/exp/gift", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ admin, target, amount })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_token: token, target, amount })
       });
-
+  
       const data = await res.json();
       status.textContent = data.message || "EXP gifted.";
     }
-
+  
     async function grantItem() {
       const target = document.getElementById("targetUser").value.trim();
       const itemKey = document.getElementById("itemKey").value.trim();
       const quantity = Number(document.getElementById("itemQty").value);
       const status = document.getElementById("statusMessage");
-
+  
       const res = await fetch("/api/admin/items/grant", {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
-        body:JSON.stringify({ admin, target, itemKey, quantity })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_token: token, target, itemKey, quantity })
       });
-
+  
       const data = await res.json();
       status.textContent = data.message || "Item granted.";
     }
-
+  
     function goAdmin() {
       window.location.href = "admin-dashboard.html";
     }
-
+  
     loadEconomy();
   </script>
+
 
 </body>
 </html>
