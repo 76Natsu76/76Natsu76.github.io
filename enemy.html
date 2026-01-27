@@ -128,28 +128,30 @@
     <button class="btn" onclick="goToMap()">World Map</button>
   </div>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
     const params = new URLSearchParams(window.location.search);
     const enemyKey = params.get("key");
-
+  
     async function loadEnemy() {
       const container = document.getElementById("enemyContainer");
       const sync = document.getElementById("syncIndicator");
-
+  
       if (!enemyKey) {
         container.textContent = "No enemy key provided.";
         sync.textContent = "Failed to load enemy.";
         return;
       }
-
+  
       try {
         sync.textContent = "Loading enemy data...";
         const res = await fetch("data/enemies.json", { cache: "no-store" });
@@ -158,16 +160,16 @@
           sync.textContent = "Sync failed.";
           return;
         }
-
+  
         const list = await res.json();
         const enemy = list.find(e => String(e.key) === String(enemyKey));
-
+  
         if (!enemy) {
           container.textContent = "Enemy not found.";
           sync.textContent = "Enemy not found.";
           return;
         }
-
+  
         renderEnemy(enemy);
         sync.textContent = "Enemy loaded.";
       } catch (err) {
@@ -175,14 +177,13 @@
         sync.textContent = "Sync failed.";
       }
     }
-
+  
     function renderEnemy(e) {
       const container = document.getElementById("enemyContainer");
-
+  
       const rarityClass = "portrait-" + (String(e.rarity || "common").toLowerCase());
-
       const tags = (e.tags || []).map(t => `<span class="tag-pill">${format(t)}</span>`).join(" ");
-
+  
       container.innerHTML = `
         <div class="section">
           <div class="portrait-frame ${rarityClass}">
@@ -190,38 +191,36 @@
                  src="${e.portrait || "/assets/enemies/default.png"}"
                  onerror="this.src='/assets/enemies/default.png'">
           </div>
-
+  
           <h2 style="text-align:center; margin-top:12px;">${e.name}</h2>
           <div style="text-align:center; opacity:0.8; font-size:13px;">
             ${format(e.family)} — ${format(e.variant)} — ${format(e.rarity || "common")}
           </div>
-
+  
           <div class="stat-row"><span>Level</span><span>${e.level || 1}</span></div>
           <div class="stat-row"><span>Element</span><span>${format(e.element || "none")}</span></div>
           <div class="stat-row"><span>Region</span><span>${format(e.region || "Unknown")}</span></div>
         </div>
-
+  
         <div class="section">
           <h2>Base Stats</h2>
           <div class="stat-row"><span>HP</span><span>${e.baseHP || e.maxHP || "?"}</span></div>
           <div class="stat-row"><span>Attack</span><span>${e.baseATK || e.attack || "?"}</span></div>
           <div class="stat-row"><span>Defense</span><span>${e.baseDEF || e.defense || "?"}</span></div>
         </div>
-
+  
         <div class="section">
           <h2>Tags & Traits</h2>
-          ${
-            tags || "<div>No special tags recorded.</div>"
-          }
+          ${tags || "<div>No special tags recorded.</div>"}
         </div>
-
+  
         <div class="section">
           <h2>Flavor</h2>
           <div style="font-size:14px; opacity:0.9;">
             ${e.flavor || "No flavor text recorded yet."}
           </div>
         </div>
-
+  
         <div class="section">
           <h2>Loot</h2>
           <div style="font-size:13px; opacity:0.9;">
@@ -236,24 +235,25 @@
         </div>
       `;
     }
-
+  
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     function goToBestiary() {
       window.location.href = "enemy-list.html";
     }
-
+  
     function goToMap() {
       window.location.href = "world-map.html";
     }
-
+  
     loadEnemy();
   </script>
+
 
 </body>
 </html>
