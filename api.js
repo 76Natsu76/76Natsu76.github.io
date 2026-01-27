@@ -77,8 +77,13 @@ async function unequipItem(username, slot) {
   return { ok: true, message: "Unequipped " + item.name };
 }
 
+export async function getPlayerFromKV(username) {
+  const res = await fetch(`https://<your-worker-url>/player/${username}`);
+  return res.json();
+}
+
 export async function savePlayerToKV(username, data) {
-  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/savePlayer", {
+  const res = await fetch(`https://<your-worker-url>/player/save`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, data })
@@ -86,4 +91,5 @@ export async function savePlayerToKV(username, data) {
 
   return res.json();
 }
+
 
