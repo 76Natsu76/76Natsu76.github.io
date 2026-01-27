@@ -141,7 +141,7 @@
       const t = document.getElementById("toast");
       t.textContent = msg;
       t.style.opacity = 1;
-      setTimeout(() => t.style.opacity = 0, 2500);
+      setTimeout(() => (t.style.opacity = 0), 2500);
     }
   
     function goGift() { window.location.href = "admin-gift.html"; }
@@ -195,5 +195,6 @@
       }
     }
   </script>
+
 </body>
 </html>
