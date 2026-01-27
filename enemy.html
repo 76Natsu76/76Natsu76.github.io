@@ -134,10 +134,8 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
     const params = new URLSearchParams(window.location.search);
     const enemyKey = params.get("key");
@@ -181,8 +179,12 @@
     function renderEnemy(e) {
       const container = document.getElementById("enemyContainer");
   
-      const rarityClass = "portrait-" + (String(e.rarity || "common").toLowerCase());
-      const tags = (e.tags || []).map(t => `<span class="tag-pill">${format(t)}</span>`).join(" ");
+      const rarityClass =
+        "portrait-" + String(e.rarity || "common").toLowerCase();
+  
+      const tags = (e.tags || [])
+        .map(t => `<span class="tag-pill">${format(t)}</span>`)
+        .join(" ");
   
       container.innerHTML = `
         <div class="section">
@@ -194,19 +196,31 @@
   
           <h2 style="text-align:center; margin-top:12px;">${e.name}</h2>
           <div style="text-align:center; opacity:0.8; font-size:13px;">
-            ${format(e.family)} — ${format(e.variant)} — ${format(e.rarity || "common")}
+            ${format(e.family)} — ${format(e.variant)} — ${format(
+        e.rarity || "common"
+      )}
           </div>
   
           <div class="stat-row"><span>Level</span><span>${e.level || 1}</span></div>
-          <div class="stat-row"><span>Element</span><span>${format(e.element || "none")}</span></div>
-          <div class="stat-row"><span>Region</span><span>${format(e.region || "Unknown")}</span></div>
+          <div class="stat-row"><span>Element</span><span>${format(
+            e.element || "none"
+          )}</span></div>
+          <div class="stat-row"><span>Region</span><span>${format(
+            e.region || "Unknown"
+          )}</span></div>
         </div>
   
         <div class="section">
           <h2>Base Stats</h2>
-          <div class="stat-row"><span>HP</span><span>${e.baseHP || e.maxHP || "?"}</span></div>
-          <div class="stat-row"><span>Attack</span><span>${e.baseATK || e.attack || "?"}</span></div>
-          <div class="stat-row"><span>Defense</span><span>${e.baseDEF || e.defense || "?"}</span></div>
+          <div class="stat-row"><span>HP</span><span>${e.baseHP ||
+            e.maxHP ||
+            "?"}</span></div>
+          <div class="stat-row"><span>Attack</span><span>${e.baseATK ||
+            e.attack ||
+            "?"}</span></div>
+          <div class="stat-row"><span>Defense</span><span>${e.baseDEF ||
+            e.defense ||
+            "?"}</span></div>
         </div>
   
         <div class="section">
@@ -226,9 +240,9 @@
           <div style="font-size:13px; opacity:0.9;">
             ${
               e.lootTable
-                ? (typeof e.lootTable === "string"
-                    ? e.lootTable
-                    : JSON.stringify(e.lootTable, null, 2))
+                ? typeof e.lootTable === "string"
+                  ? e.lootTable
+                  : JSON.stringify(e.lootTable, null, 2)
                 : "No loot table recorded."
             }
           </div>
@@ -253,7 +267,6 @@
   
     loadEnemy();
   </script>
-
 
 </body>
 </html>
