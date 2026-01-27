@@ -109,38 +109,41 @@
 </head>
 <body>
 
-<h1>Purchase Log</h1>
-<div id="logContainer">Loading...</div>
-
-<script type="module">
-  import { loadJsonFile } from "./shop-ui.js";
-
-  async function loadLogs() {
-    const container = document.getElementById("logContainer");
-    const { data: logs } = await loadJsonFile("purchases.json", []);
-
-    if (!logs.length) {
-      container.textContent = "No purchases logged.";
-      return;
+  <h1>Purchase Log</h1>
+  <div id="logContainer">Loading...</div>
+  
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+      
+    import { loadJsonFile } from "./shop-ui.js";
+  
+    async function loadLogs() {
+      const container = document.getElementById("logContainer");
+      const { data: logs } = await loadJsonFile("purchases.json", []);
+  
+      if (!logs.length) {
+        container.textContent = "No purchases logged.";
+        return;
+      }
+  
+      container.innerHTML = logs
+        .slice()
+        .reverse()
+        .map(log => `
+          <div class="log-entry">
+            <strong>${log.username}</strong> bought 
+            <strong>${log.qty}x ${log.itemId}</strong><br>
+            Cost: ${log.totalCost} gold<br>
+            Shop: ${log.shopType}<br>
+            <span style="opacity:0.7;">${new Date(log.timestamp).toLocaleString()}</span>
+          </div>
+        `)
+        .join("");
     }
-
-    container.innerHTML = logs
-      .slice()
-      .reverse()
-      .map(log => `
-        <div class="log-entry">
-          <strong>${log.username}</strong> bought 
-          <strong>${log.qty}x ${log.itemId}</strong><br>
-          Cost: ${log.totalCost} gold<br>
-          Shop: ${log.shopType}<br>
-          <span style="opacity:0.7;">${new Date(log.timestamp).toLocaleString()}</span>
-        </div>
-      `)
-      .join("");
-  }
-
-  loadLogs();
-</script>
-
+  
+    loadLogs();
+  </script>
 </body>
 </html>
