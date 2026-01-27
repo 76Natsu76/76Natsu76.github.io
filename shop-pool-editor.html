@@ -128,31 +128,23 @@
     if (!session) return;
   
     const admin = session.username;
-    const token = session.token;
-  
     document.getElementById("adminDisplay").textContent =
-      "Admin: " + admin;
+      admin ? "Admin: " + admin : "Not logged in";
   
     loadPool();
   
-    /* ============================================================
-       LOAD POOL
-       ============================================================ */
     async function loadPool() {
       const container = document.getElementById("poolContainer");
       container.textContent = "Loading...";
   
       try {
-        const pool = await api.shopPool.getAll(token);
+        const pool = await api.ShopPool().getAll();
         renderPool(pool);
       } catch (err) {
         container.textContent = "Failed to load pool: " + err.message;
       }
     }
   
-    /* ============================================================
-       RENDER POOL
-       ============================================================ */
     function renderPool(pool) {
       const out = [];
   
@@ -190,16 +182,17 @@
     function rarityOptions(selected) {
       const rarities = ["common", "uncommon", "rare", "epic", "legendary"];
       return rarities
-        .map(r => `<option value="${r}" ${r === selected ? "selected" : ""}>${format(r)}</option>`)
+        .map(
+          r =>
+            `<option value="${r}" ${
+              r === selected ? "selected" : ""
+            }>${format(r)}</option>`
+        )
         .join("");
     }
   
-    /* ============================================================
-       SAVE ITEM
-       ============================================================ */
     async function saveItem(id) {
       const payload = {
-        session_token: token,
         id,
         name: document.getElementById(`name-${id}`).value,
         rarity: document.getElementById(`rarity-${id}`).value,
@@ -218,12 +211,9 @@
       }
     }
   
-    /* ============================================================
-       DELETE ITEM
-       ============================================================ */
     async function deleteItem(id) {
       try {
-        const result = await api.shopPool.delete(token, id);
+        const result = await api.shopPool.delete(id);
         alert(result.message || "Deleted.");
         loadPool();
       } catch (err) {
@@ -231,12 +221,8 @@
       }
     }
   
-    /* ============================================================
-       ADD ITEM
-       ============================================================ */
     async function addItem() {
       const payload = {
-        session_token: token,
         name: document.getElementById("newName").value,
         rarity: document.getElementById("newRarity").value,
         minQty: Number(document.getElementById("newMinQty").value),
@@ -254,9 +240,6 @@
       }
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
@@ -268,7 +251,6 @@
       window.location.href = "admin-dashboard.html";
     }
   </script>
-
 
 </body>
 </html>
