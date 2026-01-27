@@ -6,6 +6,8 @@ import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { WORLD_BOSSES } from "./world-boss-templates.json";
+import { REGION_UNLOCKS } from "./region-unlocks.json"; 
+import { loadRegionUnlocks } from "./region-unlocks.js";
 
 export const WorldSim = {
   tick,
@@ -14,6 +16,7 @@ export const WorldSim = {
 };
 
 const STORAGE_KEY = "world_state";
+const GLOBAL_UNLOCKS = loadRegionUnlocks(REGION_UNLOCKS);
 
 // ------------------------------------------------------------
 // LOAD / SAVE
@@ -35,7 +38,8 @@ function getState() {
       event: null,
       hazard: null,
       worldBoss: null,
-      pressure: 1.0
+      pressure: 1.0,
+      unlocked: GLOBAL_UNLOCKS.unlocks[regionKey] || false
     };
   }
 
