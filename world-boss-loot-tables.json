@@ -1,0 +1,37 @@
+{
+  "$schema": "S3VEN_RPG_WORLD_BOSS_LOOT_TABLES_V1",
+  "lootTables": {
+    "celestial_worldboss_loot": {
+      "goldRange": [500, 1200],
+      "xpRange": [800, 1500],
+      "items": [
+        { "itemKey": "celestial_fragment", "weight": 10, "min": 1, "max": 1 },
+        { "itemKey": "radiant_core", "weight": 4, "min": 1, "max": 1 },
+        { "itemKey": "blessed_ingot", "weight": 2, "min": 1, "max": 1 }
+      ],
+      "guaranteed": ["celestial_dust"]
+    },
+
+    "void_worldboss_loot": {
+      "goldRange": [600, 1400],
+      "xpRange": [900, 1600],
+      "items": [
+        { "itemKey": "void_fragment", "weight": 10, "min": 1, "max": 1 },
+        { "itemKey": "entropy_shard", "weight": 3, "min": 1, "max": 1 },
+        { "itemKey": "riftcore", "weight": 1, "min": 1, "max": 1 }
+      ],
+      "guaranteed": ["void_residue"]
+    },
+
+    "chaos_worldboss_loot": {
+      "goldRange": [700, 1600],
+      "xpRange": [1000, 1800],
+      "items": [
+        { "itemKey": "chaos_orb", "weight": 10, "min": 1, "max": 1 },
+        { "itemKey": "spiral_fragment", "weight": 3, "min": 1, "max": 1 },
+        { "itemKey": "entropy_crystal", "weight": 1, "min": 1, "max": 1 }
+      ],
+      "guaranteed": ["chaos_dust"]
+    }
+  }
+}
