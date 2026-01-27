@@ -1,0 +1,28 @@
+{
+  "echo_shrine": {
+    "name": "Echo Shrine",
+    "type": "shrine",
+    "description": "A resonant shrine that amplifies inner strength.",
+    "effects": [
+      { "type": "buff", "value": 10, "duration": 2, "target": "player" }
+    ]
+  },
+
+  "collapsed_passage": {
+    "name": "Collapsed Passage",
+    "type": "trap",
+    "description": "A sudden cave-in threatens to crush you.",
+    "effects": [
+      { "type": "damage", "value": 15, "duration": 0, "target": "player" }
+    ]
+  },
+
+  "rift_anomaly": {
+    "name": "Rift Anomaly",
+    "type": "modifier",
+    "description": "Reality bends, altering the dungeon’s rules.",
+    "effects": [
+      { "type": "modifier", "value": "enemyScaling+0.1", "duration": 1, "target": "dungeon" }
+    ]
+  }
+}
