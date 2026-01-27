@@ -1,0 +1,45 @@
+{
+  "$schema": "S3VEN_RPG_MOUNTS_V1",
+  "mounts": {
+    "forest_stag": {
+      "name": "Forest Stag",
+      "rarity": "uncommon",
+      "speedBonus": 10,
+      "travelCostReduction": 5,
+      "description": "A proud stag attuned to the deep woods.",
+      "tags": ["forest", "nature"],
+      "obtain": {
+        "type": "drop",
+        "source": "forest_region",
+        "chance": 0.02
+      }
+    },
+
+    "ember_steed": {
+      "name": "Ember Steed",
+      "rarity": "rare",
+      "speedBonus": 18,
+      "travelCostReduction": 8,
+      "description": "A fiery horse leaving embers in its wake.",
+      "tags": ["fire", "desert"],
+      "obtain": {
+        "type": "worldBoss",
+        "bossKey": "ember_tyrant",
+        "chance": 0.03
+      }
+    },
+
+    "void_drake": {
+      "name": "Void Drake",
+      "rarity": "epic",
+      "speedBonus": 25,
+      "travelCostReduction": 12,
+      "description": "A draconic mount that slips between realities.",
+      "tags": ["void", "endgame"],
+      "obtain": {
+        "type": "raid",
+        "raidKey": "void_citadel"
+      }
+    }
+  }
+}
