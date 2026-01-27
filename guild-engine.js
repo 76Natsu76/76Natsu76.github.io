@@ -2,7 +2,7 @@
  * guild-engine.js — Full Guild System
  ************************************************************/
 
-import { GUILDS } from './guilds.json';
+import { GUILDS } from "./guilds.json";
 // If you later persist to storage, you’ll replace these
 // in-memory mutations with save/load helpers.
 
@@ -41,7 +41,7 @@ export const GuildEngine = {
       members: [
         {
           playerId: creatorPlayerId,
-          rank: 'leader',
+          rank: "leader",
           joinedAt: now
         }
       ],
@@ -85,7 +85,7 @@ export const GuildEngine = {
 
     guild.members.push({
       playerId,
-      rank: 'member',
+      rank: "member",
       joinedAt: Date.now()
     });
 
@@ -214,7 +214,7 @@ export const GuildEngine = {
     boss.hpRemaining = Math.max(0, boss.hpRemaining - amount);
 
     if (boss.hpRemaining === 0) {
-      // You can hook in rewards / achievements here
+      // Hook rewards / achievements here if desired
     }
 
     return boss;
@@ -267,8 +267,8 @@ export const GuildEngine = {
     const guild = this.getGuild(guildId);
     if (!guild) throw new Error(`Guild ${guildId} not found`);
 
-    if (result === 'win') guild.pvp.wins++;
-    if (result === 'loss') guild.pvp.losses++;
+    if (result === "win") guild.pvp.wins++;
+    if (result === "loss") guild.pvp.losses++;
     // rating itself is updated by ArenaEngine
     return guild.pvp;
   }
