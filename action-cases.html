@@ -160,49 +160,41 @@
 
   <script src="api.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
-    /* ============================================================
-       OUTPUT HANDLING
-    ============================================================ */
-
+      "Logged in as: " + username;
+  
     function logOutput(data, isError = false) {
       const out = document.getElementById("output");
-
       const entry = document.createElement("div");
       entry.className = "log-entry";
-
+  
       const time = document.createElement("div");
       time.className = "log-time";
       time.textContent = new Date().toLocaleTimeString();
-
+  
       const content = document.createElement("div");
       content.className = isError ? "error" : "";
       content.textContent =
         typeof data === "string" ? data : JSON.stringify(data, null, 2);
-
+  
       entry.appendChild(time);
       entry.appendChild(content);
-
       out.appendChild(entry);
       out.scrollTop = out.scrollHeight;
     }
-
+  
     function clearOutput() {
       document.getElementById("output").textContent = "";
     }
-
-    /* ============================================================
-       DIAGNOSTICS
-    ============================================================ */
-
+  
     async function pingBackend() {
       try {
         const res = await api.ping();
@@ -211,97 +203,85 @@
         logOutput("Ping failed: " + err.message, true);
       }
     }
-
+  
     async function loadPlayer() {
       try {
-        const player = await api.getPlayer(username);
+        const player = await api.getPlayer(token);
         logOutput(player);
       } catch (err) {
         logOutput("Load failed: " + err.message, true);
       }
     }
-
-    /* ============================================================
-       COMBAT
-    ============================================================ */
-
+  
     async function runCombat() {
       const region = document.getElementById("combatRegion").value || "VERDANT_WILDS";
       const manualEnemy = document.getElementById("combatEnemy").value || null;
-
+  
       try {
-        const result = await api.runCombat(username, region, manualEnemy);
+        const result = await api.runCombat(token, region, manualEnemy);
         logOutput(result);
       } catch (err) {
         logOutput("Combat error: " + err.message, true);
       }
     }
-
-    /* ============================================================
-       INVENTORY
-    ============================================================ */
-
+  
     async function useItem() {
       const itemId = document.getElementById("itemId").value;
       try {
-        const result = await api.useItem(username, itemId);
+        const result = await api.useItem(token, itemId);
         logOutput(result);
       } catch (err) {
         logOutput("Use item error: " + err.message, true);
       }
     }
-
+  
     async function equipItem() {
       const itemId = document.getElementById("itemId").value;
       try {
-        const result = await api.equipItem(username, itemId);
+        const result = await api.equipItem(token, itemId);
         logOutput(result);
       } catch (err) {
         logOutput("Equip error: " + err.message, true);
       }
     }
-
+  
     async function unequipSlot() {
       const slot = document.getElementById("slotName").value;
       try {
-        const result = await api.unequipItem(username, slot);
+        const result = await api.unequipItem(token, slot);
         logOutput(result);
       } catch (err) {
         logOutput("Unequip error: " + err.message, true);
       }
     }
-
-    /* ============================================================
-       SPECIAL ACTIONS
-    ============================================================ */
-
+  
     async function callMystery() {
       try {
-        logOutput(await api.mystery(username));
+        logOutput(await api.mystery(token));
       } catch (err) {
         logOutput("Mystery error: " + err.message, true);
       }
     }
-
+  
     async function callInspire() {
       try {
-        logOutput(await api.inspire(username));
+        logOutput(await api.inspire(token));
       } catch (err) {
         logOutput("Inspire error: " + err.message, true);
       }
     }
-
+  
     async function callBuff() {
       try {
-        logOutput(await api.buff(username));
+        logOutput(await api.buff(token));
       } catch (err) {
         logOutput("Buff error: " + err.message, true);
       }
     }
-
+  
     async function callLevelUp() {
       try {
-        logOutput(await api.levelUp(username));
+        logOutput(await api.levelUp(token));
       } catch (err) {
         logOutput("Level up error: " + err.message, true);
       }
