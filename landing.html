@@ -50,43 +50,42 @@
 
   <button id="enterBtn" style="display:none;">Enter the World</button>
 
-  <script type="module" data-v="1">
+  <script type="module">
     import { requireSession } from "./session-guard.js";
-    const session = requireSession();
-    if (!session) return;
-
-    document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + session.username;
-
     import { PlayerStorage } from "./player-storage.js";
-
+  
+    const session = requireSession();
+    if (!session) {
+      window.location.href = "login.html";
+    }
+  
     const statusBox = document.getElementById("status");
     const enterBtn = document.getElementById("enterBtn");
-
+  
     function log(msg) {
       console.log(msg);
       statusBox.textContent += "\n" + msg;
     }
-
+  
     const username = session.username;
-
     log("Logged in as: " + username);
-
+  
     async function loadPlayer() {
       log("Loading local player data…");
-
+  
       const player = PlayerStorage.load(username);
       sessionStorage.setItem("player", JSON.stringify(player));
-
+  
       statusBox.textContent = `Welcome, ${username}!`;
       enterBtn.style.display = "block";
     }
-
+  
     enterBtn.addEventListener("click", () => {
       window.location.href = "world-map.html";
     });
-
+  
     loadPlayer();
   </script>
+
 </body>
 </html>
