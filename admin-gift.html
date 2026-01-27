@@ -111,48 +111,49 @@
   <div id="toast"></div>
 
   <script src="api.js"></script>
-
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
+    const token = session.token;
+  
     document.getElementById("adminDisplay").textContent =
-      admin ? "Logged in as Admin: " + admin : "Not logged in";
-
+      "Logged in as Admin: " + admin;
+  
     function toast(msg) {
       const t = document.getElementById("toast");
       t.textContent = msg;
       t.style.opacity = 1;
       setTimeout(() => t.style.opacity = 0, 2500);
     }
-
+  
     function showResult(text) {
       document.getElementById("resultBox").textContent = text;
     }
-
+  
     // ============================
     // GOLD
     // ============================
     async function giftGold() {
       const target = document.getElementById("target").value.trim();
       const amount = Number(document.getElementById("goldAmount").value.trim());
-
+  
       if (!target || isNaN(amount)) {
         showResult("Missing or invalid target/amount.");
         return;
       }
-
+  
       try {
-        const result = await api.admin.giftGold(admin, target, amount);
-
+        const result = await api.admin.giftGold(token, target, amount);
+  
         if (!result.success) {
           showResult("Error: " + (result.message || "Unknown error"));
           toast("Gift failed");
           return;
         }
-
+  
         showResult(
           `Gold Gift Successful!\n\n` +
           `Admin: ${admin}\n` +
@@ -160,35 +161,35 @@
           `Gold Amount: ${amount}\n\n` +
           result.message
         );
-
+  
         toast("Gold gifted");
       } catch (err) {
         showResult("Network error: " + err.message);
         toast("Network error");
       }
     }
-
+  
     // ============================
     // EXP
     // ============================
     async function giftExp() {
       const target = document.getElementById("target").value.trim();
       const amount = Number(document.getElementById("expAmount").value.trim());
-
+  
       if (!target || isNaN(amount)) {
         showResult("Missing or invalid target/amount.");
         return;
       }
-
+  
       try {
-        const result = await api.admin.giftExp(admin, target, amount);
-
+        const result = await api.admin.giftExp(token, target, amount);
+  
         if (!result.success) {
           showResult("Error: " + (result.message || "Unknown error"));
           toast("Gift failed");
           return;
         }
-
+  
         showResult(
           `EXP Gift Successful!\n\n` +
           `Admin: ${admin}\n` +
@@ -196,14 +197,14 @@
           `EXP Amount: ${amount}\n\n` +
           result.message
         );
-
+  
         toast("EXP gifted");
       } catch (err) {
         showResult("Network error: " + err.message);
         toast("Network error");
       }
     }
-
+  
     // ============================
     // ITEMS
     // ============================
@@ -211,21 +212,21 @@
       const target = document.getElementById("target").value.trim();
       const itemKey = document.getElementById("itemKey").value.trim();
       const quantity = Number(document.getElementById("itemQty").value.trim());
-
+  
       if (!target || !itemKey || isNaN(quantity)) {
         showResult("Missing or invalid target/item/quantity.");
         return;
       }
-
+  
       try {
-        const result = await api.admin.grantItem(admin, target, itemKey, quantity);
-
+        const result = await api.admin.grantItem(token, target, itemKey, quantity);
+  
         if (!result.success) {
           showResult("Error: " + (result.message || "Unknown error"));
           toast("Grant failed");
           return;
         }
-
+  
         showResult(
           `Item Granted!\n\n` +
           `Admin: ${admin}\n` +
@@ -234,14 +235,14 @@
           `Quantity: ${quantity}\n\n` +
           result.message
         );
-
+  
         toast("Item granted");
       } catch (err) {
         showResult("Network error: " + err.message);
         toast("Network error");
       }
     }
-
+  
     function goBack() {
       window.location.href = "admin-dashboard.html";
     }
