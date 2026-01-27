@@ -1,4 +1,4 @@
-⭐ S3ven RPG — Architecture Documentation
+S3ven RPG — Architecture Documentation
 A complete overview of the engine, systems, data flow, and development phases.
 
 1. High‑Level Overview
@@ -275,3 +275,64 @@ Biomes in biomes.json
 Weather in weatherTable.js
 
 World tick in world-data.js
+
+
+
+
+
+                          ┌──────────────────────────┐
+                          │        PLAYERS           │
+                          │   players.json           │
+                          │   player-registry.js     │
+                          │   player-storage.js      │
+                          └───────────┬──────────────┘
+                                      │
+                                      ▼
+                     ┌────────────────────────────────────┐
+                     │            UI LAYER                 │
+                     │ character.html / inventory.html     │
+                     │ fight-interactive.html              │
+                     │ enemy.html / encounter.html         │
+                     │ world-admin.html / region-controls  │
+                     └──────────────────┬──────────────────┘
+                                        │
+                                        ▼
+                   ┌────────────────────────────────────────┐
+                   │              API LAYER                  │
+                   │               api.js                   │
+                   │     (Twitch commands, endpoints)       │
+                   └──────────────────┬─────────────────────┘
+                                      │
+                                      ▼
+         ┌──────────────────────────────────────────────────────────┐
+         │                     RESOLVER LAYER                       │
+         │                                                          │
+         │  ability-resolver.js   combat-engine.js   combat-flow.js │
+         │  status-engine.js      dot-hot-engine.js  shield-engine  │
+         │  cleanse-engine.js     world-modifiers.js talent-mods    │
+         │  enemy-ai.js           enemy-ai-helpers.js               │
+         │  encounter-generator.js encounter.js                     │
+         │  merchant-resolver.js  shop-engine.js                    │
+         └──────────────────┬───────────────────────────────────────┘
+                            │
+                            ▼
+        ┌────────────────────────────────────────────────────────────┐
+        │                         DATA LAYER                         │
+        │                                                            │
+        │  RACES: race-definitions.json, race-tier-index.json        │
+        │  SUBRACES: subrace-race-index.json, subrace-abilities.json │
+        │  PROFESSIONS: profession-definitions.json, talent-trees    │
+        │  ABILITIES: ability-definitions.json, enemy-abilities.json │
+        │  ENEMIES: enemies.json, enemy-variants.json                │
+        │  ITEMS: items.json, loot-tables.json                       │
+        │  REGIONS: regions.json, region-loot-tables.json            │
+        │  WORLD: world-data.js, weatherTable.js, biomes.json        │
+        │  MERCHANTS: merchant-types.json, merchant-inventory.json   │
+        └──────────────────┬─────────────────────────────────────────┘
+                            │
+                            ▼
+               ┌──────────────────────────────────────────┐
+               │           WORLD SIMULATION                │
+               │   world tick, seasons, weather, events    │
+               │   region modifiers, biome effects          │
+               └──────────────────────────────────────────┘
