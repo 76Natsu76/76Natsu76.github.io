@@ -129,6 +129,10 @@
   <script src="api.js"></script>
 
   <script>
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+    
     const admin = sessionStorage.getItem("twitch_username");
     document.getElementById("adminDisplay").textContent =
       admin ? "Logged in as Admin: " + admin : "Not logged in";
