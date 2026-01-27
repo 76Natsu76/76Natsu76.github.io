@@ -143,44 +143,46 @@
 
   <script src="api.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const admin = sessionStorage.getItem("twitch_username");
+  
+    const admin = session.username;
+    const token = session.token;
+  
     document.getElementById("adminDisplay").textContent =
-      admin ? "Admin: " + admin : "Not logged in";
-
+      "Admin: " + admin;
+  
     function toast(msg) {
       const t = document.getElementById("toast");
       t.textContent = msg;
       t.style.opacity = 1;
       setTimeout(() => t.style.opacity = 0, 2500);
     }
-
+  
     /* ============================================================
        SEARCH
        ============================================================ */
     async function searchPlayers() {
       const params = {};
-
+  
       const u = document.getElementById("searchUsername").value.trim();
       const p = document.getElementById("searchPartial").value.trim();
       const t = document.getElementById("searchTwitch").value.trim();
       const lmin = document.getElementById("levelMin").value;
       const lmax = document.getElementById("levelMax").value;
       const prof = document.getElementById("profession").value;
-
+  
       if (u) params.username = u;
       if (p) params.partial = p;
       if (t) params.twitchId = t;
       if (lmin) params.levelMin = lmin;
       if (lmax) params.levelMax = lmax;
       if (prof) params.profession = prof;
-
+  
       try {
-        const list = await api.admin.searchPlayers(params);
+        const list = await api.admin.searchPlayers(token, params);
         renderResults(list);
         toast("Search complete");
       } catch (err) {
@@ -189,18 +191,18 @@
         toast("Search failed");
       }
     }
-
+  
     /* ============================================================
        RENDER RESULTS
        ============================================================ */
     function renderResults(list) {
       const container = document.getElementById("resultsContainer");
-
+  
       if (!list.length) {
         container.innerHTML = "<div>No players found.</div>";
         return;
       }
-
+  
       container.innerHTML = list
         .map(p => `
           <div class="player-card">
@@ -210,7 +212,7 @@
             Last Action: ${p.lastAction || "Unknown"}<br>
             Gold: ${p.gold ?? "?"}<br>
             EXP: ${p.xp ?? "?"}<br><br>
-
+  
             <a href="character.html?user=${p.username}">Character</a> |
             <a href="inventory.html?user=${p.username}">Inventory</a> |
             <a href="combat-log.html?user=${p.username}">Combat Log</a> |
@@ -219,7 +221,7 @@
         `)
         .join("");
     }
-
+  
     /* ============================================================
        HELPERS
        ============================================================ */
@@ -229,11 +231,12 @@
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     function goBack() {
       window.location.href = "admin-dashboard.html";
     }
   </script>
+
 
 </body>
 </html>
