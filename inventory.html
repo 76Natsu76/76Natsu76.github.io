@@ -179,38 +179,41 @@
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
+    // Local cached player data (GitHub-native)
     let player = JSON.parse(sessionStorage.getItem("player") || "{}");
-
+  
     loadInventory();
-
+  
     function refreshInventory() {
       loadInventory();
       document.getElementById("syncIndicator").textContent = "Local Save ✔";
     }
-
+  
     function loadInventory() {
       player = JSON.parse(sessionStorage.getItem("player") || "{}");
       renderInventory(player);
     }
-
+  
     /* ============================================================
        RENDER INVENTORY
        ============================================================ */
-
+  
     function renderInventory(p) {
       const container = document.getElementById("inventoryContainer");
       const out = [];
-
+  
       const consumables = [];
       const materials = [];
       const quest = [];
       const misc = [];
-
+  
       for (const item of p.inventory || []) {
         switch (item.type) {
           case "consumable": consumables.push(item); break;
@@ -219,16 +222,16 @@
           default: misc.push(item); break;
         }
       }
-
+  
       out.push(renderEquipment(p));
       out.push(renderCategory("Consumables", consumables, true));
       out.push(renderCategory("Materials", materials, false));
       out.push(renderCategory("Quest Items", quest, false));
       out.push(renderCategory("Misc", misc, false));
-
+  
       container.innerHTML = out.join("");
     }
-
+  
     function renderEquipment(p) {
       return `
         <div class="section collapsible">
@@ -241,12 +244,12 @@
                 .map(([slot, item]) => `
                   <div class="equipment-card rarity-${(item?.rarity || "common").toLowerCase()}">
                     <img class="item-icon" src="${item?.icon || "/assets/items/default.png"}">
-
+  
                     <div class="item-info">
                       <div class="item-name">${item ? item.name : "—"}</div>
                       <div class="item-qty">${format(slot)}</div>
                     </div>
-
+  
                     ${
                       item
                         ? `<div class="item-actions">
@@ -262,7 +265,7 @@
         </div>
       `;
     }
-
+  
     function renderCategory(title, items, allowUse) {
       return `
         <div class="section collapsible">
@@ -277,12 +280,12 @@
                     .map(item => `
                       <div class="item-card rarity-${(item.rarity || "common").toLowerCase()}">
                         <img class="item-icon" src="${item.icon || "/assets/items/default.png"}">
-
+  
                         <div class="item-info">
                           <div class="item-name">${item.name}</div>
                           <div class="item-qty">x${item.quantity}</div>
                         </div>
-
+  
                         <div class="item-actions">
                           ${
                             item.slot
@@ -303,59 +306,60 @@
         </div>
       `;
     }
-
+  
     /* ============================================================
        ITEM ACTIONS (LOCAL ONLY)
        ============================================================ */
-
+  
     function useItem(itemId) {
       const item = player.inventory.find(i => i.id === itemId);
       if (!item) return;
-
+  
       item.quantity -= 1;
       if (item.quantity <= 0) {
         player.inventory = player.inventory.filter(i => i.id !== itemId);
       }
-
+  
       sessionStorage.setItem("player", JSON.stringify(player));
       refreshInventory();
     }
-
+  
     function equipItem(itemId) {
       const item = player.inventory.find(i => i.id === itemId);
       if (!item || !item.slot) return;
-
+  
       player.equipment[item.slot] = item;
-
+  
       sessionStorage.setItem("player", JSON.stringify(player));
       refreshInventory();
     }
-
+  
     function unequipItem(slot) {
       delete player.equipment[slot];
-
+  
       sessionStorage.setItem("player", JSON.stringify(player));
       refreshInventory();
     }
-
+  
     /* ============================================================
        HELPERS
        ============================================================ */
-
+  
     function toggleSection(header) {
       header.parentElement.classList.toggle("collapsed");
     }
-
+  
     function format(str) {
       return String(str)
         .toLowerCase()
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+  
     window.goToCharacter = () => window.location.href = "character.html";
     window.goToMap = () => window.location.href = "world-map.html";
   </script>
+
 
 </body>
 </html>
