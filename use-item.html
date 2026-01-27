@@ -125,46 +125,41 @@
 
   <script src="api.js"></script>
 
-  <script>
+  <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
-    const username = sessionStorage.getItem("twitch_username");
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
+      "Logged in as: " + username;
+  
     /* ============================================================
        LOAD USABLE ITEMS
        ============================================================ */
-
     async function loadUsableItems() {
       const container = document.getElementById("useItemContainer");
-
-      if (!username) {
-        container.textContent = "Error: No Twitch username found.";
-        return;
-      }
-
+  
       try {
-        const player = await api.getPlayer(username);
+        const player = await api.getPlayer(token);
         renderUsableItems(player);
       } catch (err) {
         container.textContent = "Network error: " + err.message;
       }
     }
-
+  
     /* ============================================================
        RENDER ITEMS
        ============================================================ */
-
     function renderUsableItems(player) {
       const container = document.getElementById("useItemContainer");
-
+  
       const usable = (player.inventory || []).filter(
         item => item.type === "consumable"
       );
-
+  
       container.innerHTML = `
         <div class="section">
           <h2>Usable Items</h2>
@@ -190,42 +185,40 @@
         </div>
       `;
     }
-
+  
     /* ============================================================
        USE ITEM
        ============================================================ */
-
     async function useItem(itemId) {
       try {
-        const result = await api.useItem(username, itemId);
-    
+        const result = await api.useItem(token, itemId);
+  
         // Refresh stored player
-        const updated = await api.getPlayer(username);
+        const updated = await api.getPlayer(token);
         sessionStorage.setItem("player", JSON.stringify(updated));
-    
+  
         alert(result.message || "Item used.");
         loadUsableItems();
       } catch (err) {
         alert("Error using item: " + err.message);
       }
     }
-
+  
     /* ============================================================
        NAVIGATION
        ============================================================ */
-
     function goToInventory() {
       window.location.href = "inventory.html";
     }
-
+  
     function goToCharacter() {
       window.location.href = "character.html";
     }
-
+  
     function goToMap() {
       window.location.href = "world-map.html";
     }
-
+  
     loadUsableItems();
   </script>
 
