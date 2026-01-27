@@ -153,27 +153,26 @@
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
-    
+  
     import { loadMerchantFromDOM } from "./js/shop.js";
-    import { initGlobalShopUI, promptForToken, startShopCountdown } from "./shop-ui.js"; 
-    
-    await loadMerchantFromDOM(); 
-    initGlobalShopUI(); 
-    startShopCountdown("globalShopTimer");
-
-    // Username display
-    const username = sessionStorage.getItem("twitch_username");
+    import { initGlobalShopUI, promptForToken, startShopCountdown } from "./shop-ui.js";
+  
+    const username = session.username;
+    const token = session.token;
+  
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-
-    // Token button
+      "Logged in as: " + username;
+  
+    await loadMerchantFromDOM();
+    initGlobalShopUI(token);
+    startShopCountdown("globalShopTimer");
+  
     document.getElementById("setTokenBtn").onclick = promptForToken;
-
-    // Inventory toggle
+  
     document.getElementById("toggleInventoryBtn").onclick = () => {
       document.getElementById("inventoryPanel").classList.toggle("hidden");
     };
-
+  
     function goToMap() { window.location.href = "world-map.html"; }
     function goToInventory() { window.location.href = "inventory.html"; }
   </script>
