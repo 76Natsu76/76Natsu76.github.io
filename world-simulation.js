@@ -5,6 +5,7 @@
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
+import { WORLD_BOSSES } from "./world-boss-templates.json";
 
 export const WorldSim = {
   tick,
@@ -33,7 +34,7 @@ function getState() {
       weather: pickFromArray(region.weatherPool || biome.weatherPool || []),
       event: null,
       hazard: null,
-      worldBossAlive: true,
+      worldBoss: null,
       pressure: 1.0
     };
   }
@@ -82,10 +83,36 @@ function tick() {
       r.hazard = null;
     }
 
-    // WORLD BOSS
-    if (!r.worldBossAlive && Math.random() < 0.05) {
-      r.worldBossAlive = true;
+    // WORLD BOSS SYSTEM
+    if (!r.worldBoss) {
+      // No boss currently active in this region
+      const bossKey = trySpawnWorldBoss(regionKey, region, r);
+      if (bossKey) {
+        r.worldBoss = {
+          key: bossKey,
+          hp: WORLD_BOSSES[bossKey].maxHP,
+          maxHP: WORLD_BOSSES[bossKey].maxHP,
+          phase: 0,
+          active: true,
+          despawnTimer: 60 // ticks until despawn if ignored
+        };
+      }
+    } else {
+      // Boss is active
+      const boss = r.worldBoss;
+    
+      // Despawn if timer runs out
+      boss.despawnTimer--;
+      if (boss.despawnTimer <= 0) {
+        r.worldBoss = null;
+      }
+    
+      // If boss was killed externally (via world-boss-engine)
+      if (boss.hp <= 0) {
+        r.worldBoss = null;
+      }
     }
+
 
     // REGION PRESSURE (encounter intensity)
     r.pressure = Math.min(3.0, Math.max(0.5, r.pressure + (Math.random() - 0.5) * 0.1));
@@ -93,6 +120,29 @@ function tick() {
 
   saveState(state);
   return state;
+}
+
+function trySpawnWorldBoss(regionKey, region, regionState) {
+  // Check all bosses for spawn eligibility
+  for (const bossKey in WORLD_BOSSES) {
+    const boss = WORLD_BOSSES[bossKey];
+
+    // Region match
+    if (boss.spawnRules.region !== regionKey) continue;
+
+    // Seasonal match
+    if (boss.spawnRules.season !== "any") {
+      // You can integrate seasons later
+      continue;
+    }
+
+    // Spawn chance
+    if (Math.random() < (boss.spawnRules.chance || 0)) {
+      return bossKey;
+    }
+  }
+
+  return null;
 }
 
 // ------------------------------------------------------------
