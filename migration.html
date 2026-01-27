@@ -1,12 +1,105 @@
-<script type="module">
-  import { migrateAndSave } from "./migration.js";
-  import { savePlayerToKV } from "./api.js";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>RPG Migration Tool</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      padding: 20px;
+    }
+    h1 {
+      color: #7cf;
+    }
+    .log {
+      background: #222;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+    button {
+      padding: 10px 20px;
+      background: #28a745;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background: #218838;
+    }
+  </style>
+</head>
+<body>
 
-  window.migrateAndPush = async (oldData) => {
-    const migrated = migrateAndSave(oldData);
-    console.log("Migrated:", migrated);
+  <h1>Player Migration Tool</h1>
 
-    const res = await savePlayerToKV(migrated.username, migrated);
-    console.log("KV Response:", res);
-  };
-</script>
+  <p>
+    This page lets you migrate an old player object and push it directly to KV.<br>
+    Steps:
+  </p>
+
+  <ol>
+    <li>Paste your old player object into DevTools:<br>
+      <code>window.old = { ... }</code>
+    </li>
+    <li>Refresh this page</li>
+    <li>Click the button below</li>
+    <li>Check Cloudflare KV for <code>player:&lt;username&gt;</code></li>
+  </ol>
+
+  <button onclick="window.runMigration()">Run Migration + Push to KV</button>
+
+  <div id="log" class="log">Waiting…</div>
+
+  <script type="module">
+    import { migrateAndSave } from "./migration.js";
+    import { savePlayerToKV } from "./api.js";
+
+    const logBox = document.getElementById("log");
+
+    function log(msg) {
+      logBox.textContent += "\n" + msg;
+    }
+
+    window.runMigration = async () => {
+      logBox.textContent = "Starting migration...\n";
+
+      if (!window.old) {
+        log("❌ ERROR: window.old is not defined.");
+        log("Paste your old character first:");
+        log("window.old = { ... }");
+        return;
+      }
+
+      try {
+        log("Migrating player...");
+        const migrated = migrateAndSave(window.old);
+
+        log("✔ Migration complete.");
+        log("Username: " + migrated.username);
+
+        log("Saving to KV...");
+        const res = await savePlayerToKV(migrated.username, migrated);
+
+        log("✔ KV Response:");
+        log(JSON.stringify(res, null, 2));
+
+        log("\n🎉 DONE! Check Cloudflare KV for:");
+        log("player:" + migrated.username);
+
+      } catch (err) {
+        log("❌ ERROR during migration:");
+        log(err.toString());
+      }
+    };
+  </script>
+
+</body>
+</html>
