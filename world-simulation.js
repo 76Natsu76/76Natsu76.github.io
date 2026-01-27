@@ -1,13 +1,15 @@
 // world-simulation.js
 // GitHub-native world simulation engine.
-// Handles weather, events, hazards, world boss states, and region pressure.
+// Handles weather, events, hazards, world boss states, region unlocks,
+// and region pressure.
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { WORLD_BOSSES } from "./world-boss-templates.json";
-import { REGION_UNLOCKS } from "./region-unlocks.json"; 
+import { REGION_UNLOCKS } from "./region-unlocks.json";
 import { loadRegionUnlocks } from "./region-unlocks.js";
+import { WorldBossAnnouncements } from "./world-boss-announcements.js";
 
 export const WorldSim = {
   tick,
@@ -104,30 +106,34 @@ function tick() {
     } else {
       // Boss is active
       const boss = r.worldBoss;
-    
+
       // Despawn if timer runs out
       boss.despawnTimer--;
       if (boss.despawnTimer <= 0) {
         r.worldBoss = null;
       }
-    
+
       // If boss was killed externally (via world-boss-engine)
       if (boss.hp <= 0) {
         r.worldBoss = null;
       }
     }
 
-
     // REGION PRESSURE (encounter intensity)
-    r.pressure = Math.min(3.0, Math.max(0.5, r.pressure + (Math.random() - 0.5) * 0.1));
+    r.pressure = Math.min(
+      3.0,
+      Math.max(0.5, r.pressure + (Math.random() - 0.5) * 0.1)
+    );
   }
 
   saveState(state);
-  import { WorldBossAnnouncements } from "./world-boss-announcements.js";
   WorldBossAnnouncements.checkForAnnouncements(state);
   return state;
 }
 
+// ------------------------------------------------------------
+// WORLD BOSS SPAWN LOGIC
+// ------------------------------------------------------------
 function trySpawnWorldBoss(regionKey, region, regionState) {
   // Check all bosses for spawn eligibility
   for (const bossKey in WORLD_BOSSES) {
@@ -138,7 +144,7 @@ function trySpawnWorldBoss(regionKey, region, regionState) {
 
     // Seasonal match
     if (boss.spawnRules.season !== "any") {
-      // You can integrate seasons later
+      // Future seasonal integration
       continue;
     }
 
