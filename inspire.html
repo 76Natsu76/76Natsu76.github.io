@@ -105,15 +105,18 @@
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
     async function sendInspire() {
       const to = document.getElementById("target").value.trim();
       const amount = document.getElementById("amount").value.trim();
       const output = document.getElementById("output");
+  
+      if (!username) {
+        output.textContent = "Error: No username found (not logged in).";
+        return;
+      }
   
       if (!to || !amount) {
         output.textContent = "Please provide both a target user and an amount.";
@@ -121,8 +124,7 @@
       }
   
       try {
-        const res = await api.inspire(token, to, amount);
-  
+        const res = await api.inspire(username, to, amount);
         if (!res.ok) {
           output.textContent = "Error: " + (res.error || "Unknown error");
           return;
