@@ -108,6 +108,10 @@
   <button class="btn" onclick="goToMap()">World Map</button>
 
   <script>
+    import { requireSession } from "./session-guard.js";
+    const session = requireSession();
+    if (!session) return;
+    
     const username = sessionStorage.getItem("twitch_username");
     document.getElementById("usernameDisplay").textContent =
       username ? "Logged in as: " + username : "No user logged in";
