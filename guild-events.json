@@ -1,0 +1,84 @@
+{
+  "$schema": "S3VEN_RPG_GUILD_EVENTS_V1",
+  "events": {
+    "EVENT_KEY": {
+      "name": "String",
+      "type": "raid | defense | resource | seasonal | ritual | anomaly",
+      "description": "String",
+      "requirements": {
+        "minMembers": 1,
+        "minGuildLevel": 1
+      },
+      "objectives": [
+        {
+          "type": "kill | collect | survive | defend | interact",
+          "target": "enemy_key | item_key | timer",
+          "amount": 1
+        }
+      ],
+      "rewards": {
+        "gold": 0,
+        "xp": 0,
+        "guildBuffs": ["buff_key"],
+        "items": ["item_key"]
+      }
+    },
+
+    "rift_instability": {
+      "name": "Rift Instability",
+      "type": "anomaly",
+      "description": "A void rift threatens to tear open near the guild hall.",
+      "requirements": {
+        "minMembers": 1,
+        "minGuildLevel": 1
+      },
+      "objectives": [
+        { "type": "kill", "target": "void_reaver", "amount": 3 }
+      ],
+      "rewards": {
+        "gold": 200,
+        "xp": 150,
+        "guildBuffs": ["guild_void_resist_1"],
+        "items": ["rift_dust"]
+      }
+    },
+
+    "siege_of_thorns": {
+      "name": "Siege of Thorns",
+      "type": "defense",
+      "description": "Nature spirits assault the guild hall. Hold the line.",
+      "requirements": {
+        "minMembers": 2,
+        "minGuildLevel": 3
+      },
+      "objectives": [
+        { "type": "survive", "target": "timer", "amount": 180 }
+      ],
+      "rewards": {
+        "gold": 300,
+        "xp": 250,
+        "guildBuffs": ["guild_nature_resist_1"],
+        "items": ["thorn_fragment"]
+      }
+    },
+
+    "celestial_rite": {
+      "name": "Celestial Rite",
+      "type": "ritual",
+      "description": "A sacred ritual grants blessings to the guild.",
+      "requirements": {
+        "minMembers": 3,
+        "minGuildLevel": 5
+      },
+      "objectives": [
+        { "type": "collect", "target": "holy_water", "amount": 5 }
+      ],
+      "rewards": {
+        "gold": 150,
+        "xp": 300,
+        "guildBuffs": ["guild_xp_boost_1"],
+        "items": ["celestial_fragment"]
+      }
+    }
+  }
+}
