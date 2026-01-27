@@ -109,52 +109,51 @@
   <button class="btn" onclick="goToMap()">World Map</button>
 
   <script src="api.js"></script>
-
   <script type="module">
     import { requireSession } from "./session-guard.js";
     const session = requireSession();
     if (!session) return;
   
     const username = session.username;
-    const token = session.token;
-  
     document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+      username ? "Logged in as: " + username : "No user logged in";
   
     let player = null;
   
     loadPlayer();
   
-    /* ============================================================
-       LOAD PLAYER DATA
-       ============================================================ */
     async function loadPlayer() {
       const container = document.getElementById("levelContainer");
   
+      if (!username) {
+        container.textContent = "Error: No username found.";
+        return;
+      }
+  
       try {
-        player = await api.getPlayer(token);
+        player = await api.getPlayer(username);
         renderLevelUI(player);
       } catch (err) {
         container.textContent = "Network error: " + err.message;
       }
     }
   
-    /* ============================================================
-       RENDER LEVEL UI
-       ============================================================ */
     function renderLevelUI(player) {
       const container = document.getElementById("levelContainer");
   
-      const xpPercent = player.xpRequired > 0
-        ? Math.min(100, Math.floor((player.xp / player.xpRequired) * 100))
-        : 0;
+      const xpPercent =
+        player.xpRequired > 0
+          ? Math.min(100, Math.floor((player.xp / player.xpRequired) * 100))
+          : 0;
   
       container.innerHTML = `
         <div class="section">
           <h2>Level Progress</h2>
   
           <div class="stat-row"><span>Level</span><span>${player.level}</span></div>
-          <div class="stat-row"><span>XP</span><span>${player.xp} / ${player.xpRequired}</span></div>
+          <div class="stat-row"><span>XP</span><span>${player.xp} / ${
+        player.xpRequired
+      }</span></div>
   
           <div class="xp-bar">
             <div class="xp-fill" id="xpFill" style="width:${xpPercent}%"></div>
@@ -169,8 +168,9 @@
           <h2>Stats</h2>
           ${
             Object.entries(player.derived || {})
-              .map(([k, v]) =>
-                `<div class="stat-row"><span>${format(k)}</span><span>${v}</span></div>`
+              .map(
+                ([k, v]) =>
+                  `<div class="stat-row"><span>${format(k)}</span><span>${v}</span></div>`
               )
               .join("")
           }
@@ -178,19 +178,15 @@
       `;
     }
   
-    /* ============================================================
-       ATTEMPT LEVEL UP
-       ============================================================ */
     async function attemptLevelUp() {
       try {
-        const result = await api.levelUp(token);
+        const result = await api.levelUp(username);
   
         const msg = document.getElementById("levelupMessage");
         msg.textContent = result.message || "Level Up!";
         msg.style.display = "block";
   
         await loadPlayer();
-  
       } catch (err) {
         const msg = document.getElementById("levelupMessage");
         msg.textContent = "Error: " + err.message;
@@ -198,9 +194,6 @@
       }
     }
   
-    /* ============================================================
-       HELPERS
-       ============================================================ */
     function format(str) {
       return String(str)
         .toLowerCase()
@@ -216,7 +209,6 @@
       window.location.href = "world-map.html";
     }
   </script>
-
 
 </body>
 </html>
