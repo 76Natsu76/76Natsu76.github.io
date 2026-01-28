@@ -1,17 +1,26 @@
 // session-guard.js
-import { loadFromKVAndLocal, detectConflict } from "./api.js";
-
 export async function requireSession() {
-  const session = JSON.parse(localStorage.getItem("session"));
+  const raw = localStorage.getItem("session");
+  if (!raw) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  let session;
+  try {
+    session = JSON.parse(raw);
+  } catch {
+    // corrupted session → force logout
+    localStorage.removeItem("session");
+    window.location.href = "login.html";
+    return;
+  }
+
   if (!session || !session.username) {
     window.location.href = "login.html";
     return;
   }
 
-  const username = session.username;
-
-  const { local, remote } = await loadFromKVAndLocal(username);
-  const conflict = detectConflict(local, remote);
-
-  window.syncState = { local, remote, conflict, username };
+  // Only store username — do NOT load player here
+  window.syncState = { username: session.username };
 }
