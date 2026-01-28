@@ -226,515 +226,515 @@
 
   <!-- MODULE SCRIPT -->
   <script type="module">
-  (async () => {
-    const { requireSession } = await import("./session-guard.js");
-    const { PlayerStorage } = await import("./player-storage.js");
-    const { savePlayerToKV, loadFromKVAndLocal } = await import("./api.js");
-  
-    /* ============================================================
-       SESSION + LOAD ON LOGIN
-    ============================================================ */
-  
-    await requireSession();
-  
-    const { local, remote, conflict, username } = window.syncState;
-    window.username = username;
-  
-    const conflictModal = document.getElementById("conflictModal");
-    const useCloudBtn = document.getElementById("useCloudBtn");
-    const useLocalBtn = document.getElementById("useLocalBtn");
-  
-    /* ============================================================
-       NORMALIZATION (prevents .map/.length crashes)
-    ============================================================ */
-  
-    function normalizePlayer(p) {
-      if (!p) return p;
-  
-      if (!Array.isArray(p.abilities)) p.abilities = [];
-      if (!Array.isArray(p.inventory)) p.inventory = [];
-      if (!Array.isArray(p.inventoryEquipment)) p.inventoryEquipment = [];
-      if (!Array.isArray(p.talentTree)) p.talentTree = [];
-      if (!Array.isArray(p.statusEffects)) p.statusEffects = [];
-      if (!Array.isArray(p.playerStatusEffects)) p.playerStatusEffects = [];
-  
-      if ((!p.statusEffects || p.statusEffects.length === 0) && p.playerStatusEffects.length) {
-        p.statusEffects = p.playerStatusEffects;
+    (async () => {
+      const { requireSession } = await import("./session-guard.js");
+      const { PlayerStorage } = await import("./player-storage.js");
+      const { savePlayerToKV, loadFromKVAndLocal } = await import("./api.js");
+    
+      /* ============================================================
+         SESSION + LOAD ON LOGIN
+      ============================================================ */
+    
+      await requireSession();
+    
+      const { local, remote, conflict, username } = window.syncState;
+      window.username = username;
+    
+      const conflictModal = document.getElementById("conflictModal");
+      const useCloudBtn = document.getElementById("useCloudBtn");
+      const useLocalBtn = document.getElementById("useLocalBtn");
+    
+      /* ============================================================
+         NORMALIZATION (prevents .map/.length crashes)
+      ============================================================ */
+    
+      function normalizePlayer(p) {
+        if (!p) return p;
+    
+        if (!Array.isArray(p.abilities)) p.abilities = [];
+        if (!Array.isArray(p.inventory)) p.inventory = [];
+        if (!Array.isArray(p.inventoryEquipment)) p.inventoryEquipment = [];
+        if (!Array.isArray(p.talentTree)) p.talentTree = [];
+        if (!Array.isArray(p.statusEffects)) p.statusEffects = [];
+        if (!Array.isArray(p.playerStatusEffects)) p.playerStatusEffects = [];
+    
+        if ((!p.statusEffects || p.statusEffects.length === 0) && p.playerStatusEffects.length) {
+          p.statusEffects = p.playerStatusEffects;
+        }
+    
+        if (typeof p.equipment !== "object" || p.equipment === null) p.equipment = {};
+        if (typeof p.stats !== "object" || p.stats === null) p.stats = {};
+        if (typeof p.derived !== "object" || p.derived === null) p.derived = {};
+        if (typeof p.adaptiveProfile !== "object" || p.adaptiveProfile === null) p.adaptiveProfile = {};
+        if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
+    
+        // Profession selection redirect
+        if (p.level >= 10 && p.profession === "adventurer") {
+          window.location.href = "profession-selection.html";
+          return null;
+        }
+    
+        return p;
+      }    
+      /* ============================================================
+         LOAD CHARACTER INTO UI
+      ============================================================ */
+    
+      function loadCharacterUI(player) {
+        player = normalizePlayer(player);
+        PlayerStorage.save(username, player);
+        renderCharacter(player);
+        document.getElementById("syncIndicator").textContent = "Synced ✔";
       }
-  
-      if (typeof p.equipment !== "object" || p.equipment === null) p.equipment = {};
-      if (typeof p.stats !== "object" || p.stats === null) p.stats = {};
-      if (typeof p.derived !== "object" || p.derived === null) p.derived = {};
-      if (typeof p.adaptiveProfile !== "object" || p.adaptiveProfile === null) p.adaptiveProfile = {};
-      if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
-  
-      // Profession selection redirect
-      if (p.level >= 10 && p.profession === "adventurer") {
-        window.location.href = "profession-selection.html";
-        return null;
+    
+      function showConflictModal(localPlayer, remotePlayer) {
+        conflictModal.style.display = "block";
+    
+        useCloudBtn.onclick = () => {
+          loadCharacterUI(remotePlayer);
+          conflictModal.style.display = "none";
+        };
+    
+        useLocalBtn.onclick = async () => {
+          await savePlayerToKV(username, localPlayer);
+          loadCharacterUI(localPlayer);
+          conflictModal.style.display = "none";
+        };
       }
-  
-      return p;
-    }    
-    /* ============================================================
-       LOAD CHARACTER INTO UI
-    ============================================================ */
-  
-    function loadCharacterUI(player) {
-      player = normalizePlayer(player);
-      PlayerStorage.save(username, player);
-      renderCharacter(player);
-      document.getElementById("syncIndicator").textContent = "Synced ✔";
-    }
-  
-    function showConflictModal(localPlayer, remotePlayer) {
-      conflictModal.style.display = "block";
-  
-      useCloudBtn.onclick = () => {
-        loadCharacterUI(remotePlayer);
-        conflictModal.style.display = "none";
+    
+      // Decide what to load on entry
+      if (conflict === "remote-only") {
+        loadCharacterUI(remote);
+      } else if (conflict === "local-only") {
+        await savePlayerToKV(username, local);
+        loadCharacterUI(local);
+      } else if (conflict === "match") {
+        loadCharacterUI(local || remote);
+      } else if (conflict === "conflict") {
+        showConflictModal(local, remote);
+      } else if (conflict === "none") {
+        document.getElementById("characterContainer").textContent =
+          "No character data found.";
+      }
+    
+      /* ============================================================
+         TO KV BUTTON
+      ============================================================ */
+      window.pushToKV = async () => {
+        const p = PlayerStorage.load(username);
+        if (!p) {
+          alert("No player loaded");
+          return;
+        }
+        const res = await savePlayerToKV(p.username, p);
+        alert("Saved to KV!");
+        console.log("KV save result:", res);
       };
-  
-      useLocalBtn.onclick = async () => {
-        await savePlayerToKV(username, localPlayer);
-        loadCharacterUI(localPlayer);
-        conflictModal.style.display = "none";
+    
+      window.loadFromKV = async () => {
+        document.getElementById("syncIndicator").textContent = "Loading from KV…";
+        const { remote } = await loadFromKVAndLocal(username);
+    
+        if (!remote) {
+          alert("No cloud data found for this character.");
+          document.getElementById("syncIndicator").textContent = "No cloud data";
+          return;
+        }
+    
+        const normalized = normalizePlayer(remote);
+        PlayerStorage.save(username, normalized);
+        renderCharacter(normalized);
+        document.getElementById("syncIndicator").textContent = "Loaded from KV ✔";
       };
-    }
-  
-    // Decide what to load on entry
-    if (conflict === "remote-only") {
-      loadCharacterUI(remote);
-    } else if (conflict === "local-only") {
-      await savePlayerToKV(username, local);
-      loadCharacterUI(local);
-    } else if (conflict === "match") {
-      loadCharacterUI(local || remote);
-    } else if (conflict === "conflict") {
-      showConflictModal(local, remote);
-    } else if (conflict === "none") {
-      document.getElementById("characterContainer").textContent =
-        "No character data found.";
-    }
-  
-    /* ============================================================
-       TO KV BUTTON
-    ============================================================ */
-    window.pushToKV = async () => {
-      const p = PlayerStorage.load(username);
-      if (!p) {
-        alert("No player loaded");
-        return;
-      }
-      const res = await savePlayerToKV(p.username, p);
-      alert("Saved to KV!");
-      console.log("KV save result:", res);
-    };
-  
-    window.loadFromKV = async () => {
-      document.getElementById("syncIndicator").textContent = "Loading from KV…";
-      const { remote } = await loadFromKVAndLocal(username);
-  
-      if (!remote) {
-        alert("No cloud data found for this character.");
-        document.getElementById("syncIndicator").textContent = "No cloud data";
-        return;
-      }
-  
-      const normalized = normalizePlayer(remote);
-      PlayerStorage.save(username, normalized);
-      renderCharacter(normalized);
-      document.getElementById("syncIndicator").textContent = "Loaded from KV ✔";
-    };
-  
-    /* ============================================================
-       RENDER CHARACTER (YOUR FULL RENDERER)
-    ============================================================ */
-    function renderCharacter(p) {
-      const container = document.getElementById("characterContainer");
-      const out = [];
-  
-      /* OVERVIEW */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Overview <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-  
-            <div class="portrait-frame portrait-${p.rarity?.toLowerCase() || "common"}">
-              <img class="portrait-img"
-                   src="${p.portrait || "/assets/portraits/default.png"}"
-                   onerror="this.src='/assets/portraits/default.png'">
+    
+      /* ============================================================
+         RENDER CHARACTER (YOUR FULL RENDERER)
+      ============================================================ */
+      function renderCharacter(p) {
+        const container = document.getElementById("characterContainer");
+        const out = [];
+    
+        /* OVERVIEW */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Overview <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+    
+              <div class="portrait-frame portrait-${p.rarity?.toLowerCase() || "common"}">
+                <img class="portrait-img"
+                     src="${p.portrait || "/assets/portraits/default.png"}"
+                     onerror="this.src='/assets/portraits/default.png'">
+              </div>
+    
+              <img class="profession-emblem"
+                   src="/assets/professions/${p.profession?.toLowerCase() || "default"}.png"
+                   onerror="this.src='/assets/professions/default.png'">
+    
+              <h2 style="text-align:center; margin-top:12px;">${p.username}</h2>
+    
+              <div class="stat-row"><span>Level</span><span>${p.level}</span></div>
+              <div class="stat-row"><span>Profession</span><span>${format(p.profession)}</span></div>
+              <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
+              <div class="stat-row"><span>Element</span><span>${format(p.element)}</span></div>
+              <div class="stat-row"><span>Family</span><span>${format(p.family)}</span></div>
+    
+              <div style="margin-top:10px;">XP: ${p.xp} / ${p.xpRequired}</div>
+              <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+    
             </div>
-  
-            <img class="profession-emblem"
-                 src="/assets/professions/${p.profession?.toLowerCase() || "default"}.png"
-                 onerror="this.src='/assets/professions/default.png'">
-  
-            <h2 style="text-align:center; margin-top:12px;">${p.username}</h2>
-  
-            <div class="stat-row"><span>Level</span><span>${p.level}</span></div>
-            <div class="stat-row"><span>Profession</span><span>${format(p.profession)}</span></div>
-            <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
-            <div class="stat-row"><span>Element</span><span>${format(p.element)}</span></div>
-            <div class="stat-row"><span>Family</span><span>${format(p.family)}</span></div>
-  
-            <div style="margin-top:10px;">XP: ${p.xp} / ${p.xpRequired}</div>
-            <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
-  
           </div>
-        </div>
-      `);
-  
-      /* BASE STATS */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Stats <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              Object.entries(p.stats || {})
-                .map(([k, v]) => `
-                  <div class="stat-row">
-                    <span>${format(k)}</span><span>${v}</span>
-                  </div>
-                `)
-                .join("")
-            }
+        `);
+    
+        /* BASE STATS */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Stats <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                Object.entries(p.stats || {})
+                  .map(([k, v]) => `
+                    <div class="stat-row">
+                      <span>${format(k)}</span><span>${v}</span>
+                    </div>
+                  `)
+                  .join("")
+              }
+            </div>
           </div>
-        </div>
-      `);
-  
-      /* DERIVED STATS */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Derived Stats <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              Object.entries(p.derived || {})
-                .map(([k, v]) => `
-                  <div class="stat-row">
-                    <span>${format(k)}</span><span>${v}</span>
-                  </div>
-                `)
-                .join("")
-            }
+        `);
+    
+        /* DERIVED STATS */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Derived Stats <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                Object.entries(p.derived || {})
+                  .map(([k, v]) => `
+                    <div class="stat-row">
+                      <span>${format(k)}</span><span>${v}</span>
+                    </div>
+                  `)
+                  .join("")
+              }
+            </div>
           </div>
-        </div>
-      `);
-  
-      /* COMBAT PROFILE */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Combat Profile <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              p.adaptiveProfile && Object.keys(p.adaptiveProfile).length
-                ? Object.entries(p.adaptiveProfile)
-                    .map(([k, v]) => `
-                      <div class="stat-row">
-                        <span>${format(k)}</span><span>${v}</span>
-                      </div>
-                    `)
-                    .join("")
-                : "<div>No combat profile data</div>"
-            }
-          </div>
-        </div>
-      `);
-  
-      /* EQUIPMENT */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Equipment <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              Object.entries(p.equipment || {})
-                .map(([slot, item]) => `
-                  <div class="equipment-card">
-                    <strong>${format(slot)}</strong>: ${item ? item.name : "—"}
-                    ${
-                      item
-                        ? `<div class="tooltip">
-                            <strong>${item.name}</strong><br>
-                            Rarity: ${format(item.rarity)}<br>
-                            ${item.bonuses ? formatBonuses(item.bonuses) : ""}
-                          </div>`
-                        : ""
-                    }
-                  </div>
-                `)
-                .join("")
-            }
-          </div>
-        </div>
-      `);
-  
-      /* UNEQUIPPED GEAR */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Unequipped Gear <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              (p.inventoryEquipment || []).length === 0
-                ? "<div>No unequipped items</div>"
-                : p.inventoryEquipment
-                    .map(
-                      (i) => `
-                        <div class="equipment-card">
-                          <strong>${i.name}</strong>
-                          <div class="tooltip">
-                            <strong>${i.name}</strong><br>
-                            Rarity: ${format(i.rarity)}<br>
-                            ${i.bonuses ? formatBonuses(i.bonuses) : ""}
-                          </div>
+        `);
+    
+        /* COMBAT PROFILE */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Combat Profile <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                p.adaptiveProfile && Object.keys(p.adaptiveProfile).length
+                  ? Object.entries(p.adaptiveProfile)
+                      .map(([k, v]) => `
+                        <div class="stat-row">
+                          <span>${format(k)}</span><span>${v}</span>
                         </div>
-                      `
-                    )
-                    .join("")
-            }
+                      `)
+                      .join("")
+                  : "<div>No combat profile data</div>"
+              }
+            </div>
           </div>
-        </div>
-      `);
-  
-      /* ABILITIES */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Abilities <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              (p.abilities || []).length === 0
-                ? "<div>No abilities</div>"
-                : p.abilities
-                    .map(
-                      (a) => `
-                        <div class="ability-card">
-                          <img class="ability-icon"
-                               src="${a.icon || "/assets/abilities/default.png"}"
-                               onerror="this.src='/assets/abilities/default.png'">
-                          <div>
-                            <strong>${a.name}</strong>
+        `);
+    
+        /* EQUIPMENT */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Equipment <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                Object.entries(p.equipment || {})
+                  .map(([slot, item]) => `
+                    <div class="equipment-card">
+                      <strong>${format(slot)}</strong>: ${item ? item.name : "—"}
+                      ${
+                        item
+                          ? `<div class="tooltip">
+                              <strong>${item.name}</strong><br>
+                              Rarity: ${format(item.rarity)}<br>
+                              ${item.bonuses ? formatBonuses(item.bonuses) : ""}
+                            </div>`
+                          : ""
+                      }
+                    </div>
+                  `)
+                  .join("")
+              }
+            </div>
+          </div>
+        `);
+    
+        /* UNEQUIPPED GEAR */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Unequipped Gear <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                (p.inventoryEquipment || []).length === 0
+                  ? "<div>No unequipped items</div>"
+                  : p.inventoryEquipment
+                      .map(
+                        (i) => `
+                          <div class="equipment-card">
+                            <strong>${i.name}</strong>
                             <div class="tooltip">
-                              <strong>${a.name}</strong><br>
-                              ${a.description}<br>
-                              Cooldown: ${a.cooldown}
+                              <strong>${i.name}</strong><br>
+                              Rarity: ${format(i.rarity)}<br>
+                              ${i.bonuses ? formatBonuses(i.bonuses) : ""}
                             </div>
                           </div>
-                        </div>
-                      `
-                    )
-                    .join("")
-            }
+                        `
+                      )
+                      .join("")
+              }
+            </div>
           </div>
-        </div>
-      `);
-  
-      /* ULTIMATE */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Ultimate <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              p.ultimate
-                ? `
-                  <div class="ability-card">
-                    <img class="ability-icon"
-                         src="${p.ultimate.icon || "/assets/abilities/default.png"}"
-                         onerror="this.src='/assets/abilities/default.png'">
-                    <div>
-                      <strong>${p.ultimate.name}</strong>
-                      <div class="tooltip">
-                        <strong>${p.ultimate.name}</strong><br>
-                        ${p.ultimate.description}<br>
-                        Charge: ${p.ultCharge}% ${p.ultReady ? "(READY)" : ""}
+        `);
+    
+        /* ABILITIES */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Abilities <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                (p.abilities || []).length === 0
+                  ? "<div>No abilities</div>"
+                  : p.abilities
+                      .map(
+                        (a) => `
+                          <div class="ability-card">
+                            <img class="ability-icon"
+                                 src="${a.icon || "/assets/abilities/default.png"}"
+                                 onerror="this.src='/assets/abilities/default.png'">
+                            <div>
+                              <strong>${a.name}</strong>
+                              <div class="tooltip">
+                                <strong>${a.name}</strong><br>
+                                ${a.description}<br>
+                                Cooldown: ${a.cooldown}
+                              </div>
+                            </div>
+                          </div>
+                        `
+                      )
+                      .join("")
+              }
+            </div>
+          </div>
+        `);
+    
+        /* ULTIMATE */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Ultimate <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                p.ultimate
+                  ? `
+                    <div class="ability-card">
+                      <img class="ability-icon"
+                           src="${p.ultimate.icon || "/assets/abilities/default.png"}"
+                           onerror="this.src='/assets/abilities/default.png'">
+                      <div>
+                        <strong>${p.ultimate.name}</strong>
+                        <div class="tooltip">
+                          <strong>${p.ultimate.name}</strong><br>
+                          ${p.ultimate.description}<br>
+                          Charge: ${p.ultCharge}% ${p.ultReady ? "(READY)" : ""}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                `
-                : "<div>No ultimate ability</div>"
-            }
+                  `
+                  : "<div>No ultimate ability</div>"
+              }
+            </div>
           </div>
-        </div>
-      `);
-  
-      /* TALENT TREE */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Talent Tree <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${renderTalentTree(p)}
-          </div>
-        </div>
-      `);
-
-      /* REGION PROGRESS */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Region Progress <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              p.regionProgress && Object.keys(p.regionProgress).length
-                ? Object.entries(p.regionProgress)
-                    .map(
-                      ([region, progress]) => `
-                        <div class="stat-row">
-                          <span>${format(region)}</span>
-                          <span>${progress}%</span>
-                        </div>
-                      `
-                    )
-                    .join("")
-                : "<div>No region progress recorded</div>"
-            }
-          </div>
-        </div>
-      `);
-  
-      /* STATUS EFFECTS */
-      out.push(`
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Status Effects <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              (p.statusEffects || []).length === 0
-                ? "<div>No active effects</div>"
-                : p.statusEffects
-                    .map(
-                      (e) => `
-                        <div class="status-card">
-                          <strong>${e.name}</strong> (${e.duration} turns)
-                          <div class="tooltip">
-                            <strong>${e.name}</strong><br>
-                            Stacks: ${e.stacks}<br>
-                            ${e.description || ""}
-                          </div>
-                        </div>
-                      `
-                    )
-                    .join("")
-            }
-          </div>
-        </div>
-      `);
-  
-      container.innerHTML = out.join("");
-  
-      /* XP BAR ANIMATION */
-      const pct = p.xpRequired ? Math.min(100, (p.xp / p.xpRequired) * 100) : 0;
-      setTimeout(() => {
-        const xpFill = document.getElementById("xpFill");
-        if (xpFill) xpFill.style.width = pct + "%";
-      }, 50);
-    }
-  
-    /* ============================================================
-       HELPERS
-    ============================================================ */
-    window.toggleSection = function(header) {
-      const section = header.parentElement;
-      section.classList.toggle("collapsed");
-    };
-  
-    function format(str) {
-      if (str == null) return "—";
-      return String(str)
-        .toLowerCase()
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, (c) => c.toUpperCase());
-    }
-  
-    function formatBonuses(b) {
-      if (!b || typeof b !== "object") return "";
-      return Object.entries(b)
-        .map(([k, v]) => `${format(k)}: +${v}`)
-        .join("<br>");
-    }
-
-    function renderTalentTree(p) {
-      const def = p.talentTreeDefinition;
-      const chosen = Array.isArray(p.talentTree) ? p.talentTree : [];
+        `);
     
-      if (!def) {
-        return `<div>No talent tree data</div>`;
+        /* TALENT TREE */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Talent Tree <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${renderTalentTree(p)}
+            </div>
+          </div>
+        `);
+  
+        /* REGION PROGRESS */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Region Progress <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                p.regionProgress && Object.keys(p.regionProgress).length
+                  ? Object.entries(p.regionProgress)
+                      .map(
+                        ([region, progress]) => `
+                          <div class="stat-row">
+                            <span>${format(region)}</span>
+                            <span>${progress}%</span>
+                          </div>
+                        `
+                      )
+                      .join("")
+                  : "<div>No region progress recorded</div>"
+              }
+            </div>
+          </div>
+        `);
+    
+        /* STATUS EFFECTS */
+        out.push(`
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Status Effects <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                (p.statusEffects || []).length === 0
+                  ? "<div>No active effects</div>"
+                  : p.statusEffects
+                      .map(
+                        (e) => `
+                          <div class="status-card">
+                            <strong>${e.name}</strong> (${e.duration} turns)
+                            <div class="tooltip">
+                              <strong>${e.name}</strong><br>
+                              Stacks: ${e.stacks}<br>
+                              ${e.description || ""}
+                            </div>
+                          </div>
+                        `
+                      )
+                      .join("")
+              }
+            </div>
+          </div>
+        `);
+    
+        container.innerHTML = out.join("");
+    
+        /* XP BAR ANIMATION */
+        const pct = p.xpRequired ? Math.min(100, (p.xp / p.xpRequired) * 100) : 0;
+        setTimeout(() => {
+          const xpFill = document.getElementById("xpFill");
+          if (xpFill) xpFill.style.width = pct + "%";
+        }, 50);
       }
     
-      let html = "";
+      /* ============================================================
+         HELPERS
+      ============================================================ */
+      window.toggleSection = function(header) {
+        const section = header.parentElement;
+        section.classList.toggle("collapsed");
+      };
     
-      // ------------------------------
-      // AVAILABLE TALENTS (FULL TREE)
-      // ------------------------------
-      html += `<div><strong>Available Talents</strong></div>`;
+      function format(str) {
+        if (str == null) return "—";
+        return String(str)
+          .toLowerCase()
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
+      }
     
-      // Tier 1
-      if (def.tier1 && def.tier1.branches) {
-        html += `<div style="margin-top:10px;"><em>Tier 1</em></div>`;
-    
-        for (const [branchKey, nodes] of Object.entries(def.tier1.branches)) {
-          html += `<div style="margin-top:6px;"><strong>${branchKey}</strong></div>`;
-    
-          for (const node of nodes) {
-            const isChosen = chosen.some(c => c.id === node.id);
-    
+      function formatBonuses(b) {
+        if (!b || typeof b !== "object") return "";
+        return Object.entries(b)
+          .map(([k, v]) => `${format(k)}: +${v}`)
+          .join("<br>");
+      }
+  
+      function renderTalentTree(p) {
+        const def = p.talentTreeDefinition;
+        const chosen = Array.isArray(p.talentTree) ? p.talentTree : [];
+      
+        if (!def) {
+          return `<div>No talent tree data</div>`;
+        }
+      
+        let html = "";
+      
+        // ------------------------------
+        // AVAILABLE TALENTS (FULL TREE)
+        // ------------------------------
+        html += `<div><strong>Available Talents</strong></div>`;
+      
+        // Tier 1
+        if (def.tier1 && def.tier1.branches) {
+          html += `<div style="margin-top:10px;"><em>Tier 1</em></div>`;
+      
+          for (const [branchKey, nodes] of Object.entries(def.tier1.branches)) {
+            html += `<div style="margin-top:6px;"><strong>${branchKey}</strong></div>`;
+      
+            for (const node of nodes) {
+              const isChosen = chosen.some(c => c.id === node.id);
+      
+              html += `
+                <div class="talent-node" style="${isChosen ? "border-left-color:#4cff7f;" : ""}">
+                  <strong>${node.name}</strong>
+                  <div class="talent-rank">Prereq: ${node.requires ? node.requires : "None"}</div>
+                  <div class="tooltip">
+                    <strong>${node.name}</strong><br>
+                    ${node.description}<br>
+                    ${node.bonuses ? JSON.stringify(node.bonuses) : ""}
+                  </div>
+                </div>
+              `;
+            }
+          }
+      
+          // Capstone
+          if (def.tier1.capstone) {
+            const cap = def.tier1.capstone;
+            const isChosen = chosen.some(c => c.id === cap.id);
+      
             html += `
+              <div style="margin-top:10px;"><strong>Capstone</strong></div>
               <div class="talent-node" style="${isChosen ? "border-left-color:#4cff7f;" : ""}">
-                <strong>${node.name}</strong>
-                <div class="talent-rank">Prereq: ${node.requires ? node.requires : "None"}</div>
+                <strong>${cap.name}</strong>
+                <div class="talent-rank">Capstone Talent</div>
                 <div class="tooltip">
-                  <strong>${node.name}</strong><br>
-                  ${node.description}<br>
-                  ${node.bonuses ? JSON.stringify(node.bonuses) : ""}
+                  <strong>${cap.name}</strong><br>
+                  ${cap.description}<br>
+                  ${cap.bonuses ? JSON.stringify(cap.bonuses) : ""}
                 </div>
               </div>
             `;
           }
         }
-    
-        // Capstone
-        if (def.tier1.capstone) {
-          const cap = def.tier1.capstone;
-          const isChosen = chosen.some(c => c.id === cap.id);
-    
-          html += `
-            <div style="margin-top:10px;"><strong>Capstone</strong></div>
-            <div class="talent-node" style="${isChosen ? "border-left-color:#4cff7f;" : ""}">
-              <strong>${cap.name}</strong>
-              <div class="talent-rank">Capstone Talent</div>
-              <div class="tooltip">
-                <strong>${cap.name}</strong><br>
-                ${cap.description}<br>
-                ${cap.bonuses ? JSON.stringify(cap.bonuses) : ""}
-              </div>
-            </div>
-          `;
-        }
-      }
-    
-    /* ============================================================
-       NAVIGATION
-    ============================================================ */
-    window.goToInventory = () => (window.location.href = "inventory.html");
-    window.goToMap = () => (window.location.href = "world-map.html");
-    })();
+      
+      /* ============================================================
+         NAVIGATION
+      ============================================================ */
+      window.goToInventory = () => (window.location.href = "inventory.html"); 
+      window.goToMap = () => (window.location.href = "world-map.html"); 
+    })(); 
   </script>
 </body>
 </html>
