@@ -20,6 +20,8 @@
       margin-top: 20px;
       white-space: pre-wrap;
       font-family: monospace;
+      max-height: 60vh;
+      overflow-y: auto;
     }
     button {
       padding: 10px 20px;
@@ -34,6 +36,11 @@
     button:hover {
       background: #218838;
     }
+    code {
+      background: #222;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
   </style>
 </head>
 <body>
@@ -41,59 +48,70 @@
   <h1>Player Migration Tool</h1>
 
   <p>
-    This page lets you migrate an old player object and push it directly to KV.<br>
-    Steps:
+    In DevTools → Console, paste your legacy KV player as a plain JS object:
   </p>
 
-  <ol>
-    <li>Open DevTools → Console</li>
-    <li>Paste your old player object as valid JS:<br>
-      <code>window.old = { "username": "s3ven_six", ... }</code>
-    </li>
-    <li>Click the button below</li>
-    <li>Check Cloudflare KV for <code>player:&lt;username&gt;</code></li>
-  </ol>
+  <pre><code>window.old = {
+  "username": "s3ven_six",
+  ...
+};</code></pre>
+
+  <p>Then click the button below to migrate and push to KV.</p>
 
   <button onclick="window.runMigration()">Run Migration + Push to KV</button>
 
   <div id="log" class="log">Waiting…</div>
-  
+
   <script type="module">
     import { resolveLegacyPlayer } from "./migration.js";
     import { api } from "./api.js";
-  
+
     const logBox = document.getElementById("log");
-    const log = msg => logBox.textContent += "\n" + msg;
-  
+    const log = (msg) => {
+      logBox.textContent += "\n" + msg;
+      logBox.scrollTop = logBox.scrollHeight;
+    };
+
     window.runMigration = async function () {
       logBox.textContent = "Starting migration...\n";
-  
+
       if (!window.old) {
         log("❌ ERROR: window.old is not defined.");
+        log("Paste your old player object first, e.g.:");
+        log('window.old = { "username": "s3ven_six", ... };');
         return;
       }
-  
+
       try {
-        log("Migrating...");
+        log("Migrating player object...");
         const migrated = await resolveLegacyPlayer(window.old);
-  
+
+        if (!migrated || !migrated.username) {
+          log("❌ Migration returned an invalid player object.");
+          return;
+        }
+
         log("✔ Migration complete for: " + migrated.username);
-  
-        log("Saving to KV...");
+        log("XP: " + migrated.xp + " / " + migrated.xpRequired);
+        log("Element: " + migrated.element);
+        log("Profession: " + migrated.profession);
+        log("Race/Subrace: " + migrated.race + " / " + migrated.subrace);
+
+        log("\nSaving to KV...");
         const res = await api.savePlayer(migrated.username, migrated);
-  
+
         log("✔ KV Response:");
         log(JSON.stringify(res, null, 2));
-  
-        log("\n🎉 DONE — check KV for player:" + migrated.username);
-  
+
+        log("\n🎉 DONE — check KV for key:");
+        log("player:" + migrated.username);
+
       } catch (err) {
-        log("❌ ERROR:");
-        log(err.toString());
+        log("❌ ERROR during migration:");
+        log(String(err));
       }
     };
   </script>
 
 </body>
 </html>
-
