@@ -1,6 +1,7 @@
 {
   "humanoid": {
     "name": "Humanoid",
+    "playable": true,
     "description": "The most common mortal shape—two arms, two legs, and a spirit shaped by culture, conflict, and ambition.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.0 },
     "elementAffinity": {},
@@ -11,6 +12,7 @@
 
   "elf": {
     "name": "Elf",
+    "playable": true,
     "description": "Long‑lived wanderers whose senses stretch beyond the physical world, hearing the quiet pulse of magic in all things.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
     "elementAffinity": { "nature": 0.1, "arcane": 0.1 },
@@ -21,6 +23,7 @@
 
   "dwarf": {
     "name": "Dwarf",
+    "playable": true,
     "description": "Stout, unyielding, and carved from the bones of the earth, dwarves endure where others falter.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 0.9, "manaMult": 0.9 },
     "elementAffinity": { "earth": 0.1, "fire": 0.05 },
@@ -31,6 +34,7 @@
 
   "orc": {
     "name": "Orc",
+    "playable": true,
     "description": "Born of storm and struggle, orcs carry a fierce vitality that drives them toward challenge and triumph.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.15, "defMult": 1.0, "speedMult": 1.0, "manaMult": 0.7 },
     "elementAffinity": { "fire": 0.05 },
@@ -41,6 +45,7 @@
 
   "goblinoid": {
     "name": "Goblinoid",
+    "playable": true,
     "description": "Quick‑witted and quicker‑footed, goblinoids thrive in chaos, scavenging opportunity from every shadow.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.15, "manaMult": 1.0 },
     "elementAffinity": {},
@@ -51,6 +56,7 @@
 
   "beastkin": {
     "name": "Beastkin",
+    "playable": true,
     "description": "Children of instinct and wilderness, beastkin walk the line between civilization and the primal world.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.05, "defMult": 0.95, "speedMult": 1.1, "manaMult": 0.9 },
     "elementAffinity": { "nature": 0.1 },
@@ -61,6 +67,7 @@
 
   "draconian": {
     "name": "Draconian",
+    "playable": false,
     "description": "Scaled descendants of ancient wyrms, carrying the echo of draconic majesty in their blood.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.05, "speedMult": 1.0, "manaMult": 1.1 },
     "elementAffinity": {},
@@ -71,6 +78,7 @@
 
   "undead": {
     "name": "Undead",
+    "playable": true,
     "description": "Souls unmoored from life, bound to motion by necrotic will rather than breath or heartbeat.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.0, "speedMult": 0.95, "manaMult": 1.0 },
     "elementAffinity": { "dark": 0.2, "holy": -0.2 },
@@ -81,6 +89,7 @@
 
   "demonborn": {
     "name": "Demonborn",
+    "playable": true,
     "description": "Infernal blood burns within them, a smoldering ember of the hells that shapes their every breath.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.0 },
     "elementAffinity": { "fire": 0.2, "dark": 0.2, "holy": -0.2 },
@@ -91,6 +100,7 @@
 
   "voidborn": {
     "name": "Voidborn",
+    "playable": false,
     "description": "Shaped by the silence between stars, voidborn carry the cold hunger of nothingness within their veins.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
     "elementAffinity": { "void": 0.3, "arcane": -0.1 },
@@ -101,6 +111,7 @@
 
   "celestialborn": {
     "name": "Celestialborn",
+    "playable": false,
     "description": "Radiant souls touched by divine light, walking the mortal world with halos unseen.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": { "holy": 0.3, "dark": -0.2 },
@@ -111,6 +122,7 @@
 
   "spiritborn": {
     "name": "Spiritborn",
+    "playable": true,
     "description": "Half‑anchored to the ethereal, their bodies shimmer with the faint glow of the unseen world.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.8, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": { "arcane": 0.1, "dark": 0.1 },
@@ -121,6 +133,7 @@
 
   "elementalborn": {
     "name": "Elementalborn",
+    "playable": true,
     "description": "Mortals infused with primal essence, their bodies shaped by flame, frost, storm, or stone.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -131,6 +144,7 @@
 
   "titanborn": {
     "name": "Titanborn",
+    "playable": false,
     "description": "Descendants of ancient giants, their blood carries the echo of mountains, storms, and primordial might.",
     "baseModifiers": { "hpMult": 1.4, "atkMult": 1.2, "defMult": 1.3, "speedMult": 0.7, "manaMult": 1.0 },
     "elementAffinity": { "earth": 0.2, "storm": 0.1 },
@@ -141,6 +155,7 @@
 
   "giantkin": {
     "name": "Giantkin",
+    "playable": true,
     "description": "Large‑framed descendants of lesser giants, towering over most mortals with quiet strength.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 1.1, "speedMult": 0.9, "manaMult": 1.0 },
     "elementAffinity": {},
@@ -151,6 +166,7 @@
 
   "colossus": {
     "name": "Colossus",
+    "playable": false,
     "description": "Titans of flesh or stone, towering far above even giantkin, embodiments of overwhelming force.",
     "baseModifiers": { "hpMult": 1.5, "atkMult": 1.3, "defMult": 1.4, "speedMult": 0.6, "manaMult": 0.8 },
     "elementAffinity": {},
@@ -161,6 +177,7 @@
 
   "fae": {
     "name": "Fae",
+    "playable": true,
     "description": "Whimsical, dangerous, and bound to ancient pacts, fae embody the wild magic of untamed realms.",
     "baseModifiers": { "hpMult": 0.95, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.15, "manaMult": 1.2 },
     "elementAffinity": { "nature": 0.2 },
@@ -171,6 +188,7 @@
 
   "chimera": {
     "name": "Chimera",
+    "playable": false,
     "description": "Beasts of fused essence, their bodies shaped by arcane whim or ancient alchemy.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.1 },
     "elementAffinity": {},
@@ -181,6 +199,7 @@
 
   "construct": {
     "name": "Construct",
+    "playable": true,
     "description": "Forged by mortal hands or ancient rituals, constructs move with purpose granted, not born.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 1.2, "speedMult": 0.8, "manaMult": 0.5 },
     "elementAffinity": { "poison": 0.5, "lightning": -0.2 },
@@ -191,6 +210,7 @@
 
   "plantfolk": {
     "name": "Plantfolk",
+    "playable": false,
     "description": "Rooted in ancient soil and nourished by sunlight, plantfolk embody the quiet strength of nature.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 0.9, "defMult": 1.1, "speedMult": 0.8, "manaMult": 1.0 },
     "elementAffinity": { "nature": 0.3, "earth": 0.1 },
@@ -201,6 +221,7 @@
 
   "slimeborn": {
     "name": "Slimeborn",
+    "playable": true,
     "description": "Creatures of fluid form and shifting mass, their bodies ripple with strange resilience and quiet curiosity.",
     "baseModifiers": { "hpMult": 1.3, "atkMult": 0.9, "defMult": 1.0, "speedMult": 0.8, "manaMult": 1.0 },
     "elementAffinity": { "acid": 0.2, "poison": 0.2 },
@@ -211,6 +232,7 @@
 
   "insectoids": {
     "name": "Insectoids",
+    "playable": false,
     "description": "Chitin‑clad and hive‑minded, insectoids navigate the world with alien precision and instinctive coordination.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.05, "defMult": 1.0, "speedMult": 1.15, "manaMult": 0.9 },
     "elementAffinity": {},
@@ -221,6 +243,7 @@
 
   "arachnids": {
     "name": "Arachnids",
+    "playable": false,
     "description": "Eight‑limbed hunters weaving fate and silk alike, their patience is as deadly as their venom.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 0.9 },
     "elementAffinity": { "poison": 0.2 },
@@ -231,6 +254,7 @@
 
   "supernatural": {
     "name": "Supernatural",
+    "playable": true,
     "description": "Beings touched by curses, rituals, or forces beyond mortal comprehension, existing half in shadow and half in myth.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -241,6 +265,7 @@
 
   "astralborn": {
     "name": "Astralborn",
+    "playable": false,
     "description": "Children of starlight and cosmic tides, their souls shimmer with the glow of distant constellations.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": { "arcane": 0.3 },
@@ -251,6 +276,7 @@
 
   "chaosborn": {
     "name": "Chaosborn",
+    "playable": false,
     "description": "Unstable beings shaped by raw entropy, their forms flicker between possibilities with every heartbeat.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 0.9, "speedMult": 1.1, "manaMult": 1.1 },
     "elementAffinity": { "chaos": 0.3 },
@@ -261,6 +287,7 @@
 
   "dragonkin": {
     "name": "Dragonkin",
+    "playable": false,
     "description": "Humanoids bearing the unmistakable spark of draconic ancestry, their spirits burn with inherited majesty.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.05, "speedMult": 1.0, "manaMult": 1.1 },
     "elementAffinity": {},
@@ -271,6 +298,7 @@
 
   "aberration": {
     "name": "Aberration",
+    "playable": false,
     "description": "Twisted forms born of warped biology or psionic mutation, defying the symmetry of natural life.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -281,6 +309,7 @@
 
   "eldritch": {
     "name": "Eldritch",
+    "playable": false,
     "description": "Beings from beyond the veil of sanity, their minds echo with whispers from impossible realms.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.3 },
     "elementAffinity": { "void": 0.2, "arcane": 0.1 },
@@ -291,6 +320,7 @@
 
   "lich": {
     "name": "Lich",
+    "playable": false,
     "description": "Masters of forbidden necromancy who traded mortality for eternal intellect and cold ambition.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 0.9, "defMult": 1.0, "speedMult": 1.0, "manaMult": 1.5 },
     "elementAffinity": { "dark": 0.3, "arcane": 0.2 },
@@ -301,6 +331,7 @@
 
   "mimic": {
     "name": "Mimic",
+    "playable": false,
     "description": "Shapeshifting predators that disguise themselves as mundane objects, waiting for the perfect moment to strike.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.0, "manaMult": 0.9 },
     "elementAffinity": {},
@@ -311,6 +342,7 @@
 
   "beast": {
     "name": "Beast",
+    "playable": false,
     "description": "Creatures of instinct and muscle, shaped by the wild rather than by magic or civilization.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 0.8 },
     "elementAffinity": {},
@@ -321,6 +353,7 @@
 
   "amorphous": {
     "name": "Amorphous",
+    "playable": true,
     "description": "Shifting masses of living matter, their forms flow like liquid thought and dissolve all certainty.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.0, "defMult": 0.9, "speedMult": 0.9, "manaMult": 1.0 },
     "elementAffinity": { "acid": 0.2 },
@@ -331,6 +364,7 @@
 
   "techborn": {
     "name": "Techborn",
+    "playable": true,
     "description": "Mortals enhanced with cybernetic augmentations, bridging the gap between flesh and circuitry.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.0 },
     "elementAffinity": { "electric": 0.1 },
@@ -341,6 +375,7 @@
 
   "machina": {
     "name": "Machina",
+    "playable": false,
     "description": "Autonomous machines forged for war, labor, or cosmic purpose, their minds shaped by logic rather than emotion.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.2, "speedMult": 1.0, "manaMult": 0.9 },
     "elementAffinity": {},
@@ -351,6 +386,7 @@
 
   "dragon": {
     "name": "Dragon",
+    "playable": false,
     "description": "Ancient apex beings of scale and flame, their wings carve the sky and their breath reshapes the world.",
     "baseModifiers": { "hpMult": 1.3, "atkMult": 1.3, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -361,6 +397,7 @@
 
   "wyrm": {
     "name": "Wyrm",
+    "playable": false,
     "description": "Serpentine ancients older than empires, their bodies coil through myth and primordial memory.",
     "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.2, "speedMult": 1.1, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -371,6 +408,7 @@
 
   "spirit": {
     "name": "Spirit",
+    "playable": false,
     "description": "Ethereal echoes of emotion, memory, or elemental force, drifting between realms with weightless grace.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -381,6 +419,7 @@
 
   "mythic_beast": {
     "name": "Mythic Beast",
+    "playable": false,
     "description": "Creatures of legend whose names echo through ancient tales—phoenixes, griffins, leviathans, and more.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.1, "speedMult": 1.1, "manaMult": 1.1 },
     "elementAffinity": {},
@@ -391,6 +430,7 @@
 
   "divinity": {
     "name": "Divinity",
+    "playable": false,
     "description": "Beings touched by divine lineage, carrying fragments of celestial or cosmic power within mortal frames.",
     "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.3, "speedMult": 1.1, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -401,6 +441,7 @@
 
   "celestial": {
     "name": "Celestial",
+    "playable": false,
     "description": "Radiant beings forged from divine light, their presence softens shadows and stirs reverence in mortal hearts.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.3 },
     "elementAffinity": { "light": 0.1 },
@@ -411,6 +452,7 @@
 
   "fiend": {
     "name": "Fiend",
+    "playable": false,
     "description": "Born of infernal furnaces and abyssal hatred, fiends stride through the world as living calamities.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.1, "speedMult": 1.0, "manaMult": 1.1 },
     "elementAffinity": { "dark": 0.1, "fire": 0.1 },
@@ -421,6 +463,7 @@
 
   "primordial": {
     "name": "Primordial",
+    "playable": false,
     "description": "Ancient forces older than gods, shaped from the raw elements that birthed the world itself.",
     "baseModifiers": { "hpMult": 1.3, "atkMult": 1.2, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -431,6 +474,7 @@
 
   "ethereal": {
     "name": "Ethereal",
+    "playable": false,
     "description": "Beings of pure energy and shimmering light, drifting through existence like living auroras.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.0, "defMult": 0.9, "speedMult": 1.3, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -441,6 +485,7 @@
 
   "titan": {
     "name": "Titan",
+    "playable": false,
     "description": "Colossal beings of mythic stature, their steps reshape landscapes and their wrath births storms.",
     "baseModifiers": { "hpMult": 1.4, "atkMult": 1.3, "defMult": 1.3, "speedMult": 0.9, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -451,6 +496,7 @@
 
   "outer_god": {
     "name": "Outer God",
+    "playable": false,
     "description": "Cosmic entities whose thoughts span galaxies and whose dreams sculpt the fabric of reality.",
     "baseModifiers": { "hpMult": 1.5, "atkMult": 1.4, "defMult": 1.4, "speedMult": 1.2, "manaMult": 1.6 },
     "elementAffinity": {},
@@ -461,6 +507,7 @@
 
   "planar_entity": {
     "name": "Planar Entity",
+    "playable": false,
     "description": "Natives of elemental, astral, shadow, or dream realms, shaped by the laws of worlds not their own.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.0, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -471,6 +518,7 @@
 
   "anomaly": {
     "name": "Anomaly",
+    "playable": false,
     "description": "Glitches in the tapestry of existence—paradoxes, errors, and impossibilities given wandering form.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -481,6 +529,7 @@
 
   "legendary_boss_template": {
     "name": "Legendary Boss Template",
+    "playable": false,
     "description": "A mantle of power that transforms any being into a world‑shaking threat, feared across realms.",
     "baseModifiers": { "hpMult": 3.0, "atkMult": 2.0, "defMult": 2.0, "speedMult": 1.2, "manaMult": 2.0 },
     "elementAffinity": {},
@@ -491,6 +540,7 @@
 
   "paragon": {
     "name": "Paragon",
+    "playable": false,
     "description": "The perfected form of a race—an embodiment of its highest potential, refined beyond mortal limits.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.2, "speedMult": 1.2, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -501,6 +551,7 @@
 
   "hybrid": {
     "name": "Hybrid",
+    "playable": false,
     "description": "Beings born of impossible unions—fusions of essence, magic, or biology that defy natural order.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.1 },
     "elementAffinity": {},
@@ -511,6 +562,7 @@
 
   "forgotten_race": {
     "name": "Forgotten Race",
+    "playable": false,
     "description": "Extinct or hidden peoples whose names survive only in ruins, myths, and the whispers of old magic.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.0, "defMult": 1.1, "speedMult": 1.0, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -521,6 +573,7 @@
 
   "cosmic_construct": {
     "name": "Cosmic Construct",
+    "playable": false,
     "description": "Machines forged by gods, titans, or outer beings—engines of purpose powered by celestial design.",
     "baseModifiers": { "hpMult": 1.3, "atkMult": 1.2, "defMult": 1.3, "speedMult": 1.0, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -531,6 +584,7 @@
 
   "metaphysical_phenomenon": {
     "name": "Metaphysical Phenomenon",
+    "playable": false,
     "description": "Living storms, sentient spells, and wandering concepts—phenomena that gained awareness.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -541,6 +595,7 @@
 
   "parasite": {
     "name": "Parasite",
+    "playable": false,
     "description": "Symbiotic or predatory beings that bind themselves to hosts, feeding on body, mind, or soul.",
     "baseModifiers": { "hpMult": 0.9, "atkMult": 1.2, "defMult": 0.9, "speedMult": 1.3, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -551,6 +606,7 @@
 
   "cosmic_fauna": {
     "name": "Cosmic Fauna",
+    "playable": false,
     "description": "Creatures that drift through the void between stars, feeding on starlight, gravity, or cosmic winds.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.1, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -561,6 +617,7 @@
 
   "mythic_undead": {
     "name": "Mythic Undead",
+    "playable": false,
     "description": "Undead of legendary stature—death titans, spectral emperors, and ancient pharaohs bound by eternal will.",
     "baseModifiers": { "hpMult": 1.3, "atkMult": 1.3, "defMult": 1.2, "speedMult": 1.0, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -571,6 +628,7 @@
 
   "hivemind": {
     "name": "Hivemind",
+    "playable": false,
     "description": "Collective intelligences spanning countless bodies, their thoughts woven into a single unified will.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.1, "speedMult": 1.2, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -581,6 +639,7 @@
 
   "living_location": {
     "name": "Living Location",
+    "playable": false,
     "description": "Sentient forests, awakened dungeons, and wandering cities—places that think, feel, and hunger.",
     "baseModifiers": { "hpMult": 1.4, "atkMult": 1.2, "defMult": 1.4, "speedMult": 0.8, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -591,6 +650,7 @@
 
   "artificial_life": {
     "name": "Artificial Life",
+    "playable": false,
     "description": "Digital phantoms, quantum beings, and algorithmic entities born from code rather than flesh.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -601,6 +661,7 @@
 
   "temporal_entity": {
     "name": "Temporal Entity",
+    "playable": false,
     "description": "Beings unbound by linear time, drifting through past, present, and future as easily as mortals draw breath.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -611,6 +672,7 @@
 
   "divine_beast": {
     "name": "Divine Beast",
+    "playable": false,
     "description": "Animals touched by the breath of gods, their forms radiant with sacred power and mythic presence.",
     "baseModifiers": { "hpMult": 1.3, "atkMult": 1.2, "defMult": 1.2, "speedMult": 1.1, "manaMult": 1.2 },
     "elementAffinity": {},
@@ -621,6 +683,7 @@
 
   "meta_entity": {
     "name": "Meta Entity",
+    "playable": false,
     "description": "Self‑aware beings who perceive the boundaries of story and simulation, gazing beyond the veil of narrative.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.1, "defMult": 1.1, "speedMult": 1.3, "manaMult": 1.5 },
     "elementAffinity": {},
@@ -631,6 +694,7 @@
 
   "narrative_construct": {
     "name": "Narrative Construct",
+    "playable": false,
     "description": "Stories given flesh—heroes who never lived, villains who never fell, myths that stepped out of their own tales.",
     "baseModifiers": { "hpMult": 1.2, "atkMult": 1.2, "defMult": 1.1, "speedMult": 1.2, "manaMult": 1.3 },
     "elementAffinity": {},
@@ -641,6 +705,7 @@
 
   "emotional": {
     "name": "Emotional",
+    "playable": false,
     "description": "Sentient manifestations of feeling—wrath that burns, sorrow that chills, joy that blinds with radiance.",
     "baseModifiers": { "hpMult": 1.0, "atkMult": 1.2, "defMult": 1.0, "speedMult": 1.3, "manaMult": 1.4 },
     "elementAffinity": {},
@@ -651,6 +716,7 @@
 
   "paradox_god": {
     "name": "Paradox God",
+    "playable": false,
     "description": "Deities of contradiction and impossibility—beings who exist before their creation and after their destruction.",
     "baseModifiers": { "hpMult": 1.5, "atkMult": 1.4, "defMult": 1.4, "speedMult": 1.3, "manaMult": 1.6 },
     "elementAffinity": {},
@@ -661,6 +727,7 @@
   
   "unique": {
     "name": "Unique",
+    "playable": false,
     "description": "One‑of‑a‑kind beings whose existence cannot be replicated—miracles, accidents, or singular creations that stand alone in all the world.",
     "baseModifiers": { "hpMult": 1.1, "atkMult": 1.1, "defMult": 1.0, "speedMult": 1.1, "manaMult": 1.1 },
     "elementAffinity": {},
@@ -671,6 +738,7 @@
 
   "multiversal_paragon": {
     "name": "Multiversal Paragon",
+    "playable": false,
     "description": "The supreme architect of all existence—creator, destroyer, and sovereign of infinite multiverses.",
     "baseModifiers": { "hpMult": 999.0, "atkMult": 999.0, "defMult": 999.0, "speedMult": 999.0, "manaMult": 999.0 },
     "elementAffinity": { "all": 1.0 },
