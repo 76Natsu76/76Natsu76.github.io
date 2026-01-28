@@ -226,10 +226,11 @@
 
   <!-- MODULE SCRIPT -->
   <script type="module">
+  (async () => {
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
-    import { savePlayerToKV, loadFromKVAndLocal } from "./api.js";    
-      
+    import { savePlayerToKV, loadFromKVAndLocal } from "./api.js";
+  
     /* ============================================================
        SESSION + LOAD ON LOGIN
     ============================================================ */
@@ -257,7 +258,6 @@
       if (!Array.isArray(p.statusEffects)) p.statusEffects = [];
       if (!Array.isArray(p.playerStatusEffects)) p.playerStatusEffects = [];
   
-      // Prefer statusEffects, but if empty and playerStatusEffects exists, copy it
       if ((!p.statusEffects || p.statusEffects.length === 0) && p.playerStatusEffects.length) {
         p.statusEffects = p.playerStatusEffects;
       }
@@ -267,14 +267,15 @@
       if (typeof p.derived !== "object" || p.derived === null) p.derived = {};
       if (typeof p.adaptiveProfile !== "object" || p.adaptiveProfile === null) p.adaptiveProfile = {};
       if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
+  
+      // Profession selection redirect
       if (p.level >= 10 && p.profession === "adventurer") {
         window.location.href = "profession-selection.html";
-        return;
+        return null;
       }
   
       return p;
-    }
-    
+    }    
     /* ============================================================
        LOAD CHARACTER INTO UI
     ============================================================ */
@@ -733,8 +734,7 @@
     ============================================================ */
     window.goToInventory = () => (window.location.href = "inventory.html");
     window.goToMap = () => (window.location.href = "world-map.html");
+    })();
   </script>
-
-
 </body>
 </html>
