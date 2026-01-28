@@ -98,6 +98,12 @@
     const { username } = window.syncState;
     
     let player = PlayerStorage.load(username);
+
+    // FIX talentTree if it was incorrectly stored as an array
+    if (!player.talentTree || Array.isArray(player.talentTree)) {
+      player.talentTree = { tier1: null, tier2: null, tier3: null };
+      PlayerStorage.save(username, player);
+    }
     
     /* ============================================================
        LOAD TALENT TREE DEFINITIONS
