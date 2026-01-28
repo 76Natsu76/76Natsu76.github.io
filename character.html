@@ -230,6 +230,18 @@
       const { requireSession } = await import("./session-guard.js");
       const { PlayerStorage } = await import("./player-storage.js");
       const { savePlayerToKV, loadFromKVAndLocal } = await import("./api.js");
+
+      // If player is level 10+ and still adventurer → force profession selection
+      if (player.level >= 10 && player.profession === "adventurer") {
+        window.location.href = "profession-selection.html";
+        return;
+      }
+      
+      // If player is level 100+ and no secondary profession → force secondary selection
+      if (player.level >= 100 && !player.secondaryProfession) {
+        window.location.href = "choose-secondary-profession.html";
+        return;
+      }
     
       /* ============================================================
          SESSION + LOAD ON LOGIN
