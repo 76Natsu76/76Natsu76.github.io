@@ -1,101 +1,272 @@
 {
-    "acolyte": {
-        "name": "Acolyte",
-        "role":"combat",
-        "tags":["holy", "support"],
-        "baseBonuses": {
-          "healingPower": 0.03,
-          "manaMult": 1.02,
-          "elementalBoost": { "holy": 0.03 }
+  "acolyte": {
+    "name": "Acolyte",
+    "role": "combat",
+    "tags": ["holy", "support"],
+    "baseBonuses": {
+      "healingPower": 0.03,
+      "manaMult": 1.02,
+      "elementalBoost": { "holy": 0.03 }
+    },
+    "abilities": ["minor_heal", "prayer_bolt"],
+    "equipment": { "weapons": [], "armor": [], "accessories": [] },
+    "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
+    "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
+    "talentTree": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Ceremonial Mace",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
         },
-        "abilities": [],
-        "equipment": { "weapons": [], "armor": [], "accessories": [] },
-        "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
-        "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
-        "talentTree": {},
-        "starterKit": {},
-        "lootKit": {},
-        "lootTable": {}
-      },
-    "adept": {
-        "name": "Adept",
-        "role":"combat",
-        "tags":["magic", "novice"],
-        "baseBonuses": {
-          "manaMult": 1.03,
-          "resourceRegen": { "mana": 0.03 }
+        "armor": {
+          "name": "Initiate Vestments",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
         },
-        "abilities": [],
-        "equipment": { "weapons": [], "armor": [], "accessories": [] },
-        "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
-        "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
-        "talentTree": {},
-        "starterKit": {},
-        "lootKit": {},
-        "lootTable": {}
+        "accessory": {
+          "name": "Prayer Charm",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
       },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["minor_heal", "prayer_bolt"],
+      "flavor": "A devout initiate serving under higher clergy."
+    },
+    "lootKit": {},
+    "lootTable": {}
+  },
+
+  "adept": {
+    "name": "Adept",
+    "role": "combat",
+    "tags": ["magic", "novice"],
+    "baseBonuses": {
+      "manaMult": 1.03,
+      "resourceRegen": { "mana": 0.03 }
+    },
+    "abilities": ["arcane_burst", "mana_surge"],
+    "equipment": { "weapons": [], "armor": [], "accessories": [] },
+    "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
+    "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
+    "talentTree": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Adept’s Focus Staff",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Runed Robes",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Channeling Ring",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_mana_potion",
+          "name": "Minor Mana Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["arcane_burst", "mana_surge"],
+      "flavor": "A practiced caster with growing control over arcane forces."
+    },
+    "lootKit": {},
+    "lootTable": {}
+  },
 
   "apocalypse": {
     "name": "Apocalypse",
-    "role":"combat",
-    "tags":["chaos", "dot", "unpredictable"],
+    "role": "combat",
+    "tags": ["chaos", "dot", "unpredictable"],
     "baseBonuses": {
       "atkMult": 1.05,
       "dotPower": 0.05,
       "chaosFactor": 0.05
     },
-    "abilities": [],
+    "abilities": ["doom_slam", "end_times"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Doomhammer",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Endbringer Plate",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Omen Talisman",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "ashen_draught",
+          "name": "Ashen Draught",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["doom_slam", "end_times"],
+      "flavor": "A living catastrophe, heralding the end of all things."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "apprentice": {
     "name": "Apprentice",
-    "role":"combat",
-    "tags":["novice", "magic"],
+    "role": "combat",
+    "tags": ["novice", "magic"],
     "baseBonuses": {
       "manaMult": 1.02,
       "atkMult": 1.01,
       "learningBoost": 0.05
     },
-    "abilities": [],
+    "abilities": ["spark", "arcane_push"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Apprentice’s Staff",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Simple Robes",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Faded Charm",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_mana_potion",
+          "name": "Minor Mana Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["spark", "arcane_push"],
+      "flavor": "A beginner spellcaster learning the fundamentals of magic."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "archer": {
     "name": "Archer",
-    "role":"combat",
-    "tags":["ranged", "precision"],
+    "role": "combat",
+    "tags": ["ranged", "precision"],
     "baseBonuses": {
       "atkMult": 1.05,
       "critChance": 0.03,
       "speedMult": 1.03
     },
-    "abilities": [],
+    "abilities": ["aimed_shot", "poison_arrow"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Oak Longbow",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Leather Tunic",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Feathered Charm",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["aimed_shot", "poison_arrow"],
+      "flavor": "A precise ranged combatant."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "assassin": {
     "name": "Assassin",
-    "role":"combat",
-    "tags":["melee", "stealth", "crit", "burst"],
+    "role": "combat",
+    "tags": ["melee", "stealth", "crit", "burst"],
     "baseBonuses": {
       "critChance": 0.05,
       "critDamage": 0.10,
@@ -106,7 +277,9 @@
       "assassin_quick_slash",
       "assassin_backstab",
       "assassin_shadow_strike",
-      "assassin_bleed_strike"
+      "assassin_bleed_strike",
+      "shadow_strike",
+      "poison_blade"
     ],
     "equipment": {
       "weapons": ["dagger", "claw", "shortblade"],
@@ -116,437 +289,1220 @@
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Shadowblade",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Nightstalker Garb",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Silent Hood",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "poison_vial",
+          "name": "Poison Vial",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["shadow_strike", "poison_blade"],
+      "flavor": "A lethal killer who strikes from the darkness."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "berserker": {
     "name": "Berserker",
-    "role":"combat",
-    "tags":["melee", "rage"],
+    "role": "combat",
+    "tags": ["melee", "rage"],
     "baseBonuses": {
       "atkMult": 1.08,
       "critChance": 0.03,
       "critDamage": 0.05
     },
-    "abilities": [],
+    "abilities": ["rage_strike", "blood_frenzy"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Brutal Axe",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Ragebound Harness",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Bloodstone Charm",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "rage_tonic",
+          "name": "Rage Tonic",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["rage_strike", "blood_frenzy"],
+      "flavor": "A warrior who channels fury into devastating blows."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "bozo": {
     "name": "Bozo",
-    "role":"combat",
-    "tags":["joke", "chaos"],
+    "role": "combat",
+    "tags": ["joke", "chaos"],
     "baseBonuses": {
       "evadeChance": 0.03,
       "confusionChance": 0.05,
       "chaosFactor": 0.05
     },
-    "abilities": [],
+    "abilities": ["slap", "trip"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Rubber Chicken",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Clown Suit",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Squeaky Nose",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "cream_pie",
+          "name": "Cream Pie",
+          "type": "consumable",
+          "quantity": 1
+        }
+      ],
+      "abilities": ["slap", "trip"],
+      "flavor": "A chaotic jester whose antics defy logic."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "cleric": {
     "name": "Cleric",
-    "role":"combat",
-    "tags":["holy", "support"],
+    "role": "combat",
+    "tags": ["holy", "support"],
     "baseBonuses": {
       "healingPower": 0.08,
       "defMult": 1.03,
       "elementalBoost": { "holy": 0.05 }
     },
-    "abilities": [],
+    "abilities": ["holy_smite", "blessing"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Sanctified Mace",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Acolyte Vestments",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Prayer Beads",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["holy_smite", "blessing"],
+      "flavor": "A devout servant channeling divine power."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "corrupted": {
     "name": "Corrupted",
-    "role":"combat",
-    "tags":["dark", "poison", "chaos"],
+    "role": "combat",
+    "tags": ["dark", "poison", "chaos"],
     "baseBonuses": {
       "dotPower": 0.05,
       "elementalBoost": { "dark": 0.05, "poison": 0.03 },
       "chaosFactor": 0.03
     },
-    "abilities": [],
+    "abilities": ["corrupt_strike", "dark_pulse"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Twisted Greatblade",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Corrupted Carapace",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Blackened Sigil",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "tainted_ichor",
+          "name": "Tainted Ichor",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["corrupt_strike", "dark_pulse"],
+      "flavor": "A once-mortal warrior now warped by malignant forces."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "druid": {
     "name": "Druid",
-    "role":"combat",
-    "tags":["nature", "healing"],
+    "role": "combat",
+    "tags": ["nature", "healing"],
     "baseBonuses": {
       "healingPower": 0.08,
       "manaMult": 1.05,
       "elementalBoost": { "nature": 0.08 }
     },
-    "abilities": [],
+    "abilities": ["thorn_whip", "rejuvenate"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Living Branch",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Grovecloth Vest",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Naturestone",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "herbal_infusion",
+          "name": "Herbal Infusion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["thorn_whip", "rejuvenate"],
+      "flavor": "A guardian of nature’s balance."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "guardian": {
     "name": "Guardian",
-    "role":"combat",
-    "tags":["tank", "defense"],
+    "role": "combat",
+    "tags": ["tank", "defense"],
     "baseBonuses": {
       "defMult": 1.10,
       "blockChance": 0.08,
       "hpRegen": 0.02
     },
-    "abilities": [],
+    "abilities": ["shield_wall", "taunt"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Tower Shield",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Guardian Plate",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Bulwark Sigil",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["shield_wall", "taunt"],
+      "flavor": "A stalwart protector who shields allies from harm."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "healer": {
     "name": "Healer",
-    "role":"combat",
-    "tags":["support", "holy"],
+    "role": "combat",
+    "tags": ["support", "holy"],
     "baseBonuses": {
       "healingPower": 0.12,
       "manaMult": 1.05
     },
-    "abilities": [],
+    "abilities": ["heal", "smite"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Blessed Staff",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Cleric Vestments",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Holy Pendant",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["heal", "smite"],
+      "flavor": "A gentle soul who mends wounds and uplifts allies."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "mage": {
     "name": "Mage",
-    "role":"combat",
-    "tags":["magic", "arcane"],
+    "role": "combat",
+    "tags": ["magic", "arcane"],
     "baseBonuses": {
       "manaMult": 1.10,
       "resourceRegen": { "mana": 0.05 },
       "elementalBoost": { "arcane": 0.08 }
     },
-    "abilities": [],
+    "abilities": ["fireball", "frost_nova"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Apprentice’s Wand",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Mystic Robes",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Arcane Focus",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_mana_potion",
+          "name": "Minor Mana Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["fireball", "frost_nova"],
+      "flavor": "A student of the arcane arts wielding elemental power."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "monk": {
     "name": "Monk",
-    "role":"combat",
-    "tags":["melee", "agile"],
+    "role": "combat",
+    "tags": ["melee", "agile"],
     "baseBonuses": {
       "speedMult": 1.05,
       "evadeChance": 0.03,
       "atkMult": 1.03
     },
-    "abilities": [],
+    "abilities": ["palm_strike", "chi_wave"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Handwraps",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Meditation Garb",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Chi Beads",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "focus_tea",
+          "name": "Focus Tea",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["palm_strike", "chi_wave"],
+      "flavor": "A disciplined martial artist with spiritual focus."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "necromancer": {
     "name": "Necromancer",
-    "role":"combat",
-    "tags":["dark", "minions", "dot"],
+    "role": "combat",
+    "tags": ["dark", "minions", "dot"],
     "baseBonuses": {
       "dotPower": 0.08,
       "manaMult": 1.05,
       "elementalBoost": { "poison": 0.05, "dark": 0.05 }
     },
-    "abilities": [],
+    "abilities": ["bone_spike", "rot"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Bone Wand",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Graveweave Robes",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Soulstone",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_mana_potion",
+          "name": "Minor Mana Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["bone_spike", "rot"],
+      "flavor": "A master of decay and the dead."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "paladin": {
     "name": "Paladin",
-    "role":"combat",
-    "tags":["holy", "tank"],
+    "role": "combat",
+    "tags": ["holy", "tank"],
     "baseBonuses": {
       "defMult": 1.05,
       "blockChance": 0.05,
       "elementalBoost": { "holy": 0.05 }
     },
-    "abilities": [],
+    "abilities": ["smite_holy", "holy_light"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Blessed Hammer",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Holy Plate",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Radiant Emblem",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["smite_holy", "holy_light"],
+      "flavor": "A holy warrior who smites evil and protects the weak."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "ranger": {
     "name": "Ranger",
-    "role":"combat",
-    "tags":["ranged", "nature"],
+    "role": "combat",
+    "tags": ["ranged", "nature"],
     "baseBonuses": {
       "atkMult": 1.03,
       "speedMult": 1.03,
       "elementalBoost": { "nature": 0.05 }
     },
-    "abilities": [],
+    "abilities": ["quick_shot", "barbed_arrow"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Hunter’s Bow",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Wildhide Vest",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Nature’s Loop",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["quick_shot", "barbed_arrow"],
+      "flavor": "A survivalist attuned to the natural world."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "rogue": {
     "name": "Rogue",
-    "role":"combat",
-    "tags":["stealth", "agile", "physical"],
+    "role": "combat",
+    "tags": ["stealth", "agile", "physical"],
     "baseBonuses": {
       "atkMult": 1.04,
       "speedMult": 1.05,
       "critChance": 0.03,
       "elementalBoost": { "shadow": 0.05 }
     },
-    "abilities": [],
+    "abilities": ["cheap_shot", "evasive_roll"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Balanced Shortsword",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Cutpurse Leathers",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Lockpick Chain",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "throwing_knife",
+          "name": "Throwing Knife",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["cheap_shot", "evasive_roll"],
+      "flavor": "A street‑hardened fighter who blends agility with dirty tactics."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "rot": {
     "name": "Rot",
-    "role":"combat",
-    "tags":["decay", "disease", "corruption"],
+    "role": "combat",
+    "tags": ["decay", "disease", "corruption"],
     "baseBonuses": {
       "dotPower": 0.10,
       "manaMult": 1.03,
       "elementalBoost": { "decay": 0.07, "poison": 0.05 }
     },
-    "abilities": [],
+    "abilities": ["rot_touch", "blight_cloud"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Blighted Scepter",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Rot‑eaten Wraps",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Fetid Charm",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "festering_vial",
+          "name": "Festering Vial",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["rot_touch", "blight_cloud"],
+      "flavor": "A harbinger of decay whose presence withers flesh and soil alike."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "shaman": {
     "name": "Shaman",
-    "role":"combat",
-    "tags":["elemental", "hybrid"],
+    "role": "combat",
+    "tags": ["elemental", "hybrid"],
     "baseBonuses": {
       "manaMult": 1.05,
       "elementalBoost": { "lightning": 0.05, "nature": 0.05 }
     },
-    "abilities": [],
+    "abilities": ["lightning_bolt", "storm_call"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Totem Staff",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Stormhide Wraps",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Spirit Fetish",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_mana_potion",
+          "name": "Minor Mana Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["lightning_bolt", "storm_call"],
+      "flavor": "A conduit of elemental and ancestral power."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "thief": {
     "name": "Thief",
-    "role":"combat",
-    "tags":["stealth", "agile"],
+    "role": "combat",
+    "tags": ["stealth", "agile"],
     "baseBonuses": {
       "speedMult": 1.05,
       "evadeChance": 0.05,
       "critChance": 0.02
     },
-    "abilities": [],
+    "abilities": ["backstab", "poison_dagger"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Twin Daggers",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Shadow Leathers",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Silent Footwraps",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "smoke_bomb",
+          "name": "Smoke Bomb",
+          "type": "consumable",
+          "quantity": 1
+        }
+      ],
+      "abilities": ["backstab", "poison_dagger"],
+      "flavor": "A quick and deadly opportunist."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "trainee": {
     "name": "Trainee",
-    "role":"combat",
-    "tags":["novice"],
+    "role": "combat",
+    "tags": ["novice"],
     "baseBonuses": {
       "learningBoost": 0.10,
       "atkMult": 1.01
     },
-    "abilities": [],
+    "abilities": ["basic_strike", "guard_stance"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Training Sword",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Padded Vest",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Practice Band",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["basic_strike", "guard_stance"],
+      "flavor": "A novice fighter just beginning formal training."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "trickster": {
     "name": "Trickster",
-    "role":"combat",
-    "tags":["illusion", "chaos"],
+    "role": "combat",
+    "tags": ["illusion", "chaos"],
     "baseBonuses": {
       "evadeChance": 0.04,
       "critChance": 0.02,
       "confusionChance": 0.03
     },
-    "abilities": [],
+    "abilities": ["feint_strike", "trick_step"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Weighted Dagger",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Mischief Leathers",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Loaded Dice",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "smoke_pellet",
+          "name": "Smoke Pellet",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["feint_strike", "trick_step"],
+      "flavor": "A sly combatant who thrives on misdirection and surprise."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "void": {
     "name": "Void",
-    "role":"combat",
-    "tags":["void", "dark", "chaos"],
+    "role": "combat",
+    "tags": ["void", "dark", "chaos"],
     "baseBonuses": {
       "elementalBoost": { "void": 0.08 },
       "manaMult": 1.05,
       "chaosFactor": 0.03
     },
-    "abilities": [],
+    "abilities": ["void_bolt", "rift_step"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Void‑touched Blade",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Hollow Shroud",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Riftstone Shard",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "void_residue",
+          "name": "Void Residue",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["void_bolt", "rift_step"],
+      "flavor": "A warrior who draws power from the emptiness between worlds."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "warlock": {
     "name": "Warlock",
-    "role":"combat",
-    "tags":["dark", "dot"],
+    "role": "combat",
+    "tags": ["dark", "dot"],
     "baseBonuses": {
       "manaMult": 1.08,
       "dotPower": 0.10,
       "elementalBoost": { "dark": 0.10 }
     },
-    "abilities": [],
+    "abilities": ["shadow_bolt", "curse_of_agony"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Demonforged Grimoire",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Abyssal Robes",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Infernal Sigil",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_mana_potion",
+          "name": "Minor Mana Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["shadow_bolt", "curse_of_agony"],
+      "flavor": "A spellcaster empowered by dark pacts."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "warrior": {
     "name": "Warrior",
-    "role":"combat",
-    "tags":["melee", "frontline"],
+    "role": "combat",
+    "tags": ["melee", "frontline"],
     "baseBonuses": {
       "atkMult": 1.05,
       "defMult": 1.05,
       "blockChance": 0.05
     },
-    "abilities": [],
+    "abilities": ["power_strike", "shield_bash"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Iron Greatsword",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Reinforced Breastplate",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Warrior’s Emblem",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "minor_healing_potion",
+          "name": "Minor Healing Potion",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["power_strike", "shield_bash"],
+      "flavor": "A hardened fighter ready for frontline combat."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "witch": {
     "name": "Witch",
-    "role":"combat",
-    "tags":["dark", "magic"],
+    "role": "combat",
+    "tags": ["dark", "magic"],
     "baseBonuses": {
       "manaMult": 1.08,
       "dotPower": 0.05,
       "elementalBoost": { "dark": 0.08 }
     },
-    "abilities": [],
+    "abilities": ["evil_eye", "binding_curse"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Hexwood Staff",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Witch’s Cloak",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Cursed Locket",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "dark_brew",
+          "name": "Dark Brew",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["evil_eye", "binding_curse"],
+      "flavor": "A wielder of hexes, rituals, and eerie brews."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
+  {
   "alchemist": {
     "name": "Alchemist",
-    "role":"non_combat",
-    "tags":["crafting", "alchemy"],
+    "role": "non_combat",
+    "tags": ["crafting", "alchemy"],
     "baseBonuses": {
       "potionPotency": 0.10,
       "potionDuration": 0.05,
       "craftingSpeed": 0.05
     },
-    "abilities": [],
+    "abilities": ["basic_brewing", "simple_infusions"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -559,21 +1515,32 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Crystal Mortar", "slot": "weapon", "rarity": "uncommon", "level": 1, "bonuses": {} },
+        "armor": { "name": "Alchemist Coat", "slot": "armor", "rarity": "uncommon", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Distillation Coil", "slot": "accessory", "rarity": "uncommon", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "herbal_extract", "name": "Herbal Extract", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["basic_brewing", "simple_infusions"],
+      "flavor": "A potion-maker who manipulates volatile reagents."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "artificer": {
     "name": "Artificer",
-    "role":"non_combat",
-    "tags":["crafting", "enchanting"],
+    "role": "non_combat",
+    "tags": ["crafting", "enchanting"],
     "baseBonuses": {
       "enchantmentPower": 0.10,
       "enchantmentSuccess": 0.05,
       "craftingQuality": 0.05
     },
-    "abilities": [],
+    "abilities": ["arcane_burst", "mana_surge"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -586,21 +1553,32 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Adept’s Focus Staff", "slot": "weapon", "rarity": "rare", "level": 1, "bonuses": {} },
+        "armor": { "name": "Runed Robes", "slot": "armor", "rarity": "rare", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Channeling Ring", "slot": "accessory", "rarity": "rare", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "minor_mana_potion", "name": "Minor Mana Potion", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["arcane_burst", "mana_surge"],
+      "flavor": "A practiced caster with growing control over arcane forces."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "blacksmith": {
     "name": "Blacksmith",
-    "role":"non_combat",
-    "tags":["crafting", "metalworking"],
+    "role": "non_combat",
+    "tags": ["crafting", "metalworking"],
     "baseBonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
-     "durabilityBonus": 0.10
+      "durabilityBonus": 0.10
     },
-    "abilities": [],
+    "abilities": ["basic_swing", "stone_sense"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -613,20 +1591,31 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Iron Pickaxe", "slot": "weapon", "rarity": "uncommon", "level": 1, "bonuses": {} },
+        "armor": { "name": "Reinforced Work Vest", "slot": "armor", "rarity": "uncommon", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Ore Pouch", "slot": "accessory", "rarity": "uncommon", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "stamina_snack", "name": "Stamina Snack", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["basic_swing", "stone_sense"],
+      "flavor": "A hardened worker of the deep earth."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "carpenter": {
     "name": "Carpenter",
-    "role":"non_combat",
-    "tags":["crafting", "woodworking"],
+    "role": "non_combat",
+    "tags": ["crafting", "woodworking"],
     "baseBonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05
     },
-    "abilities": [],
+    "abilities": ["basic_joinery", "efficient_cutting"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -639,20 +1628,31 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Carpenter’s Saw", "slot": "weapon", "rarity": "common", "level": 1, "bonuses": {} },
+        "armor": { "name": "Woodworker Apron", "slot": "armor", "rarity": "common", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Precision Plane", "slot": "accessory", "rarity": "common", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "wood_plank", "name": "Wood Plank", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["basic_joinery", "efficient_cutting"],
+      "flavor": "A builder who shapes wood into tools and structures."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "chef": {
     "name": "Chef",
-    "role":"non_combat",
-    "tags":["crafting", "cooking", "support"],
+    "role": "non_combat",
+    "tags": ["crafting", "cooking", "support"],
     "baseBonuses": {
       "foodBuffPower": 0.10,
       "foodBuffDuration": 0.10
     },
-    "abilities": [],
+    "abilities": ["basic_cooking", "ingredient_prep"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -668,20 +1668,31 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Chef’s Knife", "slot": "weapon", "rarity": "uncommon", "level": 1, "bonuses": {} },
+        "armor": { "name": "Kitchen Apron", "slot": "armor", "rarity": "uncommon", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Seasoning Pouch", "slot": "accessory", "rarity": "uncommon", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "fresh_ingredients", "name": "Fresh Ingredients", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["basic_cooking", "ingredient_prep"],
+      "flavor": "A culinary expert who prepares meals with buffs."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "fisherman": {
     "name": "Fisherman",
-    "role":"non_combat",
-    "tags":["gathering", "aquatic"],
+    "role": "non_combat",
+    "tags": ["gathering", "aquatic"],
     "baseBonuses": {
       "gatheringYield": 0.15,
       "rareCatchChance": 0.10
     },
-    "abilities": [],
+    "abilities": ["basic_casting", "line_control"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -694,20 +1705,31 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Fishing Rod", "slot": "weapon", "rarity": "common", "level": 1, "bonuses": {} },
+        "armor": { "name": "Waterproof Waders", "slot": "armor", "rarity": "common", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Reinforced Net", "slot": "accessory", "rarity": "common", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "bait", "name": "Bait", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["basic_casting", "line_control"],
+      "flavor": "A patient angler who harvests the waters."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "herbalist": {
     "name": "Herbalist",
-    "role":"non_combat",
-    "tags":["gathering", "plants"],
+    "role": "non_combat",
+    "tags": ["gathering", "plants"],
     "baseBonuses": {
       "gatheringYield": 0.15,
       "rareHerbChance": 0.10
     },
-    "abilities": [],
+    "abilities": ["foragers_eye", "basic_drying"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -720,21 +1742,32 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Gatherer’s Sickle", "slot": "weapon", "rarity": "common", "level": 1, "bonuses": {} },
+        "armor": { "name": "Botanist Wraps", "slot": "armor", "rarity": "common", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Botanist Satchel", "slot": "accessory", "rarity": "common", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "herb_bundle", "name": "Herb Bundle", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["foragers_eye", "basic_drying"],
+      "flavor": "A gatherer who knows every leaf and root."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "leatherworker": {
     "name": "Leatherworker",
-    "role":"non_combat",
-    "tags":["crafting", "armor"],
+    "role": "non_combat",
+    "tags": ["crafting", "armor"],
     "baseBonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
       "materialEfficiency": 0.10
     },
-    "abilities": [],
+    "abilities": ["basic_skinning", "basic_tanning"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -747,20 +1780,31 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Leatherworking Awl", "slot": "weapon", "rarity": "common", "level": 1, "bonuses": {} },
+        "armor": { "name": "Hide Apron", "slot": "armor", "rarity": "common", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Hide Scraper", "slot": "accessory", "rarity": "common", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "cured_leather", "name": "Cured Leather", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["basic_skinning", "basic_tanning"],
+      "flavor": "A crafter who molds hides into armor and gear."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "miner": {
     "name": "Miner",
-    "role":"non_combat",
-    "tags":["gathering", "ore"],
+    "role": "non_combat",
+    "tags": ["gathering", "ore"],
     "baseBonuses": {
       "gatheringYield": 0.15,
       "rareOreChance": 0.10
     },
-    "abilities": [],
+    "abilities": ["basic_swing", "stone_sense"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -773,20 +1817,31 @@
     },
     "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": { "name": "Iron Pickaxe", "slot": "weapon", "rarity": "common", "level": 1, "bonuses": {} },
+        "armor": { "name": "Reinforced Work Vest", "slot": "armor", "rarity": "common", "level": 1, "bonuses": {} },
+        "accessory": { "name": "Ore Pouch", "slot": "accessory", "rarity": "common", "level": 1, "bonuses": {} }
+      },
+      "inventory": [
+        { "id": "stamina_snack", "name": "Stamina Snack", "type": "consumable", "quantity": 3 }
+      ],
+      "abilities": ["basic_swing", "stone_sense"],
+      "flavor": "A hardened worker of the deep earth."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "ritualist": {
     "name": "Ritualist",
-    "role":"non_combat",
-    "tags":["rituals", "magic"],
+    "role": "non_combat",
+    "tags": ["rituals", "magic"],
     "baseBonuses": {
       "ritualPower": 0.10,
       "ritualSpeed": 0.05
     },
-    "abilities": [],
+    "abilities": ["chalk_lines", "basic_offerings"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -797,22 +1852,59 @@
       "recipes": {},
       "workstations": []
     },
-    "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
+    "synergy": {
+      "races": {}, "subraces": {}, "professions": {},
+      "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {}
+    },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Ceremonial Focus",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Threaded Robes",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Ritual Candle",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "incense_bundle",
+          "name": "Incense Bundle",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["chalk_lines", "basic_offerings"],
+      "flavor": "A practitioner of ancient rites, channeling unseen forces."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "spelunker": {
     "name": "Spelunker",
-    "role":"non_combat",
-    "tags":["exploration", "caves"],
+    "role": "non_combat",
+    "tags": ["exploration", "caves"],
     "baseBonuses": {
       "gatheringYield": 0.10,
       "trapDetection": 0.10
     },
-    "abilities": [],
+    "abilities": ["basic_casting", "line_control"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -823,23 +1915,60 @@
       "recipes": {},
       "workstations": []
     },
-    "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
+    "synergy": {
+      "races": {}, "subraces": {}, "professions": {},
+      "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {}
+    },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Mining Pick",
+          "slot": "weapon",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Cave‑Explorer Vest",
+          "slot": "armor",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Lantern Charm",
+          "slot": "accessory",
+          "rarity": "common",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "cave_rations",
+          "name": "Cave Rations",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["basic_casting", "line_control"],
+      "flavor": "A fearless explorer of deep caverns and forgotten tunnels."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "tinkerer": {
     "name": "Tinkerer",
-    "role":"non_combat",
-    "tags":["engineering", "mechanical", "crafting"],
+    "role": "non_combat",
+    "tags": ["engineering", "mechanical", "crafting"],
     "baseBonuses": {
       "craftingQuality": 0.08,
       "craftingSpeed": 0.08,
       "gadgetEfficiency": 0.10
     },
-    "abilities": [],
+    "abilities": ["basic_mechanisms", "gadget_pulse"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -850,23 +1979,60 @@
       "recipes": {},
       "workstations": []
     },
-    "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
+    "synergy": {
+      "races": {}, "subraces": {}, "professions": {},
+      "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {}
+    },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Clockwork Wrench",
+          "slot": "weapon",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Tinker's Apron",
+          "slot": "armor",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Gearchain Locket",
+          "slot": "accessory",
+          "rarity": "uncommon",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "spare_parts",
+          "name": "Spare Parts",
+          "type": "consumable",
+          "quantity": 1
+        }
+      ],
+      "abilities": ["basic_mechanisms", "gadget_pulse"],
+      "flavor": "A mechanical savant who builds gadgets and automated tools."
+    },
     "lootKit": {},
     "lootTable": {}
   },
 
   "weaver": {
     "name": "Weaver",
-    "role":"non_combat",
-    "tags":["crafting", "cloth"],
+    "role": "non_combat",
+    "tags": ["crafting", "cloth"],
     "baseBonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
       "enchantmentAffinity": 0.05
     },
-    "abilities": [],
+    "abilities": ["basic_loomwork", "fine_spinning"],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
@@ -877,9 +2043,46 @@
       "recipes": {},
       "workstations": []
     },
-    "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {} },
+    "synergy": {
+      "races": {}, "subraces": {}, "professions": {},
+      "biomes": {}, "weather": {}, "elements": {}, "statusEffects": {}
+    },
     "talentTree": {},
-    "starterKit": {},
+    "starterKit": {
+      "equipment": {
+        "weapon": {
+          "name": "Tailor’s Needle",
+          "slot": "weapon",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "armor": {
+          "name": "Weaver Cloak",
+          "slot": "armor",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        },
+        "accessory": {
+          "name": "Silk Spindle",
+          "slot": "accessory",
+          "rarity": "rare",
+          "level": 1,
+          "bonuses": {}
+        }
+      },
+      "inventory": [
+        {
+          "id": "spool_of_thread",
+          "name": "Spool of Thread",
+          "type": "consumable",
+          "quantity": 3
+        }
+      ],
+      "abilities": ["basic_loomwork", "fine_spinning"],
+      "flavor": "A skilled artisan who crafts garments and magical cloth."
+    },
     "lootKit": {},
     "lootTable": {}
   }
