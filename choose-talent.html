@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Your Talent</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #info {
+      opacity:0.8;
+      margin-bottom:12px;
+    }
+
+    .branch-card {
+      padding:14px;
+      margin:12px 0;
+      background:#1a1d24;
+      border-radius:8px;
+      border:1px solid #333;
+      cursor:pointer;
+    }
+
+    .branch-card:hover {
+      background:#222832;
+    }
+
+    .selected {
+      border-color:#7fffd4;
+      box-shadow:0 0 10px #7fffd455;
+    }
+
+    .node {
+      margin-left:12px;
+      padding:6px 0;
+      opacity:0.9;
+    }
+
+    .node-locked {
+      opacity:0.4;
+    }
+
+    .btn {
+      margin-top:20px;
+      padding:12px 16px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+      font-size:16px;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Choose Your Talent</h1>
+  <div id="info">Select one branch to define your path.</div>
+
+  <div id="talentContainer">Loading talent tree...</div>
+
+  <button id="confirmBtn" class="btn" style="display:none;">Confirm Talent Choice</button>
+
+<script type="module">
+import { api } from "./api.js";
+import { requireSession } from "./session-guard.js";
+
+await requireSession();
+const { username } = window.syncState;
+
+let player = await api.getPlayer(username);
+if (!player) {
+  document.body.innerHTML = "<h2>No player data found.</h2>";
+  throw new Error("No player");
+}
+
+let profession = player.profession;
+let talentDefs = await loadJSON("./profession-talent-trees.json");
+
+if (!talentDefs[profession]) {
+  document.body.innerHTML = "<h2>No talent tree found for this profession.</h2>";
+  throw new Error("No talent tree");
+}
+
+let selectedBranch = null;
+
+/* ============================================================
+   DETERMINE WHICH TIER IS AVAILABLE
+============================================================ */
+
+let tier = null;
+
+if (!player.talentTree || !player.talentTree.tier1) {
+  if (player.level < 10) {
+    document.body.innerHTML = "<h2>You are not eligible for Tier 1 talents yet.</h2>";
+    throw new Error("Tier 1 locked");
+  }
+  tier = "tier1";
+}
+
+else if (!player.talentTree.tier2) {
+  if (player.level < 100) {
+    document.body.innerHTML = "<h2>You are not eligible for Tier 2 talents yet.</h2>";
+    throw new Error("Tier 2 locked");
+  }
+  tier = "tier2";
+}
+
+else if (!player.talentTree.tier3) {
+  if (player.level < 1000) {
+    document.body.innerHTML = "<h2>You are not eligible for Tier 3 talents yet.</h2>";
+    throw new Error("Tier 3 locked");
+  }
+  tier = "tier3";
+}
+
+else {
+  document.body.innerHTML = "<h2>You have already selected all available talents.</h2>";
+  throw new Error("All tiers chosen");
+}
+
+/* ============================================================
+   RENDER TALENT BRANCHES
+============================================================ */
+
+const tierData = talentDefs[profession][tier];
+const branches = tierData.branches || {};
+
+renderBranches();
+
+function renderBranches() {
+  const container = document.getElementById("talentContainer");
+  container.innerHTML = `<h2>Select a Tier ${tier.replace("tier","")} Talent</h2>`;
+
+  for (const [branchKey, nodes] of Object.entries(branches)) {
+    const div = document.createElement("div");
+    div.className = "branch-card";
+    div.innerHTML = `
+      <strong>${format(branchKey)}</strong><br>
+      ${renderNodes(nodes)}
+    `;
+    div.onclick = () => selectBranch(branchKey, div);
+    container.appendChild(div);
+  }
+}
+
+function renderNodes(nodes) {
+  return nodes.map((n, i) => `
+    <div class="node ${i === 0 ? "" : "node-locked"}">
+      <strong>${n.name}</strong><br>
+      <span style="opacity:0.8;">${n.description}</span>
+    </div>
+  `).join("");
+}
+
+function selectBranch(branchKey, element) {
+  selectedBranch = branchKey;
+
+  document.querySelectorAll(".branch-card").forEach(el => el.classList.remove("selected"));
+  element.classList.add("selected");
+
+  document.getElementById("confirmBtn").style.display = "block";
+  document.getElementById("confirmBtn").onclick = confirmTalent;
+}
+
+/* ============================================================
+   CONFIRM TALENT
+============================================================ */
+
+async function confirmTalent() {
+  if (!selectedBranch) return;
+
+  if (!player.talentTree) player.talentTree = {};
+
+  player.talentTree[tier] = selectedBranch;
+
+  // Deduct talent points
+  const cost = parseInt(tier.replace("tier",""));
+  player.talentPoints = (player.talentPoints || 0) - cost;
+
+  await api.savePlayer(username, player);
+  window.location.href = "character.html";
+}
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error("Failed to load " + path);
+  return res.json();
+}
+
+function format(str) {
+  return String(str)
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+</script>
+
+</body>
+</html>
