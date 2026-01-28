@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Choose Your Profession</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #info {
+      opacity:0.8;
+      margin-bottom:12px;
+    }
+
+    .prof-card {
+      padding:14px;
+      margin:10px 0;
+      background:#1a1d24;
+      border-radius:8px;
+      border:1px solid #333;
+      cursor:pointer;
+    }
+
+    .prof-card:hover {
+      background:#222832;
+    }
+
+    .selected {
+      border-color:#7fffd4;
+      box-shadow:0 0 10px #7fffd455;
+    }
+
+    .tags {
+      margin-top:6px;
+      font-size:13px;
+      opacity:0.85;
+    }
+
+    .tag {
+      display:inline-block;
+      padding:2px 6px;
+      margin-right:4px;
+      border-radius:4px;
+      background:#222832;
+      border:1px solid #444;
+      font-size:12px;
+    }
+
+    .section-title {
+      margin-top:16px;
+      font-weight:600;
+      color:#9af7ff;
+    }
+
+    .kit-list {
+      font-size:14px;
+      margin-top:4px;
+      opacity:0.9;
+    }
+
+    .btn {
+      margin-top:20px;
+      padding:12px 16px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+      font-size:16px;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Choose Your Profession</h1>
+  <div id="info">You’ve reached the point where your path diverges. Choose your profession wisely.</div>
+
+  <div id="profContainer">Loading professions...</div>
+
+  <div id="preview"></div>
+
+  <button id="confirmBtn" class="btn" style="display:none;">Confirm Profession</button>
+
+  <script type="module">
+    import { api } from "./api.js";
+    import { requireSession } from "./session-guard.js";
+
+    const session = requireSession();
+    if (!session) {
+      document.body.innerHTML = "<h2>No active session.</h2>";
+      throw new Error("No session");
+    }
+
+    const username = session.username;
+
+    let professionDefs = {};
+    let player = null;
+    let selectedProfessionKey = null;
+
+    init();
+
+    async function init() {
+      professionDefs = await loadJSON("./profession-definitions.json");
+      player = await api.getPlayer(username);
+
+      if (!player) {
+        document.body.innerHTML = "<h2>No player data found.</h2>";
+        return;
+      }
+
+      // If they already have a non-adventurer profession, bounce back
+      if (player.profession && player.profession !== "adventurer") {
+        window.location.href = "character.html";
+        return;
+      }
+
+      renderProfessions();
+    }
+
+    async function loadJSON(path) {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error("Failed to load " + path);
+      return res.json();
+    }
+
+    function renderProfessions() {
+      const container = document.getElementById("profContainer");
+      container.innerHTML = "<h2>Available Professions</h2>";
+
+      for (const [key, def] of Object.entries(professionDefs)) {
+        // Optionally skip "adventurer" if it's in the file
+        if (key === "adventurer") continue;
+
+        const div = document.createElement("div");
+        div.className = "prof-card";
+        div.innerHTML = `
+          <strong>${def.name || format(key)}</strong><br>
+          ${def.description || ""}<br>
+          <div class="tags">
+            ${def.role ? `<span class="tag">${def.role}</span>` : ""}
+            ${(def.tags || []).map(t => `<span class="tag">${t}</span>`).join("")}
+          </div>
+        `;
+        div.onclick = () => selectProfession(key, div);
+        container.appendChild(div);
+      }
+    }
+
+    function selectProfession(key, element) {
+      selectedProfessionKey = key;
+
+      document.querySelectorAll(".prof-card").forEach(el => el.classList.remove("selected"));
+      element.classList.add("selected");
+
+      renderPreview(key);
+      const btn = document.getElementById("confirmBtn");
+      btn.style.display = "block";
+      btn.onclick = confirmProfession;
+    }
+
+    function renderPreview(key) {
+      const def = professionDefs[key];
+      const container = document.getElementById("preview");
+      if (!def) {
+        container.innerHTML = "";
+        return;
+      }
+
+      const kit = def.starterKit || {};
+      const eq = kit.equipment || {};
+      const inv = kit.inventory || [];
+
+      container.innerHTML = `
+        <div class="section-title">Profession Overview</div>
+        <div>${def.longDescription || def.description || ""}</div>
+
+        <div class="section-title">Base Bonuses</div>
+        <div class="kit-list">
+          ${formatBonuses(def.baseBonuses || {})}
+        </div>
+
+        <div class="section-title">Starter Kit</div>
+        <div class="kit-list">
+          ${
+            Object.keys(eq).length === 0 && inv.length === 0
+              ? "No starter kit defined."
+              : `
+                ${
+                  Object.entries(eq)
+                    .map(([slot, item]) => `• ${format(slot)}: ${item.name} (${item.rarity || "common"})`)
+                    .join("<br>")
+                }
+                ${
+                  inv.length
+                    ? "<br>" + inv.map(i => `• ${i.name} x${i.quantity || 1}`).join("<br>")
+                    : ""
+                }
+              `
+          }
+        </div>
+      `;
+    }
+
+    async function confirmProfession() {
+      if (!selectedProfessionKey || !player) return;
+
+      const def = professionDefs[selectedProfessionKey];
+      if (!def) return;
+
+      player.profession = selectedProfessionKey;
+
+      // Give starter kit once
+      if (!player.receivedStarterKit) {
+        applyStarterKit(player, def.starterKit || {});
+        player.receivedStarterKit = true;
+      }
+
+      await api.savePlayer(player.username, player);
+      window.location.href = "character.html";
+    }
+
+    function applyStarterKit(p, kit) {
+      if (!kit) return;
+
+      // Equipment
+      if (!p.equipment) p.equipment = {};
+      if (kit.equipment && typeof kit.equipment === "object") {
+        for (const [slot, item] of Object.entries(kit.equipment)) {
+          if (!item) continue;
+          p.equipment[slot] = {
+            ...item,
+            slot,
+            rarity: item.rarity || "common",
+            level: item.level || p.level || 1,
+            bonuses: item.bonuses || item.stats || {}
+          };
+        }
+      }
+
+      // Inventory
+      if (!Array.isArray(p.inventory)) p.inventory = [];
+      if (Array.isArray(kit.inventory)) {
+        for (const item of kit.inventory) {
+          if (!item) continue;
+          p.inventory.push({ ...item });
+        }
+      }
+    }
+
+    function formatBonuses(bonuses) {
+      const entries = Object.entries(bonuses);
+      if (!entries.length) return "None.";
+      return entries
+        .map(([k, v]) => `${format(k)}: ${v}`)
+        .join("<br>");
+    }
+
+    function format(str) {
+      return String(str)
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+  </script>
+
+</body>
+</html>
