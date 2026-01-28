@@ -66,41 +66,45 @@
   <script type="module">
     import { api } from "./api.js";
     import { requireSession } from "./session-guard.js";
-
-    const session = requireSession();
-    if (!session) {
+  
+    await requireSession();
+  
+    const { username } = window.syncState;
+    if (!username) {
       document.body.innerHTML = "<h2>No active session.</h2>";
-      throw new Error("No session");
+      throw new Error("No username found");
     }
-
-    const username = session.username;
-
+  
     let selectedRace = null;
     let selectedSubrace = null;
-
+  
     let raceDefs = {};
     let subraceDefs = {};
-
+  
     init();
-
+  
     async function init() {
       raceDefs = await loadJSON("./race-definitions.json");
       subraceDefs = await loadJSON("./subrace-stat-profiles.json");
-
+  
       renderRaces();
     }
-
+  
     async function loadJSON(path) {
       const res = await fetch(path);
       if (!res.ok) throw new Error("Failed to load " + path);
       return res.json();
     }
-
+  
     function renderRaces() {
       const container = document.getElementById("raceContainer");
       container.innerHTML = "<h2>Choose Your Race</h2>";
-
+  
       for (const [raceKey, race] of Object.entries(raceDefs)) {
+  
+        // ⭐ FILTER OUT NON‑PLAYABLE RACES
+        if (!race.playable) continue;
+  
         const div = document.createElement("div");
         div.className = "race-card";
         div.innerHTML = `
@@ -111,23 +115,23 @@
         container.appendChild(div);
       }
     }
-
+  
     function selectRace(raceKey, element) {
       selectedRace = raceKey;
       selectedSubrace = null;
-
+  
       document.querySelectorAll(".race-card").forEach(el => el.classList.remove("selected"));
       element.classList.add("selected");
-
+  
       renderSubraces(raceKey);
     }
-
+  
     function renderSubraces(raceKey) {
       const container = document.getElementById("subraceContainer");
       container.innerHTML = "<h2>Choose Your Subrace</h2>";
-
+  
       const block = subraceDefs[raceKey] || {};
-
+  
       for (const [subKey, sub] of Object.entries(block)) {
         const div = document.createElement("div");
         div.className = "subrace-card";
@@ -139,20 +143,20 @@
         container.appendChild(div);
       }
     }
-
+  
     function selectSubrace(subKey, element) {
       selectedSubrace = subKey;
-
+  
       document.querySelectorAll(".subrace-card").forEach(el => el.classList.remove("selected"));
       element.classList.add("selected");
-
+  
       document.getElementById("confirmBtn").style.display = "block";
       document.getElementById("confirmBtn").onclick = confirmCharacter;
     }
-
+  
     async function confirmCharacter() {
       if (!selectedRace || !selectedSubrace) return;
-
+  
       const newPlayer = {
         username,
         level: 1,
@@ -171,18 +175,17 @@
         adaptiveProfile: {},
         elementAffinity: {},
       };
-
+  
       await api.savePlayer(username, newPlayer);
-
+  
       window.location.href = "character.html";
     }
-
+  
     function format(str) {
       return String(str)
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
   </script>
-
 </body>
 </html>
