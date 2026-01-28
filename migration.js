@@ -178,6 +178,31 @@ function resolveAbilities(old, profession) {
 }
 
 // -----------------------------
+// Ultimate resolution (profession-based, from ability-definitions)
+// -----------------------------
+function resolveUltimate(profession) {
+  const profBlock = abilityDefs[profession] || {};
+  for (const [key, def] of Object.entries(profBlock)) {
+    if (def && def.isUltimate) {
+      return {
+        key: def.key || key,
+        name: def.name || key,
+        description: def.description || "",
+        cooldown: def.cooldown ?? 0,
+        icon: def.icon || `/assets/abilities/${key}.png`,
+        combatTags: def.combatTags || [],
+        statusEffects: def.statusEffects || [],
+        basePower: def.basePower ?? 1,
+        scalingPerLevel: def.scalingPerLevel ?? 0,
+        chargeRequired: def.chargeRequired ?? 100,
+        usesPerCombat: def.usesPerCombat ?? 1
+      };
+    }
+  }
+  return null;
+}
+
+// -----------------------------
 // Talent tree resolution
 // -----------------------------
 function resolveTalentTreeDefinition(profession) {
@@ -225,8 +250,8 @@ export async function resolveLegacyPlayer(old) {
   };
   p.element = detectPrimaryElement(p.elementAffinity);
 
-  // Family
-  p.family = old.family ?? old.regionMeta?.family ?? null;
+  // Family (race/legacy/region priority; you’ve corrected humanoid in data)
+  p.family = old.regionMeta?.family ?? old.family ?? race.family ?? null;
 
   // Equipment (normalize stats → bonuses)
   p.equipment = {};
@@ -248,6 +273,9 @@ export async function resolveLegacyPlayer(old) {
 
   // Abilities
   p.abilities = resolveAbilities(old, p.profession);
+
+  // Ultimate
+  p.ultimate = resolveUltimate(p.profession);
 
   // Status Effects
   p.statusEffects = [];
@@ -336,5 +364,6 @@ export async function resolveLegacyPlayer(old) {
   } catch (e) {
     // ignore if PlayerStorage isn't needed here
   }
+
   return p;
 }
