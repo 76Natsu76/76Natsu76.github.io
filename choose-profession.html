@@ -93,8 +93,7 @@
    <script type="module">
     (async () => {
       const { requireSession } = await import("./session-guard.js");
-      const session = requireSession();
-      if (!session) return;
+      await requireSession()
     
       const username = session.username;
       document.getElementById("usernameDisplay").textContent =
