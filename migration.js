@@ -336,6 +336,5 @@ export async function resolveLegacyPlayer(old) {
   } catch (e) {
     // ignore if PlayerStorage isn't needed here
   }
-
   return p;
 }
