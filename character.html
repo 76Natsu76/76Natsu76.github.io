@@ -227,9 +227,9 @@
   <!-- MODULE SCRIPT -->
   <script type="module">
   (async () => {
-    import { requireSession } from "./session-guard.js";
-    import { PlayerStorage } from "./player-storage.js";
-    import { savePlayerToKV, loadFromKVAndLocal } from "./api.js";
+    const { requireSession } = await import("./session-guard.js");
+    const { PlayerStorage } = await import("./player-storage.js");
+    const { savePlayerToKV, loadFromKVAndLocal } = await import("./api.js");
   
     /* ============================================================
        SESSION + LOAD ON LOGIN
