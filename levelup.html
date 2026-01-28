@@ -190,7 +190,17 @@
     /* ============================================================
        LEVEL UP
     ============================================================ */
-  
+
+     if (player.level === 10 && player.profession === "adventurer") {
+        window.location.href = "profession-selection.html";
+        return;
+      }
+      
+      if (player.level === 100 && !player.secondaryProfession) {
+        window.location.href = "choose-secondary-profession.html";
+        return;
+      }
+
     window.attemptLevelUp = async () => {
       try {
         const result = await api.levelUp(username);
