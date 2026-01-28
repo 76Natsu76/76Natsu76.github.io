@@ -229,7 +229,13 @@
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
     import { savePlayerToKV, loadFromKVAndLocal } from "./api.js";
-  
+    
+    if (p.level >= 10 && p.profession === "adventurer") {
+      window.location.href = "profession-selection.html";
+      return;
+    }
+    
+      
     /* ============================================================
        SESSION + LOAD ON LOGIN
     ============================================================ */
