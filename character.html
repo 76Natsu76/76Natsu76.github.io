@@ -228,13 +228,7 @@
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
-    import { savePlayerToKV, loadFromKVAndLocal } from "./api.js";
-    
-    if (p.level >= 10 && p.profession === "adventurer") {
-      window.location.href = "profession-selection.html";
-      return;
-    }
-    
+    import { savePlayerToKV, loadFromKVAndLocal } from "./api.js";    
       
     /* ============================================================
        SESSION + LOAD ON LOGIN
@@ -277,6 +271,11 @@
       return p;
     }
   
+    if (p.level >= 10 && p.profession === "adventurer") {
+      window.location.href = "profession-selection.html";
+      return;
+    }
+    
     /* ============================================================
        LOAD CHARACTER INTO UI
     ============================================================ */
