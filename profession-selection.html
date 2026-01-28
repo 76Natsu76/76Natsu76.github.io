@@ -130,6 +130,20 @@
         return;
       }
 
+      // If player is below level 10, they cannot choose a profession yet
+      if (player.level < 10) {
+        document.body.innerHTML = `
+          <h2>You are not ready to choose a profession.</h2>
+          <p>Reach level 10 to unlock your true path.</p>
+        `;
+        return;
+      }
+
+      // If player is level 100 and has NOT chosen a secondary profession
+      if (player.level >= 100 && !player.secondaryProfession) {
+        // Show secondary profession selection UI
+        // (We will build this page later)
+      }
       renderProfessions();
     }
 
