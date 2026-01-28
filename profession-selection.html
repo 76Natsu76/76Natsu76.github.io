@@ -100,19 +100,19 @@
   <script type="module">
     import { api } from "./api.js";
     import { requireSession } from "./session-guard.js";
-
-    const session = requireSession();
-    if (!session) {
+  
+    await requireSession();
+  
+    const { username } = window.syncState;
+    if (!username) {
       document.body.innerHTML = "<h2>No active session.</h2>";
-      throw new Error("No session");
+      throw new Error("No username found");
     }
-
-    const username = session.username;
-
+  
     let professionDefs = {};
     let player = null;
     let selectedProfessionKey = null;
-
+  
     init();
 
     async function init() {
@@ -219,46 +219,63 @@
 
     async function confirmProfession() {
       if (!selectedProfessionKey || !player) return;
-
+    
       const def = professionDefs[selectedProfessionKey];
       if (!def) return;
-
+    
       player.profession = selectedProfessionKey;
-
-      // Give starter kit once
+    
+      // Apply starter kit once
       if (!player.receivedStarterKit) {
-        applyStarterKit(player, def.starterKit || {});
+        applyStarterKit(player, def.starterKit);
         player.receivedStarterKit = true;
       }
-
+    
       await api.savePlayer(player.username, player);
       window.location.href = "character.html";
     }
 
-    function applyStarterKit(p, kit) {
+    function applyStarterKit(player, kit) {
       if (!kit) return;
-
-      // Equipment
-      if (!p.equipment) p.equipment = {};
-      if (kit.equipment && typeof kit.equipment === "object") {
+    
+      // --- EQUIPMENT ---
+      if (!player.equipment) player.equipment = {};
+    
+      if (kit.equipment) {
         for (const [slot, item] of Object.entries(kit.equipment)) {
-          if (!item) continue;
-          p.equipment[slot] = {
-            ...item,
+          player.equipment[slot] = {
+            name: item.name,
             slot,
             rarity: item.rarity || "common",
-            level: item.level || p.level || 1,
-            bonuses: item.bonuses || item.stats || {}
+            level: item.level || 1,
+            bonuses: item.bonuses || {}
           };
         }
       }
-
-      // Inventory
-      if (!Array.isArray(p.inventory)) p.inventory = [];
+    
+      // --- INVENTORY ---
+      if (!Array.isArray(player.inventory)) player.inventory = [];
+    
       if (Array.isArray(kit.inventory)) {
         for (const item of kit.inventory) {
-          if (!item) continue;
-          p.inventory.push({ ...item });
+          player.inventory.push({
+            id: item.id,
+            name: item.name,
+            type: item.type || "consumable",
+            quantity: item.quantity || 1,
+            rarity: item.rarity || "common"
+          });
+        }
+      }
+    
+      // --- ABILITIES ---
+      if (!Array.isArray(player.abilities)) player.abilities = [];
+    
+      if (Array.isArray(kit.abilities)) {
+        for (const ability of kit.abilities) {
+          if (!player.abilities.some(a => a.key === ability)) {
+            player.abilities.push({ key: ability, level: 1 });
+          }
         }
       }
     }
