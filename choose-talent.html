@@ -66,6 +66,16 @@
     .btn:hover {
       background:#222832;
     }
+
+    #returnBtn {
+      margin-top:12px;
+      display:none;
+    }
+
+    #saveStatus {
+      margin-top:10px;
+      opacity:0.8;
+    }
   </style>
 </head>
 <body>
@@ -75,10 +85,12 @@
 
   <div id="talentContainer">Loading talent tree...</div>
 
-  <button id="confirmBtn" class="btn" style="display:none;">Confirm Talent Choice</button>
+  <button id="confirmBtn" class="btn" style="display:none;">Save Talent Choice</button>
+  <div id="saveStatus"></div>
+  <button id="returnBtn" class="btn">Return to Character</button>
 
 <script type="module">
-import { api } from "./api.js";
+import { api, savePlayerToKV } from "./api.js";
 import { requireSession } from "./session-guard.js";
 
 await requireSession();
@@ -176,14 +188,14 @@ function selectBranch(branchKey, element) {
   element.classList.add("selected");
 
   document.getElementById("confirmBtn").style.display = "block";
-  document.getElementById("confirmBtn").onclick = confirmTalent;
+  document.getElementById("confirmBtn").onclick = saveTalentChoice;
 }
 
 /* ============================================================
-   CONFIRM TALENT
+   SAVE TALENT CHOICE (NO REDIRECT)
 ============================================================ */
 
-async function confirmTalent() {
+async function saveTalentChoice() {
   if (!selectedBranch) return;
 
   if (!player.talentTree) player.talentTree = {};
@@ -194,9 +206,29 @@ async function confirmTalent() {
   const cost = parseInt(tier.replace("tier",""));
   player.talentPoints = (player.talentPoints || 0) - cost;
 
+  // Save locally
   await api.savePlayer(username, player);
-  window.location.href = "character.html";
+
+  // Push to KV
+  document.getElementById("saveStatus").textContent = "Saving to cloud…";
+  const res = await savePlayerToKV(username, player);
+
+  if (res && res.ok) {
+    document.getElementById("saveStatus").textContent = "Saved ✔";
+    document.getElementById("returnBtn").style.display = "block";
+    document.getElementById("confirmBtn").style.display = "none";
+  } else {
+    document.getElementById("saveStatus").textContent = "Error saving to cloud.";
+  }
 }
+
+/* ============================================================
+   RETURN BUTTON
+============================================================ */
+
+document.getElementById("returnBtn").onclick = () => {
+  window.location.href = "character.html";
+};
 
 /* ============================================================
    HELPERS
