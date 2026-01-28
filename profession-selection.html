@@ -100,19 +100,19 @@
   <script type="module">
     import { api } from "./api.js";
     import { requireSession } from "./session-guard.js";
-  
+    
     await requireSession();
-  
+    
     const { username } = window.syncState;
     if (!username) {
       document.body.innerHTML = "<h2>No active session.</h2>";
       throw new Error("No username found");
     }
-  
+    
     let professionDefs = {};
     let player = null;
     let selectedProfessionKey = null;
-  
+    
     init();
 
     async function init() {
