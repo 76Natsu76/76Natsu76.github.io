@@ -72,7 +72,7 @@
       logBox.scrollTop = logBox.scrollHeight;
     };
 
-    window.runMigration = async function () {
+    window.runMigration = async function runMigration() {
       logBox.textContent = "Starting migration...\n";
 
       if (!window.old) {
