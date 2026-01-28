@@ -1,23 +1,23 @@
-{  acolyte: {
-    name: "Acolyte",
-    role: "combat",
-    tags: ["holy", "support"],
-    baseBonuses: {
-      healingPower: 0.03,
-      manaMult: 1.02,
-      elementalBoost: { holy: 0.03 }
-    },
-    abilities: [],
-    equipment: { weapons: [], armor: [], accessories: [] },
-    noncombat: { perks: [], recipes: {}, workstations: [] },
-    synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
-    talentTree: {},
-    starterKit: {},
-    lootKit: {},
-    lootTable: {}
-  },
-
-  adept: {
+{
+    acolyte: {
+        name: "Acolyte",
+        role: "combat",
+        tags: ["holy", "support"],
+        baseBonuses: {
+          healingPower: 0.03,
+          manaMult: 1.02,
+          elementalBoost: { holy: 0.03 }
+        },
+        abilities: [],
+        equipment: { weapons: [], armor: [], accessories: [] },
+        noncombat: { perks: [], recipes: {}, workstations: [] },
+        synergy: { races: {}, subraces: {}, professions: {}, biomes: {}, weather: {}, elements: {}, statusEffects: {} },
+        talentTree: {},
+        starterKit: {},
+        lootKit: {},
+        lootTable: {}
+      },
+adept: {
     name: "Adept",
     role: "combat",
     tags: ["magic", "novice"],
