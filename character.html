@@ -269,11 +269,11 @@
         if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
    
         // After loading player:
-        if (player.level >= 10 && player.profession === "adventurer") {
+        if (p.level >= 10 && p.profession === "adventurer") {
           window.location.href = "profession-selection.html";
           return;
         }
-        if (player.level >= 100 && !player.secondaryProfession) {
+        if (p.level >= 100 && !p.secondaryProfession) {
           window.location.href = "choose-secondary-profession.html";
           return;
         }
