@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Create Your Character</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    .race-card, .subrace-card {
+      padding:14px;
+      margin:10px 0;
+      background:#1a1d24;
+      border-radius:8px;
+      border:1px solid #333;
+      cursor:pointer;
+    }
+
+    .race-card:hover, .subrace-card:hover {
+      background:#222832;
+    }
+
+    .selected {
+      border-color:#7fffd4;
+      box-shadow:0 0 10px #7fffd455;
+    }
+
+    .btn {
+      margin-top:20px;
+      padding:12px 16px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+      font-size:16px;
+    }
+
+    .btn:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Create Your Character</h1>
+  <div id="stepIndicator">Step 1: Choose Race</div>
+
+  <div id="raceContainer">Loading races...</div>
+  <div id="subraceContainer"></div>
+
+  <button id="confirmBtn" class="btn" style="display:none;">Confirm Character</button>
+
+  <script type="module">
+    import { api } from "./api.js";
+    import { requireSession } from "./session-guard.js";
+
+    const session = requireSession();
+    if (!session) {
+      document.body.innerHTML = "<h2>No active session.</h2>";
+      throw new Error("No session");
+    }
+
+    const username = session.username;
+
+    let selectedRace = null;
+    let selectedSubrace = null;
+
+    let raceDefs = {};
+    let subraceDefs = {};
+
+    init();
+
+    async function init() {
+      raceDefs = await loadJSON("./race-definitions.json");
+      subraceDefs = await loadJSON("./subrace-stat-profiles.json");
+
+      renderRaces();
+    }
+
+    async function loadJSON(path) {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error("Failed to load " + path);
+      return res.json();
+    }
+
+    function renderRaces() {
+      const container = document.getElementById("raceContainer");
+      container.innerHTML = "<h2>Choose Your Race</h2>";
+
+      for (const [raceKey, race] of Object.entries(raceDefs)) {
+        const div = document.createElement("div");
+        div.className = "race-card";
+        div.innerHTML = `
+          <strong>${format(raceKey)}</strong><br>
+          ${race.description || ""}
+        `;
+        div.onclick = () => selectRace(raceKey, div);
+        container.appendChild(div);
+      }
+    }
+
+    function selectRace(raceKey, element) {
+      selectedRace = raceKey;
+      selectedSubrace = null;
+
+      document.querySelectorAll(".race-card").forEach(el => el.classList.remove("selected"));
+      element.classList.add("selected");
+
+      renderSubraces(raceKey);
+    }
+
+    function renderSubraces(raceKey) {
+      const container = document.getElementById("subraceContainer");
+      container.innerHTML = "<h2>Choose Your Subrace</h2>";
+
+      const block = subraceDefs[raceKey] || {};
+
+      for (const [subKey, sub] of Object.entries(block)) {
+        const div = document.createElement("div");
+        div.className = "subrace-card";
+        div.innerHTML = `
+          <strong>${format(subKey)}</strong><br>
+          ${sub.description || ""}
+        `;
+        div.onclick = () => selectSubrace(subKey, div);
+        container.appendChild(div);
+      }
+    }
+
+    function selectSubrace(subKey, element) {
+      selectedSubrace = subKey;
+
+      document.querySelectorAll(".subrace-card").forEach(el => el.classList.remove("selected"));
+      element.classList.add("selected");
+
+      document.getElementById("confirmBtn").style.display = "block";
+      document.getElementById("confirmBtn").onclick = confirmCharacter;
+    }
+
+    async function confirmCharacter() {
+      if (!selectedRace || !selectedSubrace) return;
+
+      const newPlayer = {
+        username,
+        level: 1,
+        race: selectedRace,
+        subrace: selectedSubrace,
+        profession: "adventurer",
+        xp: 0,
+        xpRequired: 100,
+        gold: 0,
+        inventory: [],
+        equipment: {},
+        talentTree: [],
+        talentPoints: 0,
+        statusEffects: [],
+        regionProgress: {},
+        adaptiveProfile: {},
+        elementAffinity: {},
+      };
+
+      await api.savePlayer(username, newPlayer);
+
+      window.location.href = "character.html";
+    }
+
+    function format(str) {
+      return String(str)
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+  </script>
+
+</body>
+</html>
