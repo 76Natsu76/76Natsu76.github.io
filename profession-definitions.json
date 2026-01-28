@@ -104,6 +104,38 @@
     "lootTable": {}
   },
 
+  "adventurer": {
+    "name": "Adventurer",
+    "role": "unassigned",
+    "tags": ["starter", "untrained"],
+    "baseBonuses": {},
+    "abilities": [],
+    "equipment": { "weapons": [], "armor": [], "accessories": [] },
+    "starterKit": {
+      "equipment": {},
+      "inventory": [],
+      "abilities": [],
+      "flavor": "A novice explorer with no formal training."
+    },
+    "noncombat": {
+      "perks": [],
+      "recipes": {},
+      "workstations": []
+    },
+    "synergy": {
+      "races": {},
+      "subraces": {},
+      "professions": {},
+      "biomes": {},
+      "weather": {},
+      "elements": {},
+      "statusEffects": {}
+    },
+    "talentTree": {},
+    "lootKit": {},
+    "lootTable": {}
+  },
+
   "apocalypse": {
     "name": "Apocalypse",
     "role": "combat",
