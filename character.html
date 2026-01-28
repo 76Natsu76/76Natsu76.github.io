@@ -724,27 +724,6 @@
         }
       }
     
-      // ------------------------------
-      // CHOSEN TALENTS
-      // ------------------------------
-      html += `<div style="margin-top:20px;"><strong>Chosen Talents</strong></div>`;
-    
-      if (!chosen.length) {
-        html += `<div>No talents selected yet.</div>`;
-      } else {
-        for (const node of chosen) {
-          html += `
-            <div class="talent-node" style="border-left-color:#4cff7f;">
-              <strong>${node.name || node.id}</strong>
-              <div class="talent-rank">Rank: ${node.rank ?? 1}</div>
-            </div>
-          `;
-        }
-      }
-    
-      return html;
-    }
-  
     /* ============================================================
        NAVIGATION
     ============================================================ */
