@@ -6,7 +6,7 @@
         "baseBonuses": {
           "healingPower": 0.03,
           "manaMult": 1.02,
-          "elementalBoost": { holy: 0.03 }
+          "elementalBoost": { "holy": 0.03 }
         },
         "abilities": [],
         "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -23,7 +23,7 @@ adept: {
     "tags":["magic", "novice"],
     "baseBonuses": {
       "manaMult": 1.03,
-      "resourceRegen": { mana: 0.03 }
+      "resourceRegen": { "mana": 0.03 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -166,7 +166,7 @@ adept: {
     "baseBonuses": {
       "healingPower": 0.08,
       "defMult": 1.03,
-      "elementalBoost": { holy: 0.05 }
+      "elementalBoost": { "holy": 0.05 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -184,7 +184,7 @@ adept: {
     "tags":["dark", "poison", "chaos"],
     "baseBonuses": {
       "dotPower": 0.05,
-      "elementalBoost": { dark: 0.05, poison: 0.03 },
+      "elementalBoost": { "dark": 0.05, "poison": 0.03 },
       "chaosFactor": 0.03
     },
     "abilities": [],
@@ -204,7 +204,7 @@ adept: {
     "baseBonuses": {
       "healingPower": 0.08,
       "manaMult": 1.05,
-      "elementalBoost": { nature: 0.08 }
+      "elementalBoost": { "nature": 0.08 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -259,8 +259,8 @@ adept: {
     "tags":["magic", "arcane"],
     "baseBonuses": {
       "manaMult": 1.10,
-      "resourceRegen": { mana: 0.05 },
-      "elementalBoost": { arcane: 0.08 }
+      "resourceRegen": { "mana": 0.05 },
+      "elementalBoost": { "arcane": 0.08 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -298,7 +298,7 @@ adept: {
     "baseBonuses": {
       "dotPower": 0.08,
       "manaMult": 1.05,
-      "elementalBoost": { poison: 0.05, dark: 0.05 }
+      "elementalBoost": { "poison": 0.05, "dark": 0.05 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -317,7 +317,7 @@ adept: {
     "baseBonuses": {
       "defMult": 1.05,
       "blockChance": 0.05,
-      "elementalBoost": { holy: 0.05 }
+      "elementalBoost": { "holy": 0.05 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -336,7 +336,7 @@ adept: {
     "baseBonuses": {
       "atkMult": 1.03,
       "speedMult": 1.03,
-      "elementalBoost": { nature: 0.05 }
+      "elementalBoost": { "nature": 0.05 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -356,7 +356,7 @@ adept: {
       "atkMult": 1.04,
       "speedMult": 1.05,
       "critChance": 0.03,
-      "elementalBoost": { shadow: 0.05 }
+      "elementalBoost": { "shadow": 0.05 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -375,7 +375,7 @@ adept: {
     "baseBonuses": {
       "dotPower": 0.10,
       "manaMult": 1.03,
-      "elementalBoost": { decay: 0.07, poison: 0.05 }
+      "elementalBoost": { "decay": 0.07, "poison": 0.05 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -393,7 +393,7 @@ adept: {
     "tags":["elemental", "hybrid"],
     "baseBonuses": {
       "manaMult": 1.05,
-      "elementalBoost": { lightning: 0.05, nature: 0.05 }
+      "elementalBoost": { "lightning": 0.05, "nature": 0.05 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -461,12 +461,12 @@ adept: {
     "lootTable": {}
   },
 
-  void: {
+  "void": {
     "name": "Void",
     "role":"combat",
     "tags":["void", "dark", "chaos"],
     "baseBonuses": {
-      "elementalBoost": { void: 0.08 },
+      "elementalBoost": { "void": 0.08 },
       "manaMult": 1.05,
       "chaosFactor": 0.03
     },
@@ -487,7 +487,7 @@ adept: {
     "baseBonuses": {
       "manaMult": 1.08,
       "dotPower": 0.10,
-      "elementalBoost": { dark: 0.10 }
+      "elementalBoost": { "dark": 0.10 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -525,7 +525,7 @@ adept: {
     "baseBonuses": {
       "manaMult": 1.08,
       "dotPower": 0.05,
-      "elementalBoost": { dark: 0.08 }
+      "elementalBoost": { "dark": 0.08 }
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -604,7 +604,7 @@ adept: {
     "noncombat": {
       "perks": [
         "Unlocks metal weapon recipes",
-        "Unlocks heavy and medium "armor" recipes",
+        "Unlocks heavy and medium armor recipes",
         "Can repair and reinforce metal gear"
       ],
       "recipes": {},
@@ -648,8 +648,8 @@ adept: {
     "role":"non_combat",
     "tags":["crafting", "cooking", "support"],
     "baseBonuses": {
-      foodBuffPower: 0.10,
-      foodBuffDuration: 0.10
+      "foodBuffPower": 0.10,
+      "foodBuffDuration": 0.10
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -660,8 +660,8 @@ adept: {
         "Can preserve food for longer"
       ],
       "recipes": {
-        foods: ["hearty_stew", "spicy_broth", "energizing_feast"],
-        consumables: ["chef_special", "restorative_meal"]
+        "foods": ["hearty_stew", "spicy_broth", "energizing_feast"],
+        "consumables": ["chef_special", "restorative_meal"]
       },
       "workstations": []
     },
@@ -677,8 +677,8 @@ adept: {
     "role":"non_combat",
     "tags":["gathering", "aquatic"],
     "baseBonuses": {
-      gatheringYield: 0.15,
-      rareCatchChance: 0.10
+      "gatheringYield": 0.15,
+      "rareCatchChance": 0.10
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -703,8 +703,8 @@ adept: {
     "role":"non_combat",
     "tags":["gathering", "plants"],
     "baseBonuses": {
-      gatheringYield: 0.15,
-      rareHerbChance: 0.10
+      "gatheringYield": 0.15,
+      "rareHerbChance": 0.10
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -731,7 +731,7 @@ adept: {
     "baseBonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
-      materialEfficiency: 0.10
+      "materialEfficiency": 0.10
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -756,8 +756,8 @@ adept: {
     "role":"non_combat",
     "tags":["gathering", "ore"],
     "baseBonuses": {
-      gatheringYield: 0.15,
-      rareOreChance: 0.10
+      "gatheringYield": 0.15,
+      "rareOreChance": 0.10
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -782,8 +782,8 @@ adept: {
     "role":"non_combat",
     "tags":["rituals", "magic"],
     "baseBonuses": {
-      ritualPower: 0.10,
-      ritualSpeed: 0.05
+      "ritualPower": 0.10,
+      "ritualSpeed": 0.05
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -808,8 +808,8 @@ adept: {
     "role":"non_combat",
     "tags":["exploration", "caves"],
     "baseBonuses": {
-      gatheringYield: 0.10,
-      trapDetection: 0.10
+      "gatheringYield": 0.10,
+      "trapDetection": 0.10
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -836,7 +836,7 @@ adept: {
     "baseBonuses": {
       "craftingQuality": 0.08,
       "craftingSpeed": 0.08,
-      gadgetEfficiency: 0.10
+      "gadgetEfficiency": 0.10
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
@@ -863,13 +863,13 @@ adept: {
     "baseBonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
-      enchantmentAffinity: 0.05
+      "enchantmentAffinity": 0.05
     },
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
-        "Unlocks cloth "armor" and robe recipes",
+        "Unlocks cloth armor and robe recipes",
         "Can weave magical threads",
         "Improves enchantment success"
       ],
