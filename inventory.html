@@ -176,196 +176,201 @@
   <button class="btn" onclick="goToMap()">World Map</button>
 
   <script type="module">
-    import { requireSession } from "./session-guard.js";
-    const session = requireSession();
-    if (!session) return;
-  
-    const username = session.username;
-    document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
-  
-    let player = JSON.parse(sessionStorage.getItem("player") || "{}");
-  
-    loadInventory();
-  
-    function refreshInventory() {
+    (async () => {
+      import { requireSession } from "./session-guard.js";
+      const session = requireSession();
+      if (!session) {
+        document.getElementById("inventoryContainer").textContent =
+          "No active session.";
+        return;
+      }
+    
+      const username = session.username;
+      document.getElementById("usernameDisplay").textContent =
+        username ? "Logged in as: " + username : "No user logged in";
+    
+      let player = JSON.parse(sessionStorage.getItem("player") || "{}");
+    
       loadInventory();
-      document.getElementById("syncIndicator").textContent = "Local Save ✔";
-    }
+    
+      function refreshInventory() {
+        loadInventory();
+        document.getElementById("syncIndicator").textContent = "Local Save ✔";
+      }
+    
+      function loadInventory() {
+        player = JSON.parse(sessionStorage.getItem("player") || "{}");
+        renderInventory(player);
+      }
+    
+      // ... keep the rest of your functions exactly as-is ..
   
-    function loadInventory() {
-      player = JSON.parse(sessionStorage.getItem("player") || "{}");
-      renderInventory(player);
-    }
-  
-    function renderInventory(p) {
-      const container = document.getElementById("inventoryContainer");
-      const out = [];
-  
-      const consumables = [];
-      const materials = [];
-      const quest = [];
-      const misc = [];
-  
-      for (const item of p.inventory || []) {
-        switch (item.type) {
-          case "consumable":
-            consumables.push(item);
-            break;
-          case "material":
-            materials.push(item);
-            break;
-          case "quest":
-            quest.push(item);
-            break;
-          default:
-            misc.push(item);
-            break;
+      function renderInventory(p) {
+        const container = document.getElementById("inventoryContainer");
+        const out = [];
+    
+        const consumables = [];
+        const materials = [];
+        const quest = [];
+        const misc = [];
+    
+        for (const item of p.inventory || []) {
+          switch (item.type) {
+            case "consumable":
+              consumables.push(item);
+              break;
+            case "material":
+              materials.push(item);
+              break;
+            case "quest":
+              quest.push(item);
+              break;
+            default:
+              misc.push(item);
+              break;
+          }
         }
+    
+        out.push(renderEquipment(p));
+        out.push(renderCategory("Consumables", consumables, true));
+        out.push(renderCategory("Materials", materials, false));
+        out.push(renderCategory("Quest Items", quest, false));
+        out.push(renderCategory("Misc", misc, false));
+    
+        container.innerHTML = out.join("");
       }
-  
-      out.push(renderEquipment(p));
-      out.push(renderCategory("Consumables", consumables, true));
-      out.push(renderCategory("Materials", materials, false));
-      out.push(renderCategory("Quest Items", quest, false));
-      out.push(renderCategory("Misc", misc, false));
-  
-      container.innerHTML = out.join("");
-    }
-  
-    function renderEquipment(p) {
-      return `
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            Equipment <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              Object.entries(p.equipment || {})
-                .map(
-                  ([slot, item]) => `
-                  <div class="equipment-card rarity-${(
-                    item?.rarity || "common"
-                  ).toLowerCase()}">
-                    <img class="item-icon" src="${
-                      item?.icon || "/assets/items/default.png"
-                    }">
-  
-                    <div class="item-info">
-                      <div class="item-name">${item ? item.name : "—"}</div>
-                      <div class="item-qty">${format(slot)}</div>
-                    </div>
-  
-                    ${
-                      item
-                        ? `<div class="item-actions">
-                             <button onclick="unequipItem('${slot}')">Unequip</button>
-                           </div>`
-                        : ""
-                    }
-                  </div>
-                `
-                )
-                .join("")
-            }
-          </div>
-        </div>
-      `;
-    }
-  
-    function renderCategory(title, items, allowUse) {
-      return `
-        <div class="section collapsible">
-          <h2 onclick="toggleSection(this)">
-            ${title} <span class="collapse-arrow">▼</span>
-          </h2>
-          <div class="section-content">
-            ${
-              items.length === 0
-                ? "<div>No items.</div>"
-                : items
-                    .map(
-                      item => `
-                      <div class="item-card rarity-${(
-                        item.rarity || "common"
-                      ).toLowerCase()}">
-                        <img class="item-icon" src="${
-                          item.icon || "/assets/items/default.png"
-                        }">
-  
-                        <div class="item-info">
-                          <div class="item-name">${item.name}</div>
-                          <div class="item-qty">x${item.quantity}</div>
-                        </div>
-  
-                        <div class="item-actions">
-                          ${
-                            item.slot
-                              ? `<button onclick="equipItem('${item.id}')">Equip</button>`
-                              : ""
-                          }
-                          ${
-                            allowUse
-                              ? `<button onclick="useItem('${item.id}')">Use</button>`
-                              : ""
-                          }
-                        </div>
+    
+      function renderEquipment(p) {
+        return `
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              Equipment <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                Object.entries(p.equipment || {})
+                  .map(
+                    ([slot, item]) => `
+                    <div class="equipment-card rarity-${(
+                      item?.rarity || "common"
+                    ).toLowerCase()}">
+                      <img class="item-icon" src="${
+                        item?.icon || "/assets/items/default.png"
+                      }">
+    
+                      <div class="item-info">
+                        <div class="item-name">${item ? item.name : "—"}</div>
+                        <div class="item-qty">${format(slot)}</div>
                       </div>
-                    `
-                    )
-                    .join("")
-            }
+    
+                      ${
+                        item
+                          ? `<div class="item-actions">
+                               <button onclick="unequipItem('${slot}')">Unequip</button>
+                             </div>`
+                          : ""
+                      }
+                    </div>
+                  `
+                  )
+                  .join("")
+              }
+            </div>
           </div>
-        </div>
-      `;
-    }
-  
-    function useItem(itemId) {
-      const item = player.inventory.find(i => i.id === itemId);
-      if (!item) return;
-  
-      item.quantity -= 1;
-      if (item.quantity <= 0) {
-        player.inventory = player.inventory.filter(i => i.id !== itemId);
+        `;
       }
-  
-      sessionStorage.setItem("player", JSON.stringify(player));
-      refreshInventory();
-    }
-  
-    function equipItem(itemId) {
-      const item = player.inventory.find(i => i.id === itemId);
-      if (!item || !item.slot) return;
-  
-      player.equipment[item.slot] = item;
-  
-      sessionStorage.setItem("player", JSON.stringify(player));
-      refreshInventory();
-    }
-  
-    function unequipItem(slot) {
-      delete player.equipment[slot];
-  
-      sessionStorage.setItem("player", JSON.stringify(player));
-      refreshInventory();
-    }
-  
-    function toggleSection(header) {
-      header.parentElement.classList.toggle("collapsed");
-    }
-  
-    function format(str) {
-      return String(str)
-        .toLowerCase()
-        .replace(/_/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase());
-    }
-  
-    window.goToCharacter = () => (window.location.href = "character.html");
-    window.goToMap = () => (window.location.href = "world-map.html");
+    
+      function renderCategory(title, items, allowUse) {
+        return `
+          <div class="section collapsible">
+            <h2 onclick="toggleSection(this)">
+              ${title} <span class="collapse-arrow">▼</span>
+            </h2>
+            <div class="section-content">
+              ${
+                items.length === 0
+                  ? "<div>No items.</div>"
+                  : items
+                      .map(
+                        item => `
+                        <div class="item-card rarity-${(
+                          item.rarity || "common"
+                        ).toLowerCase()}">
+                          <img class="item-icon" src="${
+                            item.icon || "/assets/items/default.png"
+                          }">
+    
+                          <div class="item-info">
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-qty">x${item.quantity}</div>
+                          </div>
+    
+                          <div class="item-actions">
+                            ${
+                              item.slot
+                                ? `<button onclick="equipItem('${item.id}')">Equip</button>`
+                                : ""
+                            }
+                            ${
+                              allowUse
+                                ? `<button onclick="useItem('${item.id}')">Use</button>`
+                                : ""
+                            }
+                          </div>
+                        </div>
+                      `
+                      )
+                      .join("")
+              }
+            </div>
+          </div>
+        `;
+      }
+    
+      function useItem(itemId) {
+        const item = player.inventory.find(i => i.id === itemId);
+        if (!item) return;
+    
+        item.quantity -= 1;
+        if (item.quantity <= 0) {
+          player.inventory = player.inventory.filter(i => i.id !== itemId);
+        }
+    
+        sessionStorage.setItem("player", JSON.stringify(player));
+        refreshInventory();
+      }
+    
+      function equipItem(itemId) {
+        const item = player.inventory.find(i => i.id === itemId);
+        if (!item || !item.slot) return;
+    
+        player.equipment[item.slot] = item;
+    
+        sessionStorage.setItem("player", JSON.stringify(player));
+        refreshInventory();
+      }
+    
+      function unequipItem(slot) {
+        delete player.equipment[slot];
+    
+        sessionStorage.setItem("player", JSON.stringify(player));
+        refreshInventory();
+      }
+    
+      function toggleSection(header) {
+        header.parentElement.classList.toggle("collapsed");
+      }
+    
+      function format(str) {
+        return String(str)
+          .toLowerCase()
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, c => c.toUpperCase());
+      }
+    
+      window.goToCharacter = () => (window.location.href = "character.html");
+      window.goToMap = () => (window.location.href = "world-map.html");
+    })();
   </script>
-
-
-
 </body>
 </html>
