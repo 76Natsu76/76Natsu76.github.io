@@ -1,141 +1,47 @@
 // migration.js
-// 1) Apps Script row → legacy KV-ish player (migrateAndSave)
-// 2) Legacy KV player → full modern schema (resolveLegacyPlayer)
+// Converts legacy KV → full modern player schema
 
 import { PlayerStorage } from "./player-storage.js";
 
 // -----------------------------
-// Generic helpers
+// JSON loader (works on GitHub Pages + Cloudflare)
 // -----------------------------
-function safeParse(value, fallback) {
-  try {
-    if (typeof value === "string") return JSON.parse(value);
-    if (typeof value === "object" && value !== null) return value;
-    return fallback;
-  } catch {
-    return fallback;
-  }
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error("Failed to load " + path);
+  return res.json();
 }
 
+// Preload all definitions
+const abilityDefs = await loadJSON("./ability-definitions.json");
+
+// -----------------------------
+// Helpers
+// -----------------------------
 function computeXpRequired(level) {
-  // Simple quadratic curve; adjust if you want your original formula
   const lvl = level || 1;
-  return Math.floor(100 * Math.pow(lvl, 2));
+  return Math.floor(100 * lvl * lvl);
 }
 
 function detectPrimaryElement(affinity) {
-  if (!affinity || typeof affinity !== "object") return "none";
+  if (!affinity) return "none";
   const entries = Object.entries(affinity);
   if (!entries.length) return "none";
   return entries.sort((a, b) => b[1] - a[1])[0][0];
 }
 
-function formatAbilityName(key) {
-  if (!key) return "Unknown";
-  return key
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-// -----------------------------
-// Ability definitions loader (JSON via fetch, cached)
-// -----------------------------
-let abilityDefsCache = null;
-
-async function getAbilityDefs() {
-  if (abilityDefsCache) return abilityDefsCache;
-  const res = await fetch("./ability-definitions.json");
-  if (!res.ok) throw new Error("Failed to load ability-definitions.json");
-  abilityDefsCache = await res.json();
-  return abilityDefsCache;
-}
-
-// ============================================================
-// 1) Apps Script row → legacy KV-ish player
-// ============================================================
-export function migrateAndSave(old) {
-  if (!old || !old.username) {
-    throw new Error("Invalid old player object");
-  }
-
-  const computed = safeParse(old.computedStatsJSON, {});
-  const equipment = safeParse(old.equipment, {});
-  const inventory = safeParse(old.inventoryEquipment, []);
-  const cooldowns = safeParse(old.cooldownsJSON, {});
-  const abilityLevels = safeParse(old.abilityLevelsJSON, {});
-  const status = safeParse(old.playerStatusJSON, []);
-  const activeEffects = safeParse(old.ActiveEffectsJSON, {});
-  const talentTree = safeParse(old.talentTreeJSON, []);
-  const regionMeta = safeParse(old.regionMetaJSON, {});
-
-  const migrated = {
-    username: old.username,
-    level: old.level || 1,
-    race: old.race || "human",
-    subrace: old.subrace || null,
-    profession: old.profession || "adventurer",
-
-    exp: old.exp || 0,
-    gold: old.gold || 0,
-
-    hardcore: !!old.hardcore,
-    transcension: !!old.transcension,
-
-    hp: old.hpCurrent || computed.hpMax || 10,
-    hpMax: computed.hpMax || 10,
-
-    mana: old.manaCurrent || computed.manaMax || 0,
-    manaMax: computed.manaMax || 0,
-
-    atk: computed.atk || 1,
-    def: computed.def || 1,
-    speed: computed.speed || old.speedBase || 1,
-
-    critChance: computed.critChance || 0,
-    critDamage: computed.critDamage || 1.5,
-
-    elementAffinity: computed.elementAffinity || {},
-
-    equipment: equipment || {},
-    inventory: inventory || [],
-
-    abilities: {
-      slot1: old.ability1 || null
-    },
-
-    cooldowns,
-    abilityLevels,
-    abilityPoints: old.abilityPoints || 0,
-
-    status,
-    activeEffects,
-
-    talentPoints: old.talentPoints || 0,
-    talentTree,
-
-    regionMeta
-  };
-
-  PlayerStorage.save(migrated.username, migrated);
-  return migrated;
-}
-
-// ============================================================
-// 2) Legacy KV player → full modern canonical schema
-// ============================================================
-
 function computeEquipmentBonuses(equipment) {
-  const bonuses = { hp: 0, atk: 0, def: 0, speed: 0, crit: 0, critDmg: 0 };
-  if (!equipment || typeof equipment !== "object") return bonuses;
+  const out = { hp: 0, atk: 0, def: 0, speed: 0, crit: 0, critDmg: 0 };
+  if (!equipment) return out;
 
   for (const slot of Object.keys(equipment)) {
     const item = equipment[slot];
     if (!item || !item.bonuses) continue;
     for (const [k, v] of Object.entries(item.bonuses)) {
-      bonuses[k] = (bonuses[k] || 0) + v;
+      out[k] = (out[k] || 0) + v;
     }
   }
-  return bonuses;
+  return out;
 }
 
 function computeDerivedStats(p) {
@@ -150,11 +56,9 @@ function computeDerivedStats(p) {
   };
 }
 
-async function resolveAbilities(old) {
+function resolveAbilities(old) {
   const out = [];
-  if (!old.abilities || typeof old.abilities !== "object") return out;
-
-  const abilityDefs = await getAbilityDefs();
+  if (!old.abilities) return out;
 
   for (const slot of Object.keys(old.abilities)) {
     const key = old.abilities[slot];
@@ -165,7 +69,7 @@ async function resolveAbilities(old) {
     if (!def) {
       out.push({
         key,
-        name: formatAbilityName(key),
+        name: key,
         description: "(Unknown legacy ability)",
         cooldown: old.cooldowns?.[key] ?? 0,
         icon: "/assets/abilities/default.png"
@@ -175,9 +79,9 @@ async function resolveAbilities(old) {
 
     out.push({
       key,
-      name: def.name || formatAbilityName(key),
-      description: def.description || "",
-      cooldown: def.cooldown ?? (old.cooldowns?.[key] ?? 0),
+      name: def.name,
+      description: def.description,
+      cooldown: def.cooldown ?? old.cooldowns?.[key] ?? 0,
       icon: def.icon || `/assets/abilities/${key}.png`,
       type: def.type,
       scaling: def.scaling
@@ -187,6 +91,9 @@ async function resolveAbilities(old) {
   return out;
 }
 
+// ============================================================
+// MAIN RESOLVER
+// ============================================================
 export async function resolveLegacyPlayer(old) {
   if (!old) return null;
 
@@ -200,17 +107,19 @@ export async function resolveLegacyPlayer(old) {
   p.profession = old.profession ?? "adventurer";
 
   // XP
-  p.xp = old.exp ?? old.xp ?? 0;
+  p.xp = old.exp ?? 0;
   p.xpRequired = computeXpRequired(p.level);
 
-  // Element + family
+  // Element
   p.elementAffinity = old.elementAffinity ?? {};
   p.element = detectPrimaryElement(p.elementAffinity);
+
+  // Family
   p.family = old.family ?? old.regionMeta?.family ?? null;
 
-  // Equipment (normalize stats → bonuses)
+  // Equipment
   p.equipment = {};
-  if (old.equipment && typeof old.equipment === "object") {
+  if (old.equipment) {
     for (const slot of Object.keys(old.equipment)) {
       const item = old.equipment[slot];
       if (!item) continue;
@@ -218,7 +127,7 @@ export async function resolveLegacyPlayer(old) {
         name: item.name,
         rarity: item.rarity ?? "common",
         level: item.level ?? 1,
-        bonuses: item.bonuses || item.stats || {}
+        bonuses: item.stats || item.bonuses || {}
       };
     }
   }
@@ -227,21 +136,14 @@ export async function resolveLegacyPlayer(old) {
   p.inventory = Array.isArray(old.inventory) ? old.inventory : [];
 
   // Abilities
-  p.abilities = await resolveAbilities(old);
+  p.abilities = resolveAbilities(old);
 
   // Status Effects
   p.statusEffects = [];
   if (Array.isArray(old.status)) {
-    p.statusEffects.push(
-      ...old.status.map((s) => ({
-        name: s.name ?? "Unknown",
-        duration: s.duration ?? 0,
-        stacks: s.stacks ?? 1,
-        description: s.description ?? ""
-      }))
-    );
+    p.statusEffects.push(...old.status);
   }
-  if (old.activeEffects && typeof old.activeEffects === "object") {
+  if (old.activeEffects) {
     for (const key of Object.keys(old.activeEffects)) {
       const eff = old.activeEffects[key];
       p.statusEffects.push({
@@ -252,10 +154,6 @@ export async function resolveLegacyPlayer(old) {
       });
     }
   }
-
-  // Talent Tree
-  p.talentTree = Array.isArray(old.talentTree) ? old.talentTree : [];
-  p.talentPoints = old.talentPoints ?? 0;
 
   // Region Progress
   p.regionProgress = {};
@@ -268,7 +166,7 @@ export async function resolveLegacyPlayer(old) {
   // Equipment bonuses
   const eq = computeEquipmentBonuses(p.equipment);
 
-  // Final stats (use legacy numeric stats as base truth)
+  // Final stats
   p.hpMax = (old.hpMax ?? old.hp ?? 10) + (eq.hp ?? 0);
   p.hpCurrent = Math.min(old.hp ?? p.hpMax, p.hpMax);
 
@@ -290,7 +188,7 @@ export async function resolveLegacyPlayer(old) {
   };
   p.derived = computeDerivedStats(p);
 
-  // Adaptive profile (fresh for legacy)
+  // Adaptive profile
   p.adaptiveProfile = {
     playerHeals: 0,
     playerBuffs: 0,
