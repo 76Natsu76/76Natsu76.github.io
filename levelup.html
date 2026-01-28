@@ -109,25 +109,35 @@
   <button class="btn" onclick="goToMap()">World Map</button>
 
    <script type="module">
-    import { requireSession } from "./session-guard.js";
-    import { api } from "./api.js";
+     import { api } from "./api.js"; 
+     import { requireSession } from "./session-guard.js"; 
   
     /* ============================================================
        SESSION
     ============================================================ */
   
-    await requireSession();
-  
-    const { username } = window.syncState;
-    document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
-  
-    let player = null;
-  
+     await requireSession(); 
+     const { username } = window.syncState; 
+     let player = await api.getPlayer(username); 
+     
     /* ============================================================
        LOAD PLAYER
     ============================================================ */
   
+     if (!player) { 
+       document.body.innerHTML = "<h2>No player data found.</h2>"; 
+       throw new Error("No player"); 
+     } 
+       // --- PROFESSION GATING --- 
+     if (player.level >= 10 && player.profession === "adventurer") { 
+       window.location.href = "profession-selection.html"; 
+       return; 
+     } 
+     if (player.level >= 100 && !player.secondaryProfession) { 
+       window.location.href = "choose-secondary-profession.html"; 
+       return; 
+     }
+     
     loadPlayer();
   
     async function loadPlayer() {
