@@ -566,9 +566,7 @@
         </div>
       `);
   
-      /* ------------------------------
-         TALENT TREE
-      ------------------------------ */
+      /* TALENT TREE */
       out.push(`
         <div class="section collapsible">
           <h2 onclick="toggleSection(this)">
@@ -580,7 +578,6 @@
         </div>
       `);
 
-  
       /* REGION PROGRESS */
       out.push(`
         <div class="section collapsible">
@@ -688,7 +685,7 @@
         html += `<div style="margin-top:10px;"><em>Tier 1</em></div>`;
     
         for (const [branchKey, nodes] of Object.entries(def.tier1.branches)) {
-          html += `<div style="margin-top:6px;"><strong>${format(branchKey)}</strong></div>`;
+          html += `<div style="margin-top:6px;"><strong>${branchKey}</strong></div>`;
     
           for (const node of nodes) {
             const isChosen = chosen.some(c => c.id === node.id);
@@ -726,6 +723,28 @@
           `;
         }
       }
+    
+      // ------------------------------
+      // CHOSEN TALENTS
+      // ------------------------------
+      html += `<div style="margin-top:20px;"><strong>Chosen Talents</strong></div>`;
+    
+      if (!chosen.length) {
+        html += `<div>No talents selected yet.</div>`;
+      } else {
+        for (const node of chosen) {
+          html += `
+            <div class="talent-node" style="border-left-color:#4cff7f;">
+              <strong>${node.name || node.id}</strong>
+              <div class="talent-rank">Rank: ${node.rank ?? 1}</div>
+            </div>
+          `;
+        }
+      }
+    
+      return html;
+    }
+
     
       // ------------------------------
       // CHOSEN TALENTS
