@@ -267,13 +267,12 @@
       if (typeof p.derived !== "object" || p.derived === null) p.derived = {};
       if (typeof p.adaptiveProfile !== "object" || p.adaptiveProfile === null) p.adaptiveProfile = {};
       if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
+      if (p.level >= 10 && p.profession === "adventurer") {
+        window.location.href = "profession-selection.html";
+        return;
+      }
   
       return p;
-    }
-  
-    if (p.level >= 10 && p.profession === "adventurer") {
-      window.location.href = "profession-selection.html";
-      return;
     }
     
     /* ============================================================
