@@ -567,35 +567,20 @@
         </div>
       `);
   
-      /* TALENT TREE */
+      /* ------------------------------
+         TALENT TREE
+      ------------------------------ */
       out.push(`
         <div class="section collapsible">
           <h2 onclick="toggleSection(this)">
             Talent Tree <span class="collapse-arrow">▼</span>
           </h2>
           <div class="section-content">
-            ${
-              p.talentTree && p.talentTree.length
-                ? p.talentTree
-                    .map(
-                      (node) => `
-                        <div class="talent-node">
-                          <strong>${node.name}</strong>
-                          <div class="talent-rank">Rank: ${node.rank}/${node.maxRank}</div>
-                          <div class="tooltip">
-                            <strong>${node.name}</strong><br>
-                            ${node.description}<br>
-                            Rank: ${node.rank}/${node.maxRank}
-                          </div>
-                        </div>
-                      `
-                    )
-                    .join("")
-                : "<div>No talent tree data</div>"
-            }
+            ${renderTalentTree(p)}
           </div>
         </div>
       `);
+
   
       /* REGION PROGRESS */
       out.push(`
@@ -683,6 +668,87 @@
         .map(([k, v]) => `${format(k)}: +${v}`)
         .join("<br>");
     }
+
+    function renderTalentTree(p) {
+      const def = p.talentTreeDefinition;
+      const chosen = Array.isArray(p.talentTree) ? p.talentTree : [];
+    
+      if (!def) {
+        return `<div>No talent tree data</div>`;
+      }
+    
+      let html = "";
+    
+      // ------------------------------
+      // AVAILABLE TALENTS (FULL TREE)
+      // ------------------------------
+      html += `<div><strong>Available Talents</strong></div>`;
+    
+      // Tier 1
+      if (def.tier1 && def.tier1.branches) {
+        html += `<div style="margin-top:10px;"><em>Tier 1</em></div>`;
+    
+        for (const [branchKey, nodes] of Object.entries(def.tier1.branches)) {
+          html += `<div style="margin-top:6px;"><strong>${format(branchKey)}</strong></div>`;
+    
+          for (const node of nodes) {
+            const isChosen = chosen.some(c => c.id === node.id);
+    
+            html += `
+              <div class="talent-node" style="${isChosen ? "border-left-color:#4cff7f;" : ""}">
+                <strong>${node.name}</strong>
+                <div class="talent-rank">Prereq: ${node.requires ? node.requires : "None"}</div>
+                <div class="tooltip">
+                  <strong>${node.name}</strong><br>
+                  ${node.description}<br>
+                  ${node.bonuses ? JSON.stringify(node.bonuses) : ""}
+                </div>
+              </div>
+            `;
+          }
+        }
+    
+        // Capstone
+        if (def.tier1.capstone) {
+          const cap = def.tier1.capstone;
+          const isChosen = chosen.some(c => c.id === cap.id);
+    
+          html += `
+            <div style="margin-top:10px;"><strong>Capstone</strong></div>
+            <div class="talent-node" style="${isChosen ? "border-left-color:#4cff7f;" : ""}">
+              <strong>${cap.name}</strong>
+              <div class="talent-rank">Capstone Talent</div>
+              <div class="tooltip">
+                <strong>${cap.name}</strong><br>
+                ${cap.description}<br>
+                ${cap.bonuses ? JSON.stringify(cap.bonuses) : ""}
+              </div>
+            </div>
+          `;
+        }
+      }
+    
+      // ------------------------------
+      // CHOSEN TALENTS
+      // ------------------------------
+      html += `<div style="margin-top:20px;"><strong>Chosen Talents</strong></div>`;
+    
+      if (!chosen.length) {
+        html += `<div>No talents selected yet.</div>`;
+      } else {
+        for (const node of chosen) {
+          html += `
+            <div class="talent-node" style="border-left-color:#4cff7f;">
+              <strong>${node.name || node.id}</strong>
+              <div class="talent-rank">Rank: ${node.rank ?? 1}</div>
+            </div>
+          `;
+        }
+      }
+    
+      return html;
+    }
+
   
     /* ============================================================
        NAVIGATION
