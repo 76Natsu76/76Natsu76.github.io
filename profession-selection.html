@@ -114,23 +114,23 @@
     let selectedProfessionKey = null;
     
     init();
-
+    
     async function init() {
       professionDefs = await loadJSON("./profession-definitions.json");
       player = await api.getPlayer(username);
-
+    
       if (!player) {
         document.body.innerHTML = "<h2>No player data found.</h2>";
         return;
       }
-
-      // If they already have a non-adventurer profession, bounce back
+    
+      // Already has a profession? Bounce.
       if (player.profession && player.profession !== "adventurer") {
         window.location.href = "character.html";
         return;
       }
-
-      // If player is below level 10, they cannot choose a profession yet
+    
+      // Too low level?
       if (player.level < 10) {
         document.body.innerHTML = `
           <h2>You are not ready to choose a profession.</h2>
@@ -138,29 +138,23 @@
         `;
         return;
       }
-
-      // If player is level 100 and has NOT chosen a secondary profession
-      if (player.level >= 100 && !player.secondaryProfession) {
-        // Show secondary profession selection UI
-        // (We will build this page later)
-      }
+    
       renderProfessions();
     }
-
+    
     async function loadJSON(path) {
       const res = await fetch(path);
       if (!res.ok) throw new Error("Failed to load " + path);
       return res.json();
     }
-
+    
     function renderProfessions() {
       const container = document.getElementById("profContainer");
       container.innerHTML = "<h2>Available Professions</h2>";
-
+    
       for (const [key, def] of Object.entries(professionDefs)) {
-        // Optionally skip "adventurer" if it's in the file
         if (key === "adventurer") continue;
-
+    
         const div = document.createElement("div");
         div.className = "prof-card";
         div.innerHTML = `
@@ -175,19 +169,19 @@
         container.appendChild(div);
       }
     }
-
+    
     function selectProfession(key, element) {
       selectedProfessionKey = key;
-
+    
       document.querySelectorAll(".prof-card").forEach(el => el.classList.remove("selected"));
       element.classList.add("selected");
-
+    
       renderPreview(key);
       const btn = document.getElementById("confirmBtn");
       btn.style.display = "block";
       btn.onclick = confirmProfession;
     }
-
+    
     function renderPreview(key) {
       const def = professionDefs[key];
       const container = document.getElementById("preview");
@@ -195,20 +189,20 @@
         container.innerHTML = "";
         return;
       }
-
+    
       const kit = def.starterKit || {};
       const eq = kit.equipment || {};
       const inv = kit.inventory || [];
-
+    
       container.innerHTML = `
         <div class="section-title">Profession Overview</div>
         <div>${def.longDescription || def.description || ""}</div>
-
+    
         <div class="section-title">Base Bonuses</div>
         <div class="kit-list">
           ${formatBonuses(def.baseBonuses || {})}
         </div>
-
+    
         <div class="section-title">Starter Kit</div>
         <div class="kit-list">
           ${
@@ -230,7 +224,7 @@
         </div>
       `;
     }
-
+    
     async function confirmProfession() {
       if (!selectedProfessionKey || !player) return;
     
@@ -239,22 +233,19 @@
     
       player.profession = selectedProfessionKey;
     
-      // Apply starter kit once
       if (!player.receivedStarterKit) {
         applyStarterKit(player, def.starterKit);
         player.receivedStarterKit = true;
       }
     
-      await api.savePlayer(player.username, player);
+      await api.savePlayer(username, player);
       window.location.href = "character.html";
     }
-
+    
     function applyStarterKit(player, kit) {
       if (!kit) return;
     
-      // --- EQUIPMENT ---
       if (!player.equipment) player.equipment = {};
-    
       if (kit.equipment) {
         for (const [slot, item] of Object.entries(kit.equipment)) {
           player.equipment[slot] = {
@@ -267,9 +258,7 @@
         }
       }
     
-      // --- INVENTORY ---
       if (!Array.isArray(player.inventory)) player.inventory = [];
-    
       if (Array.isArray(kit.inventory)) {
         for (const item of kit.inventory) {
           player.inventory.push({
@@ -282,9 +271,7 @@
         }
       }
     
-      // --- ABILITIES ---
       if (!Array.isArray(player.abilities)) player.abilities = [];
-    
       if (Array.isArray(kit.abilities)) {
         for (const ability of kit.abilities) {
           if (!player.abilities.some(a => a.key === ability)) {
@@ -293,21 +280,19 @@
         }
       }
     }
-
+    
     function formatBonuses(bonuses) {
       const entries = Object.entries(bonuses);
       if (!entries.length) return "None.";
-      return entries
-        .map(([k, v]) => `${format(k)}: ${v}`)
-        .join("<br>");
+      return entries.map(([k, v]) => `${format(k)}: ${v}`).join("<br>");
     }
-
+    
     function format(str) {
       return String(str)
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-  </script>
+    </script>
 
 </body>
 </html>
