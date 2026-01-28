@@ -57,52 +57,38 @@
   <button onclick="window.runMigration()">Run Migration + Push to KV</button>
 
   <div id="log" class="log">Waiting…</div>
-
+  
   <script type="module">
     import { resolveLegacyPlayer } from "./migration.js";
     import { api } from "./api.js";
-
+  
     const logBox = document.getElementById("log");
-
-    function log(msg) {
-      logBox.textContent += "\n" + msg;
-    }
-
-    // Attach to window so the button can see it
+    const log = msg => logBox.textContent += "\n" + msg;
+  
     window.runMigration = async function () {
       logBox.textContent = "Starting migration...\n";
-
+  
       if (!window.old) {
         log("❌ ERROR: window.old is not defined.");
-        log("Paste your old character first:");
-        log("window.old = { ... }");
         return;
       }
-
+  
       try {
-        log("Migrating player...");
-
+        log("Migrating...");
         const migrated = await resolveLegacyPlayer(window.old);
-
-        if (!migrated || !migrated.username) {
-          log("❌ Migration returned invalid player object.");
-          return;
-        }
-
-        log("✔ Migration complete.");
-        log("Username: " + migrated.username);
-
+  
+        log("✔ Migration complete for: " + migrated.username);
+  
         log("Saving to KV...");
         const res = await api.savePlayer(migrated.username, migrated);
-
+  
         log("✔ KV Response:");
         log(JSON.stringify(res, null, 2));
-
-        log("\n🎉 DONE! Check Cloudflare KV for:");
-        log("player:" + migrated.username);
-
+  
+        log("\n🎉 DONE — check KV for player:" + migrated.username);
+  
       } catch (err) {
-        log("❌ ERROR during migration:");
+        log("❌ ERROR:");
         log(err.toString());
       }
     };
@@ -110,3 +96,4 @@
 
 </body>
 </html>
+
