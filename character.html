@@ -230,7 +230,7 @@
       const { requireSession } = await import("./session-guard.js");
       const { PlayerStorage } = await import("./player-storage.js");
       const { savePlayerToKV, loadFromKVAndLocal } = await import("./api.js");
-
+    
       /* ============================================================
          SESSION + LOAD ON LOGIN
       ============================================================ */
@@ -239,13 +239,13 @@
     
       const { local, remote, conflict, username } = window.syncState;
       window.username = username;
-
+    
       const conflictModal = document.getElementById("conflictModal");
       const useCloudBtn = document.getElementById("useCloudBtn");
       const useLocalBtn = document.getElementById("useLocalBtn");
     
       /* ============================================================
-         NORMALIZATION (prevents .map/.length crashes)
+         NORMALIZATION (NO REDIRECTS HERE)
       ============================================================ */
     
       function normalizePlayer(p) {
@@ -267,24 +267,40 @@
         if (typeof p.derived !== "object" || p.derived === null) p.derived = {};
         if (typeof p.adaptiveProfile !== "object" || p.adaptiveProfile === null) p.adaptiveProfile = {};
         if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
-   
-        // After loading player:
+    
+        return p;
+      }
+    
+      /* ============================================================
+         PROFESSION GATING (CORRECT LOCATION)
+      ============================================================ */
+    
+      function enforceProfessionGating(p) {
+        if (!p) return;
+    
         if (p.level >= 10 && p.profession === "adventurer") {
           window.location.href = "profession-selection.html";
-          return;
+          return true;
         }
+    
         if (p.level >= 100 && !p.secondaryProfession) {
           window.location.href = "choose-secondary-profession.html";
-          return;
+          return true;
         }
-        return p;
-      }    
+    
+        return false;
+      }
+    
       /* ============================================================
          LOAD CHARACTER INTO UI
       ============================================================ */
     
       function loadCharacterUI(player) {
         player = normalizePlayer(player);
+    
+        // enforce gating AFTER normalization
+        if (enforceProfessionGating(player)) return;
+    
         PlayerStorage.save(username, player);
         renderCharacter(player);
         document.getElementById("syncIndicator").textContent = "Synced ✔";
@@ -305,7 +321,10 @@
         };
       }
     
-      // Decide what to load on entry
+      /* ============================================================
+         DECIDE WHAT TO LOAD
+      ============================================================ */
+    
       if (conflict === "remote-only") {
         loadCharacterUI(remote);
       } else if (conflict === "local-only") {
@@ -323,6 +342,7 @@
       /* ============================================================
          TO KV BUTTON
       ============================================================ */
+    
       window.pushToKV = async () => {
         const p = PlayerStorage.load(username);
         if (!p) {
@@ -345,6 +365,9 @@
         }
     
         const normalized = normalizePlayer(remote);
+    
+        if (enforceProfessionGating(normalized)) return;
+    
         PlayerStorage.save(username, normalized);
         renderCharacter(normalized);
         document.getElementById("syncIndicator").textContent = "Loaded from KV ✔";
