@@ -240,17 +240,6 @@
       const { local, remote, conflict, username } = window.syncState;
       window.username = username;
 
-      // After loading player:
-      if (player.level >= 10 && player.profession === "adventurer") {
-        window.location.href = "profession-selection.html";
-        return;
-      }
-      
-      if (player.level >= 100 && !player.secondaryProfession) {
-        window.location.href = "choose-secondary-profession.html";
-        return;
-      }
-
       const conflictModal = document.getElementById("conflictModal");
       const useCloudBtn = document.getElementById("useCloudBtn");
       const useLocalBtn = document.getElementById("useLocalBtn");
@@ -278,13 +267,16 @@
         if (typeof p.derived !== "object" || p.derived === null) p.derived = {};
         if (typeof p.adaptiveProfile !== "object" || p.adaptiveProfile === null) p.adaptiveProfile = {};
         if (typeof p.regionProgress !== "object" || p.regionProgress === null) p.regionProgress = {};
-    
-        // Profession selection redirect
-        if (p.level >= 10 && p.profession === "adventurer") {
+   
+        // After loading player:
+        if (player.level >= 10 && player.profession === "adventurer") {
           window.location.href = "profession-selection.html";
-          return null;
+          return;
         }
-    
+        if (player.level >= 100 && !player.secondaryProfession) {
+          window.location.href = "choose-secondary-profession.html";
+          return;
+        }
         return p;
       }    
       /* ============================================================
