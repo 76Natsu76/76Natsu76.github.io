@@ -1,5 +1,5 @@
 {
-    acolyte: {
+    "acolyte": {
         "name": "Acolyte",
         "role":"combat",
         "tags":["holy", "support"],
@@ -17,25 +17,25 @@
         "lootKit": {},
         "lootTable": {}
       },
-adept: {
-    "name": "Adept",
-    "role":"combat",
-    "tags":["magic", "novice"],
-    "baseBonuses": {
-      "manaMult": 1.03,
-      "resourceRegen": { "mana": 0.03 }
-    },
-    "abilities": [],
-    "equipment": { "weapons": [], "armor": [], "accessories": [] },
-    "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
-    "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements:" {}, "statusEffects": {} },
-    "talentTree": {},
-    "starterKit": {},
-    "lootKit": {},
-    "lootTable": {}
-  },
+    "adept": {
+        "name": "Adept",
+        "role":"combat",
+        "tags":["magic", "novice"],
+        "baseBonuses": {
+          "manaMult": 1.03,
+          "resourceRegen": { "mana": 0.03 }
+        },
+        "abilities": [],
+        "equipment": { "weapons": [], "armor": [], "accessories": [] },
+        "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
+        "synergy": { "races": {}, "subraces": {}, "professions": {}, "biomes": {}, "weather": {}, "elements:" {}, "statusEffects": {} },
+        "talentTree": {},
+        "starterKit": {},
+        "lootKit": {},
+        "lootTable": {}
+      },
 
-  apocalypse: {
+  "apocalypse": {
     "name": "Apocalypse",
     "role":"combat",
     "tags":["chaos", "dot", "unpredictable"],
@@ -54,7 +54,7 @@ adept: {
     "lootTable": {}
   },
 
-  apprentice: {
+  "apprentice": {
     "name": "Apprentice",
     "role":"combat",
     "tags":["novice", "magic"],
@@ -73,7 +73,7 @@ adept: {
     "lootTable": {}
   },
 
-  archer: {
+  "archer": {
     "name": "Archer",
     "role":"combat",
     "tags":["ranged", "precision"],
@@ -92,7 +92,7 @@ adept: {
     "lootTable": {}
   },
 
-  assassin: {
+  "assassin": {
     "name": "Assassin",
     "role":"combat",
     "tags":["melee", "stealth", "crit", "burst"],
@@ -121,7 +121,7 @@ adept: {
     "lootTable": {}
   },
 
-  berserker: {
+  "berserker": {
     "name": "Berserker",
     "role":"combat",
     "tags":["melee", "rage"],
@@ -140,7 +140,7 @@ adept: {
     "lootTable": {}
   },
 
-  bozo: {
+  "bozo": {
     "name": "Bozo",
     "role":"combat",
     "tags":["joke", "chaos"],
@@ -159,7 +159,7 @@ adept: {
     "lootTable": {}
   },
 
-  cleric: {
+  "cleric": {
     "name": "Cleric",
     "role":"combat",
     "tags":["holy", "support"],
@@ -178,7 +178,7 @@ adept: {
     "lootTable": {}
   },
 
-  corrupted: {
+  "corrupted": {
     "name": "Corrupted",
     "role":"combat",
     "tags":["dark", "poison", "chaos"],
@@ -197,7 +197,7 @@ adept: {
     "lootTable": {}
   },
 
-  druid: {
+  "druid": {
     "name": "Druid",
     "role":"combat",
     "tags":["nature", "healing"],
@@ -216,7 +216,7 @@ adept: {
     "lootTable": {}
   },
 
-  guardian: {
+  "guardian": {
     "name": "Guardian",
     "role":"combat",
     "tags":["tank", "defense"],
@@ -235,7 +235,7 @@ adept: {
     "lootTable": {}
   },
 
-  healer: {
+  "healer": {
     "name": "Healer",
     "role":"combat",
     "tags":["support", "holy"],
@@ -253,7 +253,7 @@ adept: {
     "lootTable": {}
   },
 
-  mage: {
+  "mage": {
     "name": "Mage",
     "role":"combat",
     "tags":["magic", "arcane"],
@@ -272,7 +272,7 @@ adept: {
     "lootTable": {}
   },
 
-  monk: {
+  "monk": {
     "name": "Monk",
     "role":"combat",
     "tags":["melee", "agile"],
@@ -291,7 +291,7 @@ adept: {
     "lootTable": {}
   },
 
-  necromancer: {
+  "necromancer": {
     "name": "Necromancer",
     "role":"combat",
     "tags":["dark", "minions", "dot"],
@@ -310,7 +310,7 @@ adept: {
     "lootTable": {}
   },
 
-  paladin: {
+  "paladin": {
     "name": "Paladin",
     "role":"combat",
     "tags":["holy", "tank"],
@@ -329,7 +329,7 @@ adept: {
     "lootTable": {}
   },
 
-  ranger: {
+  "ranger": {
     "name": "Ranger",
     "role":"combat",
     "tags":["ranged", "nature"],
@@ -348,7 +348,7 @@ adept: {
     "lootTable": {}
   },
 
-  rogue: {
+  "rogue": {
     "name": "Rogue",
     "role":"combat",
     "tags":["stealth", "agile", "physical"],
@@ -368,7 +368,7 @@ adept: {
     "lootTable": {}
   },
 
-  rot: {
+  "rot": {
     "name": "Rot",
     "role":"combat",
     "tags":["decay", "disease", "corruption"],
@@ -387,7 +387,7 @@ adept: {
     "lootTable": {}
   },
 
-  shaman: {
+  "shaman": {
     "name": "Shaman",
     "role":"combat",
     "tags":["elemental", "hybrid"],
@@ -405,7 +405,7 @@ adept: {
     "lootTable": {}
   },
 
-  thief: {
+  "thief": {
     "name": "Thief",
     "role":"combat",
     "tags":["stealth", "agile"],
@@ -424,7 +424,7 @@ adept: {
     "lootTable": {}
   },
 
-  trainee: {
+  "trainee": {
     "name": "Trainee",
     "role":"combat",
     "tags":["novice"],
@@ -442,7 +442,7 @@ adept: {
     "lootTable": {}
   },
 
-  trickster: {
+  "trickster": {
     "name": "Trickster",
     "role":"combat",
     "tags":["illusion", "chaos"],
@@ -480,7 +480,7 @@ adept: {
     "lootTable": {}
   },
 
-  warlock: {
+  "warlock": {
     "name": "Warlock",
     "role":"combat",
     "tags":["dark", "dot"],
@@ -499,7 +499,7 @@ adept: {
     "lootTable": {}
   },
 
-  warrior: {
+  "warrior": {
     "name": "Warrior",
     "role":"combat",
     "tags":["melee", "frontline"],
@@ -518,7 +518,7 @@ adept: {
     "lootTable": {}
   },
 
-  witch: {
+  "witch": {
     "name": "Witch",
     "role":"combat",
     "tags":["dark", "magic"],
@@ -536,7 +536,8 @@ adept: {
     "lootKit": {},
     "lootTable": {}
   },
-  alchemist: {
+
+  "alchemist": {
     "name": "Alchemist",
     "role":"non_combat",
     "tags":["crafting", "alchemy"],
@@ -563,7 +564,7 @@ adept: {
     "lootTable": {}
   },
 
-  artificer: {
+  "artificer": {
     "name": "Artificer",
     "role":"non_combat",
     "tags":["crafting", "enchanting"],
@@ -590,7 +591,7 @@ adept: {
     "lootTable": {}
   },
 
-  blacksmith: {
+  "blacksmith": {
     "name": "Blacksmith",
     "role":"non_combat",
     "tags":["crafting", "metalworking"],
@@ -617,7 +618,7 @@ adept: {
     "lootTable": {}
   },
 
-  carpenter: {
+  "carpenter": {
     "name": "Carpenter",
     "role":"non_combat",
     "tags":["crafting", "woodworking"],
@@ -643,7 +644,7 @@ adept: {
     "lootTable": {}
   },
 
-  chef: {
+  "chef": {
     "name": "Chef",
     "role":"non_combat",
     "tags":["crafting", "cooking", "support"],
@@ -672,7 +673,7 @@ adept: {
     "lootTable": {}
   },
 
-  fisherman: {
+  "fisherman": {
     "name": "Fisherman",
     "role":"non_combat",
     "tags":["gathering", "aquatic"],
@@ -698,7 +699,7 @@ adept: {
     "lootTable": {}
   },
 
-  herbalist: {
+  "herbalist": {
     "name": "Herbalist",
     "role":"non_combat",
     "tags":["gathering", "plants"],
@@ -724,10 +725,10 @@ adept: {
     "lootTable": {}
   },
 
-  leatherworker: {
+  "leatherworker": {
     "name": "Leatherworker",
     "role":"non_combat",
-    "tags":["crafting", ""armor""],
+    "tags":["crafting", "armor"],
     "baseBonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
@@ -737,7 +738,7 @@ adept: {
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "noncombat": {
       "perks": [
-        "Unlocks light "armor" and hide gear",
+        "Unlocks light armor and hide gear",
         "Can salvage extra leather",
         "Can add defensive linings to gear"
       ],
@@ -751,7 +752,7 @@ adept: {
     "lootTable": {}
   },
 
-  miner: {
+  "miner": {
     "name": "Miner",
     "role":"non_combat",
     "tags":["gathering", "ore"],
@@ -777,7 +778,7 @@ adept: {
     "lootTable": {}
   },
 
-  ritualist: {
+  "ritualist": {
     "name": "Ritualist",
     "role":"non_combat",
     "tags":["rituals", "magic"],
@@ -803,7 +804,7 @@ adept: {
     "lootTable": {}
   },
 
-  spelunker: {
+  "spelunker": {
     "name": "Spelunker",
     "role":"non_combat",
     "tags":["exploration", "caves"],
@@ -829,7 +830,7 @@ adept: {
     "lootTable": {}
   },
 
-  tinkerer: {
+  "tinkerer": {
     "name": "Tinkerer",
     "role":"non_combat",
     "tags":["engineering", "mechanical", "crafting"],
@@ -856,7 +857,7 @@ adept: {
     "lootTable": {}
   },
 
-  weaver: {
+  "weaver": {
     "name": "Weaver",
     "role":"non_combat",
     "tags":["crafting", "cloth"],
