@@ -696,6 +696,23 @@
         { "type": "poison", "value": 6, "duration": 3, "stack": "add" }
       ],
       "description": "A venom-laced stab that inflicts lingering poison."
+    },
+    "shadow_execution": {
+      "key": "shadow_execution",
+      "name": "Shadow Execution",
+      "isUltimate": true,
+      "chargeRequired": 100,
+      "usesPerCombat": 1,
+      "basePower": 2.2,
+      "scalingPerLevel": 0.12,
+      "manaCost": 25,
+      "cooldown": 0,
+      "combatTags": ["physical", "pierce", "crit", "finisher", "stealth"],
+      "statusEffects": [
+        { "type": "crit_chance_up", "value": 25, "duration": 1, "stack": "add" },
+        { "type": "bleed", "value": 12, "duration": 3, "stack": "add" }
+      ],
+      "description": "From perfect stillness you strike with lethal precision, exploiting every weakness. The attack deals massive damage, greatly increases your critical chance for a moment, and leaves the target bleeding."
     }
   },
   "trainee": {
