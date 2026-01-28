@@ -177,7 +177,7 @@
 
   <script type="module">
     (async () => {
-      import { requireSession } from "./session-guard.js";
+      const { requireSession } = await import("./session-guard.js");
       const session = requireSession();
       if (!session) {
         document.getElementById("inventoryContainer").textContent =
