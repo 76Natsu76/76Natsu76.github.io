@@ -234,8 +234,8 @@ function buildEnemyInstance(
   const rarityMult = rarityScaling(rarity);
 
   const baseHP = Math.round(template.baseHP * rarityMult * region.lootModifier);
-  const baseATK = Math.round(template.attack * rarityMult);
-  const baseDEF = Math.round(template.defense * rarityMult);
+  const baseATK = Math.round(template.atk * rarityMult);
+  const baseDEF = Math.round(template.def * rarityMult);
 
   const modifiers = [];
 
