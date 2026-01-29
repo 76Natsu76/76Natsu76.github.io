@@ -12,15 +12,15 @@ export const EnemyRegistry = {
   subraceMap: {},
 
   async loadAll() {
-    this.families   = await fetchJSON("enemy-families.json");
-    this.variants   = await fetchJSON("enemy-variants.json");
-    this.tags       = await fetchJSON("enemy-tags.json");
-    this.behaviors  = await fetchJSON("enemy-behaviors.json");
-    this.abilities  = await fetchJSON("enemy-abilities.json");
-    this.ultimates  = await fetchJSON("enemy-ultimates.json");
-    this.enemies    = await fetchJSON("enemies.json");
-    this.regionMap  = await fetchJSON("enemy-regions.json");
-    this.subraceMap = await fetchJSON("enemy-subrace.json");
+    this.families   = await fetchJSON("./enemy-families.json");
+    this.variants   = await fetchJSON("./enemy-variants.json");
+    this.tags       = await fetchJSON("./enemy-tags.json");
+    this.behaviors  = await fetchJSON("./enemy-behaviors.json");
+    this.abilities  = await fetchJSON("./enemy-abilities.json");
+    this.ultimates  = await fetchJSON("./enemy-ultimates.json");
+    this.enemies    = await fetchJSON("./enemies.json");
+    this.regionMap  = await fetchJSON("./enemy-regions.json");
+    this.subraceMap = await fetchJSON("./enemy-subrace.json");
   },
 
   getEnemy(key) {
