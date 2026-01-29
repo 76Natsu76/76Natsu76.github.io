@@ -1,8 +1,8 @@
 // shop-engine.js
 
-import shopPool from "./data/shop-pool.json" assert { type: "json" };
-import players from "./data/players.json" assert { type: "json" };
-import RARITY_WEIGHTS from "./data/rarity-weights.json" assert { type:"json"};
+import shopPool from "./shop-pool.json" assert { type: "json" };
+import players from "./players.json" assert { type: "json" };
+import RARITY_WEIGHTS from "./rarity-weights.json" assert { type:"json"};
 
 // --------------------------------------------------
 // Weighted random item selection
