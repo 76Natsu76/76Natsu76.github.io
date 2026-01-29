@@ -85,7 +85,6 @@
 
   <h1>World Map</h1>
   <div id="usernameDisplay"></div>
-  <div id="worldboss-popup" class="popup"></div>
   <div id="mapContainer">Loading world...</div>
 
   <button class="btn" id="characterBtn">Character</button>
@@ -100,16 +99,15 @@
     import { WorldSim } from "./world-simulation.js";
     import { requireSession } from "./session-guard.js";
 
-    /* ============================================================
-       SESSION + PLAYER LEVEL
-    ============================================================ */
-
     await requireSession();
-
     const { username } = window.syncState;
+
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
 
+    /* ============================================================
+       LOAD PLAYER LEVEL
+    ============================================================ */
     let playerLevel = 1;
     try {
       const raw = localStorage.getItem("player_" + username);
@@ -118,91 +116,59 @@
         playerLevel = Number(p.level || 1);
       }
     } catch (e) {
-      console.warn("Failed to read local player for level; defaulting to 1.", e);
+      console.warn("Failed to load player level", e);
     }
 
     /* ============================================================
-       LOAD WORLD
+       LOAD JSON FILES SAFELY
     ============================================================ */
+    async function loadJSON(path) {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error("Failed to load " + path);
+      return res.json();
+    }
 
-    function loadWorld() {
-      let worldState = {};
-      try {
-        // Prefer username-scoped state if your WorldSim supports it
-        if (typeof WorldSim.getState === "function") {
-          const maybeState = WorldSim.getState(username);
-          if (maybeState && typeof maybeState === "object") {
-            worldState = maybeState;
-          }
-        }
-      } catch (e) {
-        console.warn("Failed to load world state; using empty state.", e);
-      }
+    const regionUnlocks = await loadJSON("./region-unlocks.json");
+    const worldBossTemplates = await loadJSON("./world-boss-templates.json");
 
-      renderWorld(WORLD_DATA, worldState);
+    /* ============================================================
+       LOAD WORLD STATE
+    ============================================================ */
+    let worldState = {};
+    try {
+      worldState = WorldSim.getState(username) || {};
+    } catch (e) {
+      console.warn("WorldSim state failed", e);
+      worldState = {};
     }
 
     /* ============================================================
-       RENDER WORLD MAP
+       RENDER WORLD
     ============================================================ */
-
-    function renderWorld(world, worldState) {
+    function renderWorld() {
       const container = document.getElementById("mapContainer");
       const out = [];
 
-      if (!world || !world.regions) {
-        container.textContent = "World data unavailable.";
-        return;
-      }
+      for (const regionKey in WORLD_DATA.regions) {
+        const region = WORLD_DATA.regions[regionKey];
+        const state = worldState[regionKey] || {};
 
-      for (const regionKey in world.regions) {
-        const region = world.regions[regionKey];
-        const state = worldState && worldState[regionKey] ? worldState[regionKey] : {};
-
-        // Resolve biome
         const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
         const biome = BIOMES[biomeKey];
 
-        // Level range
         const [minLevel, maxLevel] = region.levelRange || [1, 999];
         const levelLocked = playerLevel < minLevel;
 
-        // Global unlock (world boss progression)
-        const globallyUnlocked = state.unlocked;
-
-        // World boss lock
+        const globallyUnlocked = regionUnlocks.unlocks[regionKey] ?? false;
         const bossActive = !!state.worldBoss;
         const bossLocked = !globallyUnlocked;
 
-        // Combined lock logic
         const regionLocked = levelLocked || bossLocked;
 
-        // Flavor text
-        const biomeFlavor = biome?.flavor
-          ? biome.flavor[Math.floor(Math.random() * biome.flavor.length)]
-          : "Unknown biome.";
-
-        const regionFlavor = region.flavor || "";
-
-        // Weather preview
-        const weatherPreview =
-          region.weatherPool?.join(", ") ||
-          biome?.weatherPool?.join(", ") ||
-          "Unknown";
-
-        // Hazards
-        const hazards = biome?.hazards?.length
-          ? biome.hazards.map(h => h.key).join(", ")
-          : "None";
-
-        // Events
         const events = region.eventPool?.length
-          ? region.eventPool
-              .map(e => `<div class="event">${format(e)}</div>`)
-              .join("")
+          ? region.eventPool.map(e => `<div class="event">${format(e)}</div>`).join("")
           : "<div class='event'>None</div>";
 
-        // Lock message
         let lockMessage = "";
         if (levelLocked) lockMessage = `Requires Lv ${minLevel}`;
         else if (bossLocked) lockMessage = `Locked — Defeat the World Boss`;
@@ -212,10 +178,9 @@
             <h2>${region.name}</h2>
 
             <div class="stat-row"><span>Biome</span><span>${format(biomeKey)}</span></div>
-            <div class="stat-row"><span>Weather</span><span>${weatherPreview}</span></div>
-            <div class="stat-row"><span>Hazards</span><span>${hazards}</span></div>
+            <div class="stat-row"><span>Weather</span><span>${region.weatherPool?.join(", ") || "Unknown"}</span></div>
+            <div class="stat-row"><span>Hazards</span><span>${biome?.hazards?.map(h => h.key).join(", ") || "None"}</span></div>
             <div class="stat-row"><span>Danger</span><span>${region.danger || "Moderate"}</span></div>
-            <div class="stat-row"><span>Blessing</span><span>${region.blessing || "None"}</span></div>
 
             <div class="stat-row">
               <span>World Boss</span>
@@ -228,25 +193,13 @@
             </div>
 
             <div class="section">
-              <strong>Biome Flavor:</strong>
-              <div class="event">${biomeFlavor}</div>
-            </div>
-
-            <div class="section">
-              <strong>Region Flavor:</strong>
-              <div class="event">${regionFlavor}</div>
-            </div>
-
-            <div class="section">
               <strong>Events:</strong>
               ${events}
             </div>
 
-            <button
-              class="btn ${regionLocked ? "disabled" : ""}"
+            <button class="btn ${regionLocked ? "disabled" : ""}"
               data-region="${regionKey}"
-              data-locked="${regionLocked ? "1" : "0"}"
-            >
+              data-locked="${regionLocked ? "1" : "0"}">
               ${regionLocked ? lockMessage : "Enter Region"}
             </button>
           </div>
@@ -256,22 +209,27 @@
       container.innerHTML = out.join("");
     }
 
-    /* ============================================================
-       ENTER REGION → GENERATE ENCOUNTER
-    ============================================================ */
+    renderWorld();
 
-    function enterRegion(regionKey, locked) {
+    /* ============================================================
+       REGION CLICK HANDLER
+    ============================================================ */
+    document.getElementById("mapContainer").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-region]");
+      if (!btn) return;
+
+      const regionKey = btn.getAttribute("data-region");
+      const locked = btn.getAttribute("data-locked") === "1";
       if (locked) return;
 
       const encounter = EncounterEngine.generate(regionKey, username);
       localStorage.setItem("current_encounter", JSON.stringify(encounter));
       window.location.href = "fight-interactive.html";
-    }
+    });
 
     /* ============================================================
-       BUTTON WIRING (NO GLOBAL FUNCTIONS)
+       NAVIGATION BUTTONS
     ============================================================ */
-
     document.getElementById("characterBtn").addEventListener("click", () => {
       window.location.href = "character.html";
     });
@@ -284,29 +242,15 @@
       window.location.href = "bestiary.html";
     });
 
-    document.getElementById("mapContainer").addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-region]");
-      if (!btn) return;
-
-      const regionKey = btn.getAttribute("data-region");
-      const locked = btn.getAttribute("data-locked") === "1";
-      enterRegion(regionKey, locked);
-    });
-
     /* ============================================================
        HELPERS
     ============================================================ */
-
     function format(str) {
       return String(str)
-        .toLowerCase()
         .replace(/_/g, " ")
         .replace(/-/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
-    // Start
-    loadWorld();
   </script>
 
 </body>
