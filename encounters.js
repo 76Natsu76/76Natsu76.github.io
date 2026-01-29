@@ -233,38 +233,41 @@ function buildEnemyInstance(
   const level = rollLevel(region.levelRange);
   const rarityMult = rarityScaling(rarity);
 
-  const baseHP = Math.round(template.baseHP * rarityMult * region.lootModifier);
-  const baseATK = Math.round(template.atk * rarityMult);
-  const baseDEF = Math.round(template.def * rarityMult);
+  // Base stats from template
+  const baseHP = Math.round((template.baseHP ?? template.hp ?? 1) * rarityMult * region.lootModifier);
+  const baseATK = Math.round((template.baseATK ?? template.atk ?? template.attack ?? 1) * rarityMult);
+  const baseDEF = Math.round((template.baseDEF ?? template.def ?? template.defense ?? 0) * rarityMult);
 
+  // Apply region/biome multipliers
+  let finalATK = baseATK;
+  let finalDEF = baseDEF;
+
+  if (region.combatModifiers) {
+    const cm = region.combatModifiers;
+    if (cm.enemyATKMult) finalATK = Math.round(finalATK * cm.enemyATKMult);
+    if (cm.enemyDEFMult) finalDEF = Math.round(finalDEF * cm.enemyDEFMult);
+  }
+
+  if (biome.combatModifiers) {
+    const bm = biome.combatModifiers;
+    if (bm.enemyATKMult) finalATK = Math.round(finalATK * bm.enemyATKMult);
+    if (bm.enemyDEFMult) finalDEF = Math.round(finalDEF * bm.enemyDEFMult);
+  }
+
+  // Collect modifier icons/text
   const modifiers = [];
 
   if (weather && WEATHER_MODIFIERS[weather]) {
     modifiers.push(WEATHER_MODIFIERS[weather]);
   }
-
   if (event && EVENT_MODIFIERS[event]) {
     modifiers.push(EVENT_MODIFIERS[event]);
   }
-
   if (hazard && HAZARD_MODIFIERS[hazard]) {
     modifiers.push(HAZARD_MODIFIERS[hazard]);
   }
-
   if (variant && VARIANT_MODIFIERS[variant]) {
     modifiers.push(VARIANT_MODIFIERS[variant]);
-  }
-
-  if (region.combatModifiers) {
-    const cm = region.combatModifiers;
-    if (cm.enemyATKMult > 1) modifiers.push({ icon: "atk_up.png", text: "Region: Enemy attack increased" });
-    if (cm.enemyDEFMult > 1) modifiers.push({ icon: "def_up.png", text: "Region: Enemy defense increased" });
-  }
-
-  if (biome.combatModifiers) {
-    const bm = biome.combatModifiers;
-    if (bm.enemyATKMult > 1) modifiers.push({ icon: "atk_up.png", text: "Biome: Enemy attack empowered" });
-    if (bm.enemyDEFMult > 1) modifiers.push({ icon: "def_up.png", text: "Biome: Enemy defense empowered" });
   }
 
   return {
@@ -277,8 +280,8 @@ function buildEnemyInstance(
 
     hp: baseHP,
     hpMax: baseHP,
-    atk: baseATK,
-    def: baseDEF,
+    atk: finalATK,
+    def: finalDEF,
 
     portrait: template.portrait || `/assets/enemies/${template.key}.png`,
     flavor: template.flavor || "",
