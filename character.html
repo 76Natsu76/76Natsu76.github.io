@@ -250,6 +250,10 @@
     
       function normalizePlayer(p) {
         if (!p) return p;
+        
+        if (!p.talentTree || Array.isArray(p.talentTree)) {
+          p.talentTree = { tier1: null, tier2: null, tier3: null };
+        }
     
         if (!Array.isArray(p.abilities)) p.abilities = [];
         if (!Array.isArray(p.inventory)) p.inventory = [];
@@ -260,10 +264,6 @@
     
         if ((!p.statusEffects || p.statusEffects.length === 0) && p.playerStatusEffects.length) {
           p.statusEffects = p.playerStatusEffects;
-        }
-        
-        if (!p.talentTree || Array.isArray(p.talentTree)) {
-          p.talentTree = { tier1: null, tier2: null, tier3: null };
         }
     
         if (typeof p.equipment !== "object" || p.equipment === null) p.equipment = {};
