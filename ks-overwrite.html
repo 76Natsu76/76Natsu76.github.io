@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>KV Overwrite Tool</title>
+  <style>
+    body {
+      background:#111;
+      color:#eee;
+      font-family:system-ui, sans-serif;
+      padding:20px;
+    }
+    h1 { color:#7cf; }
+    textarea {
+      width:100%;
+      height:300px;
+      background:#222;
+      color:#eee;
+      border:1px solid #444;
+      border-radius:6px;
+      padding:10px;
+      font-family:monospace;
+      font-size:14px;
+    }
+    button {
+      margin-top:12px;
+      padding:12px 18px;
+      background:#28a745;
+      border:none;
+      border-radius:6px;
+      color:white;
+      cursor:pointer;
+      font-size:16px;
+    }
+    button:hover { background:#218838; }
+    pre {
+      background:#222;
+      padding:12px;
+      border-radius:6px;
+      margin-top:20px;
+      white-space:pre-wrap;
+      max-height:50vh;
+      overflow-y:auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Modern KV Overwrite Tool</h1>
+
+  <p>Paste your FULL player JSON below. This tool will push it directly to KV with no mutation.</p>
+
+  <textarea id="jsonInput" placeholder='{"username":"example", ...}'></textarea>
+
+  <button id="pushBtn">Overwrite KV</button>
+
+  <pre id="output">Waiting…</pre>
+
+  <script type="module">
+    import { savePlayerToKV } from "./api.js";
+
+    const input = document.getElementById("jsonInput");
+    const output = document.getElementById("output");
+    const btn = document.getElementById("pushBtn");
+
+    const log = (msg) => {
+      output.textContent += "\n" + msg;
+      output.scrollTop = output.scrollHeight;
+    };
+
+    btn.onclick = async () => {
+      output.textContent = "Starting KV overwrite...\n";
+
+      let obj;
+      try {
+        obj = JSON.parse(input.value);
+      } catch (err) {
+        log("❌ Invalid JSON: " + err.message);
+        return;
+      }
+
+      if (!obj.username) {
+        log("❌ JSON must contain a 'username' field.");
+        return;
+      }
+
+      log("Pushing to KV for user: " + obj.username);
+
+      try {
+        const res = await savePlayerToKV(obj.username, obj);
+        log("✔ KV Response:");
+        log(JSON.stringify(res, null, 2));
+        log("\n🎉 DONE — KV has been overwritten.");
+      } catch (err) {
+        log("❌ ERROR pushing to KV:");
+        log(String(err));
+      }
+    };
+  </script>
+
+</body>
+</html>
