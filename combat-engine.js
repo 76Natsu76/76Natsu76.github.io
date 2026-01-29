@@ -1,6 +1,5 @@
 // combat-engine.js
 
-import { getWeatherDefinition } from "./world-simulation.js";
 import { ELEMENT_MATRIX } from "./element-matrix.js";
 import { chooseBossActionV3, chooseEnemyActionV3 } from "./enemy-ai.js";
 import {
@@ -15,7 +14,7 @@ import {
  ****************************************************/
 
 export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, player, enemy) {
-  const weatherDef = weatherKey ? getWeatherDefinition(weatherKey) : null;
+  const weatherDef = weatherTable[encounter.weather] || null;
 
   return {
     regionKey: regionKey || null,
