@@ -2,7 +2,6 @@
 
 import {
   getUsableAbilities,
-  crowdControlCheck,
   estimateAbilityDamage,
   resolveBossCombo,
   getAdaptiveCounter,
@@ -10,6 +9,8 @@ import {
   resolvePatternStep,
   highestDamageAbility
 } from "./enemy-ai-helpers.js";
+
+import { crowdControlCheck } from "./status-effects.js";
 
 export function chooseBossActionV3(enemy, player, context, logs) {
   enemy.ultimateUses = enemy.ultimateUses || {};
