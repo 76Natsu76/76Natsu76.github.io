@@ -2,9 +2,9 @@
  * world-boss-ui.js
  ************************************************************/
 
-import { WorldBossEngine } from './world-boss-engine.js';
-import WORLD_BOSSES from './world-boss-templates.json' assert { type: "json"};
-import { getPlayerById } from './player-registry.js';
+import { WorldBossEngine } from "./world-boss-engine.js";
+import { WorldSim } from "./world-simulation.js";
+import { getPlayerById } from "./player-registry.js";
 
 let currentPlayer = null;
 
@@ -19,8 +19,10 @@ function renderOverview() {
   if (!boss) {
     document.getElementById("worldboss-content").innerHTML = `
       <h2>No active world boss</h2>
-      <button onclick="spawnBossPrompt()">Spawn Boss</button>
+      <button id="spawnBossBtn">Spawn Boss</button>
     `;
+
+    document.getElementById("spawnBossBtn").onclick = spawnBossPrompt;
     return;
   }
 
@@ -32,28 +34,35 @@ function renderOverview() {
     <p>Phase: ${boss.phaseIndex + 1}</p>
     <p>Turns: ${boss.turnCount}</p>
 
-    <button onclick="fightBoss()">Fight Boss</button>
+    <button id="fightBossBtn">Fight Boss</button>
   `;
+
+  document.getElementById("fightBossBtn").onclick = fightBoss;
 }
 
-window.spawnBossPrompt = function() {
+function spawnBossPrompt() {
+  const WORLD_BOSSES = WorldSim._getBossData();
   const keys = Object.keys(WORLD_BOSSES);
-  const options = keys.map(k => `<option value="${k}">${WORLD_BOSSES[k].name}</option>`).join("");
+
+  const options = keys
+    .map(k => `<option value="${k}">${WORLD_BOSSES[k].name}</option>`)
+    .join("");
 
   document.getElementById("worldboss-content").innerHTML = `
     <h2>Spawn World Boss</h2>
     <select id="boss-select">${options}</select>
-    <button onclick="spawnSelectedBoss()">Spawn</button>
+    <button id="spawnSelectedBtn">Spawn</button>
   `;
-};
 
-window.spawnSelectedBoss = function() {
+  document.getElementById("spawnSelectedBtn").onclick = spawnSelectedBoss;
+}
+
+function spawnSelectedBoss() {
   const key = document.getElementById("boss-select").value;
   WorldBossEngine.spawnBoss(key);
   renderOverview();
-};
+}
 
-window.fightBoss = function() {
-  // Hook into your combat engine
+function fightBoss() {
   alert("World boss combat not implemented yet.");
-};
+}
