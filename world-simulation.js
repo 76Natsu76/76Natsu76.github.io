@@ -6,28 +6,44 @@
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
-import { WORLD_BOSSES } from "./world-boss-templates.json";
-import { REGION_UNLOCKS } from "./region-unlocks.json";
-import { loadRegionUnlocks } from "./region-unlocks.js";
 import { WorldBossAnnouncements } from "./world-boss-announcements.js";
 
 export const WorldSim = {
   tick,
   getState,
-  forceUpdate
+  forceUpdate,
+  init
 };
 
 const STORAGE_KEY = "world_state";
-const GLOBAL_UNLOCKS = loadRegionUnlocks(REGION_UNLOCKS);
 
-// ------------------------------------------------------------
-// LOAD / SAVE
-// ------------------------------------------------------------
+let WORLD_BOSSES = {};
+let REGION_UNLOCKS = { unlocks: {} };
+
+/* ============================================================
+   INITIALIZATION — MUST BE CALLED BEFORE USING WORLD SIM
+============================================================ */
+export async function init() {
+  WORLD_BOSSES = await loadJSON("./world-boss-templates.json");
+  REGION_UNLOCKS = await loadJSON("./region-unlocks.json");
+}
+
+/* ============================================================
+   LOAD JSON SAFELY
+============================================================ */
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error("Failed to load " + path);
+  return res.json();
+}
+
+/* ============================================================
+   LOAD / SAVE WORLD STATE
+============================================================ */
 function getState() {
   const raw = sessionStorage.getItem(STORAGE_KEY);
   if (raw) return JSON.parse(raw);
 
-  // Initialize world state
   const state = {};
 
   for (const regionKey in WORLD_DATA.regions) {
@@ -41,7 +57,7 @@ function getState() {
       hazard: null,
       worldBoss: null,
       pressure: 1.0,
-      unlocked: GLOBAL_UNLOCKS.unlocks[regionKey] || false
+      unlocked: REGION_UNLOCKS.unlocks[regionKey] || false
     };
   }
 
@@ -53,9 +69,9 @@ function saveState(state) {
   sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-// ------------------------------------------------------------
-// MAIN TICK
-// ------------------------------------------------------------
+/* ============================================================
+   MAIN TICK
+============================================================ */
 function tick() {
   const state = getState();
 
@@ -91,35 +107,27 @@ function tick() {
 
     // WORLD BOSS SYSTEM
     if (!r.worldBoss) {
-      // No boss currently active in this region
-      const bossKey = trySpawnWorldBoss(regionKey, region, r);
+      const bossKey = trySpawnWorldBoss(regionKey);
       if (bossKey) {
+        const boss = WORLD_BOSSES[bossKey];
         r.worldBoss = {
           key: bossKey,
-          hp: WORLD_BOSSES[bossKey].maxHP,
-          maxHP: WORLD_BOSSES[bossKey].maxHP,
+          hp: boss.maxHP,
+          maxHP: boss.maxHP,
           phase: 0,
           active: true,
-          despawnTimer: 60 // ticks until despawn if ignored
+          despawnTimer: 60
         };
       }
     } else {
-      // Boss is active
       const boss = r.worldBoss;
-
-      // Despawn if timer runs out
       boss.despawnTimer--;
-      if (boss.despawnTimer <= 0) {
-        r.worldBoss = null;
-      }
-
-      // If boss was killed externally (via world-boss-engine)
-      if (boss.hp <= 0) {
+      if (boss.despawnTimer <= 0 || boss.hp <= 0) {
         r.worldBoss = null;
       }
     }
 
-    // REGION PRESSURE (encounter intensity)
+    // REGION PRESSURE
     r.pressure = Math.min(
       3.0,
       Math.max(0.5, r.pressure + (Math.random() - 0.5) * 0.1)
@@ -131,24 +139,16 @@ function tick() {
   return state;
 }
 
-// ------------------------------------------------------------
-// WORLD BOSS SPAWN LOGIC
-// ------------------------------------------------------------
-function trySpawnWorldBoss(regionKey, region, regionState) {
-  // Check all bosses for spawn eligibility
+/* ============================================================
+   WORLD BOSS SPAWN LOGIC
+============================================================ */
+function trySpawnWorldBoss(regionKey) {
   for (const bossKey in WORLD_BOSSES) {
     const boss = WORLD_BOSSES[bossKey];
 
-    // Region match
     if (boss.spawnRules.region !== regionKey) continue;
+    if (boss.spawnRules.season !== "any") continue;
 
-    // Seasonal match
-    if (boss.spawnRules.season !== "any") {
-      // Future seasonal integration
-      continue;
-    }
-
-    // Spawn chance
     if (Math.random() < (boss.spawnRules.chance || 0)) {
       return bossKey;
     }
@@ -157,18 +157,18 @@ function trySpawnWorldBoss(regionKey, region, regionState) {
   return null;
 }
 
-// ------------------------------------------------------------
-// FORCE UPDATE (manual refresh)
-// ------------------------------------------------------------
+/* ============================================================
+   FORCE UPDATE
+============================================================ */
 function forceUpdate() {
   const state = tick();
   saveState(state);
   return state;
 }
 
-// ------------------------------------------------------------
-// HELPERS
-// ------------------------------------------------------------
+/* ============================================================
+   HELPERS
+============================================================ */
 function pickFromArray(arr) {
   if (!arr || !arr.length) return null;
   return arr[Math.floor(Math.random() * arr.length)];
