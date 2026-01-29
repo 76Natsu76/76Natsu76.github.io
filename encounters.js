@@ -1,17 +1,25 @@
 // encounters.js
 // GitHub‑native Encounter Engine
-// Uses WORLD_DATA (region metadata), BIOMES (biome metadata),
-// REGION_TO_BIOME (region → biome mapping),
-// EnemyRegistry (enemy templates),
-// enemy-regions.json (region restrictions),
-// enemy-tags.json (biome restrictions).
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
-import enemyRegions from "./enemy-regions.json" assert { type: "json" };
-import enemyTags from "./enemy-tags.json" assert { type: "json" };
+
+// JSON data loaded via fetch()
+let enemyRegions = {};
+let enemyTags = {};
+
+export async function initEncounters() {
+  enemyRegions = await loadJSON("./enemy-regions.json");
+  enemyTags = await loadJSON("./enemy-tags.json");
+}
+
+async function loadJSON(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error("Failed to load " + path);
+  return res.json();
+}
 
 // Public API
 export const EncounterEngine = {
@@ -42,18 +50,18 @@ function generate(regionKey, username, enemyOverride = null) {
   const eventPool = region.eventPool || [];
   const event = pickFromArray(eventPool);
 
-  // HAZARDS (biome-level)
+  // HAZARDS
   const hazardPool = biome.hazards || [];
   const hazard = pickHazard(hazardPool);
 
-  // VARIANTS (region-level)
+  // VARIANTS
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
 
-  // RARITY (region-level)
+  // RARITY
   const rarity = pickWeighted(region.rarityWeights);
 
-  // FAMILY (biome-level)
+  // FAMILY
   const family = pickWeightedObject(biome.encounterWeights);
 
   // PICK ENEMY TEMPLATE
@@ -79,7 +87,6 @@ function generate(regionKey, username, enemyOverride = null) {
     variant
   );
 
-  // FINAL ENCOUNTER OBJECT
   const encounter = {
     region: regionKey,
     biome: biomeKey,
@@ -118,12 +125,12 @@ function clear() {
 }
 
 // ------------------------------------------------------------
-// ENEMY TEMPLATE PICKER (Logic D)
+// ENEMY TEMPLATE PICKER
 // ------------------------------------------------------------
 function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
   const all = EnemyRegistry.enemies || [];
 
-  // STEP 1 — strict filter: family + rarity + region + biome
+  // STEP 1 — strict filter
   let candidates = all.filter(e =>
     e.family === family &&
     e.rarity.toLowerCase() === rarity.toLowerCase() &&
@@ -165,7 +172,7 @@ function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
 
   if (candidates.length) return chooseTemplate(candidates);
 
-  // STEP 6 — absolute fallback: any enemy
+  // STEP 6 — absolute fallback
   return chooseTemplate(all);
 }
 
@@ -179,54 +186,34 @@ function chooseTemplate(list) {
 // ------------------------------------------------------------
 function isEnemyAllowedInRegion(enemyKey, regionKey) {
   const allowed = enemyRegions[enemyKey];
-  if (!allowed) return true; // no restriction
+  if (!allowed) return true;
   return allowed.includes(regionKey);
 }
 
 function isEnemyAllowedInBiome(enemyKey, biomeKey) {
   const tags = enemyTags[enemyKey];
-  if (!tags) return true; // no restriction
+  if (!tags) return true;
 
-  // Example: "ice" tag → only ice biomes
   if (tags.includes("ice")) {
-    return (
-      biomeKey === "tundra" ||
-      biomeKey === "frozen-expanse" ||
-      biomeKey === "crystalline-tundra"
-    );
+    return ["tundra", "frozen-expanse", "crystalline-tundra"].includes(biomeKey);
   }
 
   if (tags.includes("fire")) {
-    return (
-      biomeKey === "volcano" ||
-      biomeKey === "molten-crest" ||
-      biomeKey === "magma"
-    );
+    return ["volcano", "molten-crest", "magma"].includes(biomeKey);
   }
 
   if (tags.includes("void")) {
-    return (
-      biomeKey === "void" ||
-      biomeKey === "void-wastes" ||
-      biomeKey === "void-realm"
-    );
+    return ["void", "void-wastes", "void-realm"].includes(biomeKey);
   }
 
   if (tags.includes("arcane")) {
-    return (
-      biomeKey === "arcane" ||
-      biomeKey === "arcane-rift"
-    );
+    return ["arcane", "arcane-rift"].includes(biomeKey);
   }
 
   if (tags.includes("astral")) {
-    return (
-      biomeKey === "astral-plane" ||
-      biomeKey === "astral-nexus"
-    );
+    return ["astral-plane", "astral-nexus"].includes(biomeKey);
   }
 
-  // Default: allowed everywhere
   return true;
 }
 
@@ -252,62 +239,32 @@ function buildEnemyInstance(
 
   const modifiers = [];
 
-  // Weather modifiers
   if (weather && WEATHER_MODIFIERS[weather]) {
     modifiers.push(WEATHER_MODIFIERS[weather]);
   }
 
-  // Event modifiers
   if (event && EVENT_MODIFIERS[event]) {
     modifiers.push(EVENT_MODIFIERS[event]);
   }
 
-  // Hazard modifiers
   if (hazard && HAZARD_MODIFIERS[hazard]) {
     modifiers.push(HAZARD_MODIFIERS[hazard]);
   }
 
-  // Variant modifiers
   if (variant && VARIANT_MODIFIERS[variant]) {
     modifiers.push(VARIANT_MODIFIERS[variant]);
   }
 
-  // Region combat modifiers
   if (region.combatModifiers) {
     const cm = region.combatModifiers;
-
-    if (cm.enemyATKMult && cm.enemyATKMult > 1) {
-      modifiers.push({
-        icon: "atk_up.png",
-        text: "Region: Enemy attack increased"
-      });
-    }
-
-    if (cm.enemyDEFMult && cm.enemyDEFMult > 1) {
-      modifiers.push({
-        icon: "def_up.png",
-        text: "Region: Enemy defense increased"
-      });
-    }
+    if (cm.enemyATKMult > 1) modifiers.push({ icon: "atk_up.png", text: "Region: Enemy attack increased" });
+    if (cm.enemyDEFMult > 1) modifiers.push({ icon: "def_up.png", text: "Region: Enemy defense increased" });
   }
 
-  // Biome combat modifiers
   if (biome.combatModifiers) {
     const bm = biome.combatModifiers;
-
-    if (bm.enemyATKMult && bm.enemyATKMult > 1) {
-      modifiers.push({
-        icon: "atk_up.png",
-        text: "Biome: Enemy attack empowered"
-      });
-    }
-
-    if (bm.enemyDEFMult && bm.enemyDEFMult > 1) {
-      modifiers.push({
-        icon: "def_up.png",
-        text: "Biome: Enemy defense empowered"
-      });
-    }
+    if (bm.enemyATKMult > 1) modifiers.push({ icon: "atk_up.png", text: "Biome: Enemy attack empowered" });
+    if (bm.enemyDEFMult > 1) modifiers.push({ icon: "def_up.png", text: "Biome: Enemy defense empowered" });
   }
 
   return {
@@ -397,7 +354,7 @@ function rarityScaling(rarity) {
 }
 
 // ------------------------------------------------------------
-// MODIFIER TABLES (expand as needed)
+// MODIFIER TABLES
 // ------------------------------------------------------------
 const WEATHER_MODIFIERS = {
   rain: { icon: "rain.png", text: "Rain: +10% lightning damage" },
