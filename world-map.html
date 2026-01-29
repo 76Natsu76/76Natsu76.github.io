@@ -99,15 +99,16 @@
     import { WorldSim } from "./world-simulation.js";
     import { requireSession } from "./session-guard.js";
 
+    /* ============================================================
+       SESSION + PLAYER LEVEL
+    ============================================================ */
+
     await requireSession();
     const { username } = window.syncState;
 
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
 
-    /* ============================================================
-       LOAD PLAYER LEVEL
-    ============================================================ */
     let playerLevel = 1;
     try {
       const raw = localStorage.getItem("player_" + username);
@@ -128,15 +129,22 @@
       return res.json();
     }
 
-    const regionUnlocks = await loadJSON("./region-unlocks.json");
-    const worldBossTemplates = await loadJSON("./world-boss-templates.json");
+    const REGION_UNLOCKS = await loadJSON("./region-unlocks.json");
+    const WORLD_BOSSES = await loadJSON("./world-boss-templates.json");
+
+    /* ============================================================
+       INITIALIZE WORLD SIM
+    ============================================================ */
+    // Provide JSON data to WorldSim
+    WorldSim._injectBosses = WORLD_BOSSES;
+    WorldSim._injectUnlocks = REGION_UNLOCKS;
 
     /* ============================================================
        LOAD WORLD STATE
     ============================================================ */
     let worldState = {};
     try {
-      worldState = WorldSim.getState(username) || {};
+      worldState = WorldSim.getState() || {};
     } catch (e) {
       console.warn("WorldSim state failed", e);
       worldState = {};
@@ -159,7 +167,7 @@
         const [minLevel, maxLevel] = region.levelRange || [1, 999];
         const levelLocked = playerLevel < minLevel;
 
-        const globallyUnlocked = regionUnlocks.unlocks[regionKey] ?? false;
+        const globallyUnlocked = REGION_UNLOCKS.unlocks[regionKey] ?? false;
         const bossActive = !!state.worldBoss;
         const bossLocked = !globallyUnlocked;
 
