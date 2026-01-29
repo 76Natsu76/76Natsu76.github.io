@@ -939,13 +939,10 @@
     function resolvePlayer(raw) {
       const stats = raw.stats || {};
       const derived = raw.derived || {};
-  
+    
       const hpMax = raw.hpMax ?? stats.hp ?? 1;
       const manaMax = raw.manaMax ?? 0;
-  
-      const hpCurrent = Math.max(0, Math.min(raw.hpCurrent ?? hpMax, hpMax));
-      const manaCurrent = Math.max(0, Math.min(raw.mana ?? manaMax, manaMax));
-  
+    
       return {
         id: raw.username,
         name: raw.username,
@@ -953,43 +950,42 @@
         profession: raw.profession,
         race: raw.race,
         subrace: raw.subrace,
-  
-        hpCurrent,
+    
+        hpCurrent: raw.hpCurrent ?? hpMax,
         hpMax,
-        manaCurrent,
+        manaCurrent: raw.mana ?? manaMax,
         manaMax,
-  
+    
         atk: stats.atk ?? 1,
         def: stats.def ?? 0,
         speed: stats.speed ?? 1,
-  
+    
         critChance: derived.critChance ?? raw.crit ?? 0.05,
         critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
-  
+    
         element: raw.element || null,
-        statusEffects: Array.isArray(raw.statusEffects)
-          ? raw.statusEffects
-          : [],
+        statusEffects: raw.statusEffects || [],
         cooldowns: raw.cooldowns || {},
         pendingAction: null,
-  
+    
         abilities: raw.abilities || [],
         ultimate: raw.ultimate || null,
         ultimateCharge: raw.ultimateCharge || 0,
         ultimateChargeRequired:
           raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
-  
+    
         equipment: raw.equipment || {},
         talentTree: raw.talentTree || {},
         talentPoints: raw.talentPoints || 0,
-  
+    
         inventory: raw.inventory || [],
-  
+    
         isPlayer: true,
         lastAction: null,
         lastActionType: null
       };
     }
+
   
     function resolveEnemyForCombat(e) {
       return {
@@ -1125,26 +1121,27 @@
     /* ============================================================
        START FIGHT
     ============================================================ */
-  
     async function beginFight() {
       logBox.innerHTML = "";
-  
+    
       const playerState = resolvePlayer(rawPlayer);
       const enemyState = resolveEnemyForCombat(encounter.enemy);
-  
-      combat = buildCombatContext(
-        encounter.region,
-        encounter.biome,
-        encounter.weather,
-        encounter.event,
+    
+      combat = {
         playerState,
-        enemyState
-      );
-  
+        enemyState,
+        context: buildCombatContext(
+          encounter.region,
+          encounter.biome,
+          encounter.weather,
+          encounter.event
+        )
+      };
+    
       renderPanels();
       showActionPanel();
     }
-  
+    
     /* ============================================================
        RUN ROUND (WRAPPER AROUND combat-engine)
     ============================================================ */
