@@ -128,53 +128,19 @@ function clear() {
 // ENEMY TEMPLATE PICKER
 // ------------------------------------------------------------
 function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
-  const all = EnemyRegistry.enemies || [];
+  const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
 
-  // STEP 1 — strict filter
-  let candidates = all.filter(e =>
+  const pool = EnemyRegistry.enemies.filter(e =>
+    allowedKeys.includes(e.key) &&
     e.family === family &&
-    e.rarity.toLowerCase() === rarity.toLowerCase() &&
-    isEnemyAllowedInRegion(e.key, regionKey) &&
-    isEnemyAllowedInBiome(e.key, biomeKey)
+    e.rarity === rarity
   );
 
-  if (candidates.length) return chooseTemplate(candidates);
-
-  // STEP 2 — fallback: family + rarity + biome
-  candidates = all.filter(e =>
-    e.family === family &&
-    e.rarity.toLowerCase() === rarity.toLowerCase() &&
-    isEnemyAllowedInBiome(e.key, biomeKey)
-  );
-
-  if (candidates.length) return chooseTemplate(candidates);
-
-  // STEP 3 — fallback: family + rarity
-  candidates = all.filter(e =>
-    e.family === family &&
-    e.rarity.toLowerCase() === rarity.toLowerCase()
-  );
-
-  if (candidates.length) return chooseTemplate(candidates);
-
-  // STEP 4 — fallback: rarity only
-  candidates = all.filter(e =>
-    e.rarity.toLowerCase() === rarity.toLowerCase()
-  );
-
-  if (candidates.length) return chooseTemplate(candidates);
-
-  // STEP 5 — fallback: any enemy in level range
-  candidates = all.filter(e =>
-    e.level >= WORLD_DATA.regions[regionKey].levelRange[0] &&
-    e.level <= WORLD_DATA.regions[regionKey].levelRange[1]
-  );
-
-  if (candidates.length) return chooseTemplate(candidates);
-
-  // STEP 6 — absolute fallback
-  return chooseTemplate(all);
+  return pool.length
+    ? pool[Math.floor(Math.random() * pool.length)]
+    : null;
 }
+
 
 function chooseTemplate(list) {
   const chosen = list[Math.floor(Math.random() * list.length)];
