@@ -104,6 +104,7 @@
     ============================================================ */
 
     await requireSession();
+    await WorldSim.init();
     const { username } = window.syncState;
 
     document.getElementById("usernameDisplay").textContent =
