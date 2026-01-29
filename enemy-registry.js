@@ -18,7 +18,7 @@ export const EnemyRegistry = {
     this.behaviors  = await fetchJSON("./enemy-behaviors.json");
     this.abilities  = await fetchJSON("./enemy-abilities.json");
     this.ultimates  = await fetchJSON("./enemy-ultimates.json");
-    this.enemies    = await fetchJSON("./enemies.json");
+    this.enemies = Object.values(await fetchJSON("./enemies.json")); // we know this is an array
     this.regionMap  = await fetchJSON("./enemy-regions.json");
     this.subraceMap = await fetchJSON("./enemy-subrace.json");
   },
