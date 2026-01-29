@@ -1137,9 +1137,10 @@
           encounter.event
         )
       };
-    
-      renderPanels();
-      showActionPanel();
+      setTimeout(() => {
+        renderPanels();
+        showActionPanel();
+      }, 50);
     }
     
     /* ============================================================
@@ -1245,9 +1246,13 @@
       await runRound(action);
     }
   
-    function pickAutoAction() {
+    function pickAutoAction(player) {
+      if (player.ultimate && player.ultimateCharge >= player.ultimateChargeRequired) {
+        return { type: "ability", ability: player.ultimate, isUltimate: true };
+      }
       return { type: "basic" };
     }
+
   
     /* ============================================================
        ITEM SYSTEM
