@@ -21,12 +21,11 @@ const STORAGE_KEY = "world_state";
 let WORLD_BOSSES = {};
 let REGION_UNLOCKS = { unlocks: {} };
 
-export function _getBossData() {
-  return WORLD_BOSSES;
-}
-
+export function _getBossData() { return WORLD_BOSSES; }
+export function _getRegionUnlocks() { return REGION_UNLOCKS; }
 WorldSim._getBossData = _getBossData;
-
+WorldSim._getRegionUnlocks = _getRegionUnlocks;
+```”
 
 /* ============================================================
    INITIALIZATION — MUST BE CALLED BEFORE USING WORLD SIM
