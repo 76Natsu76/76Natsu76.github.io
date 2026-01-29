@@ -2,16 +2,16 @@
  * world-boss-engine.js
  ************************************************************/
 
-import { WORLD_BOSSES } from './world-boss-templates.json';
-import { rollLootTable } from './loot-tables.js';
-import { GuildEngine } from './guild-engine.js';
-import { REGION_UNLOCKS } from "./region-unlocks.json";
-import { saveRegionUnlocks } from "./region-unlocks.js"; // new helper
+import { WorldSim } from "./world-simulation.js";
+import { rollLootTable } from "./loot-tables.js";
+import { GuildEngine } from "./guild-engine.js";
+import { saveRegionUnlocks } from "./region-unlocks.js";
 
 export const WorldBossEngine = {
   activeBoss: null,
 
   spawnBoss(bossKey) {
+    const WORLD_BOSSES = WorldSim._getBossData();
     const template = WORLD_BOSSES[bossKey];
     if (!template) return null;
 
@@ -22,7 +22,7 @@ export const WorldBossEngine = {
       hp: template.maxHP,
       phaseIndex: 0,
       turnCount: 0,
-      contributions: {}, // playerId → damage
+      contributions: {},
       template
     };
 
@@ -36,21 +36,12 @@ export const WorldBossEngine = {
     boss.hp = Math.max(0, boss.hp - amount);
     boss.turnCount++;
 
-    // Track contribution
     boss.contributions[playerId] =
       (boss.contributions[playerId] || 0) + amount;
-/*
-    const guildId = getPlayerGuild(playerId);
-    boss.guildContributions[guildId] =
-      (boss.guildContributions[guildId] || 0) + amount;
-*/ 
-    // Phase transitions
-    this.checkPhaseTransition();
 
-    // Enrage
+    this.checkPhaseTransition();
     this.checkEnrage();
 
-    // Death
     if (boss.hp <= 0) {
       return this.handleBossDeath();
     }
@@ -63,13 +54,11 @@ export const WorldBossEngine = {
     const template = boss.template;
 
     const hpPercent = boss.hp / boss.maxHP;
-
     const nextPhase = template.phases[boss.phaseIndex + 1];
     if (!nextPhase) return;
 
     if (hpPercent <= nextPhase.threshold) {
       boss.phaseIndex++;
-      // You can trigger flavor or events here
     }
   },
 
@@ -86,21 +75,22 @@ export const WorldBossEngine = {
     const boss = this.activeBoss;
     const template = boss.template;
 
-    // Unlock region globally 
-    const regionKey = template.spawnRules.region; 
-    REGION_UNLOCKS.unlocks[regionKey] = true; 
-    saveRegionUnlocks(REGION_UNLOCKS);
-    
+    const regionKey = template.spawnRules.region;
+
+    // Unlock region globally
+    const unlocks = WorldSim._getRegionUnlocks();
+    unlocks.unlocks[regionKey] = true;
+    saveRegionUnlocks(unlocks);
+
     const loot = rollLootTable(template.lootTable);
     const contributions = boss.contributions;
 
-    // Sort contributors
     const sorted = Object.entries(contributions)
       .sort((a, b) => b[1] - a[1]);
 
     const rewards = {
       loot,
-      contributions: sorted, 
+      contributions: sorted,
       unlockedRegion: regionKey
     };
 
