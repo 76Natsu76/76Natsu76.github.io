@@ -9,21 +9,22 @@ import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { WorldBossAnnouncements } from "./world-boss-announcements.js";
 
 export const WorldSim = {
+  init,
   tick,
   getState,
-  forceUpdate,
-  init
+  forceUpdate
 };
 
 const STORAGE_KEY = "world_state";
 
+// These will be filled by init()
 let WORLD_BOSSES = {};
 let REGION_UNLOCKS = { unlocks: {} };
 
 /* ============================================================
    INITIALIZATION — MUST BE CALLED BEFORE USING WORLD SIM
 ============================================================ */
-export async function init() {
+async function init() {
   WORLD_BOSSES = await loadJSON("./world-boss-templates.json");
   REGION_UNLOCKS = await loadJSON("./region-unlocks.json");
 }
@@ -121,6 +122,7 @@ function tick() {
       }
     } else {
       const boss = r.worldBoss;
+
       boss.despawnTimer--;
       if (boss.despawnTimer <= 0 || boss.hp <= 0) {
         r.worldBoss = null;
