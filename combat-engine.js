@@ -13,24 +13,19 @@ import {
  * CORE CONTEXT
  ****************************************************/
 
-export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, player, enemy) {
+export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey) {
   const weatherDef = weatherTable[weatherKey] || null;
 
   return {
-    regionKey: regionKey || null,
-    biomeKey: biomeKey || null,
+    regionKey,
+    biomeKey,
     weatherKey: weatherKey || (weatherDef ? weatherDef.key : "clear"),
-    eventKey: eventKey || null,
+    eventKey,
     turn: 1,
-    lastPlayerActionType: null,
-    flavor: {
-      region: { exploration: [], midCombat: [] },
-      biome: { exploration: [], midCombat: [] },
-      weather: { intro: [], midCombat: [] },
-      event: { intro: [], midCombat: [] }
-    }
+    lastPlayerActionType: null
   };
 }
+
 
 export function applyEnvironmentIntroFlavor(context, logs) {
   const weatherKey = context.weatherKey || "clear";
