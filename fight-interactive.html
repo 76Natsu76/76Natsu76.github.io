@@ -899,8 +899,9 @@
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
   
-    let combat = null; // add this at top of script
-    
+    let combat = null;
+    let autoBattle = false;
+  
     // Choose player version from syncState
     let rawPlayer = null;
     if (conflict === "remote-only") rawPlayer = remote;
@@ -909,7 +910,7 @@
     else if (conflict === "conflict") rawPlayer = remote || local;
     else rawPlayer = local || remote;
   
-    // ⭐ Fallback: if syncState has nothing, try local PlayerStorage
+    // Fallback: if syncState has nothing, try local PlayerStorage
     if (!rawPlayer) {
       const fallback = PlayerStorage.load(username);
       if (fallback) {
@@ -930,20 +931,20 @@
       alert("No encounter found. Returning to map.");
       window.location.href = "world-map.html";
     }
-    
   
     /* ============================================================
        RUNTIME ENTITIES
     ============================================================ */
   
     function resolvePlayer(raw) {
-      const stats = raw.computedStatsJSON || {};
+      const stats = raw.stats || {};
+      const derived = raw.derived || {};
   
-      const hpMax = stats.hpMax || 1;
-      const manaMax = stats.manaMax || 0;
+      const hpMax = raw.hpMax ?? stats.hp ?? 1;
+      const manaMax = raw.manaMax ?? 0;
   
       const hpCurrent = Math.max(0, Math.min(raw.hpCurrent ?? hpMax, hpMax));
-      const manaCurrent = Math.max(0, Math.min(raw.manaCurrent ?? manaMax, manaMax));
+      const manaCurrent = Math.max(0, Math.min(raw.mana ?? manaMax, manaMax));
   
       return {
         id: raw.username,
@@ -958,16 +959,16 @@
         manaCurrent,
         manaMax,
   
-        atk: stats.atk || 1,
-        def: stats.def || 0,
-        speed: stats.speed || 1,
+        atk: stats.atk ?? 1,
+        def: stats.def ?? 0,
+        speed: stats.speed ?? 1,
   
-        critChance: stats.critChance || 0.05,
-        critDamageMult: stats.critDamage || 1.5,
+        critChance: derived.critChance ?? raw.crit ?? 0.05,
+        critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
   
-        element: stats.element || null,
-        statusEffects: Array.isArray(raw.playerStatusEffects)
-          ? raw.playerStatusEffects
+        element: raw.element || null,
+        statusEffects: Array.isArray(raw.statusEffects)
+          ? raw.statusEffects
           : [],
         cooldowns: raw.cooldowns || {},
         pendingAction: null,
@@ -975,15 +976,14 @@
         abilities: raw.abilities || [],
         ultimate: raw.ultimate || null,
         ultimateCharge: raw.ultimateCharge || 0,
-        ultimateChargeRequired: raw.ultimateChargeRequired || 100,
+        ultimateChargeRequired:
+          raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
   
         equipment: raw.equipment || {},
         talentTree: raw.talentTree || {},
         talentPoints: raw.talentPoints || 0,
   
         inventory: raw.inventory || [],
-  
-        regionMetaJSON: raw.regionMetaJSON || {},
   
         isPlayer: true,
         lastAction: null,
@@ -1003,6 +1003,9 @@
         def: e.defense ?? e.def ?? 0,
         speed: e.speed || 1,
   
+        manaCurrent: e.mana ?? 0,
+        manaMax: e.manaMax ?? 0,
+  
         statusEffects: [],
         cooldowns: {},
         isPlayer: false
@@ -1017,9 +1020,6 @@
     const actionPanel = document.getElementById("actionPanel");
     const abilityPanel = document.getElementById("abilityPanel");
     const itemModal = document.getElementById("itemModal");
-  
-    let combat = null;
-    let autoBattle = false;
   
     function isDead(entity) {
       return !entity || entity.hpCurrent <= 0;
@@ -1075,7 +1075,12 @@
       document.getElementById("enemyLevel").textContent = "Lv " + (e.level || 1);
   
       updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
-      updateManaBar("enemyManaFill", "enemyManaText", e.manaCurrent || 0, e.manaMax || 0);
+      updateManaBar(
+        "enemyManaFill",
+        "enemyManaText",
+        e.manaCurrent || 0,
+        e.manaMax || 0
+      );
     }
   
     function updateHPBar(fillId, textId, current, max) {
@@ -1120,13 +1125,13 @@
     /* ============================================================
        START FIGHT
     ============================================================ */
-
+  
     async function beginFight() {
       logBox.innerHTML = "";
-    
+  
       const playerState = resolvePlayer(rawPlayer);
       const enemyState = resolveEnemyForCombat(encounter.enemy);
-    
+  
       combat = buildCombatContext(
         encounter.region,
         encounter.biome,
@@ -1135,10 +1140,10 @@
         playerState,
         enemyState
       );
-    
-      updateUI(combat); // optional
+  
+      renderPanels();
+      showActionPanel();
     }
-
   
     /* ============================================================
        RUN ROUND (WRAPPER AROUND combat-engine)
@@ -1238,7 +1243,7 @@
     }
   
     async function autoLoop() {
-      if (!autoBattle) return;
+      if (!autoBattle || !combat) return;
       const action = pickAutoAction(combat.playerState);
       await runRound(action);
     }
@@ -1264,6 +1269,11 @@
       const list = document.getElementById("itemList");
       list.innerHTML = "";
   
+      if (!combat || !combat.playerState) {
+        list.innerHTML = "<div>No usable items.</div>";
+        return;
+      }
+  
       const inv = combat.playerState.inventory || [];
   
       if (!inv.length) {
@@ -1285,6 +1295,8 @@
     ============================================================ */
   
     function openAbilityMenu() {
+      if (!combat || !combat.playerState) return;
+  
       const list = document.getElementById("abilityList");
       list.innerHTML = "";
   
@@ -1370,6 +1382,11 @@
     ============================================================ */
   
     function inspectEnemy() {
+      if (!combat || !combat.enemyState) {
+        alert("Enemy not initialized yet.");
+        return;
+      }
+  
       const e = combat.enemyState;
       alert(
         `${e.name}\n` +
@@ -1464,6 +1481,5 @@
     window.continueExploring = continueExploring;
     window.goToMap = goToMap;
   </script>
-
 </body>
 </html>
