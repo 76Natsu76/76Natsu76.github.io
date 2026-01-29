@@ -153,3 +153,64 @@ export const WEATHER_COMBAT_FLAVOR = {
     "Void energy lashes out violently as the fight begins."
   ]
 };
+
+export const WEATHER_COMBAT_LOGS = {
+  rain: {
+    firePenalty: "The rain dampens the flames!",
+    lightningBoost: "Lightning crackles with amplified power!",
+    waterBoost: "Water surges with the storm’s momentum!"
+  },
+  fog: {
+    accuracyPenalty: "The fog obscures your vision."
+  },
+  storm: {
+    lightningBoost: "The storm supercharges your lightning attack!",
+    shockBoost: "Electricity dances wildly in the storm!"
+  },
+  heatwave: {
+    fireBoost: "The heatwave intensifies the flames!",
+    icePenalty: "The scorching heat weakens your frost attack."
+  },
+  arcane_winds: {
+    arcaneBoost: "Arcane winds amplify your spell!"
+  },
+  void_storm: {
+    voidBoost: "Void energy lashes out violently!",
+    accuracyPenalty: "Chaotic void winds disrupt your aim."
+  }
+};
+
+export const WEATHER_DAMAGE_EFFECTS = {
+  clear: {},
+
+  rain: {
+    damageBoost: { lightning: 0.15, water: 0.10 },
+    damagePenalty: { fire: 0.15 },
+    critPenalty: 0.05
+  },
+
+  fog: {
+    accuracyPenalty: 0.10,
+    critPenalty: 0.10
+  },
+
+  storm: {
+    damageBoost: { lightning: 0.25 },
+    statusBoost: { shock: 0.20 },
+    critBoost: 0.05
+  },
+
+  heatwave: {
+    damageBoost: { fire: 0.15 },
+    damagePenalty: { ice: 0.20 }
+  },
+
+  arcane_winds: {
+    damageBoost: { arcane: 0.20 }
+  },
+
+  void_storm: {
+    damageBoost: { void: 0.25 },
+    accuracyPenalty: 0.05
+  }
+};
