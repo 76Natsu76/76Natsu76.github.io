@@ -1,258 +1,143 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>World Map</title>
+enemy-registry.js : // enemyRegistry.js
 
-  <style>
-    body {
-      background: #0d0f14;
-      color: #e8e8e8;
-      font-family: system-ui, sans-serif;
-      padding: 24px;
-    }
+export const EnemyRegistry = {
+  families: {},
+  variants: {},
+  tags: {},
+  behaviors: {},
+  abilities: {},
+  ultimates: {},
+  enemies: [],
+  regionMap: {},
+  subraceMap: {},
 
-    h1 {
-      color: #7fffd4;
-      margin-bottom: 4px;
-    }
+  async loadAll() {
+    this.families   = await fetchJSON("/data/enemy-families.json");
+    this.variants   = await fetchJSON("/data/enemy-variants.json");
+    this.tags       = await fetchJSON("/data/enemy-tags.json");
+    this.behaviors  = await fetchJSON("/data/enemy-behaviors.json");
+    this.abilities  = await fetchJSON("/data/enemy-abilities.json");
+    this.ultimates  = await fetchJSON("/data/enemy-ultimates.json");
+    this.enemies    = await fetchJSON("/data/enemies.json");
+    this.regionMap  = await fetchJSON("/data/enemy-regions.json");
+    this.subraceMap = await fetchJSON("/data/enemy-subrace.json");
+  },
 
-    #usernameDisplay {
-      opacity: 0.8;
-      margin-bottom: 20px;
-    }
+  getEnemy(key) {
+    return this.enemies.find(e => e.key === key) || null;
+  },
 
-    .region-card {
-      background: #11141c;
-      border: 1px solid #262a36;
-      border-radius: 8px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
+  buildEnemyTemplate(key) {
+    const raw = this.getEnemy(key);
+    if (!raw) throw new Error("Unknown enemy: " + key);
 
-    .region-card h2 {
-      margin-top: 0;
-      color: #9af7ff;
-    }
+    const family  = this.families[raw.family];
+    if (!family) throw new Error("Unknown family: " + raw.family);
 
-    .stat-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 4px;
-      border-bottom: 1px solid #1c1f28;
-      font-size: 14px;
-    }
+    const variant = raw.variant ? this.variants[raw.variant] : null;
 
-    .stat-row:last-child {
-      border-bottom: none;
-    }
+    // --- FAMILY + VARIANT MODIFIERS ---
+    const famMod = family.familyModifiers || {};
+    const varMod = variant?.combatModifiers || {};
 
-    .event {
-      margin-top: 6px;
-      padding: 6px;
-      background: #1a1d24;
-      border-radius: 4px;
-      border: 1px solid #333;
-      font-size: 13px;
-    }
+    const hpMult  = (famMod.hpMult  ?? 1) * (varMod.hpMult  ?? 1);
+    const atkMult = (famMod.atkMult ?? 1) * (varMod.atkMult ?? 1);
+    const defMult = (famMod.defMult ?? 1) * (varMod.defMult ?? 1);
 
-    .btn {
-      margin-top: 12px;
-      padding: 8px 12px;
-      border-radius: 4px;
-      border: 1px solid #444;
-      background: #1a1d24;
-      color: #eee;
-      cursor: pointer;
-    }
+    // --- BASE STATS ---
+    const baseHP  = (raw.baseHP  ?? family.baseHP)  * hpMult;
+    const baseATK = (raw.baseATK ?? family.baseATK) * atkMult;
+    const baseDEF = (raw.baseDEF ?? family.baseDEF) * defMult;
 
-    .btn:hover {
-      background: #222832;
-    }
+    // --- ELEMENTAL AFFINITY ---
+    const elementAffinity = {
+      ...(family.elementAffinity || {}),
+      ...(variant?.elementAffinity || {})
+    };
 
-    .btn.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-    }
+    // --- BEHAVIOR ---
+    const behaviorKey = variant?.behavior || family.behavior;
+    const behavior = this.behaviors[behaviorKey] || null;
 
-    .section {
-      margin-top: 12px;
-    }
-  </style>
-</head>
+    // --- TAGS ---
+    const tagKeys = [
+      ...(family.tags || []),
+      ...(variant?.tags || [])
+    ];
 
-<body>
+    const resolvedTags = tagKeys.map(t => this.tags[t]).filter(Boolean);
 
-  <h1>World Map</h1>
-  <div id="usernameDisplay"></div>
-  <div id="mapContainer">Loading world...</div>
+    // --- ABILITIES ---
+    const abilityKeys = [
+      ...(family.abilities || []),
+      ...(variant?.abilities || [])
+    ];
 
-  <button class="btn" id="characterBtn">Character</button>
-  <button class="btn" id="inventoryBtn">Inventory</button>
-  <button class="btn" id="bestiaryBtn">Bestiary</button>
-  
-  <script type="module">
-    import { WORLD_DATA } from "./world-data.js";
-    import { BIOMES } from "./biomes.js";
-    import { REGION_TO_BIOME } from "./region-to-biome.js";
-    import { EncounterEngine } from "./encounters.js";
-    import { initEncounters } from "./encounters.js";
-    import { EnemyRegistry } from "./enemy-registry.js";
-    import { WorldSim } from "./world-simulation.js";
-    import { requireSession } from "./session-guard.js";
+    const resolvedAbilities = abilityKeys.map(a => this.abilities[a]).filter(Boolean);
 
-    /* ============================================================
-       SESSION + INITIALIZATION
-    ============================================================ */
+    // --- ULTIMATE ---
+    const ultimateKey = variant?.ultimate || family.ultimate || null;
+    const ultimate = ultimateKey ? this.ultimates[ultimateKey] : null;
 
-    await requireSession();
-    await initEncounters();
-    await EnemyRegistry.loadAll();   // ⭐ REQUIRED
-    await WorldSim.init();
+    // --- REGION ---
+    const region = this.regionMap[raw.key] || null;
 
-    const { username } = window.syncState;
+    // --- SUBRACE ---
+    const subrace = raw.subrace || this.subraceMap[raw.key] || null;
 
-    document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
+    // --- LOOT / EFFECTS ---
+    const lootTable = parseMaybeJSON(raw.lootTableJSON) || [];
+    const activeEffects = parseMaybeJSON(raw.activeEffectsJSON) || [];
 
-    /* ============================================================
-       PLAYER LEVEL
-    ============================================================ */
-    let playerLevel = 1;
-    try {
-      const raw = localStorage.getItem("player_" + username);
-      if (raw) {
-        const p = JSON.parse(raw);
-        playerLevel = Number(p.level || 1);
-      }
-    } catch (e) {
-      console.warn("Failed to load player level", e);
-    }
+    return {
+      key: raw.key,
+      name: raw.name,
 
-    /* ============================================================
-       WORLD DATA FROM SIM
-    ============================================================ */
-    const REGION_UNLOCKS = WorldSim._getRegionUnlocks();
-    const WORLD_BOSSES = WorldSim._getBossData();
+      family: raw.family,
+      variant: raw.variant || null,
+      subrace,
 
-    let worldState = {};
-    try {
-      worldState = WorldSim.getState() || {};
-    } catch (e) {
-      console.warn("WorldSim state failed", e);
-      worldState = {};
-    }
+      rarity: raw.rarity,
+      element: raw.element,
+      level: raw.level,
 
-    /* ============================================================
-       RENDER WORLD
-    ============================================================ */
-    function renderWorld() {
-      const container = document.getElementById("mapContainer");
-      const out = [];
+      baseHP,
+      baseATK,
+      baseDEF,
 
-      for (const regionKey in WORLD_DATA.regions) {
-        const region = WORLD_DATA.regions[regionKey];
-        const state = worldState[regionKey] || {};
+      elementAffinity,
+      behavior,
 
-        const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
-        const biome = BIOMES[biomeKey];
+      tags: resolvedTags,
+      abilities: resolvedAbilities,
+      ultimate,
 
-        const [minLevel, maxLevel] = region.levelRange || [1, 999];
-        const levelLocked = playerLevel < minLevel;
+      lootTable,
+      activeEffects,
 
-        const globallyUnlocked = REGION_UNLOCKS.unlocks[regionKey] ?? false;
-        const bossActive = !!state.worldBoss;
-        const bossLocked = !globallyUnlocked;
+      region,
 
-        const regionLocked = levelLocked || bossLocked;
+      flavor: variant?.flavor || family.flavor || ""
+    };
+  }
+};
 
-        const events = region.eventPool?.length
-          ? region.eventPool.map(e => `<div class="event">${format(e)}</div>`).join("")
-          : "<div class='event'>None</div>";
+// -----------------
+// Helper Functions
+// -----------------
 
-        let lockMessage = "";
-        if (levelLocked) lockMessage = `Requires Lv ${minLevel}`;
-        else if (bossLocked) lockMessage = `Locked — Defeat the World Boss`;
+async function fetchJSON(path) {
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to load " + path);
+  return await res.json();
+}
 
-        out.push(`
-          <div class="region-card">
-            <h2>${region.name}</h2>
-
-            <div class="stat-row"><span>Biome</span><span>${format(biomeKey)}</span></div>
-            <div class="stat-row"><span>Weather</span><span>${region.weatherPool?.join(", ") || "Unknown"}</span></div>
-            <div class="stat-row"><span>Hazards</span><span>${biome?.hazards?.map(h => h.key).join(", ") || "None"}</span></div>
-            <div class="stat-row"><span>Danger</span><span>${region.danger || "Moderate"}</span></div>
-
-            <div class="stat-row">
-              <span>World Boss</span>
-              <span>${bossActive ? "Active" : globallyUnlocked ? "Defeated" : "Locked"}</span>
-            </div>
-
-            <div class="stat-row">
-              <span>Level Range</span>
-              <span>${minLevel} - ${maxLevel}</span>
-            </div>
-
-            <div class="section">
-              <strong>Events:</strong>
-              ${events}
-            </div>
-
-            <button class="btn ${regionLocked ? "disabled" : ""}"
-              data-region="${regionKey}"
-              data-locked="${regionLocked ? "1" : "0"}">
-              ${regionLocked ? lockMessage : "Enter Region"}
-            </button>
-          </div>
-        `);
-      }
-
-      container.innerHTML = out.join("");
-    }
-
-    renderWorld();
-
-    /* ============================================================
-       REGION CLICK HANDLER
-    ============================================================ */
-    document.getElementById("mapContainer").addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-region]");
-      if (!btn) return;
-
-      const regionKey = btn.getAttribute("data-region");
-      const locked = btn.getAttribute("data-locked") === "1";
-      if (locked) return;
-
-      const encounter = EncounterEngine.generate(regionKey, username);
-      localStorage.setItem("current_encounter", JSON.stringify(encounter));
-      window.location.href = "fight-interactive.html";
-    });
-
-    /* ============================================================
-       NAVIGATION BUTTONS
-    ============================================================ */
-    document.getElementById("characterBtn").addEventListener("click", () => {
-      window.location.href = "character.html";
-    });
-
-    document.getElementById("inventoryBtn").addEventListener("click", () => {
-      window.location.href = "inventory.html";
-    });
-
-    document.getElementById("bestiaryBtn").addEventListener("click", () => {
-      window.location.href = "bestiary.html";
-    });
-
-    /* ============================================================
-       HELPERS
-    ============================================================ */
-    function format(str) {
-      return String(str)
-        .replace(/_/g, " ")
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase());
-    }
-  </script>
-
-</body>
-</html>
+function parseMaybeJSON(value) {
+  if (!value) return null;
+  if (typeof value !== "string") return value;
+  try {
+    return JSON.parse(value);
+  } catch {
+    return null;
+  }
+}
