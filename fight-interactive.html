@@ -899,7 +899,7 @@
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
   
-    // Choose player version
+    // Choose player version from syncState
     let rawPlayer = null;
     if (conflict === "remote-only") rawPlayer = remote;
     else if (conflict === "local-only") rawPlayer = local;
@@ -907,12 +907,20 @@
     else if (conflict === "conflict") rawPlayer = remote || local;
     else rawPlayer = local || remote;
   
+    // ⭐ Fallback: if syncState has nothing, try local PlayerStorage
+    if (!rawPlayer) {
+      const fallback = PlayerStorage.load(username);
+      if (fallback) {
+        rawPlayer = fallback;
+      }
+    }
+  
     if (!rawPlayer) {
       alert("No player data found.");
       window.location.href = "world-map.html";
     }
   
-    // Cache locally
+    // Cache locally (only if valid)
     PlayerStorage.save(username, rawPlayer);
   
     const encounter = EncounterEngine.loadFromSession();
