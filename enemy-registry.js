@@ -1,4 +1,4 @@
-enemy-registry.js : // enemyRegistry.js
+// enemyRegistry.js
 
 export const EnemyRegistry = {
   families: {},
