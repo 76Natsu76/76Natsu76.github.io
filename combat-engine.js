@@ -242,8 +242,15 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
 
   let finalDmg = applyShieldReduction(defender, mitigated, logs);
   finalDmg = Math.max(0, finalDmg);
+  if (attacker && attacker.isPlayer) {
+    attacker.ultimateCharge = Math.min( attacker.ultimateChargeRequired, attacker.ultimateCharge || 0) + Math.floor(finalDmg * 0.5));
+  }
 
   defender.hpCurrent = Math.max(0, defender.hpCurrent - finalDmg);
+
+  if (defender && defender.isPlayer) {
+    defender.ultimateCharge = Math.min( defender.ultimateChargeRequired, (defender.ultimateCharge || 0) + Math.floor(finalDmg * 0.25));
+  }
 
   if (logs && finalDmg > 0) {
     const srcName = attacker ? attacker.name : "The environment";
