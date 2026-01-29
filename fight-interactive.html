@@ -899,6 +899,8 @@
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
   
+    let combat = null; // add this at top of script
+    
     // Choose player version from syncState
     let rawPlayer = null;
     if (conflict === "remote-only") rawPlayer = remote;
@@ -928,6 +930,7 @@
       alert("No encounter found. Returning to map.");
       window.location.href = "world-map.html";
     }
+    
   
     /* ============================================================
        RUNTIME ENTITIES
@@ -1117,14 +1120,14 @@
     /* ============================================================
        START FIGHT
     ============================================================ */
-  
+
     async function beginFight() {
       logBox.innerHTML = "";
-  
+    
       const playerState = resolvePlayer(rawPlayer);
       const enemyState = resolveEnemyForCombat(encounter.enemy);
-  
-      const context = buildCombatContext(
+    
+      combat = buildCombatContext(
         encounter.region,
         encounter.biome,
         encounter.weather,
@@ -1132,33 +1135,10 @@
         playerState,
         enemyState
       );
-  
-      combat = {
-        playerState,
-        enemyState,
-        context
-      };
-  
-      const introLogs = [];
-      introLogs.push(`You encounter **${enemyState.name}** in the ${encounter.region}!`);
-      if (encounter.hazard) {
-        introLogs.push(`The area is hazardous: ${encounter.hazard}`);
-      }
-  
-      renderLogs(introLogs);
-      renderPanels();
-  
-      const outcome = checkOutcome(playerState, enemyState);
-      if (outcome) {
-        addLog("Combat ended immediately: " + outcome);
-        await finalizeRewards(outcome);
-        endCombat(outcome);
-        return;
-      }
-  
-      showCinematicIntro(enemyState);
-      showActionPanel();
+    
+      updateUI(combat); // optional
     }
+
   
     /* ============================================================
        RUN ROUND (WRAPPER AROUND combat-engine)
