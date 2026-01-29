@@ -5,7 +5,6 @@
  ************************************************************/
 
 import { WorldSim } from "./world-simulation.js";
-import { WORLD_BOSSES } from "./world-boss-templates.json";
 
 export const WorldBossMap = {
   init() {
@@ -14,6 +13,7 @@ export const WorldBossMap = {
 
   renderBossMarkers() {
     const state = WorldSim.getState();
+    const WORLD_BOSSES = WorldSim._getBossData(); // <-- NEW
 
     for (const regionKey in state) {
       const regionState = state[regionKey];
