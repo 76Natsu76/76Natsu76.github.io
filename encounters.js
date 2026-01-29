@@ -277,8 +277,8 @@ function buildEnemyInstance(
 
     hp: baseHP,
     hpMax: baseHP,
-    attack: baseATK,
-    defense: baseDEF,
+    atk: baseATK,
+    def: baseDEF,
 
     portrait: template.portrait || `/assets/enemies/${template.key}.png`,
     flavor: template.flavor || "",
