@@ -14,16 +14,15 @@ import {
  ****************************************************/
 
 export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, player, enemy) {
-  const weatherDef = weatherTable[encounter.weather] || null;
+  const weatherDef = weatherTable[weatherKey] || null;
 
   return {
     regionKey: regionKey || null,
     biomeKey: biomeKey || null,
     weatherKey: weatherKey || (weatherDef ? weatherDef.key : "clear"),
     eventKey: eventKey || null,
-    player,
-    enemy,
     turn: 1,
+    lastPlayerActionType: null,
     flavor: {
       region: { exploration: [], midCombat: [] },
       biome: { exploration: [], midCombat: [] },
@@ -264,8 +263,6 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
  ****************************************************/
 
 export function resolveAbilityUse(attacker, defender, ability, context, logs) {
-  const weatherKey = context.weatherKey || "clear";
-
   const hitChance = computeHitChance(attacker, defender, context);
   if (!rollChance(hitChance)) {
     if (logs) logs.push(`${attacker.name}'s ${ability.name} misses!`);
@@ -274,7 +271,7 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
 
   const critChance = computeCritChance(attacker, context);
   const isCrit = rollChance(critChance);
-  const power = ability.power || 0;
+  const power = ability.power || ability.basePower || 0;
   let baseDamage = power + attacker.atk;
 
   if (isCrit) {
