@@ -2,12 +2,14 @@
  * world-boss-announcements.js
  ************************************************************/
 
-import { WORLD_BOSSES } from "./world-boss-templates.json";
+import { WorldSim } from "./world-simulation.js";
 
 export const WorldBossAnnouncements = {
   lastState: {},
 
   checkForAnnouncements(newState) {
+    const WORLD_BOSSES = WorldSim._getBossData(); // <-- NEW
+
     for (const regionKey in newState) {
       const region = newState[regionKey];
       const prev = this.lastState[regionKey];
