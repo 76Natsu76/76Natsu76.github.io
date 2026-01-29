@@ -1242,8 +1242,7 @@
   
     async function autoLoop() {
       if (!autoBattle || !combat) return;
-    
-      // Wait 1 second so the player can cancel auto mode
+      // 1 second delay so player can cancel
       await new Promise(resolve => setTimeout(resolve, 1000));
     
       // If auto was turned off during the delay, stop
@@ -1252,16 +1251,17 @@
       const action = pickAutoAction(combat.playerState);
       await runRound(action);
     
-      // Continue looping
+      // If combat ended, stop
+      if (!combat || combat.enemyState.hpCurrent <= 0 || combat.playerState.hpCurrent <= 0) {
+        autoBattle = false;
+        return;
+      }
+      // Continue
       autoLoop();
     }
-
-
   
     function pickAutoAction(player) {
-      // ================================
-      // 1. Ultimate ready?
-      // ================================
+      // Ultimate ready?
       if (
         player.ultimate &&
         player.ultimateCharge >= (player.ultimateChargeRequired || 100)
@@ -1273,9 +1273,7 @@
         };
       }
     
-      // ================================
-      // 2. Collect usable abilities
-      // ================================
+      // Usable abilities
       const abilities = player.abilities || [];
       const usable = abilities.filter(a => {
         const cd = player.cooldowns?.[a.key] || 0;
@@ -1283,22 +1281,16 @@
         return cd <= 0 && player.manaCurrent >= manaCost;
       });
     
-      // ================================
-      // 3. 40% chance to use an ability
-      // ================================
+      // 40% chance to use ability
       if (usable.length && Math.random() < 0.40) {
         const ability = usable[Math.floor(Math.random() * usable.length)];
-        return {
-          type: "ability",
-          ability
-        };
+        return { type: "ability", ability };
       }
     
-      // ================================
-      // 4. Default basic attack
-      // ================================
+      // Default
       return { type: "basic" };
     }
+
 
 
   
