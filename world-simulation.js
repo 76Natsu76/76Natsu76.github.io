@@ -12,20 +12,27 @@ export const WorldSim = {
   init,
   tick,
   getState,
-  forceUpdate
+  forceUpdate,
+  _getBossData,
+  _getRegionUnlocks
 };
 
 const STORAGE_KEY = "world_state";
 
-// These will be filled by init()
+// These are filled by init()
 let WORLD_BOSSES = {};
 let REGION_UNLOCKS = { unlocks: {} };
 
-export function _getBossData() { return WORLD_BOSSES; }
-export function _getRegionUnlocks() { return REGION_UNLOCKS; }
-WorldSim._getBossData = _getBossData;
-WorldSim._getRegionUnlocks = _getRegionUnlocks;
-```”
+/* ============================================================
+   ACCESSORS FOR OTHER MODULES
+============================================================ */
+function _getBossData() {
+  return WORLD_BOSSES;
+}
+
+function _getRegionUnlocks() {
+  return REGION_UNLOCKS;
+}
 
 /* ============================================================
    INITIALIZATION — MUST BE CALLED BEFORE USING WORLD SIM
