@@ -5,9 +5,7 @@
   "orc": 1,
   "goblinoid": 1,
   "beastkin": 1
-}
-
-{
+  
   "draconian": 2,
   "undead": 2,
   "demonborn": 2,
@@ -26,10 +24,7 @@
   "insectoids": 2,
   "arachnids": 2,
   "supernatural": 2
-}
 
-
-{
   "astralborn": 3,
   "chaosborn": 3,
   "dragonkin": 3,
@@ -42,10 +37,7 @@
   "mythic_beast": 3,
   "divinity": 3,
   "unique": 3
-}
 
-
-{
   "techborn": 4,
   "machina": 4,
   "dragon": 4,
@@ -59,10 +51,7 @@
   "cosmic_construct": 4,
   "cosmic_fauna": 4,
   "mythic_undead": 4
-}
 
-
-{
   "anomaly": 5,
   "legendary_boss_template": 5,
   "paragon": 5,
@@ -78,14 +67,8 @@
   "meta_entity": 5,
   "narrative_construct": 5,
   "emotional": 5
-}
 
-
-{
   "paradox_god": 6
-}
 
-
-{
   "multiversal_paragon": 7
 }
