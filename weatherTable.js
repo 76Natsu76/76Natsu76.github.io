@@ -128,3 +128,28 @@ export const weatherTable = {
     }
   }
 };
+
+
+export const WEATHER_COMBAT_FLAVOR = {
+  clear: [
+    "The air is calm — perfect conditions for battle."
+  ],
+  rain: [
+    "Rain pours down, slickening the ground beneath you."
+  ],
+  fog: [
+    "A thick fog obscures your vision."
+  ],
+  storm: [
+    "Lightning cracks overhead as combat begins."
+  ],
+  heatwave: [
+    "The oppressive heat drains your stamina."
+  ],
+  arcane_winds: [
+    "Arcane winds swirl unpredictably around you."
+  ],
+  void_storm: [
+    "Void energy lashes out violently as the fight begins."
+  ]
+};
