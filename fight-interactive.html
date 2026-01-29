@@ -1242,16 +1242,64 @@
   
     async function autoLoop() {
       if (!autoBattle || !combat) return;
+    
+      // Wait 1 second so the player can cancel auto mode
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    
+      // If auto was turned off during the delay, stop
+      if (!autoBattle) return;
+    
       const action = pickAutoAction(combat.playerState);
       await runRound(action);
+    
+      // Continue looping
+      autoLoop();
     }
+
+
   
     function pickAutoAction(player) {
-      if (player.ultimate && player.ultimateCharge >= player.ultimateChargeRequired) {
-        return { type: "ability", ability: player.ultimate, isUltimate: true };
+      // ================================
+      // 1. Ultimate ready?
+      // ================================
+      if (
+        player.ultimate &&
+        player.ultimateCharge >= (player.ultimateChargeRequired || 100)
+      ) {
+        return {
+          type: "ability",
+          ability: player.ultimate,
+          isUltimate: true
+        };
       }
+    
+      // ================================
+      // 2. Collect usable abilities
+      // ================================
+      const abilities = player.abilities || [];
+      const usable = abilities.filter(a => {
+        const cd = player.cooldowns?.[a.key] || 0;
+        const manaCost = a.manaCost || 0;
+        return cd <= 0 && player.manaCurrent >= manaCost;
+      });
+    
+      // ================================
+      // 3. 40% chance to use an ability
+      // ================================
+      if (usable.length && Math.random() < 0.40) {
+        const ability = usable[Math.floor(Math.random() * usable.length)];
+        return {
+          type: "ability",
+          ability
+        };
+      }
+    
+      // ================================
+      // 4. Default basic attack
+      // ================================
       return { type: "basic" };
     }
+
 
   
     /* ============================================================
