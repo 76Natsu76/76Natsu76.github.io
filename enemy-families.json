@@ -49,5 +49,50 @@
       "specialRules": { "decayTouch": true },
       "notes": "Resilient and rot‑infused, with strong debuff potential."
     }
+  },
+
+  "void": {
+    "key": "void",
+    "baseHP": 130,
+    "baseATK": 14,
+    "baseDEF": 10,
+    "elementAffinity": { "void": 0.20 },
+    "behavior": "chaotic",
+    "flavor": "Entities twisted by the emptiness between worlds.",
+    "familyModifiers": {
+      "atkMult": 1.15,
+      "defMult": 1.10,
+      "notes": "Unstable and dangerous, void creatures distort reality."
+    }
+  },
+
+  "elemental": {
+    "key": "elemental",
+    "baseHP": 140,
+    "baseATK": 16,
+    "baseDEF": 12,
+    "elementAffinity": { "arcane": 0.10 },
+    "behavior": "unpredictable",
+    "flavor": "Manifestations of raw elemental power.",
+    "familyModifiers": {
+      "atkMult": 1.20,
+      "defMult": 1.05,
+      "notes": "Elementals embody the forces of nature."
+    }
+  },
+
+  "demon": {
+    "key": "demon",
+    "baseHP": 150,
+    "baseATK": 18,
+    "baseDEF": 14,
+    "elementAffinity": { "fire": 0.20 },
+    "behavior": "aggressive",
+    "flavor": "Malevolent beings from infernal realms.",
+    "familyModifiers": {
+      "atkMult": 1.25,
+      "defMult": 1.10,
+      "notes": "Demons strike with overwhelming force."
+    }
   }
 }
