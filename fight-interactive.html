@@ -254,14 +254,87 @@
       height: 100%;
       transition: width 0.6s ease-in-out;
     }
-    .hp-bar .bar-fill { 
-      background: linear-gradient(90deg, #ff3b3b, #ff7b7b); 
-    } 
-    .mana-bar .bar-fill { 
-      background: linear-gradient(90deg, #3b7bff, #7bb3ff); 
-    } 
-    .ult-bar .bar-fill { 
-      background: linear-gradient(90deg, #ffd700, #fff27b); 
+    
+    /* HUD PANEL */
+    .hud-panel {
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      width: 260px;
+    }
+    
+    /* BAR CONTAINER */
+    .hud-bar {
+      position: relative;
+      height: 20px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.4);
+      margin: 6px 0;
+    }
+    
+    /* BAR FILL */
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.35s ease-out;
+    }
+    
+    /* HP BAR COLORS */
+    .hp-bar .bar-fill {
+      background: linear-gradient(90deg, #ff3b3b, #ff7b7b);
+    }
+    
+    /* MANA BAR COLORS */
+    .mana-bar .bar-fill {
+      background: linear-gradient(90deg, #3b7bff, #7bb3ff);
+    }
+    
+    /* ULT BAR COLORS */
+    .ult-bar .bar-fill {
+      background: linear-gradient(90deg, #ffd700, #fff27b);
+    }
+    
+    /* BAR TEXT */
+    .bar-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 0;
+      left: 0;
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 4px #000;
+    }
+
+    .damage-popup {
+      position: absolute;
+      font-weight: bold;
+      color: #ff4444;
+      font-size: 20px;
+      animation: dmgFloat 0.8s ease-out forwards;
+      pointer-events: none;
+    }
+    
+    .heal-popup {
+      position: absolute;
+      font-weight: bold;
+      color: #44ff44;
+      font-size: 20px;
+      animation: healFloat 0.8s ease-out forwards;
+      pointer-events: none;
+    }
+    
+    @keyframes dmgFloat {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-30px); }
+    }
+    
+    @keyframes healFloat {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-30px); }
     }
 
     .damage-flash {
@@ -1532,7 +1605,20 @@
     function hideActionPanel() {
       actionPanel.style.display = "none";
     }
-  
+
+    function showPopup(targetPanelId, text, type="damage") {
+      const panel = document.getElementById(targetPanelId);
+      if (!panel) return;
+    
+      const div = document.createElement("div");
+      div.className = type === "heal" ? "heal-popup" : "damage-popup";
+      div.textContent = text;
+    
+      panel.appendChild(div);
+    
+      setTimeout(() => div.remove(), 800);
+    }
+
     /* ============================================================
        BUTTON BINDINGS
     ============================================================ */
