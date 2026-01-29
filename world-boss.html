@@ -4,31 +4,33 @@
   <meta charset="UTF-8" />
   <title>World Boss</title>
   <link rel="stylesheet" href="world-boss.css" />
-  <script src="player-registry.js"></script>
-  <script src="world-boss-engine.js"></script>
-  <script src="world-boss-templates.json" type="application/json"></script>
 </head>
 
 <body>
   <div id="worldboss-container">
     <h1>World Boss</h1>
-
     <div id="worldboss-content"></div>
   </div>
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
-    const session = requireSession();
-    if (!session) return;
-  
+    import { WorldSim } from "./world-simulation.js";
+
+    // Ensure session
+    const session = await requireSession();
     const username = session.username;
-  
-    // Load UI module AFTER verifying session
-    import("./world-boss-ui.js").then(mod => {
-      if (mod && mod.initWorldBossUI) {
-        mod.initWorldBossUI(username);
-      }
-    });
+
+    // Load boss templates + region unlocks
+    await WorldSim.init();
+
+    // Load engine + UI as modules
+    const engine = await import("./world-boss-engine.js");
+    const ui = await import("./world-boss-ui.js");
+
+    // Initialize UI
+    if (ui && ui.initWorldBossUI) {
+      ui.initWorldBossUI(username, engine, WorldSim);
+    }
   </script>
 
 </body>
