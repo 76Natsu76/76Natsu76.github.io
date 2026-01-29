@@ -121,9 +121,13 @@
     let playerLevel = 1;
     try {
       const raw = localStorage.getItem("player_" + username);
-      if (raw) {
-        const p = JSON.parse(raw);
-        playerLevel = Number(p.level || 1);
+      if (raw && raw !== "undefined") {
+        try {
+          const p = JSON.parse(raw);
+          playerLevel = Number(p.level || 1);
+        } catch (e) {
+          console.warn("Invalid player JSON:", raw);
+        }
       }
     } catch (e) {
       console.warn("Failed to load player level", e);
