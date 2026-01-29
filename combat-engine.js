@@ -377,6 +377,17 @@ export function runPlayerAction(player, enemy, action, context, logs) {
     resolveAbilityUse(player, enemy, action.ability, context, logs);
     context.lastPlayerActionType = action.ability.actionType || "ability";
   }
+
+  if (action.type === "flee") {
+    const chance = 0.5; // or scale by speed
+    if (Math.random() < chance) {
+      logs.push(`${player.name} successfully fled!`);
+      context.fled = true;
+    } else {
+      logs.push(`${player.name} failed to flee!`);
+    }
+    return;
+  }
 }
 
 /****************************************************
@@ -398,6 +409,9 @@ export function runCombatRound(player, enemy, context, playerAction, logs) {
       runPlayerAction(player, enemy, playerAction, context, logs);
     } else {
       runEnemyTurn(enemy, player, context, logs);
+    }
+    if (context.fled) {
+      return { player, enemy, context, logs };
     }
   }
 
