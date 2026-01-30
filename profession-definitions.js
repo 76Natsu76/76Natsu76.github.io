@@ -1,17 +1,47 @@
 export const PROFESSION_DEFINITIONS = {
-  
   "beast": {
-    "key": "beast",
-    "baseHP": 0,
-    "baseATK": 0,
-    "baseDEF": 0,
-    "speed": 1.1,
-    "critChance": 0.08,
-    "critDamageMult": 1.5,
-    "accuracy": 0.05,
-    "evasion": 0.05,
-    "abilities": ["feral_bite", "howl"],
-    "ultimate": "primal_rage"
+    "name": "Beast",
+    "role": "combat",
+    "tags": ["feral", "instinct", "physical"],
+    "baseBonuses": {
+      "atkMult": 1.08,              // Beasts hit harder than humanoids
+      "defMult": 1.00,              // Neutral defense
+      "hpMult": 1.10,               // Slightly tankier
+      "speedMult": 1.05,            // Faster than average
+      "critChance": 0.04,           // Natural ferocity
+      "critDamageMult": 1.5,        // Standard crit damage
+      "accuracy": 0.02,             // Instinctive strikes
+      "evasion": 0.03               // Agile movement
+    },
+    "abilities": [ "feral_bite", "howl" ],
+    "equipment": {
+      "weapons": [],
+      "armor": [],
+      "accessories": []
+    },
+    "noncombat": {
+      "perks": [],
+      "recipes": {},
+      "workstations": []
+    },
+    "synergy": {
+      "races": {},
+      "subraces": {},
+      "professions": {},
+      "biomes": {},
+      "weather": {},
+      "elements": {},
+      "statusEffects": {}
+    },
+    "talentTree": {},
+    "starterKit": {
+      "equipment": {},
+      "inventory": [],
+      "abilities": ["feral_bite", "howl"],
+      "flavor": "A wild creature driven by instinct and primal force."
+    },
+    "lootKit": {},
+    "lootTable": {}
   },
   
   "acolyte": {
