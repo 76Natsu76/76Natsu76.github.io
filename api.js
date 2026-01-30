@@ -12,6 +12,88 @@ export const api = {
 };
 
 
+// player-serialize.js (or inside api.js)
+
+export function sanitizePlayerForSave(player) {
+  if (!player) return null;
+
+  return {
+    username: player.username || player.id || player.name, // depending on how you store it
+    level: player.level ?? 1,
+    race: player.race || null,
+    subrace: player.subrace || null,
+    profession: player.profession || null,
+
+    xp: player.xp ?? 0,
+    xpRequired: player.xpRequired ?? 0,
+
+    elementAffinity: player.elementAffinity || {},
+    element: player.element || null,
+    family: player.family || null,
+
+    equipment: player.equipment || { weapon: null, armor: null, accessory: null },
+    inventory: Array.isArray(player.inventory) ? player.inventory : [],
+    inventoryEquipment: Array.isArray(player.inventoryEquipment)
+      ? player.inventoryEquipment
+      : [],
+
+    abilities: Array.isArray(player.abilities) ? player.abilities : [],
+    ultimate: player.ultimate || null,
+
+    statusEffects: Array.isArray(player.statusEffects) ? player.statusEffects : [],
+    playerStatusEffects: Array.isArray(player.playerStatusEffects)
+      ? player.playerStatusEffects
+      : [],
+
+    regionProgress: player.regionProgress || {},
+    talentTreeDefinition: player.talentTreeDefinition || {},
+    talentTree: Array.isArray(player.talentTree) ? player.talentTree : [],
+    talentPoints: player.talentPoints ?? 0,
+
+    hpMax: player.hpMax ?? (player.stats?.hp ?? 1),
+    hpCurrent: player.hpCurrent ?? (player.stats?.hp ?? 1),
+    atk: player.atk ?? (player.stats?.atk ?? 1),
+    def: player.def ?? (player.stats?.def ?? 0),
+    speed: player.speed ?? (player.stats?.speed ?? 1),
+
+    manaMax: player.manaMax ?? 0,
+    mana: player.mana ?? 0,
+
+    crit: player.crit ?? (player.stats?.crit ?? 0),
+    critDmg: player.critDmg ?? (player.stats?.critDmg ?? 1.5),
+    evade: player.evade ?? (player.derived?.evade ?? 0),
+
+    stats: player.stats || {
+      hp: player.hpMax ?? 1,
+      atk: player.atk ?? 1,
+      def: player.def ?? 0,
+      speed: player.speed ?? 1,
+      crit: player.crit ?? 0,
+      critDmg: player.critDmg ?? 1.5
+    },
+
+    derived: player.derived || {
+      evade: player.evade ?? 0,
+      block: 0,
+      critChance: player.crit ?? 0,
+      critDamage: player.critDmg ?? 1.5,
+      powerScore: 0
+    },
+
+    adaptiveProfile: player.adaptiveProfile || {
+      playerHeals: 0,
+      playerBuffs: 0,
+      playerShields: 0,
+      playerDOTsApplied: 0,
+      playerCCsApplied: 0
+    },
+
+    gold: player.gold ?? 0,
+    hardcore: !!player.hardcore,
+    transcension: !!player.transcension
+  };
+}
+
 export async function autoSync(username) {
   const p = PlayerStorage.load(username);
   if (!p) return;
@@ -176,87 +258,4 @@ export async function getLeaderboardFriendsKV(username) {
     `https://auth-worker.godeaterspersona.workers.dev/leaderboards/friends/${username}`
   );
   return res.json();
-}
-
-
-// player-serialize.js (or inside api.js)
-
-export function sanitizePlayerForSave(player) {
-  if (!player) return null;
-
-  return {
-    username: player.username || player.id || player.name, // depending on how you store it
-    level: player.level ?? 1,
-    race: player.race || null,
-    subrace: player.subrace || null,
-    profession: player.profession || null,
-
-    xp: player.xp ?? 0,
-    xpRequired: player.xpRequired ?? 0,
-
-    elementAffinity: player.elementAffinity || {},
-    element: player.element || null,
-    family: player.family || null,
-
-    equipment: player.equipment || { weapon: null, armor: null, accessory: null },
-    inventory: Array.isArray(player.inventory) ? player.inventory : [],
-    inventoryEquipment: Array.isArray(player.inventoryEquipment)
-      ? player.inventoryEquipment
-      : [],
-
-    abilities: Array.isArray(player.abilities) ? player.abilities : [],
-    ultimate: player.ultimate || null,
-
-    statusEffects: Array.isArray(player.statusEffects) ? player.statusEffects : [],
-    playerStatusEffects: Array.isArray(player.playerStatusEffects)
-      ? player.playerStatusEffects
-      : [],
-
-    regionProgress: player.regionProgress || {},
-    talentTreeDefinition: player.talentTreeDefinition || {},
-    talentTree: Array.isArray(player.talentTree) ? player.talentTree : [],
-    talentPoints: player.talentPoints ?? 0,
-
-    hpMax: player.hpMax ?? (player.stats?.hp ?? 1),
-    hpCurrent: player.hpCurrent ?? (player.stats?.hp ?? 1),
-    atk: player.atk ?? (player.stats?.atk ?? 1),
-    def: player.def ?? (player.stats?.def ?? 0),
-    speed: player.speed ?? (player.stats?.speed ?? 1),
-
-    manaMax: player.manaMax ?? 0,
-    mana: player.mana ?? 0,
-
-    crit: player.crit ?? (player.stats?.crit ?? 0),
-    critDmg: player.critDmg ?? (player.stats?.critDmg ?? 1.5),
-    evade: player.evade ?? (player.derived?.evade ?? 0),
-
-    stats: player.stats || {
-      hp: player.hpMax ?? 1,
-      atk: player.atk ?? 1,
-      def: player.def ?? 0,
-      speed: player.speed ?? 1,
-      crit: player.crit ?? 0,
-      critDmg: player.critDmg ?? 1.5
-    },
-
-    derived: player.derived || {
-      evade: player.evade ?? 0,
-      block: 0,
-      critChance: player.crit ?? 0,
-      critDamage: player.critDmg ?? 1.5,
-      powerScore: 0
-    },
-
-    adaptiveProfile: player.adaptiveProfile || {
-      playerHeals: 0,
-      playerBuffs: 0,
-      playerShields: 0,
-      playerDOTsApplied: 0,
-      playerCCsApplied: 0
-    },
-
-    gold: player.gold ?? 0,
-    hardcore: !!player.hardcore,
-    transcension: !!player.transcension
-  };
 }
