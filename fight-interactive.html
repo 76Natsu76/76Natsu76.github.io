@@ -1017,9 +1017,11 @@
     import { requireSession } from "./session-guard.js";
     import { EncounterEngine } from "./encounters.js";
     import { PlayerStorage } from "./player-storage.js";
-    import { resolveEnemy } from "./resolveEnemy.js";
     import { api } from "./api.js";
-    import { buildCombatContext, runCombatRound as engineRunRound } from "./combat-engine.js";
+    import {
+      buildCombatContext,
+      runCombatRound as engineRunRound
+    } from "./combat-engine.js";
   
     /* ============================================================
        SESSION + PLAYER + ENCOUNTER LOAD
@@ -1071,10 +1073,10 @@
     function resolvePlayer(raw) {
       const stats = raw.stats || {};
       const derived = raw.derived || {};
-    
+  
       const hpMax = raw.hpMax ?? stats.hp ?? 1;
       const manaMax = raw.manaMax ?? 0;
-    
+  
       return {
         id: raw.username,
         name: raw.username,
@@ -1082,59 +1084,63 @@
         profession: raw.profession,
         race: raw.race,
         subrace: raw.subrace,
-    
+  
         hpCurrent: raw.hpCurrent ?? hpMax,
         hpMax,
         manaCurrent: raw.mana ?? manaMax,
         manaMax,
-    
+  
         atk: stats.atk ?? 1,
         def: stats.def ?? 0,
         speed: stats.speed ?? 1,
-    
+  
         critChance: derived.critChance ?? raw.crit ?? 0.05,
         critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
-    
+  
         element: raw.element || null,
         statusEffects: raw.statusEffects || [],
         cooldowns: raw.cooldowns || {},
         pendingAction: null,
-    
+  
         abilities: raw.abilities || [],
         ultimate: raw.ultimate || null,
         ultimateCharge: raw.ultimateCharge || 0,
         ultimateChargeRequired:
           raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
-    
+  
         equipment: raw.equipment || {},
         talentTree: raw.talentTree || {},
         talentPoints: raw.talentPoints || 0,
-    
+  
         inventory: raw.inventory || [],
-    
+  
         isPlayer: true,
         lastAction: null,
         lastActionType: null
       };
     }
-
   
-    function resolveEnemyForCombat(e) {
+    // Use the already-built enemy instance from EncounterEngine
+    function resolveEnemyFromEncounter(encounterEnemy) {
+      const hpMax = encounterEnemy.hpMax ?? encounterEnemy.hp ?? 1;
+  
       return {
-        name: e.name,
-        level: e.level || 1,
-        element: e.element || "neutral",
+        id: encounterEnemy.key,
+        name: encounterEnemy.name,
+        level: encounterEnemy.level || 1,
+        element: encounterEnemy.element || "neutral",
   
-        hpCurrent: e.hpMax ?? e.hp ?? 1,
-        hpMax: e.hpMax ?? e.hp ?? 1,
-        atk: e.attack ?? e.atk ?? 1,
-        def: e.defense ?? e.def ?? 0,
-        speed: e.speed || 1,
+        hpCurrent: hpMax,
+        hpMax,
   
-        manaCurrent: e.mana ?? 0,
-        manaMax: e.manaMax ?? 0,
+        atk: encounterEnemy.atk ?? encounterEnemy.attack ?? 1,
+        def: encounterEnemy.def ?? encounterEnemy.defense ?? 0,
+        speed: encounterEnemy.speed || 1,
   
-        statusEffects: [],
+        manaCurrent: encounterEnemy.mana ?? 0,
+        manaMax: encounterEnemy.manaMax ?? 0,
+  
+        statusEffects: encounterEnemy.statusEffects || [],
         cooldowns: {},
         isPlayer: false
       };
@@ -1257,14 +1263,10 @@
     ============================================================ */
     async function beginFight() {
       logBox.innerHTML = "";
-    
+  
       const playerState = resolvePlayer(rawPlayer);
-      const enemyState = resolveEnemy(
-        encounter.enemy,
-        encounter.region,
-        encounter.enemy.tier || encounter.tier || 1
-      );
-    
+      const enemyState = resolveEnemyFromEncounter(encounter.enemy);
+  
       combat = {
         playerState,
         enemyState,
@@ -1275,14 +1277,13 @@
           encounter.event
         )
       };
-    
+  
       setTimeout(() => {
         renderPanels();
         showActionPanel();
       }, 50);
     }
-
-    
+  
     /* ============================================================
        RUN ROUND (WRAPPER AROUND combat-engine)
     ============================================================ */
@@ -1319,7 +1320,7 @@
       } else {
         showActionPanel();
       }
-
+  
       if (combat.context.fled) {
         endCombat("fled");
         return;
