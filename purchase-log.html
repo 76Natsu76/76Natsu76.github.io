@@ -3,45 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <title>Purchase Log</title>
-    <style>
+  <style>
     body {
       background:#0d0f14;
       color:#e8e8e8;
       font-family:system-ui, sans-serif;
       padding:24px;
     }
-
     h1 {
       color:#7fffd4;
       margin-bottom:4px;
     }
-
-    #usernameDisplay {
-      opacity:0.8;
-      margin-bottom:20px;
-    }
-
-    .controls {
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-bottom:20px;
-    }
-
-    select, button {
-      background:#1a1d24;
-      color:#eee;
-      border:1px solid #444;
-      padding:8px;
-      border-radius:4px;
-      font-size:14px;
-    }
-
-    button:hover {
-      background:#222832;
-      cursor:pointer;
-    }
-
     .log-entry {
       background:#11141c;
       border:1px solid #262a36;
@@ -49,107 +21,50 @@
       padding:16px;
       margin-bottom:16px;
     }
-
-    .log-header {
-      display:flex;
-      justify-content:space-between;
-      margin-bottom:8px;
-      font-size:14px;
-      opacity:0.8;
-    }
-
-    .log-title {
-      font-size:16px;
-      font-weight:600;
-      color:#9af7ff;
-      margin-bottom:6px;
-    }
-
-    .stat-row {
-      display:flex;
-      justify-content:space-between;
-      padding:4px 0;
-      border-bottom:1px solid #1c1f28;
-      font-size:14px;
-    }
-
-    .stat-row:last-child {
-      border-bottom:none;
-    }
-
-    .btn-nav {
-      margin-top:16px;
-      padding:10px 14px;
-      border-radius:6px;
-      border:1px solid #444;
-      background:#1a1d24;
-      color:#eee;
-      cursor:pointer;
-      width:100%;
-      text-align:center;
-    }
-
-    .btn-nav:hover {
-      background:#222832;
-    }
-
-    #errorMessage {
-      margin-top:12px;
-      font-size:14px;
-      color:#ff8080;
-      display:none;
-    }
-
-    #summaryBar {
-      margin-bottom:12px;
-      font-size:14px;
-      opacity:0.85;
-    }
   </style>
 </head>
 <body>
 
   <h1>Purchase Log</h1>
   <div id="logContainer">Loading...</div>
-  
+
   <script type="module">
     import { requireSession } from "./session-guard.js";
+    import { PURCHASE_LOG } from "./purchases.js";   // ← NEW
+
     const session = requireSession();
     if (!session) return;
-  
-    import { loadJsonFile } from "./shop-ui.js";
-  
-    async function loadLogs() {
+
+    function loadLogs() {
       const container = document.getElementById("logContainer");
-      const { data: logs } = await loadJsonFile("purchases.json", []);
-  
+      const logs = PURCHASE_LOG || [];
+
       if (!logs.length) {
         container.textContent = "No purchases logged.";
         return;
       }
-  
+
       container.innerHTML = logs
         .slice()
         .reverse()
         .map(
           log => `
-          <div class="log-entry">
-            <strong>${log.username}</strong> bought 
-            <strong>${log.qty}x ${log.itemId}</strong><br>
-            Cost: ${log.totalCost} gold<br>
-            Shop: ${log.shopType}<br>
-            <span style="opacity:0.7;">${new Date(
-              log.timestamp
-            ).toLocaleString()}</span>
-          </div>
-        `
+            <div class="log-entry">
+              <strong>${log.username}</strong> bought 
+              <strong>${log.qty}x ${log.itemId}</strong><br>
+              Cost: ${log.totalCost} gold<br>
+              Shop: ${log.shopType}<br>
+              <span style="opacity:0.7;">${new Date(
+                log.timestamp
+              ).toLocaleString()}</span>
+            </div>
+          `
         )
         .join("");
     }
-  
+
     loadLogs();
   </script>
-
 
 </body>
 </html>
