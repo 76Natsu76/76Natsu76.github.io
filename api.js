@@ -211,15 +211,6 @@ export async function savePlayerToKV(username, player) {
   return await res.json().catch(() => ({}));
 }
 
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    console.error("KV save failed", res.status, text);
-    throw new Error(`KV save failed: ${res.status}`);
-  }
-
-  return await res.json().catch(() => ({}));
-}
-
 
 /* ============================================================
    LOAD + CONFLICT DETECTION
