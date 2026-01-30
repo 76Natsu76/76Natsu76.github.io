@@ -1,4 +1,4 @@
-{
+export const ITEMS = {
   "leveler": {
     "id": "leveler",
     "name": "Leveler",
@@ -115,4 +115,4 @@
     "type": "mana",
     "effect": { "mp": 100 }
   }
-}
+};
