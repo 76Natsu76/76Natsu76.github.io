@@ -5276,9 +5276,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "sthreeven's_chaotic_doppelcat": {
-    "key": "sthreeven's_chaotic_doppelcat",
-    "name": "sthreeven's_chaotic_doppelcat",
+  "sthreevens_chaotic_doppelcat": {
+    "key": "sthreevens_chaotic_doppelcat",
+    "name": "sthreevens_chaotic_doppelcat",
     "profession": "cat",
     "family": "void",
     "element": "void-dark",
