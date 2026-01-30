@@ -1384,29 +1384,298 @@ export const BIOMES = {
   }
 };
 
-export const BIOME_MODIFIERS = {
-  forest: {
+eexport const BIOME_MODIFIERS = {
+  "forest": {
     speedMult: 1.05,
-    evadeMult: 1.05
+    defMult: 1.05,
+    elementDamage: { nature: 0.10 },
+    elementResist: { fire: -0.05 }
   },
-  swamp: {
-    poisonResist: 0.15,
-    speedMult: 0.90
+
+  "deep-forest": {
+    speedMult: 1.05,
+    defMult: 1.10,
+    elementDamage: { nature: 0.15, dark: 0.05 },
+    elementResist: { fire: -0.10 }
   },
-  desert: {
-    fireDamageMult: 1.10,
-    accuracyPenalty: 0.05
+
+  "wild-forest": {
+    atkMult: 1.05,
+    speedMult: 1.05,
+    elementDamage: { nature: 0.15 },
+    elementResist: { fire: -0.05 }
   },
-  tundra: {
-    iceDamageMult: 1.10,
-    speedMult: 0.90
+
+  "ancient-forest": {
+    defMult: 1.10,
+    hpMult: 1.05,
+    elementDamage: { nature: 0.20, arcane: 0.05 },
+    elementResist: { fire: -0.10 }
   },
-  volcanic: {
-    fireDamageMult: 1.20,
-    defMult: 0.90
+
+  "eldergrove-depths": {
+    hpMult: 1.10,
+    defMult: 1.10,
+    elementDamage: { nature: 0.20, holy: 0.05, dark: 0.05 },
+    elementResist: { fire: -0.10 }
   },
-  plains: {
-    speedMult: 1.02
+
+  "elderwood-heart": {
+    hpMult: 1.15,
+    defMult: 1.10,
+    elementDamage: { nature: 0.25, holy: 0.05 },
+    elementResist: { fire: -0.10 }
+  },
+
+  "primeval-overgrowth": {
+    hpMult: 1.10,
+    atkMult: 1.05,
+    elementDamage: { nature: 0.20, earth: 0.10 },
+    elementResist: { fire: -0.10 }
+  },
+
+  "plains": {
+    speedMult: 1.05,
+    elementDamage: { wind: 0.10 },
+    elementResist: {}
+  },
+
+  "open-steppe": {
+    speedMult: 1.05,
+    atkMult: 1.05,
+    elementDamage: { wind: 0.10, earth: 0.05 },
+    elementResist: {}
+  },
+
+  "plateau": {
+    speedMult: 1.05,
+    elementDamage: { storm: 0.10, wind: 0.10 },
+    elementResist: {}
+  },
+
+  "swamp": {
+    defMult: 1.10,
+    speedMult: 0.95,
+    elementDamage: { poison: 0.15, water: 0.10 },
+    elementResist: { poison: 0.10 }
+  },
+
+  "drowned-marsh": {
+    defMult: 1.10,
+    speedMult: 0.95,
+    elementDamage: { water: 0.10, poison: 0.10 },
+    elementResist: { water: 0.10 }
+  },
+
+  "whispering-marsh": {
+    defMult: 1.10,
+    speedMult: 0.95,
+    elementDamage: { water: 0.10, dark: 0.10 },
+    elementResist: { dark: 0.05 }
+  },
+
+  "desert": {
+    speedMult: 1.05,
+    elementDamage: { fire: 0.10, earth: 0.10 },
+    elementResist: { fire: 0.05 }
+  },
+
+  "sunscorched-dunes": {
+    speedMult: 1.10,
+    elementDamage: { fire: 0.15, light: 0.05 },
+    elementResist: { fire: 0.10 }
+  },
+
+  "shattered-desert": {
+    atkMult: 1.10,
+    speedMult: 1.05,
+    elementDamage: { fire: 0.15, earth: 0.10, chaos: 0.05 },
+    elementResist: { fire: 0.10 }
+  },
+
+  "void-wastes": {
+    defMult: 1.05,
+    elementDamage: { void: 0.25, dark: 0.10 },
+    elementResist: { void: 0.10 }
+  },
+
+  "tundra": {
+    defMult: 1.10,
+    speedMult: 0.95,
+    elementDamage: { ice: 0.20 },
+    elementResist: { ice: 0.10 }
+  },
+
+  "frozen-expanse": {
+    defMult: 1.10,
+    speedMult: 0.90,
+    elementDamage: { ice: 0.25, wind: 0.05 },
+    elementResist: { ice: 0.15 }
+  },
+
+  "crystalline-tundra": {
+    defMult: 1.10,
+    hpMult: 1.05,
+    elementDamage: { ice: 0.25, arcane: 0.10 },
+    elementResist: { ice: 0.15 }
+  },
+
+  "highlands": {
+    atkMult: 1.05,
+    defMult: 1.05,
+    elementDamage: { storm: 0.10, earth: 0.10 },
+    elementResist: {}
+  },
+
+  "storm-highlands": {
+    atkMult: 1.10,
+    speedMult: 1.05,
+    elementDamage: { storm: 0.25, electric: 0.15 },
+    elementResist: { electric: 0.10 }
+  },
+
+  "mountain-peak": {
+    speedMult: 1.10,
+    defMult: 1.05,
+    elementDamage: { wind: 0.20, ice: 0.10 },
+    elementResist: { wind: 0.05 }
+  },
+
+  "mountain": {
+    defMult: 1.10,
+    elementDamage: { earth: 0.15, wind: 0.05 },
+    elementResist: { earth: 0.10 }
+  },
+
+  "volcano": {
+    atkMult: 1.10,
+    elementDamage: { fire: 0.30, earth: 0.10 },
+    elementResist: { fire: 0.15 }
+  },
+
+  "molten-crest": {
+    atkMult: 1.15,
+    elementDamage: { fire: 0.35, chaos: 0.10 },
+    elementResist: { fire: 0.20 }
+  },
+
+  "magma": {
+    atkMult: 1.10,
+    elementDamage: { fire: 0.30 },
+    elementResist: { fire: 0.15 }
+  },
+
+  "cave": {
+    defMult: 1.10,
+    elementDamage: { dark: 0.10, earth: 0.10 },
+    elementResist: { dark: 0.05 }
+  },
+
+  "crystal-cave": {
+    defMult: 1.05,
+    elementDamage: { arcane: 0.25, light: 0.05 },
+    elementResist: { arcane: 0.10 }
+  },
+
+  "prism-caverns": {
+    defMult: 1.05,
+    elementDamage: { arcane: 0.30, light: 0.10 },
+    elementResist: { arcane: 0.10 }
+  },
+
+  "underdeep": {
+    defMult: 1.10,
+    elementDamage: { dark: 0.20, earth: 0.10 },
+    elementResist: { dark: 0.10 }
+  },
+
+  "subterranean": {
+    defMult: 1.10,
+    elementDamage: { earth: 0.15, dark: 0.10 },
+    elementResist: { earth: 0.10 }
+  },
+
+  "deep-caverns": {
+    defMult: 1.10,
+    elementDamage: { dark: 0.20, void: 0.20 },
+    elementResist: { void: 0.10 }
+  },
+
+  "ruins": {
+    defMult: 1.05,
+    elementDamage: { dark: 0.10, arcane: 0.05 },
+    elementResist: {}
+  },
+
+  "forgotten-ruins": {
+    defMult: 1.05,
+    elementDamage: { arcane: 0.15, dark: 0.10 },
+    elementResist: { arcane: 0.05 }
+  },
+
+  "ruined-kingdom": {
+    defMult: 1.10,
+    elementDamage: { dark: 0.15, holy: 0.05 },
+    elementResist: { dark: 0.05 }
+  },
+
+  "coastal": {
+    speedMult: 1.05,
+    elementDamage: { water: 0.20, wind: 0.05 },
+    elementResist: { water: 0.10 }
+  },
+
+  "arcane": {
+    atkMult: 1.05,
+    elementDamage: { arcane: 0.30 },
+    elementResist: { arcane: 0.10 }
+  },
+
+  "arcane-rift": {
+    atkMult: 1.10,
+    elementDamage: { arcane: 0.35, void: 0.10 },
+    elementResist: { arcane: 0.10 }
+  },
+
+  "corrupted": {
+    defMult: 1.05,
+    elementDamage: { poison: 0.20, dark: 0.20 },
+    elementResist: { poison: 0.10 }
+  },
+
+  "void": {
+    defMult: 1.05,
+    elementDamage: { void: 0.30, dark: 0.10 },
+    elementResist: { void: 0.10 }
+  },
+
+  "void-realm": {
+    defMult: 1.10,
+    elementDamage: { void: 0.35, chaos: 0.15 },
+    elementResist: { void: 0.15 }
+  },
+
+  "astral-plane": {
+    atkMult: 1.05,
+    elementDamage: { arcane: 0.20, cosmic: 0.20 },
+    elementResist: { arcane: 0.10 }
+  },
+
+  "astral-nexus": {
+    atkMult: 1.10,
+    elementDamage: { cosmic: 0.30, arcane: 0.20 },
+    elementResist: { cosmic: 0.10 }
+  },
+
+  "abyss": {
+    defMult: 1.10,
+    elementDamage: { dark: 0.30, fire: 0.10 },
+    elementResist: { dark: 0.10 }
+  },
+
+  "abyssal-deep": {
+    defMult: 1.15,
+    elementDamage: { dark: 0.35, void: 0.25 },
+    elementResist: { void: 0.15 }
   }
 };
-
