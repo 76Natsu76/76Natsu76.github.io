@@ -2,7 +2,7 @@
  * mount-engine.js
  ************************************************************/
 
-import { MOUNTS } from "./mounts.json";
+import { MOUNTS } from "./mounts.js";
 
 export const MountEngine = {
   getMount(key) {
