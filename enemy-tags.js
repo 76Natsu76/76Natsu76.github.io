@@ -1,4 +1,4 @@
-export const ENEMY_TAGE = {
+export const ENEMY_TAGS = {
   "small": {
     "key": "small",
     "description": "Small creature. Harder to hit, faster actions.",
