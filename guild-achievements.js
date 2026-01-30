@@ -1,4 +1,4 @@
-{
+export const GUILD_ACHIEVEMENTS = {
   "$schema": "S3VEN_RPG_GUILD_ACHIEVEMENTS_V1",
   "achievements": {
     "ACHIEVEMENT_KEY": {
@@ -64,4 +64,4 @@
       "xp": 400
     }
   }
-}
+};
