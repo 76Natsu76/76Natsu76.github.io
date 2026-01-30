@@ -1,39 +1,23 @@
 // /js/merchant-resolver.js
+// Modern JS‑module version (no JSON, no fetch)
 
-let LOOT_TABLES = null;
-let MERCHANT_TYPES = null;
-let MERCHANT_PERSONALITIES = null;
-let MERCHANT_INSTANCES = null;
+import { LOOT_TABLES } from "./loot-table.js";
+import { MERCHANT_TYPES } from "./merchant-types.js";
+import { MERCHANT_PERSONALITIES } from "./merchant-personalities.js";
+import { MERCHANT_INSTANCES } from "./merchant-instances.js";
 
-async function loadJson(url) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Failed to load ${url}`);
-  return res.json();
+// --------------------------------------------------
+// Initialization (no async needed anymore)
+// --------------------------------------------------
+export function initMerchantData() {
+  // All data is already imported as JS modules.
+  // This function remains for compatibility.
+  return true;
 }
 
-export async function initMerchantData() {
-  if (LOOT_TABLES) return; // already loaded
-
-  const base = '/data'; // adjust if needed
-
-  const [
-    lootTables,
-    merchantTypes,
-    merchantPersonalities,
-    merchantInstances
-  ] = await Promise.all([
-    loadJson(`${base}/loot-tables.json`),
-    loadJson(`${base}/merchant-types.json`),
-    loadJson(`${base}/merchant-personalities.json`),
-    loadJson(`${base}/merchant-instances.json`)
-  ]);
-
-  LOOT_TABLES = lootTables;
-  MERCHANT_TYPES = merchantTypes;
-  MERCHANT_PERSONALITIES = merchantPersonalities;
-  MERCHANT_INSTANCES = merchantInstances;
-}
-
+// --------------------------------------------------
+// Helpers
+// --------------------------------------------------
 function getItemsByTopCategory(topCategory) {
   const result = [];
   const categoryBlock = LOOT_TABLES[topCategory];
@@ -51,7 +35,7 @@ function getItemsByTopCategory(topCategory) {
 function groupItemsByRarity(items) {
   const map = {};
   for (const item of items) {
-    const rarity = item.rarity || 'common';
+    const rarity = item.rarity || "common";
     if (!map[rarity]) map[rarity] = [];
     map[rarity].push(item);
   }
@@ -87,15 +71,13 @@ function pickRandom(arr) {
 }
 
 function applyWorldAndSeasonalModifiers(inventory, context = {}) {
-  // hook for later; no-op for now
-  return inventory;
+  return inventory; // hook for future expansion
 }
 
+// --------------------------------------------------
+// MAIN INVENTORY GENERATOR
+// --------------------------------------------------
 export function generateMerchantInventorySync(merchantId, options = {}) {
-  if (!LOOT_TABLES || !MERCHANT_TYPES || !MERCHANT_PERSONALITIES || !MERCHANT_INSTANCES) {
-    throw new Error('Merchant data not initialized. Call initMerchantData() first.');
-  }
-
   const { context = {} } = options;
 
   const instance = MERCHANT_INSTANCES[merchantId];
@@ -108,13 +90,11 @@ export function generateMerchantInventorySync(merchantId, options = {}) {
     ? MERCHANT_PERSONALITIES[instance.personality]
     : null;
 
+  // Allowed categories
   let allowedCategories = [...(type.allowedCategories || [])];
 
   if (personality?.preferredCategories?.length) {
-    allowedCategories = [
-      ...allowedCategories,
-      ...personality.preferredCategories
-    ];
+    allowedCategories.push(...personality.preferredCategories);
   }
 
   if (personality?.bannedCategories?.length) {
@@ -122,11 +102,13 @@ export function generateMerchantInventorySync(merchantId, options = {}) {
     allowedCategories = allowedCategories.filter(cat => !bannedSet.has(cat));
   }
 
+  // Candidate items
   const candidateItems = [];
   for (const cat of allowedCategories) {
     candidateItems.push(...getItemsByTopCategory(cat));
   }
 
+  // Banned IDs
   const bannedIds = new Set([
     ...(type.banned || []),
     ...(instance.banned || [])
@@ -138,6 +120,7 @@ export function generateMerchantInventorySync(merchantId, options = {}) {
 
   const rarityMap = groupItemsByRarity(filteredCandidates);
 
+  // Item count
   const minItems = instance.minItems ?? type.minItems ?? 3;
   const maxItems = instance.maxItems ?? type.maxItems ?? 6;
   const targetCount =
@@ -158,6 +141,7 @@ export function generateMerchantInventorySync(merchantId, options = {}) {
     }
   }
 
+  // Guaranteed items
   const guaranteedIds = [
     ...(type.guaranteed || []),
     ...(personality?.guaranteed || []),
@@ -165,12 +149,14 @@ export function generateMerchantInventorySync(merchantId, options = {}) {
   ];
   for (const gid of guaranteedIds) addItemById(gid);
 
+  // Overrides
   const overrideIds = [
     ...(personality?.overrides || []),
     ...(instance.overrides || [])
   ];
   for (const oid of overrideIds) addItemById(oid);
 
+  // Fill remaining slots
   let safety = 500;
   while (inventory.length < targetCount && safety-- > 0) {
     const rarity = pickRarity(rarityWeights, rarityBias);
