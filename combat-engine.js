@@ -239,7 +239,8 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
 
   const atk = attacker ? attacker.atk : defender.atk;
   const def = defender.def || 0;
-  const mitigated = Math.max(1, Math.floor(dmg * (atk / (atk + def + 1))));
+  const k = 0.015; // global tuning constant
+  const mitigated = Math.max(1, Math.floor(dmg * Math.exp(-k * def)));
 
   let finalDmg = applyShieldReduction(defender, mitigated, logs);
   finalDmg = Math.max(0, finalDmg);
