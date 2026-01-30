@@ -1,12 +1,12 @@
 // item-registry.js
 // Canonical loot + item access layer
 
-import items from "./items.json" assert { type: "json" };
-import lootTables from "./loot-tables.json" assert { type: "json" };
-import professionLoot from "./profession-loot.json" assert { type: "json" };
-import biomeLoot from "./biome-loot.json" assert { type: "json" };
-import regionLoot from "./region-loot.json" assert { type: "json" };
-import enemyLootConfig from "./enemy-loot-config.json" assert { type: "json" };
+import { items } from "./items.js";
+import { lootTables } from "./loot-tables.js";
+import { professionLoot } from "./profession-loot.js";
+import { biomeLoot } from "./biome-loot.js";
+import { regionLoot } from "./region-loot.js";
+import { enemyLootConfig } from "./enemy-loot-config.js";
 
 // -----------------------------
 // Basic item access
