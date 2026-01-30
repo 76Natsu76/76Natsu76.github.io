@@ -1,10 +1,10 @@
 // resolveEnemy.js
 
-import { REGION_MODIFIERS } from "./world-simulation.js";
-import { PROFESSION_STAT_MODIFIERS } from "./profession-stat-modifiers.js";
-import { TAG_MODIFIERS, applyTagModifiers } from "./tag-modifiers.js";
-import { ELEMENT_MATRIX, applyElementalDamage } from "./element-helpers.js";
-import { RARITY_MULTIPLIERS } from "./rarity-multipliers.js";
+import { REGION_MODIFIERS } from "./world-modifiers.js";
+import { PROFESSION_SYNERGIES as PROFESSION_STAT_MODIFIERS } from "./profession-synergies.js";
+import { ENEMY_TAGS as TAG_MODIFIERS, applyTagModifiers } from "./enemy-tags.js";
+import { ELEMENT_MATRIX, applyElementalDamage } from "./element-matrix.js";
+import { RARITY_WEIGHTS as RARITY_MULTIPLIERS } from "./rarity-weights.js";
 import { ENEMY_FAMILIES } from "./enemy-families.js";
 import { ENEMY_VARIANTS } from "./enemy-variants.js";
 import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
