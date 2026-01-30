@@ -1,79 +1,68 @@
-/* auto-variant-generator.js
-   Requires:
-     - EnemyRegistry.loadAll()
-     - generateCoverageReport()
-*/
+// auto-variant-generator.js — Hybrid Tier Variant Generator
 
-import { EnemyRegistry } from "./enemy-registry.js";
-import { generateCoverageReport } from "./coverage-report.js";
+import { EnemyRegistry } from "./enemyRegistry.js";
 
-export async function autoGenerateMissingEnemies() {
+(async function generateVariants() {
   await EnemyRegistry.loadAll();
 
-  const missing = generateCoverageReport();
-  if (!missing || missing.length === 0) {
-    console.log("No missing combinations. Nothing to generate.");
-    return;
-  }
+  const families = EnemyRegistry.families;
 
-  const newEnemies = [];
+  // ---------------------------------------------------------
+  // 1. Only Tier 1–2 families get variants
+  // ---------------------------------------------------------
+  const tier12Families = Object.values(families)
+    .filter(f => f.tier === 1 || f.tier === 2)
+    .map(f => f.key);
 
-  for (const m of missing) {
-    const { region, family, rarity } = m;
+  console.log("Generating variants for Tier 1–2 families:");
+  console.log(tier12Families.join(", "));
+  console.log("");
 
-    // Find a base enemy of this family to clone
-    const base = EnemyRegistry.enemies.find(e => e.family === family);
-    if (!base) {
-      console.warn(`No base enemy found for family=${family}. Skipping.`);
-      continue;
+  // ---------------------------------------------------------
+  // 2. Rarity scaling rules
+  // ---------------------------------------------------------
+  const rarityScaling = {
+    "uncommon": { hpMult: 1.10, atkMult: 1.10, defMult: 1.05 },
+    "rare":     { hpMult: 1.20, atkMult: 1.20, defMult: 1.10 },
+    "elite":    { hpMult: 1.35, atkMult: 1.30, defMult: 1.20 },
+    "mythical": { hpMult: 1.55, atkMult: 1.45, defMult: 1.30 },
+    "boss":     { hpMult: 1.80, atkMult: 1.60, defMult: 1.40 },
+    "final":    { hpMult: 2.20, atkMult: 1.90, defMult: 1.60 }
+  };
+
+  // ---------------------------------------------------------
+  // 3. Generate variants for each family
+  // ---------------------------------------------------------
+  const generated = {};
+
+  for (const famKey of tier12Families) {
+    const family = families[famKey];
+
+    for (const rarity of Object.keys(rarityScaling)) {
+      const scale = rarityScaling[rarity];
+
+      const variantKey = `${famKey}_${rarity}`;
+      generated[variantKey] = {
+        key: variantKey,
+        family: famKey,
+        rarity,
+        flavor: `${rarity} variant of the ${famKey} family.`,
+        combatModifiers: {
+          hpMult: scale.hpMult,
+          atkMult: scale.atkMult,
+          defMult: scale.defMult
+        },
+        elementAffinity: {},
+        tags: [],
+        abilities: [],
+        ultimate: null
+      };
     }
-
-    // Build a new key
-    const key = `${family}_${rarity}_${region}`.replace(/\s+/g, "_");
-
-    const newEnemy = {
-      key,
-      name: `${rarity} ${family} (${region})`,
-      family,
-      rarity,
-      element: base.element || "neutral",
-
-      // Base stats scaled by rarity
-      baseHP: Math.round((base.baseHP ?? 50) * rarityScale(rarity)),
-      baseATK: Math.round((base.baseATK ?? 5) * rarityScale(rarity)),
-      baseDEF: Math.round((base.baseDEF ?? 2) * rarityScale(rarity)),
-
-      // Copy tags/abilities/behavior from base
-      tags: base.tags || [],
-      abilities: base.abilities || [],
-      ultimate: base.ultimate || null,
-
-      // Region placement
-      region: [region],
-
-      // Flavor
-      flavor: base.flavor || `${family} adapted to ${region}`
-    };
-
-    newEnemies.push(newEnemy);
   }
 
-  console.log("=== AUTO-GENERATED ENEMIES ===");
-  console.log(JSON.stringify(newEnemies, null, 2));
-
-  return newEnemies;
-}
-
-function rarityScale(rarity) {
-  switch (rarity.toLowerCase()) {
-    case "common": return 1.0;
-    case "uncommon": return 1.15;
-    case "rare": return 1.35;
-    case "epic": return 1.6;
-    case "elite": return 1.9;
-    case "mythical": return 2.3;
-    case "legendary": return 2.8;
-    case "ancient": return 3.4;
-    default: return 1.0;
-  }
-}
+  // ---------------------------------------------------------
+  // 4. Output JSON
+  // ---------------------------------------------------------
+  console.log("=== AUTO-GENERATED VARIANTS JSON ===");
+  console.log(JSON.stringify(generated, null, 2));
+})();
