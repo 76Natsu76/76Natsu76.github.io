@@ -1,4 +1,4 @@
-{
+export const PROFESSION_DEFINITIONS = {
   "acolyte": {
     "name": "Acolyte",
     "role": "combat",
@@ -2117,4 +2117,4 @@
     "lootKit": {},
     "lootTable": {}
   }
-}
+};
