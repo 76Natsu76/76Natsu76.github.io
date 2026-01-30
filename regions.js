@@ -1,4 +1,4 @@
-[
+export const REGIONS = [
   "forest-edge",
   "deep-forest",
   "plains-field",
@@ -67,4 +67,4 @@
   "primeval-overgrowth",
   "celestial-horizon",
   "worlds-end-expanse"
-]
+];
