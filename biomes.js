@@ -1383,3 +1383,22 @@ export const BIOMES = {
     }
   }
 };
+
+export const BIOME_MODIFIERS = {
+  forest: {
+    speedMult: 1.05,
+    evadeMult: 1.05
+  },
+  swamp: {
+    poisonResist: 0.15,
+    speedMult: 0.90
+  },
+  desert: {
+    fireDamageMult: 1.10,
+    accuracyPenalty: 0.05
+  },
+  tundra: {
+    iceDamageMult: 1.10,
+    speedMult: 0.90
+  }
+};
