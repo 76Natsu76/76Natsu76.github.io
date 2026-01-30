@@ -3,33 +3,25 @@
 
 import { PlayerStorage } from "./player-storage.js";
 
-// -----------------------------
-// JSON loader (root-relative)
-// -----------------------------
-async function loadJSON(path) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error("Failed to load " + path);
-  return res.json();
-}
+// ---------------------------------------------
+// IMPORT ALL DATA MODULES (no JSON, no fetch)
+// ---------------------------------------------
+import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
+import { RACE_DEFINITIONS } from "./race-definitions.js";
+import { SUBRACE_PROFILES } from "./subrace-stat-profiles.js";
+import { PROFESSION_DEFINITIONS } from "./profession-definitions.js";
+import { TALENT_TREES } from "./profession-talent-trees.js";
 
-// Preload all game data
-const [
-  abilityDefs,
-  raceDefs,
-  subraceProfiles,
-  professionDefs,
-  talentTrees
-] = await Promise.all([
-  loadJSON("./ability-definitions.json"),
-  loadJSON("./race-definitions.json"),
-  loadJSON("./subrace-stat-profiles.json"),
-  loadJSON("./profession-definitions.json"),
-  loadJSON("./profession-talent-trees.json")
-]);
+// Aliases for readability
+const abilityDefs = ABILITY_DEFINITIONS;
+const raceDefs = RACE_DEFINITIONS;
+const subraceProfiles = SUBRACE_PROFILES;
+const professionDefs = PROFESSION_DEFINITIONS;
+const talentTrees = TALENT_TREES;
 
-// -----------------------------
+// ---------------------------------------------
 // Helpers
-// -----------------------------
+// ---------------------------------------------
 function computeXpRequired(level) {
   const lvl = level || 1;
   return Math.floor(100 * lvl * lvl);
@@ -51,9 +43,9 @@ function mapSubrace(race, subrace) {
   return subrace;
 }
 
-// -----------------------------
+// ---------------------------------------------
 // Stat computation
-// -----------------------------
+// ---------------------------------------------
 function computeBaseFromLegacyAndDefs(old, raceKey, subraceKey, professionKey) {
   const race = raceDefs[raceKey] || {};
   const raceMods = race.baseModifiers || {};
@@ -75,23 +67,13 @@ function computeBaseFromLegacyAndDefs(old, raceKey, subraceKey, professionKey) {
     critDmg: old.critDamage ?? 1.5
   };
 
-  const hpMult =
-    (raceMods.hpMult ?? 1) *
-    (growth.hp ?? 1);
-  const atkMult =
-    (raceMods.atkMult ?? 1) *
-    (growth.atk ?? 1);
-  const defMult =
-    (raceMods.defMult ?? 1) *
-    (growth.def ?? 1);
-  const speedMult =
-    (raceMods.speedMult ?? 1) *
-    (growth.speed ?? 1);
-  const manaMult =
-    (raceMods.manaMult ?? 1) *
-    (growth.mana ?? 1);
+  const hpMult = (raceMods.hpMult ?? 1) * (growth.hp ?? 1);
+  const atkMult = (raceMods.atkMult ?? 1) * (growth.atk ?? 1);
+  const defMult = (raceMods.defMult ?? 1) * (growth.def ?? 1);
+  const speedMult = (raceMods.speedMult ?? 1) * (growth.speed ?? 1);
+  const manaMult = (raceMods.manaMult ?? 1) * (growth.mana ?? 1);
 
-  const base = {
+  return {
     hp: legacy.hp * hpMult,
     atk: legacy.atk * atkMult,
     def: legacy.def * defMult,
@@ -101,8 +83,6 @@ function computeBaseFromLegacyAndDefs(old, raceKey, subraceKey, professionKey) {
     critDmg: legacy.critDmg,
     evade: baseBonuses.evadeChance ?? 0
   };
-
-  return base;
 }
 
 function computeEquipmentBonuses(equipment) {
@@ -132,9 +112,9 @@ function computeDerivedStats(p) {
   };
 }
 
-// -----------------------------
-// Ability resolution (nested by profession)
-// -----------------------------
+// ---------------------------------------------
+// Ability resolution
+// ---------------------------------------------
 function resolveAbilities(old, profession) {
   const out = [];
   if (!old.abilities || typeof old.abilities !== "object") return out;
@@ -146,9 +126,7 @@ function resolveAbilities(old, profession) {
     const key = old.abilities[slot];
     if (!key) continue;
 
-    const def =
-      profBlock[key] ||
-      globalBlock[key];
+    const def = profBlock[key] || globalBlock[key];
 
     if (!def) {
       out.push({
@@ -177,9 +155,9 @@ function resolveAbilities(old, profession) {
   return out;
 }
 
-// -----------------------------
-// Ultimate resolution (profession-based, from ability-definitions)
-// -----------------------------
+// ---------------------------------------------
+// Ultimate resolution
+// ---------------------------------------------
 function resolveUltimate(profession) {
   const profBlock = abilityDefs[profession] || {};
   for (const [key, def] of Object.entries(profBlock)) {
@@ -202,9 +180,9 @@ function resolveUltimate(profession) {
   return null;
 }
 
-// -----------------------------
-// Talent tree resolution
-// -----------------------------
+// ---------------------------------------------
+// Talent tree
+// ---------------------------------------------
 function resolveTalentTreeDefinition(profession) {
   return talentTrees[profession] || null;
 }
@@ -214,10 +192,10 @@ function resolveTalentTree(old) {
   return [];
 }
 
-// -----------------------------
+// ---------------------------------------------
 // MAIN RESOLVER
-// -----------------------------
-export async function resolveLegacyPlayer(old) {
+// ---------------------------------------------
+export function resolveLegacyPlayer(old) {
   if (!old) return null;
 
   const p = {};
@@ -233,7 +211,7 @@ export async function resolveLegacyPlayer(old) {
   p.xp = old.exp ?? old.xp ?? 0;
   p.xpRequired = computeXpRequired(p.level);
 
-  // Element affinity + element
+  // Element affinity
   const race = raceDefs[p.race] || {};
   const raceAffinity = race.elementAffinity || {};
 
@@ -250,10 +228,10 @@ export async function resolveLegacyPlayer(old) {
   };
   p.element = detectPrimaryElement(p.elementAffinity);
 
-  // Family (race/legacy/region priority; you’ve corrected humanoid in data)
+  // Family
   p.family = old.regionMeta?.family ?? old.family ?? race.family ?? null;
 
-  // Equipment (normalize stats → bonuses)
+  // Equipment
   p.equipment = {};
   if (old.equipment && typeof old.equipment === "object") {
     for (const slot of Object.keys(old.equipment)) {
@@ -307,7 +285,7 @@ export async function resolveLegacyPlayer(old) {
   p.talentTree = resolveTalentTree(old);
   p.talentPoints = old.talentPoints ?? 0;
 
-  // Base stats from legacy × race × subrace × profession
+  // Base stats
   const base = computeBaseFromLegacyAndDefs(
     old,
     p.race,
@@ -358,12 +336,10 @@ export async function resolveLegacyPlayer(old) {
   p.hardcore = old.hardcore ?? false;
   p.transcension = old.transcension ?? false;
 
-  // Persist locally as the new canonical object (optional but nice)
+  // Persist locally
   try {
     PlayerStorage.save(p.username, p);
-  } catch (e) {
-    // ignore if PlayerStorage isn't needed here
-  }
+  } catch (e) {}
 
   return p;
 }
