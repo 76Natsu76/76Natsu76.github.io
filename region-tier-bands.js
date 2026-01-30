@@ -1,4 +1,4 @@
-{
+export const REGION_TIER_BANDS = {
   "forest-edge":        { "minTier": 1, "maxTier": 2, "bossTier": 3 },
   "deep-forest":        { "minTier": 2, "maxTier": 3, "bossTier": 4 },
   "plains-field":       { "minTier": 1, "maxTier": 2, "bossTier": 3 },
@@ -67,4 +67,4 @@
   "primeval-overgrowth":{ "minTier": 3, "maxTier": 5, "bossTier": 6 },
   "celestial-horizon":  { "minTier": 5, "maxTier": 6, "bossTier": 7 },
   "worlds-end-expanse": { "minTier": 6, "maxTier": 7, "bossTier": 7 }
-}
+};
