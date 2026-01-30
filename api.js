@@ -29,7 +29,7 @@ async function getPlayer(username) {
 }
 
 async function savePlayer(username, data) {
-  PlayerStorage.save("player": + username, data);
+  PlayerStorage.save("player:" + username, data);
   autoSync(username);
   return { ok: true };
 }
@@ -57,7 +57,7 @@ async function useItem(username, itemId) {
     p.inventory = p.inventory.filter(i => i.id !== itemId);
   }
 
-  PlayerStorage.save("player": + username, p);
+  PlayerStorage.save("player:" + username, p);
   autoSync(username);
   return { ok: true, message: "Item used." };
 }
@@ -76,7 +76,7 @@ async function equipItem(username, itemId) {
   p.equipment[slot] = item;
   p.inventory = p.inventory.filter(i => i.id !== itemId);
 
-  PlayerStorage.save("player": + username, p);
+  PlayerStorage.save("player:" + username, p);
   autoSync(username);
   return { ok: true, message: "Equipped " + item.name };
 }
@@ -89,7 +89,7 @@ async function unequipItem(username, slot) {
   p.inventory.push(item);
   delete p.equipment[slot];
 
-  PlayerStorage.save("player": + username, p);
+  PlayerStorage.save("player:" + username, p);
   autoSync(username);
   return { ok: true, message: "Unequipped " + item.name };
 }
