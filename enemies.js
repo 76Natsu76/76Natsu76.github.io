@@ -27,7 +27,7 @@ export const ENEMIES = {
   "tiny_slime": {
     "key": "tiny_slime",
     "name": "tiny_slime",
-    "profession": "beast",
+    "profession": "slime",
     "family": "slime",
     "element": "poison",
     "rarity": "common",
@@ -52,7 +52,7 @@ export const ENEMIES = {
   "slime": {
     "key": "slime",
     "name": "slime",
-    "profession": "beast",
+    "profession": "slime",
     "family": "slime",
     "element": "poison",
     "rarity": "common",
@@ -277,7 +277,7 @@ export const ENEMIES = {
   "corrosive_slime": {
     "key": "corrosive_slime",
     "name": "corrosive_slime",
-    "profession": "beast",
+    "profession": "slime",
     "family": "slime",
     "element": "acid",
     "rarity": "uncommon",
@@ -464,7 +464,7 @@ export const ENEMIES = {
   "royal_slime": {
     "key": "royal_slime",
     "name": "royal_slime",
-    "profession": "beast",
+    "profession": "slime",
     "family": "slime",
     "element": "poison",
     "rarity": "rare",
@@ -767,7 +767,7 @@ export const ENEMIES = {
   "zombie": {
     "key": "zombie",
     "name": "zombie",
-    "profession": "warrior",
+    "profession": "rot",
     "family": "undead",
     "element": "poison",
     "rarity": "common",
@@ -792,7 +792,7 @@ export const ENEMIES = {
   "ghoul": {
     "key": "ghoul",
     "name": "ghoul",
-    "profession": "assassin",
+    "profession": "rot",
     "family": "undead",
     "element": "dark",
     "rarity": "common",
@@ -817,7 +817,7 @@ export const ENEMIES = {
   "giant_spider": {
     "key": "giant_spider",
     "name": "giant_spider",
-    "profession": "beast",
+    "profession": "arachnid",
     "family": "beast",
     "element": "poison",
     "rarity": "common",
