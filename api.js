@@ -105,6 +105,8 @@ export async function getPlayerFromKV(username) {
   return res.json();
 }
 
+export const loadPlayerFromKV = getPlayerFromKV;
+
 export async function savePlayerToKV(username, data) {
   const res = await fetch(
     `https://auth-worker.godeaterspersona.workers.dev/player/save`,
