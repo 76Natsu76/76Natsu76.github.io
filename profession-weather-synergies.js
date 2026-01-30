@@ -1,4 +1,4 @@
-{
+export const PROFESSION_WEATHER_SYNERGIES = {
   "acolyte": {
     "clear": { "healingBoost": 0.05 }
   },
@@ -136,4 +136,4 @@
     "fog": { "damageBoost": 0.10 },
     "rain": { "damageBoost": 0.05 }
   }
-}
+};
