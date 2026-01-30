@@ -31,7 +31,8 @@ export const EnemyRegistry = {
   },
 
   getEnemy(key) {
-    return this.enemies.find(e => e.key === key) || null;
+    const normalized = key.toLowerCase().replace(/[\s-]/g, "_");
+    return this.enemies.find(e => e.key === normalized) || null;
   },
 
   // ---------------------------------------------------------
