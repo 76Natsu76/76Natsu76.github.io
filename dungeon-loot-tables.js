@@ -1,4 +1,4 @@
-{
+export const DUNGEON_LOOT_TABLES = {
   "cavern_floor_1": {
     "goldRange": [5, 20],
     "xpRange": [10, 25],
@@ -25,4 +25,4 @@
       { "itemKey": "riftcore", "weight": 2, "min": 1, "max": 1 }
     ]
   }
-}
+};
