@@ -271,6 +271,17 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
   let finalDmg = applyShieldReduction(defender, mitigated, logs);
   finalDmg = Math.max(0, finalDmg);
 
+  // 🔍 DEBUG: show the full damage pipeline 
+  console.log("DMG DEBUG", { 
+    attacker: attacker ? attacker.name : "ENV", 
+    defender: defender.name, 
+    baseDamage, 
+    elemApplied: dmg, 
+    atk, 
+    def, 
+    mitigated, 
+    finalDmg });
+
   // Apply HP change
   defender.hpCurrent = Math.max(0, defender.hpCurrent - finalDmg);
 
