@@ -125,6 +125,9 @@ function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
   const allEnemies = Object.values(EnemyRegistry.enemies);
   const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
 
+  console.log("regionKey =", regionKey);
+  console.log("allowedKeys =", allowedKeys);
+
   function pick(pool) {
     const chosen = pool[Math.floor(Math.random() * pool.length)];
     return EnemyRegistry.buildEnemyTemplate(chosen.key);
@@ -153,9 +156,9 @@ function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
   pool = allEnemies.filter(e => e.family === family);
   if (pool.length) return pick(pool);
 
-  // 5. FINAL FALLBACK: ANY ENEMY
-  console.warn("No valid enemies for region", regionKey, "— using region-only fallback.");
-  return pick(allEnemies.filter(e => allowedKeys.includes(e.key)));
+  // 5. FINAL FALLBACK: ANY ENEMY (global)
+  console.warn("No valid enemies for region", regionKey, "— using global fallback.");
+  return pick(allEnemies);
 }
 
 // ------------------------------------------------------------
