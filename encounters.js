@@ -1,24 +1,17 @@
 // encounters.js
-// GitHub‑native Encounter Engine
+// GitHub‑native Encounter Engine (JS‑module version)
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
 
-// JSON data loaded via fetch()
-let enemyRegions = {};
-let enemyTags = {};
+import { ENEMY_REGIONS } from "./enemy-regions.js";
+import { ENEMY_TAGS } from "./enemy-tags.js";
 
-export async function initEncounters() {
-  enemyRegions = await loadJSON("./enemy-regions.json");
-  enemyTags = await loadJSON("./enemy-tags.json");
-}
-
-async function loadJSON(path) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error("Failed to load " + path);
-  return res.json();
+// No async initialization needed anymore
+export function initEncounters() {
+  return true;
 }
 
 // Public API
@@ -131,87 +124,58 @@ function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
   const allEnemies = EnemyRegistry.enemies;
   const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
 
-  // ------------------------------------------------------------
   // 1. STRICT MATCH: region + family + rarity
-  // ------------------------------------------------------------
   let pool = allEnemies.filter(e =>
     allowedKeys.includes(e.key) &&
     e.family === family &&
     e.rarity === rarity
   );
-
   if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
 
-  // ------------------------------------------------------------
   // 2. FALLBACK: region + family
-  // ------------------------------------------------------------
   pool = allEnemies.filter(e =>
     allowedKeys.includes(e.key) &&
     e.family === family
   );
-
   if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
 
-  // ------------------------------------------------------------
   // 3. FALLBACK: region only
-  // ------------------------------------------------------------
-  pool = allEnemies.filter(e =>
-    allowedKeys.includes(e.key)
-  );
-
+  pool = allEnemies.filter(e => allowedKeys.includes(e.key));
   if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
 
-  // ------------------------------------------------------------
-  // 4. FALLBACK: biome family (if any enemies match family globally)
-  // ------------------------------------------------------------
-  pool = allEnemies.filter(e =>
-    e.family === family
-  );
-
+  // 4. FALLBACK: biome family (global)
+  pool = allEnemies.filter(e => e.family === family);
   if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
 
-  // ------------------------------------------------------------
-  // 5. FINAL FALLBACK: ANY ENEMY (global pool)
-  // ------------------------------------------------------------
+  // 5. FINAL FALLBACK: ANY ENEMY
   return allEnemies[Math.floor(Math.random() * allEnemies.length)];
-}
-
-
-
-function chooseTemplate(list) {
-  const chosen = list[Math.floor(Math.random() * list.length)];
-  return EnemyRegistry.buildEnemyTemplate(chosen.key);
 }
 
 // ------------------------------------------------------------
 // REGION + BIOME RESTRICTION HELPERS
 // ------------------------------------------------------------
 function isEnemyAllowedInRegion(enemyKey, regionKey) {
-  const allowed = enemyRegions[enemyKey];
+  const allowed = ENEMY_REGIONS[enemyKey];
   if (!allowed) return true;
   return allowed.includes(regionKey);
 }
 
 function isEnemyAllowedInBiome(enemyKey, biomeKey) {
-  const tags = enemyTags[enemyKey];
+  const tags = ENEMY_TAGS[enemyKey];
   if (!tags) return true;
 
   if (tags.includes("ice")) {
     return ["tundra", "frozen-expanse", "crystalline-tundra"].includes(biomeKey);
   }
-
   if (tags.includes("fire")) {
     return ["volcano", "molten-crest", "magma"].includes(biomeKey);
   }
-
   if (tags.includes("void")) {
     return ["void", "void-wastes", "void-realm"].includes(biomeKey);
   }
-
   if (tags.includes("arcane")) {
     return ["arcane", "arcane-rift"].includes(biomeKey);
   }
-
   if (tags.includes("astral")) {
     return ["astral-plane", "astral-nexus"].includes(biomeKey);
   }
@@ -235,12 +199,12 @@ function buildEnemyInstance(
   const level = rollLevel(region.levelRange);
   const rarityMult = rarityScaling(rarity);
 
-  // Base stats from template
+  // Base stats
   const baseHP = Math.round((template.baseHP ?? template.hp ?? 1) * rarityMult * region.lootModifier);
   const baseATK = Math.round((template.baseATK ?? template.atk ?? template.attack ?? 1) * rarityMult);
   const baseDEF = Math.round((template.baseDEF ?? template.def ?? template.defense ?? 0) * rarityMult);
 
-  // Apply region/biome multipliers
+  // Region/biome modifiers
   let finalATK = baseATK;
   let finalDEF = baseDEF;
 
@@ -256,21 +220,13 @@ function buildEnemyInstance(
     if (bm.enemyDEFMult) finalDEF = Math.round(finalDEF * bm.enemyDEFMult);
   }
 
-  // Collect modifier icons/text
+  // Modifier icons/text
   const modifiers = [];
 
-  if (weather && WEATHER_MODIFIERS[weather]) {
-    modifiers.push(WEATHER_MODIFIERS[weather]);
-  }
-  if (event && EVENT_MODIFIERS[event]) {
-    modifiers.push(EVENT_MODIFIERS[event]);
-  }
-  if (hazard && HAZARD_MODIFIERS[hazard]) {
-    modifiers.push(HAZARD_MODIFIERS[hazard]);
-  }
-  if (variant && VARIANT_MODIFIERS[variant]) {
-    modifiers.push(VARIANT_MODIFIERS[variant]);
-  }
+  if (weather && WEATHER_MODIFIERS[weather]) modifiers.push(WEATHER_MODIFIERS[weather]);
+  if (event && EVENT_MODIFIERS[event]) modifiers.push(EVENT_MODIFIERS[event]);
+  if (hazard && HAZARD_MODIFIERS[hazard]) modifiers.push(HAZARD_MODIFIERS[hazard]);
+  if (variant && VARIANT_MODIFIERS[variant]) modifiers.push(VARIANT_MODIFIERS[variant]);
 
   return {
     key: template.key,
