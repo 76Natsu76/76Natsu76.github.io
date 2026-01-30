@@ -27,7 +27,7 @@ export const ENEMIES = {
   "tiny_slime": {
     "key": "tiny_slime",
     "name": "tiny_slime",
-    "profession": "slime",
+    "profession": "beast",
     "family": "slime",
     "element": "poison",
     "rarity": "common",
@@ -74,9 +74,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "giant rat": {
-    "key": "giant rat",
-    "name": "giant rat",
+  "giant_rat": {
+    "key": "giant_rat",
+    "name": "giant_rat",
     "profession": "beast",
     "family": "beast",
     "element": "nomal",
@@ -102,7 +102,7 @@ export const ENEMIES = {
   "stray_hound": {
     "key": "stray_hound",
     "name": "stray_hound",
-    "profession": "dog",
+    "profession": "beast",
     "family": "dog",
     "element": "normal",
     "rarity": "common",
@@ -177,7 +177,7 @@ export const ENEMIES = {
   "feral_tracker": {
     "key": "feral_tracker",
     "name": "feral_tracker",
-    "profession": "dog",
+    "profession": "rogue",
     "family": "dog",
     "element": "earth",
     "rarity": "common",
@@ -277,7 +277,7 @@ export const ENEMIES = {
   "corrosive_slime": {
     "key": "corrosive_slime",
     "name": "corrosive_slime",
-    "profession": "slime",
+    "profession": "beast",
     "family": "slime",
     "element": "acid",
     "rarity": "uncommon",
@@ -410,7 +410,7 @@ export const ENEMIES = {
   "alpha_mastiff": {
     "key": "alpha_mastiff",
     "name": "alpha_mastiff",
-    "profession": "dog",
+    "profession": "beast",
     "family": "dog",
     "element": "normal",
     "rarity": "uncommon",
@@ -464,7 +464,7 @@ export const ENEMIES = {
   "royal_slime": {
     "key": "royal_slime",
     "name": "royal_slime",
-    "profession": "slime",
+    "profession": "beast",
     "family": "slime",
     "element": "poison",
     "rarity": "rare",
@@ -576,7 +576,7 @@ export const ENEMIES = {
   "howling_warg": {
     "key": "howling_warg",
     "name": "howling_warg",
-    "profession": "dog",
+    "profession": "beast",
     "family": "beast",
     "element": "dark",
     "rarity": "rare",
