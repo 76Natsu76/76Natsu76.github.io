@@ -18,7 +18,7 @@
     "notes": "Shadehound variant corrupted by abyss; warrior fits feral melee archetype"
   },
   "abyssal_bonecarver": {
-    "subrace": "abyssal_brute",
+    "subrace": "undead",
     "profession": "warrior",
     "element": "dark",
     "notes": "Abyssal bone‑carving brute fits abyssal_brute; warrior role matches"
@@ -42,7 +42,7 @@
     "notes": "Aether‑crowned hex mage aligns with astral_entity; warlock fits hexbinding magic"
   },
   "alpha_mastiff": {
-    "subrace": "dogkin",
+    "subrace": "beastkin",
     "profession": "warrior",
     "element": "normal",
     "notes": "Large canine → dogkin; alpha implies warrior role"
@@ -90,25 +90,25 @@
     "notes": "Arcane serpent variant; caster fits magical pulse attacks"
   },
   "archer_rogue": {
-    "subrace": "catkin",
+    "subrace": "banditfolk",
     "profession": "rogue",
     "element": "normal",
     "notes": "Agile archer archetype fits catkin mobility; rogue from name"
   },
   "ash_marked": {
-    "subrace": "fiery",
+    "subrace": "undead",
     "profession": "warrior",
     "element": "fire",
     "notes": "Ash‑marked variant; fiery theme"
   },
   "assassin_shade": {
-    "subrace": "shadehound",
+    "subrace": "wraith",
     "profession": "assassin",
     "element": "dark",
     "notes": "Shadow assassin archetype aligns with shadehound subrace"
   },
   "astral_chimera": {
-    "subrace": "chimera",
+    "subrace": "astral_entity",
     "profession": "caster",
     "element": "arcane",
     "notes": "Astral variant of chimera; chimera subrace; arcane element fits astral magic"
@@ -168,13 +168,13 @@
     "notes": "Bloom‑crowned archdruid fits druidling; druid role explicit"
   },
   "bramble_hide_ravager": {
-    "subrace": "grove_warden",
+    "subrace": "thornborn",
     "profession": "warrior",
     "element": "nature",
     "notes": "Bramble‑armored beast fits grove_warden; ravager implies warrior"
   },
   "cataclysmic_strike": {
-    "subrace": "boss",
+    "subrace": "chaosling",
     "profession": "warrior",
     "element": "normal",
     "notes": "Boss ultimate"
@@ -186,7 +186,7 @@
     "notes": "Mounted lancer fits centaur perfectly"
   },
   "chaos_spiral_sovereign": {
-    "subrace": "astral_entity",
+    "subrace": "chaosling",
     "profession": "caster",
     "element": "chaos",
     "notes": "Chaos‑spiral cosmic sovereign fits astral_entity; caster matches chaotic magic"
@@ -246,7 +246,7 @@
     "notes": "Generic demon → lesser_demon as closest canonical subrace"
   },
   "demon_knight": {
-    "subrace": "abyssal_brute",
+    "subrace": "lesser_demon",
     "profession": "warrior",
     "element": "dark",
     "notes": "Demonic knight aligns with abyssal_brute; warrior role fits armored melee demon"
@@ -264,7 +264,7 @@
     "notes": "Divine‑forged paragon fits seraph; guardian matches exalted protector archetype"
   },
   "divine_sentinel": {
-    "subrace": "seraph",
+    "subrace": "sentinel",
     "profession": "guardian",
     "element": "light",
     "notes": "Divine guardian aligns with seraph; guardian role fits holy protector archetype"
@@ -318,7 +318,7 @@
     "notes": "Ethereal + tidecaller theme aligns with water‑element caster"
   },
   "feral_tracker": {
-    "subrace": "dogkin",
+    "subrace": "beastkin",
     "profession": "hunter",
     "element": "earth",
     "notes": "Tracker → canine hunter; earth from spreadsheet"
@@ -384,7 +384,7 @@
     "notes": "High‑ranking occult mage"
   },
   "grimhollow_reaperling": {
-    "subrace": "wraith",
+    "subrace": "undead",
     "profession": "rogue",
     "element": "dark",
     "notes": "Reaperling fits wraith‑like undead; rogue fits small, swift reaper archetype"
@@ -414,7 +414,7 @@
     "notes": "Direct match to hobgoblin subrace; dark from spreadsheet"
   },
   "hollowbone_stalker": {
-    "subrace": "skeleton",
+    "subrace": "undead",
     "profession": "rogue",
     "element": "dark",
     "notes": "Hollowbone suggests skeletal; stalker implies rogue; dark element fits undead"
@@ -450,7 +450,7 @@
     "notes": "Imp fits lesser_demon; warlock from name; dark element matches infernal magic"
   },
   "infernal_archlord": {
-    "subrace": "abyssal_brute",
+    "subrace": "lesser_demon",
     "profession": "warlock",
     "element": "fire",
     "notes": "Infernal overlord fits abyssal_brute; fire element matches infernal theme"
@@ -516,7 +516,7 @@
     "notes": "Molten serpent; warrior fits aggressive melee lunges"
   },
   "metal_golem": {
-    "subrace": "iron_colossus",
+    "subrace": "construct",
     "profession": "guardian",
     "element": "metal",
     "notes": "Metal golem → construct; iron_colossus is closest canonical subrace"
@@ -666,19 +666,19 @@
     "notes": "Radiant dawn theme fits seraph; strider implies holy warrior"
   },
   "ranger_scout": {
-    "subrace": "rangerborn",
+    "subrace": "humanoid",
     "profession": "ranger",
     "element": "nature",
     "notes": "Human ranger archetype"
   },
   "rift_wrought_golem": {
-    "subrace": "iron_colossus",
+    "subrace": "construct",
     "profession": "guardian",
     "element": "void",
     "notes": "Golem shaped by rifts; iron_colossus is closest construct; void element fits"
   },
   "root_bound_sentinel": {
-    "subrace": "grove_warden",
+    "subrace": "sentinel",
     "profession": "guardian",
     "element": "nature",
     "notes": "Root‑bound guardian aligns with grove_warden; guardian role fits plant defender"
@@ -726,13 +726,13 @@
     "notes": "Shadow‑aligned giant; shadow_titan is the closest canonical subrace"
   },
   "shadow_marked_outrider": {
-    "subrace": "shadehound",
+    "subrace": "wraith",
     "profession": "rogue",
     "element": "dark",
     "notes": "Shadow‑marked theme aligns with shadehound; outrider implies rogue mobility"
   },
   "shadow_step_initiate": {
-    "subrace": "shadehound",
+    "subrace": "wraith",
     "profession": "rogue",
     "element": "dark",
     "notes": "Shadow‑step theme aligns with shadehound; rogue inferred from stealth archetype"
@@ -792,7 +792,7 @@
     "notes": "Spell‑riven archonling fits astral_entity; caster role matches arcane mastery"
   },
   "spellforged_myrmidon": {
-    "subrace": "sentinel",
+    "subrace": "construct",
     "profession": "warrior",
     "element": "arcane",
     "notes": "Spellforged construct aligns with sentinel; myrmidon implies arcane warrior"
@@ -876,7 +876,7 @@
     "notes": "Direct match to tiny_slime subrace; slime profession inferred from type"
   },
   "titan_blooded_ruinshaper": {
-    "subrace": "worldrender",
+    "subrace": "titan",
     "profession": "caster",
     "element": "earth",
     "notes": "Titan‑blooded ruin mage fits worldrender; caster matches earth‑shaping magic"
@@ -894,13 +894,13 @@
     "notes": "Delver/miner strongly aligns with dwarven subrace; earth from spreadsheet"
   },
   "umbral_rift_howler": {
-    "subrace": "shadehound",
+    "subrace": "voidborn",
     "profession": "warrior",
     "element": "dark",
     "notes": "Umbral rift‑tainted beast fits shadehound; warrior fits feral howler archetype"
   },
   "umbral_skitterfiend": {
-    "subrace": "shadehound",
+    "subrace": "voidborn",
     "profession": "rogue",
     "element": "dark",
     "notes": "Umbral + skittering predator aligns with shadehound; rogue fits ambush behavior"
