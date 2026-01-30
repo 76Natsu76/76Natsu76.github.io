@@ -18,3 +18,4 @@ export const ArenaLeaderboard = {
       .slice(0, limit);
   }
 };
+
