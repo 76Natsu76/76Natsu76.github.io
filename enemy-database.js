@@ -1,7 +1,7 @@
 // enemy-database.js
 
-import enemies from "./enemies.json" assert { type: "json" };
+import { ENEMIES }  from "./enemies.js";
 
 export function loadEnemies() {
-  return enemies;
+  return ENEMIES;
 }
