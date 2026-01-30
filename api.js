@@ -194,14 +194,22 @@ export async function loadPlayerFromKV(username) {
 export async function savePlayerToKV(username, player) {
   const clean = sanitizePlayerForSave(player);
 
-  // Optional: quick guard to catch NaN / undefined before hitting the Worker
-  const body = JSON.stringify({ username, player: clean });
+  const body = JSON.stringify({ username, data: clean });
 
   const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/player/save", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body
   });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    console.error("KV save failed", res.status, text);
+    throw new Error(`KV save failed: ${res.status}`);
+  }
+
+  return await res.json().catch(() => ({}));
+}
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
