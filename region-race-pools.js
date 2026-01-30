@@ -1,4 +1,4 @@
-{
+export const REGION_RACE_POOLS = {
   "forest-edge": {
     "tier1": ["humanoid", "beast", "slimeborn"],
     "tier2": ["beastkin", "plantfolk"],
@@ -385,4 +385,4 @@
     "tier7": [],
     "boss": []
   }
-}
+};
