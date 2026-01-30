@@ -1,4 +1,4 @@
-{
+export PROFESSION_BIOME_BONUSES = {
   "acolyte": {
     "celestial_shrine": 0.05
   },
@@ -127,4 +127,4 @@
   "witch": {
     "swamp": 0.08
   }
-}
+};
