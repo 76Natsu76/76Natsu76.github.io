@@ -1,4 +1,4 @@
-{
+export const ENEMY_TAGE = {
   "small": {
     "key": "small",
     "description": "Small creature. Harder to hit, faster actions.",
@@ -185,4 +185,4 @@
       "rareLootBonus": 0.30
     }
   }
-}
+};
