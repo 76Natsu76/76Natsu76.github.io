@@ -1,4 +1,19 @@
 export const PROFESSION_DEFINITIONS = {
+  
+  "beast": {
+    "key": "beast",
+    "baseHP": 0,
+    "baseATK": 0,
+    "baseDEF": 0,
+    "speed": 1.1,
+    "critChance": 0.08,
+    "critDamageMult": 1.5,
+    "accuracy": 0.05,
+    "evasion": 0.05,
+    "abilities": ["feral_bite", "howl"],
+    "ultimate": "primal_rage"
+  },
+  
   "acolyte": {
     "name": "Acolyte",
     "role": "combat",
