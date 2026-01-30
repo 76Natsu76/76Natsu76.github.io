@@ -1,4 +1,4 @@
-{
+export const MOUNTS = {
   "$schema": "S3VEN_RPG_MOUNTS_V1",
   "mounts": {
     "forest_stag": {
@@ -42,4 +42,4 @@
       }
     }
   }
-}
+};
