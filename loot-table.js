@@ -1,16 +1,16 @@
-[
-  {
-    "id": "broken_sword",
-    "name": "Broken Sword",
-    "rarity": "common",
-    "tier": 1,
-    "type": "weapon",
-    "tags": ["weapon", "sword", "metal", "hostile"],
-    "topCategory": "weapons",
-    "subCategory": "swords",
-    "group": "basic"
-  },
-  {
+export const LOOT_TABLES = [
+    {
+        "id": "broken_sword",
+        "name": "Broken Sword",
+        "rarity": "common",
+        "tier": 1,
+        "type": "weapon",
+        "tags": ["weapon", "sword", "metal", "hostile"],
+        "topCategory": "weapons",
+        "subCategory": "swords",
+        "group": "basic"
+    },
+    {
     "id": "iron_sword",
     "name": "Iron Sword",
     "rarity": "uncommon",
@@ -98,7 +98,6 @@
     "subCategory": "swords",
     "group": "elemental"
   },
-
   {
     "id": "light_sword",
     "name": "Light Sword",
@@ -143,7 +142,6 @@
     "subCategory": "swords",
     "group": "holy"
   },
-
   {
     "id": "dark_sword",
     "name": "Dark Sword",
@@ -232,7 +230,6 @@
     "subCategory": "swords",
     "group": "darkVoid"
   },
-
   {
     "id": "holy_sticalibur",
     "name": "Holy Sticalibur",
@@ -244,7 +241,6 @@
     "subCategory": "swords",
     "group": "special"
   },
-
   {
     "id": "greatsword",
     "name": "Greatsword",
@@ -256,7 +252,6 @@
     "subCategory": "swords",
     "group": "basic"
   },
-
   {
     "id": "dull_knife",
     "name": "Dull Knife",
@@ -312,7 +307,6 @@
     "subCategory": "daggers",
     "group": "shadow"
   },
-
   {
     "id": "short_bow",
     "name": "Short Bow",
@@ -335,7 +329,6 @@
     "subCategory": "bows",
     "group": "crafted"
   },
-
   {
     "id": "archons_solar_mace",
     "name": "Archon’s Solar Mace",
@@ -347,7 +340,6 @@
     "subCategory": "maces",
     "group": "holy"
   },
-
   {
     "id": "__placeholder_staves_category",
     "name": "Staves Placeholder",
@@ -359,7 +351,6 @@
     "subCategory": "staves",
     "group": "placeholder"
   },
-
   {
     "id": "__placeholder_wands_category",
     "name": "Wands Placeholder",
@@ -371,7 +362,6 @@
     "subCategory": "wands",
     "group": "placeholder"
   },
-
   {
     "id": "wolf_pelt",
     "name": "Wolf Pelt",
@@ -438,7 +428,6 @@
     "subCategory": "pelts",
     "group": "elite"
   },
-
   {
     "id": "wolf_fang",
     "name": "Wolf Fang",
@@ -494,7 +483,6 @@
     "subCategory": "fangs",
     "group": "elite"
   },
-
   {
     "id": "lizard_scale",
     "name": "Lizard Scale",
@@ -550,7 +538,6 @@
     "subCategory": "scales",
     "group": "elite"
   },
-
   {
     "id": "boar_hide_material",
     "name": "Boar Hide",
@@ -562,7 +549,6 @@
     "subCategory": "hides",
     "group": "common"
   },
-
   {
     "id": "fire_core",
     "name": "Fire Core",
@@ -1068,7 +1054,7 @@
     "topCategory": "cosmic",
     "subCategory": "anomalies",
     "group": "anomalies"
-  }.
+  },
 
   {
     "id": "radiant_shard",
@@ -3036,13 +3022,5 @@
     "topCategory": "seasonal",
     "subCategory": "mythic",
     "group": "mythic"
-  },
-
-  {
-  "mountsAndPets": {
-    "mountGear": [],
-    "petItems": [],
-    "evolution": [],
-    "rare": []
   }
-]
+];
