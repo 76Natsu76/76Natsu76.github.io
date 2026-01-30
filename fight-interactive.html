@@ -1277,6 +1277,9 @@
           encounter.event
         )
       };
+      // 🔍 DEBUG: log resolved stats 
+      console.log("DEBUG RESOLVED PLAYER:", combat.playerState); 
+      console.log("DEBUG RESOLVED ENEMY:", combat.enemyState);
   
       setTimeout(() => {
         renderPanels();
