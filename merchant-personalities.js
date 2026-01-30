@@ -1,4 +1,4 @@
-{
+export const MERCHANT_PERSONALITIES = {
   "dwarven_smith": {
     "preferredCategories": ["metals", "components", "engineering"],
     "bannedCategories": ["plants", "seasonal", "alchemy"],
@@ -43,4 +43,4 @@
       "epic": 1.2
     }
   }
-}
+};
