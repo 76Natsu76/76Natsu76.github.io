@@ -1,4 +1,4 @@
-{
+export const SHOP_POOL = {
   "exp_buff": {
     "id": "exp_buff",
     "minPrice": 7600,
@@ -103,4 +103,4 @@
     "maxQty": 1,
     "rarity": "ridiculous"
   }
-}
+};
