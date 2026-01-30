@@ -1,4 +1,4 @@
-{
+export const ENEMY_SUBRACE = {
   "abyss_forged_harrower": {
     "subrace": "abyssal_brute",
     "profession": "warrior",
@@ -1007,4 +1007,4 @@
     "element": "dark",
     "notes": "Direct match to zombie subrace; warrior inferred from melee undead behavior"
   }
-}
+};
