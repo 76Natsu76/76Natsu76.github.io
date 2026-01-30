@@ -1,4 +1,4 @@
-{
+export const DUNGEON_EVENTS = {
   "echo_shrine": {
     "name": "Echo Shrine",
     "type": "shrine",
@@ -25,4 +25,4 @@
       { "type": "modifier", "value": "enemyScaling+0.1", "duration": 1, "target": "dungeon" }
     ]
   }
-}
+};
