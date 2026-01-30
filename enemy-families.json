@@ -221,6 +221,91 @@
     }
   },
 
+  "abyssal_brute_family": {
+    "key": "abyssal_brute_family",
+    "tier": 4,
+    "baseHP": 220,
+    "baseATK": 22,
+    "baseDEF": 18,
+    "elementAffinity": { "dark": 0.20, "rot": 0.10 },
+    "behavior": "rampaging",
+    "flavor": "Massive horrors shaped by the Abyss, driven by hunger and violent instinct.",
+    "familyModifiers": {
+      "atkMult": 1.30,
+      "defMult": 1.20,
+      "speedBias": -0.05,
+      "notes": "Brutal, overwhelming force; resistant to fear and pain, but slow and predictable."
+    }
+  }, 
+  
+  "astral_family": {
+    "key": "astral_family",
+    "tier": 5,
+    "baseHP": 180,
+    "baseATK": 20,
+    "baseDEF": 14,
+    "elementAffinity": { "arcane": 0.25, "holy": 0.10 },
+    "behavior": "drifting",
+    "flavor": "Cosmic entities touched by the Astral Sea, guided by thought rather than instinct.",
+    "familyModifiers": {
+      "atkMult": 1.25,
+      "defMult": 1.10,
+      "evasionBias": 0.10,
+      "notes": "Unpredictable and reality‑bending; often apply arcane, gravity, or mind‑warp effects."
+    }
+  }, 
+  
+  "verdant_colossus_family": {
+    "key": "verdant_colossus_family",
+    "tier": 4,
+    "baseHP": 240,
+    "baseATK": 18,
+    "baseDEF": 22,
+    "elementAffinity": { "nature": 0.30, "fire": -0.20 },
+    "behavior": "ancient",
+    "flavor": "Towering plant‑titan hybrids, embodiments of ancient forests and primal growth.",
+    "familyModifiers": {
+      "atkMult": 1.10,
+      "defMult": 1.35,
+      "statusEffectChanceMult": 1.20,
+      "notes": "Extremely durable; inflict roots, thorns, and nature‑based debuffs."
+    }
+  }, 
+  
+  "phoenix_family": {
+    "key": "phoenix_family",
+    "tier": 4,
+    "baseHP": 170,
+    "baseATK": 24,
+    "baseDEF": 14,
+    "elementAffinity": { "fire": 0.35, "holy": 0.15 },
+    "behavior": "reborn",
+    "flavor": "Mythic firebirds of rebirth, blazing with divine flame and radiant fury.",
+    "familyModifiers": {
+      "atkMult": 1.35,
+      "defMult": 1.05,
+      "specialRules": { "rebirth": true },
+      "notes": "High fire damage, radiant bursts, and revival mechanics."
+    }
+  }, 
+  
+  "worldrender_family": {
+    "key": "worldrender_family",
+    "tier": 6,
+    "baseHP": 300,
+    "baseATK": 28,
+    "baseDEF": 26,
+    "elementAffinity": { "earth": 0.25, "arcane": 0.20 },
+    "behavior": "cataclysmic",
+    "flavor": "Apocalyptic titans whose movements reshape continents and fracture reality.",
+    "familyModifiers": {
+      "atkMult": 1.50,
+      "defMult": 1.40,
+      "speedBias": -0.10,
+      "notes": "World‑shaking blows, seismic ruptures, and catastrophic AoE effects."
+    }
+  },
+
   "giantkin": {
     "key": "giantkin",
     "tier": 2,
