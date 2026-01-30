@@ -121,6 +121,7 @@ function clear() {
 // ENEMY TEMPLATE PICKER
 // ------------------------------------------------------------
 function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
+  regionKey = regionKey.toLowerCase().trim();
   const allEnemies = Object.values(EnemyRegistry.enemies);
   const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
 
