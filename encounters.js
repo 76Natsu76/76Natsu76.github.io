@@ -121,7 +121,7 @@ function clear() {
 // ENEMY TEMPLATE PICKER
 // ------------------------------------------------------------
 function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
-  const allEnemies = EnemyRegistry.enemies;
+  const allEnemies = Object.values(EnemyRegistry.enemies);
   const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
 
   // 1. STRICT MATCH: region + family + rarity
