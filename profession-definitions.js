@@ -4,7 +4,7 @@ export const PROFESSION_DEFINITIONS = {
     "role": "combat",
     "nonPlayable": true, // if (!profession.nonPlayable) showInUI();
     "tags": ["feral", "instinct", "physical"],
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.08,              // Beasts hit harder than humanoids
       "defMult": 1.00,              // Neutral defense
       "hpMult": 1.10,               // Slightly tankier
@@ -50,7 +50,7 @@ export const PROFESSION_DEFINITIONS = {
     "nonPlayable": true,
     "tags": ["ooze", "amorphous", "physical"],
   
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 0.90,
       "defMult": 1.10,
       "hpMult": 1.20,
@@ -95,7 +95,7 @@ export const PROFESSION_DEFINITIONS = {
     "nonPlayable": true,
     "tags": ["swarm", "poison", "fast"],
   
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.00,
       "defMult": 0.90,
       "hpMult": 0.85,
@@ -140,7 +140,7 @@ export const PROFESSION_DEFINITIONS = {
     "nonPlayable": true,
     "tags": ["poison", "ambush", "web"],
   
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.10,
       "defMult": 1.00,
       "hpMult": 1.00,
@@ -188,7 +188,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Acolyte",
     "role": "combat",
     "tags": ["holy", "support"],
-    "baseBonuses": {
+    "bonuses": {
       "healingPower": 0.03,
       "manaMult": 1.02,
       "elementalBoost": { "holy": 0.03 }
@@ -241,7 +241,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Adept",
     "role": "combat",
     "tags": ["magic", "novice"],
-    "baseBonuses": {
+    "bonuses": {
       "manaMult": 1.03,
       "resourceRegen": { "mana": 0.03 }
     },
@@ -293,7 +293,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Adventurer",
     "role": "unassigned",
     "tags": ["starter", "untrained"],
-    "baseBonuses": {},
+    "bonuses": {},
     "abilities": [],
     "equipment": { "weapons": [], "armor": [], "accessories": [] },
     "starterKit": {
@@ -325,7 +325,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Apocalypse",
     "role": "combat",
     "tags": ["chaos", "dot", "unpredictable"],
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.05,
       "dotPower": 0.05,
       "chaosFactor": 0.05
@@ -378,7 +378,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Apprentice",
     "role": "combat",
     "tags": ["novice", "magic"],
-    "baseBonuses": {
+    "bonuses": {
       "manaMult": 1.02,
       "atkMult": 1.01,
       "learningBoost": 0.05
@@ -431,7 +431,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Archer",
     "role": "combat",
     "tags": ["ranged", "precision"],
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.05,
       "critChance": 0.03,
       "speedMult": 1.03
@@ -484,7 +484,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Assassin",
     "role": "combat",
     "tags": ["melee", "stealth", "crit", "burst"],
-    "baseBonuses": {
+    "bonuses": {
       "critChance": 0.05,
       "critDamage": 0.10,
       "speedMult": 1.03
@@ -549,7 +549,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Berserker",
     "role": "combat",
     "tags": ["melee", "rage"],
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.08,
       "critChance": 0.03,
       "critDamage": 0.05
@@ -602,7 +602,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Bozo",
     "role": "combat",
     "tags": ["joke", "chaos"],
-    "baseBonuses": {
+    "bonuses": {
       "evadeChance": 0.03,
       "confusionChance": 0.05,
       "chaosFactor": 0.05
@@ -655,7 +655,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Cleric",
     "role": "combat",
     "tags": ["holy", "support"],
-    "baseBonuses": {
+    "bonuses": {
       "healingPower": 0.08,
       "defMult": 1.03,
       "elementalBoost": { "holy": 0.05 }
@@ -708,7 +708,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Corrupted",
     "role": "combat",
     "tags": ["dark", "poison", "chaos"],
-    "baseBonuses": {
+    "bonuses": {
       "dotPower": 0.05,
       "elementalBoost": { "dark": 0.05, "poison": 0.03 },
       "chaosFactor": 0.03
@@ -761,7 +761,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Druid",
     "role": "combat",
     "tags": ["nature", "healing"],
-    "baseBonuses": {
+    "bonuses": {
       "healingPower": 0.08,
       "manaMult": 1.05,
       "elementalBoost": { "nature": 0.08 }
@@ -814,7 +814,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Guardian",
     "role": "combat",
     "tags": ["tank", "defense"],
-    "baseBonuses": {
+    "bonuses": {
       "defMult": 1.10,
       "blockChance": 0.08,
       "hpRegen": 0.02
@@ -867,7 +867,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Healer",
     "role": "combat",
     "tags": ["support", "holy"],
-    "baseBonuses": {
+    "bonuses": {
       "healingPower": 0.12,
       "manaMult": 1.05
     },
@@ -919,7 +919,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Mage",
     "role": "combat",
     "tags": ["magic", "arcane"],
-    "baseBonuses": {
+    "bonuses": {
       "manaMult": 1.10,
       "resourceRegen": { "mana": 0.05 },
       "elementalBoost": { "arcane": 0.08 }
@@ -972,7 +972,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Monk",
     "role": "combat",
     "tags": ["melee", "agile"],
-    "baseBonuses": {
+    "bonuses": {
       "speedMult": 1.05,
       "evadeChance": 0.03,
       "atkMult": 1.03
@@ -1025,7 +1025,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Necromancer",
     "role": "combat",
     "tags": ["dark", "minions", "dot"],
-    "baseBonuses": {
+    "bonuses": {
       "dotPower": 0.08,
       "manaMult": 1.05,
       "elementalBoost": { "poison": 0.05, "dark": 0.05 }
@@ -1078,7 +1078,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Paladin",
     "role": "combat",
     "tags": ["holy", "tank"],
-    "baseBonuses": {
+    "bonuses": {
       "defMult": 1.05,
       "blockChance": 0.05,
       "elementalBoost": { "holy": 0.05 }
@@ -1131,7 +1131,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Ranger",
     "role": "combat",
     "tags": ["ranged", "nature"],
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.03,
       "speedMult": 1.03,
       "elementalBoost": { "nature": 0.05 }
@@ -1184,7 +1184,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Rogue",
     "role": "combat",
     "tags": ["stealth", "agile", "physical"],
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.04,
       "speedMult": 1.05,
       "critChance": 0.03,
@@ -1238,7 +1238,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Rot",
     "role": "combat",
     "tags": ["decay", "disease", "corruption"],
-    "baseBonuses": {
+    "bonuses": {
       "dotPower": 0.10,
       "manaMult": 1.03,
       "elementalBoost": { "decay": 0.07, "poison": 0.05 }
@@ -1291,7 +1291,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Shaman",
     "role": "combat",
     "tags": ["elemental", "hybrid"],
-    "baseBonuses": {
+    "bonuses": {
       "manaMult": 1.05,
       "elementalBoost": { "lightning": 0.05, "nature": 0.05 }
     },
@@ -1343,7 +1343,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Thief",
     "role": "combat",
     "tags": ["stealth", "agile"],
-    "baseBonuses": {
+    "bonuses": {
       "speedMult": 1.05,
       "evadeChance": 0.05,
       "critChance": 0.02
@@ -1396,7 +1396,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Trainee",
     "role": "combat",
     "tags": ["novice"],
-    "baseBonuses": {
+    "bonuses": {
       "learningBoost": 0.10,
       "atkMult": 1.01
     },
@@ -1448,7 +1448,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Trickster",
     "role": "combat",
     "tags": ["illusion", "chaos"],
-    "baseBonuses": {
+    "bonuses": {
       "evadeChance": 0.04,
       "critChance": 0.02,
       "confusionChance": 0.03
@@ -1501,7 +1501,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Void",
     "role": "combat",
     "tags": ["void", "dark", "chaos"],
-    "baseBonuses": {
+    "bonuses": {
       "elementalBoost": { "void": 0.08 },
       "manaMult": 1.05,
       "chaosFactor": 0.03
@@ -1554,7 +1554,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Warlock",
     "role": "combat",
     "tags": ["dark", "dot"],
-    "baseBonuses": {
+    "bonuses": {
       "manaMult": 1.08,
       "dotPower": 0.10,
       "elementalBoost": { "dark": 0.10 }
@@ -1607,7 +1607,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Warrior",
     "role": "combat",
     "tags": ["melee", "frontline"],
-    "baseBonuses": {
+    "bonuses": {
       "atkMult": 1.05,
       "defMult": 1.05,
       "blockChance": 0.05
@@ -1660,7 +1660,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Witch",
     "role": "combat",
     "tags": ["dark", "magic"],
-    "baseBonuses": {
+    "bonuses": {
       "manaMult": 1.08,
       "dotPower": 0.05,
       "elementalBoost": { "dark": 0.08 }
@@ -1713,7 +1713,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Alchemist",
     "role": "non_combat",
     "tags": ["crafting", "alchemy"],
-    "baseBonuses": {
+    "bonuses": {
       "potionPotency": 0.10,
       "potionDuration": 0.05,
       "craftingSpeed": 0.05
@@ -1751,7 +1751,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Artificer",
     "role": "non_combat",
     "tags": ["crafting", "enchanting"],
-    "baseBonuses": {
+    "bonuses": {
       "enchantmentPower": 0.10,
       "enchantmentSuccess": 0.05,
       "craftingQuality": 0.05
@@ -1789,7 +1789,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Blacksmith",
     "role": "non_combat",
     "tags": ["crafting", "metalworking"],
-    "baseBonuses": {
+    "bonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
       "durabilityBonus": 0.10
@@ -1827,7 +1827,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Carpenter",
     "role": "non_combat",
     "tags": ["crafting", "woodworking"],
-    "baseBonuses": {
+    "bonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05
     },
@@ -1864,7 +1864,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Chef",
     "role": "non_combat",
     "tags": ["crafting", "cooking", "support"],
-    "baseBonuses": {
+    "bonuses": {
       "foodBuffPower": 0.10,
       "foodBuffDuration": 0.10
     },
@@ -1904,7 +1904,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Fisherman",
     "role": "non_combat",
     "tags": ["gathering", "aquatic"],
-    "baseBonuses": {
+    "bonuses": {
       "gatheringYield": 0.15,
       "rareCatchChance": 0.10
     },
@@ -1941,7 +1941,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Herbalist",
     "role": "non_combat",
     "tags": ["gathering", "plants"],
-    "baseBonuses": {
+    "bonuses": {
       "gatheringYield": 0.15,
       "rareHerbChance": 0.10
     },
@@ -1978,7 +1978,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Leatherworker",
     "role": "non_combat",
     "tags": ["crafting", "armor"],
-    "baseBonuses": {
+    "bonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
       "materialEfficiency": 0.10
@@ -2016,7 +2016,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Miner",
     "role": "non_combat",
     "tags": ["gathering", "ore"],
-    "baseBonuses": {
+    "bonuses": {
       "gatheringYield": 0.15,
       "rareOreChance": 0.10
     },
@@ -2053,7 +2053,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Ritualist",
     "role": "non_combat",
     "tags": ["rituals", "magic"],
-    "baseBonuses": {
+    "bonuses": {
       "ritualPower": 0.10,
       "ritualSpeed": 0.05
     },
@@ -2116,7 +2116,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Spelunker",
     "role": "non_combat",
     "tags": ["exploration", "caves"],
-    "baseBonuses": {
+    "bonuses": {
       "gatheringYield": 0.10,
       "trapDetection": 0.10
     },
@@ -2179,7 +2179,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Tinkerer",
     "role": "non_combat",
     "tags": ["engineering", "mechanical", "crafting"],
-    "baseBonuses": {
+    "bonuses": {
       "craftingQuality": 0.08,
       "craftingSpeed": 0.08,
       "gadgetEfficiency": 0.10
@@ -2243,7 +2243,7 @@ export const PROFESSION_DEFINITIONS = {
     "name": "Weaver",
     "role": "non_combat",
     "tags": ["crafting", "cloth"],
-    "baseBonuses": {
+    "bonuses": {
       "craftingQuality": 0.10,
       "craftingSpeed": 0.05,
       "enchantmentAffinity": 0.05
