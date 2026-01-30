@@ -1,4 +1,4 @@
-{
+export const ENEMY_FAMILIES = {
   "humanoid": {
     "key": "humanoid",
     "tier": 1,
@@ -490,4 +490,4 @@
     "elementAffinity": {},
     "familyModifiers": {}
   }
-}
+};
