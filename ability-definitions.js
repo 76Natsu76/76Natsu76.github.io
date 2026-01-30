@@ -1,4 +1,4 @@
-{
+export const ABILITY_DEFINITIONS = {
   "acolyte": {
     "minor_heal": {
       "key": "minor_heal",
@@ -1250,4 +1250,4 @@
       "description": "Enchanted threads lash out and entangle the target, restricting their movement."
     }
   }
-}
+};
