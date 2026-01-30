@@ -1,4 +1,4 @@
-{
+export const GUILDS = {
   "order_dawnforge": {
     "name": "Order of the Dawnforge",
     "createdAt": 1730000000,
@@ -76,4 +76,4 @@
       "losses": 7
     }
   }
-}
+};
