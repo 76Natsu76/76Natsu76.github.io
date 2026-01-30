@@ -1,11 +1,11 @@
 /************************************************************
- * arena-engine.js
+ * arena-engine.js — Modernized JS Module Version
  ************************************************************/
 
 import { ARENA } from './arena.js';
 import { GuildEngine } from './guild-engine.js';
-import { getPlayerById} from './player-registry.js';
-import { runPvPCombat } from './combat-engine.js'; // you’ll wire this
+import { getPlayerById, getAllPlayers } from './player-registry.js';
+import { runPvPCombat } from './combat-engine.js';
 import { api } from "./api.js";
 
 const queues = {}; // { modeKey: [ { playerId, guildId, joinedAt } ] }
@@ -22,7 +22,7 @@ export const ArenaEngine = {
   },
 
   tryMatchmake(modeKey, logs = []) {
-    const mode = ARENA_CONFIG.modes[modeKey];
+    const mode = ARENA.modes[modeKey];
     if (!mode) return null;
 
     const queue = queues[modeKey] || [];
@@ -44,13 +44,12 @@ export const ArenaEngine = {
   },
 
   async runMatch(match, logs = []) {
-    const mode = ARENA_CONFIG.modes[match.modeKey];
+    const mode = ARENA.modes[match.modeKey];
 
     const teamAPlayers = match.teamA.map(p => getPlayerById(p.playerId));
     const teamBPlayers = match.teamB.map(p => getPlayerById(p.playerId));
 
     const result = await runPvPCombat(teamAPlayers, teamBPlayers, { mode }, logs);
-    // result: { winner: "A" | "B" | "draw" }
 
     this.applyResults(mode, match, result, logs);
 
@@ -103,7 +102,8 @@ export const ArenaEngine = {
 
       const newRating = Math.round(current + k * (score - expectedWin));
       p.arenaRating = newRating;
-      api.savePlayer(player.id, player);
+
+      api.savePlayer(p.id, p);
     }
   },
 
@@ -143,7 +143,6 @@ export const ArenaEngine = {
 
       player.gold = (player.gold ?? 0) + (reward.gold ?? 0);
       player.xp = (player.xp ?? 0) + (reward.xp ?? 0);
-      // items would be added via your inventory system
 
       api.savePlayer(player.id, player);
     };
@@ -153,41 +152,37 @@ export const ArenaEngine = {
       for (const l of losers) giveReward(l, lossReward);
       logs.push(`Arena result: ${result.winner === 'A' ? 'Team A' : 'Team B'} wins.`);
     } else {
-      // draw: both sides get lossReward (or a special draw reward if you want)
       for (const w of winners) giveReward(w, lossReward);
       for (const l of losers) giveReward(l, lossReward);
       logs.push(`Arena result: Draw.`);
     }
+  },
+
+  resetSeason() {
+    const season = ARENA.seasons.currentSeason;
+    const cfg = ARENA.seasons.seasonConfig[season];
+
+    const resetTo = cfg.ratingResetTo ?? 1000;
+
+    for (const p of getAllPlayers()) {
+      p.arenaRating = resetTo;
+      api.savePlayer(p.id, p);
+    }
+
+    for (const g of Object.values(GuildEngine.getAllGuilds())) {
+      g.pvp.rating = resetTo;
+      g.pvp.wins = 0;
+      g.pvp.losses = 0;
+      GuildEngine.saveGuild(g);
+    }
+
+    ARENA.seasons.currentSeason++;
   }
 };
-
-resetSeason() {
-  const season = ARENA_CONFIG.seasons.currentSeason;
-  const cfg = ARENA_CONFIG.seasons.seasonConfig[season];
-
-  const resetTo = cfg.ratingResetTo ?? 1000;
-
-  // Reset all players
-  for (const p of getAllPlayers()) {
-    p.arenaRating = resetTo;
-    api.savePlayer(player.id, player);
-  }
-
-  // Reset all guilds
-  for (const g of Object.values(GUILDS)) {
-    g.pvp.rating = resetTo;
-    g.pvp.wins = 0;
-    g.pvp.losses = 0;
-  }
-
-  // Advance season
-  ARENA_CONFIG.seasons.currentSeason++;
-}
 
 /************************************************************
  * Helpers
  ************************************************************/
-
 function average(arr) {
   if (!arr.length) return 1000;
   return arr.reduce((a, b) => a + b, 0) / arr.length;
