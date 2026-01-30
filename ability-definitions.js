@@ -245,6 +245,83 @@ export const ABILITY_DEFINITIONS = {
       "description": "A precise puncture that causes heavy bleeding over time."
     }
   },
+  "beast": {
+    "feral_bite": {
+      "key": "feral_bite",
+      "name": "Feral Bite",
+      "basePower": 1.0,
+      "scalingPerLevel": 0.06,
+      "manaCost": 0,
+      "cooldown": 1,
+      "combatTags": ["physical", "melee", "bite"],
+      "statusEffects": [
+        { "type": "bleed", "value": 4, "duration": 2, "stack": "add" }
+      ],
+      "description": "A savage bite that tears flesh and may cause bleeding."
+    },
+  
+    "howl": {
+      "key": "howl",
+      "name": "Howl",
+      "basePower": 0.0,
+      "scalingPerLevel": 0.0,
+      "manaCost": 0,
+      "cooldown": 3,
+      "combatTags": ["buff", "beast", "support"],
+      "statusEffects": [
+        { "type": "buff_atk", "valuePerTurn": 8, "duration": 2, "stack": "add" },
+        { "type": "buff_speed", "valuePerTurn": 5, "duration": 2, "stack": "add" }
+      ],
+      "description": "A primal howl that rallies feral strength and quickens movement."
+    },
+  
+    "rending_claws": {
+      "key": "rending_claws",
+      "name": "Rending Claws",
+      "basePower": 1.2,
+      "scalingPerLevel": 0.07,
+      "manaCost": 0,
+      "cooldown": 2,
+      "combatTags": ["physical", "slash"],
+      "statusEffects": [
+        { "type": "debuff_def", "valuePerTurn": -6, "duration": 2, "stack": "add" }
+      ],
+      "description": "A vicious claw swipe that rends armor and weakens defenses."
+    },
+  
+    "pounce": {
+      "key": "pounce",
+      "name": "Pounce",
+      "basePower": 0.9,
+      "scalingPerLevel": 0.06,
+      "manaCost": 0,
+      "cooldown": 3,
+      "combatTags": ["physical", "melee", "mobility"],
+      "statusEffects": [
+        { "type": "stun", "duration": 1, "stack": "replace" }
+      ],
+      "description": "A sudden leap that crashes into the target, briefly stunning them."
+    },
+  
+    "beast_ultimate": {
+      "key": "beast_ultimate",
+      "name": "Primal Frenzy",
+      "isUltimate": true,
+      "chargeRequired": 100,
+      "usesPerCombat": 1,
+      "basePower": 1.4,
+      "scalingPerLevel": 0.10,
+      "manaCost": 0,
+      "cooldown": 0,
+      "combatTags": ["physical", "rage", "frenzy"],
+      "statusEffects": [
+        { "type": "buff_atk", "valuePerTurn": 15, "duration": 3, "stack": "add" },
+        { "type": "buff_speed", "valuePerTurn": 10, "duration": 3, "stack": "add" },
+        { "type": "bleed", "value": 6, "duration": 3, "stack": "add" }
+      ],
+      "description": "Unleash pure feral instinct, striking with overwhelming force and entering a frenzy."
+    }
+  },
   "berserker": {
     "frenzy_slash": {
       "key": "frenzy_slash",
