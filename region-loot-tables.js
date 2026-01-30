@@ -1,4 +1,4 @@
-{
+export const REGION_LOOT_TABLES = {
   "forest-edge": {
     "common": ["Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Forest Berry"],
     "uncommon": ["Mossleaf","Shadecap","Twig Bundle","Copper Ore","Leather Strip","Edgewood Charm"],
@@ -2276,4 +2276,4 @@
       "paladin": ["Light‑Against‑Darkness Sigil"]
     }
   }
-}
+};
