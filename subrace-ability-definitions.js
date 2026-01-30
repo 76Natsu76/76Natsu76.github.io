@@ -1,4 +1,4 @@
-{
+export const SUBRACE_ABILITY_DEFINITIONS = {
   "humanoid": {
     "human": {
       "adaptability": {
@@ -2669,4 +2669,4 @@
       }
     }
   }
-}
+};
