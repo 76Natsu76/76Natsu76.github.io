@@ -1,4 +1,4 @@
-{
+export const PROFESSION_TALENT_TREES = {
   "acolyte": {
     "tier1": {"branches": {
       "foundations_of_faith":[
@@ -982,4 +982,4 @@
     "tier2": {},
     "tier3": {}
   }
-}
+};
