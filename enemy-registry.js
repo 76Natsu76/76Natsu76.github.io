@@ -1,31 +1,33 @@
-// enemyRegistry.js — HYBRID FAMILY VERSION
+// enemyRegistry.js — HYBRID FAMILY VERSION (JS module)
+
+import { ENEMY_FAMILIES } from "./enemy-families.js";
+import { ENEMY_VARIANTS } from "./enemy-variants.js";
+import { ENEMY_TAGS } from "./enemy-tags.js";
+import { ENEMY_BEHAVIORS } from "./enemy-behaviors.js";
+import { ENEMY_ABILITIES } from "./enemy-abilities.js";
+import { ENEMY_ULTIMATES } from "./enemy-ultimates.js";
+
+import { ENEMIES } from "./enemies.js"; // array
+import { ENEMY_REGIONS } from "./enemy-regions.js";
+import { SUBRACE_FAMILY_INDEX } from "./subrace-family-index.js";
+import { RACE_FAMILY_INDEX } from "./race-family-index.js";
 
 export const EnemyRegistry = {
-  families: {},
-  variants: {},
-  tags: {},
-  behaviors: {},
-  abilities: {},
-  ultimates: {},
-  enemies: [],
-  regionMap: {},
-  subraceMap: {},
-  raceMap: {},
+  families: ENEMY_FAMILIES,
+  variants: ENEMY_VARIANTS,
+  tags: ENEMY_TAGS,
+  behaviors: ENEMY_BEHAVIORS,
+  abilities: ENEMY_ABILITIES,
+  ultimates: ENEMY_ULTIMATES,
 
-  async loadAll() {
-    this.families   = await fetchJSON("./enemy-families.json");
-    this.variants   = await fetchJSON("./enemy-variants.json");
-    this.tags       = await fetchJSON("./enemy-tags.json");
-    this.behaviors  = await fetchJSON("./enemy-behaviors.json");
-    this.abilities  = await fetchJSON("./enemy-abilities.json");
-    this.ultimates  = await fetchJSON("./enemy-ultimates.json");
+  enemies: ENEMIES,
+  regionMap: ENEMY_REGIONS,
+  subraceMap: SUBRACE_FAMILY_INDEX,
+  raceMap: RACE_FAMILY_INDEX,
 
-    // enemies.json is an array
-    this.enemies = Object.values(await fetchJSON("./enemies.json"));
-
-    this.regionMap  = await fetchJSON("./enemy-regions.json");
-    this.subraceMap = await fetchJSON("./subrace-family-index.json");
-    this.raceMap    = await fetchJSON("./race-family-index.json"); // optional but supported
+  // No async loading needed anymore
+  loadAll() {
+    return true;
   },
 
   getEnemy(key) {
@@ -57,7 +59,7 @@ export const EnemyRegistry = {
   },
 
   // ---------------------------------------------------------
-  // BASE STAT RESOLUTION (supports null family stats)
+  // BASE STAT RESOLUTION
   // ---------------------------------------------------------
   resolveBaseStat(rawValue, familyValue, defaultValue = 0) {
     if (rawValue != null) return rawValue;
@@ -72,7 +74,7 @@ export const EnemyRegistry = {
     const raw = this.getEnemy(key);
     if (!raw) throw new Error("Unknown enemy: " + key);
 
-    // --- FAMILY (Hybrid Tier Resolution) ---
+    // --- FAMILY ---
     const family = this.resolveFamily(raw);
 
     // --- VARIANT ---
@@ -86,10 +88,10 @@ export const EnemyRegistry = {
     const atkMult = (famMod.atkMult ?? 1) * (varMod.atkMult ?? 1);
     const defMult = (famMod.defMult ?? 1) * (varMod.defMult ?? 1);
 
-    // --- BASE STATS (Hybrid Safe) ---
-    const baseHP = this.resolveBaseStat(raw.baseHP, family.baseHP, 50) * hpMult;
-    const baseATK = this.resolveBaseStat(raw.baseATK, family.baseATK, 5) * atkMult;
-    const baseDEF = this.resolveBaseStat(raw.baseDEF, family.baseDEF, 5) * defMult;
+    // --- BASE STATS ---
+    const baseHP  = this.resolveBaseStat(raw.baseHP,  family.baseHP,  50) * hpMult;
+    const baseATK = this.resolveBaseStat(raw.baseATK, family.baseATK, 5)  * atkMult;
+    const baseDEF = this.resolveBaseStat(raw.baseDEF, family.baseDEF, 5)  * defMult;
 
     // --- ELEMENTAL AFFINITY ---
     const elementAffinity = {
@@ -163,15 +165,8 @@ export const EnemyRegistry = {
 };
 
 // ---------------------------------------------------------
-// Helper Functions
+// Helper
 // ---------------------------------------------------------
-
-async function fetchJSON(path) {
-  const res = await fetch(path, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to load " + path);
-  return await res.json();
-}
-
 function parseMaybeJSON(value) {
   if (!value) return null;
   if (typeof value !== "string") return value;
