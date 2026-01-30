@@ -1,4 +1,4 @@
-{
+export const PETS = {
   "$schema": "S3VEN_RPG_PETS_V1",
   "pets": {
     "forest_sprite": {
@@ -87,4 +87,4 @@
       }
     }
   }
-}
+};
