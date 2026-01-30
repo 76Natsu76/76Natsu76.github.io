@@ -1,4 +1,4 @@
-{
+export const ENEMY_REGIONS = {
   "goblin": ["forest", "plains"],
   "tiny_slime": ["forest", "swamp"],
   "slime": ["forest", "cavern", "swamp"],
@@ -192,4 +192,4 @@
   "sky_piercer_colossus": ["titanfall"],
   "obsidian_world_breaker": ["titanfall"],
   "tide_forged_leviathan": ["titanfall"]
-}
+};
