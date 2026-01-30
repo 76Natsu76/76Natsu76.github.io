@@ -1,108 +1,110 @@
-/* coverage-report.js
-   Run this AFTER EnemyRegistry.loadAll()
-   Example:
-      await EnemyRegistry.loadAll();
-      generateCoverageReport();
-*/
+// coverage-report.js — Hybrid Tier Coverage Checker
 
-import { EnemyRegistry } from "./enemy-registry.js";
-import { WORLD_DATA } from "./world-data.js";
-import { BIOMES } from "./biomes.js";
+import { EnemyRegistry } from "./enemyRegistry.js";
 
-export function generateCoverageReport() {
-  console.log("=== ENEMY COVERAGE REPORT ===");
+(async function runCoverageReport() {
+  await EnemyRegistry.loadAll();
 
+  const families = EnemyRegistry.families;
   const enemies = EnemyRegistry.enemies;
   const regionMap = EnemyRegistry.regionMap;
 
-  // Collect all families and rarities used in biomes/regions
-  const allFamilies = new Set();
-  const allRarities = new Set();
+  // ---------------------------------------------
+  // 1. Identify Tier 1–2 families (combinatorial)
+  // ---------------------------------------------
+  const tier12Families = Object.values(families)
+    .filter(f => f.tier === 1 || f.tier === 2)
+    .map(f => f.key);
 
-  // Extract biome encounter families
-  for (const biomeKey in BIOMES) {
-    const biome = BIOMES[biomeKey];
-    if (biome.encounterWeights) {
-      for (const fam in biome.encounterWeights) {
-        allFamilies.add(fam);
-      }
+  console.log("=== Tier 1–2 Families (Checked for Coverage) ===");
+  console.log(tier12Families.join(", "));
+  console.log("");
+
+  // ---------------------------------------------
+  // 2. Build lookup: family → enemies
+  // ---------------------------------------------
+  const familyBuckets = {};
+  for (const fam of tier12Families) {
+    familyBuckets[fam] = [];
+  }
+
+  for (const e of enemies) {
+    const fam = e.family;
+    if (familyBuckets[fam]) {
+      familyBuckets[fam].push(e);
     }
   }
 
-  // Extract region rarity weights
-  for (const regionKey in WORLD_DATA.regions) {
-    const region = WORLD_DATA.regions[regionKey];
-    if (region.rarityWeights) {
-      region.rarityWeights.forEach(r => allRarities.add(r.id));
+  // ---------------------------------------------
+  // 3. Check missing base enemies per family
+  // ---------------------------------------------
+  console.log("=== Missing Base Enemies (Tier 1–2) ===");
+  for (const fam of tier12Families) {
+    if (familyBuckets[fam].length === 0) {
+      console.log(`❌ Family '${fam}' has NO base enemies`);
+    }
+  }
+  console.log("");
+
+  // ---------------------------------------------
+  // 4. Check rarity coverage per family
+  // ---------------------------------------------
+  const rarities = ["common", "uncommon", "rare", "elite", "mythical", "boss", "final"];
+
+  console.log("=== Missing Rarity Coverage (Tier 1–2 Families) ===");
+
+  for (const fam of tier12Families) {
+    const famEnemies = familyBuckets[fam];
+    const found = new Set(famEnemies.map(e => e.rarity));
+
+    const missing = rarities.filter(r => !found.has(r));
+    if (missing.length > 0) {
+      console.log(`⚠ Family '${fam}' missing rarities: ${missing.join(", ")}`);
+    }
+  }
+  console.log("");
+
+  // ---------------------------------------------
+  // 5. Region × Family coverage
+  // ---------------------------------------------
+  console.log("=== Region × Family Coverage (Tier 1–2) ===");
+
+  const regionFamilies = {};
+
+  for (const [enemyKey, region] of Object.entries(regionMap)) {
+    const enemy = enemies.find(e => e.key === enemyKey);
+    if (!enemy) continue;
+
+    const fam = enemy.family;
+    if (!tier12Families.includes(fam)) continue;
+
+    if (!regionFamilies[region]) regionFamilies[region] = new Set();
+    regionFamilies[region].add(fam);
+  }
+
+  for (const region of Object.keys(regionFamilies)) {
+    const present = Array.from(regionFamilies[region]);
+    const missing = tier12Families.filter(f => !present.includes(f));
+
+    if (missing.length > 0) {
+      console.log(`⚠ Region '${region}' missing families: ${missing.join(", ")}`);
+    }
+  }
+  console.log("");
+
+  // ---------------------------------------------
+  // 6. Variant coverage
+  // ---------------------------------------------
+  console.log("=== Variant Coverage (Tier 1–2 Families) ===");
+
+  for (const fam of tier12Families) {
+    const famEnemies = familyBuckets[fam];
+    const variants = famEnemies.filter(e => e.variant);
+
+    if (variants.length === 0) {
+      console.log(`⚠ Family '${fam}' has NO variants`);
     }
   }
 
-  // Build lookup tables
-  const enemiesByFamily = {};
-  const enemiesByRarity = {};
-  const enemiesByRegion = {};
-
-  enemies.forEach(e => {
-    if (!enemiesByFamily[e.family]) enemiesByFamily[e.family] = [];
-    enemiesByFamily[e.family].push(e);
-
-    if (!enemiesByRarity[e.rarity]) enemiesByRarity[e.rarity] = [];
-    enemiesByRarity[e.rarity].push(e);
-
-    const allowedRegions = regionMap[e.key] || [];
-    allowedRegions.forEach(r => {
-      if (!enemiesByRegion[r]) enemiesByRegion[r] = [];
-      enemiesByRegion[r].push(e);
-    });
-  });
-
-  const missing = [];
-
-  // Scan every region
-  for (const regionKey in WORLD_DATA.regions) {
-    const region = WORLD_DATA.regions[regionKey];
-    const biomeKey = region.biome;
-    const biome = BIOMES[biomeKey];
-
-    if (!biome) continue;
-
-    const biomeFamilies = Object.keys(biome.encounterWeights || {});
-    const regionRarities = region.rarityWeights.map(r => r.id);
-
-    biomeFamilies.forEach(family => {
-      regionRarities.forEach(rarity => {
-        const pool = enemies.filter(e =>
-          (regionMap[e.key] || []).includes(regionKey) &&
-          e.family === family &&
-          e.rarity === rarity
-        );
-
-        if (pool.length === 0) {
-          missing.push({
-            region: regionKey,
-            biome: biomeKey,
-            family,
-            rarity
-          });
-        }
-      });
-    });
-  }
-
-  if (missing.length === 0) {
-    console.log("All combinations covered. No missing enemies.");
-    return;
-  }
-
-  console.log("=== MISSING ENEMY COMBINATIONS ===");
-  missing.forEach(m => {
-    console.log(
-      `Region: ${m.region.padEnd(15)} | Biome: ${m.biome.padEnd(15)} | Family: ${m.family.padEnd(12)} | Rarity: ${m.rarity}`
-    );
-  });
-
-  console.log(`\nTotal missing combinations: ${missing.length}`);
-  console.log("====================================");
-
-  return missing;
-}
+  console.log("\n=== Coverage Report Complete ===");
+})();
