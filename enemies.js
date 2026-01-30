@@ -740,8 +740,8 @@ export const ENEMIES = {
     "activeEffects": {}
   },
   "skeleton_archer": {
-    "key": "skeleton archer",
-    "name": "skeleton archer",
+    "key": "skeleton_archer",
+    "name": "skeleton_archer",
     "profession": "archer",
     "family": "archer",
     "element": "dark",
