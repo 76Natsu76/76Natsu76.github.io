@@ -1400,5 +1400,13 @@ export const BIOME_MODIFIERS = {
   tundra: {
     iceDamageMult: 1.10,
     speedMult: 0.90
+  },
+  volcanic: {
+    fireDamageMult: 1.20,
+    defMult: 0.90
+  },
+  plains: {
+    speedMult: 1.02
   }
 };
+
