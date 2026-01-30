@@ -1,27 +1,41 @@
-// resolveEnemy.js
+/************************************************************
+ * resolveEnemy.js — GitHub-native, fully updated
+ ************************************************************/
 
 import { REGION_MODIFIERS } from "./region-modifiers.js";
 import { PROFESSION_SYNERGIES as PROFESSION_STAT_MODIFIERS } from "./profession-synergies.js";
 import { ENEMY_TAGS as TAG_MODIFIERS, applyTagModifiers } from "./enemy-tags.js";
 import { ELEMENT_MATRIX, applyElementalDamage } from "./element-matrix.js";
 import { RARITY_WEIGHTS as RARITY_MULTIPLIERS } from "./rarity-weights.js";
+
 import { ENEMY_FAMILIES } from "./enemy-families.js";
 import { ENEMY_VARIANTS } from "./enemy-variants.js";
 import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
 import { ENEMY_ULTIMATES } from "./enemy-ultimates.js";
 import { chooseBossActionV3, chooseEnemyActionV3 } from "./enemy-ai.js";
 
+/************************************************************
+ * MAIN RESOLVER
+ ************************************************************/
 export function resolveEnemy(raw, regionKey, tier) {
   const familyId = raw.family || "unknown";
   const family = ENEMY_FAMILIES[familyId] || {};
   const famMods = family.familyModifiers || {};
+
   const rarity = raw.rarity || "common";
   const rarityData = RARITY_MULTIPLIERS[rarity] || {};
+
   const tags = raw.tags || [];
+
+  // Variant = any tag that matches ENEMY_VARIANTS
   const variant = tags.find(t => ENEMY_VARIANTS[t]) || null;
   const v = variant ? ENEMY_VARIANTS[variant] : null;
+
   const prof = raw.profession || null;
-  const profStats = prof && PROFESSION_STAT_MODIFIERS[prof] ? PROFESSION_STAT_MODIFIERS[prof] : {};
+  const profStats = prof && PROFESSION_STAT_MODIFIERS[prof]
+    ? PROFESSION_STAT_MODIFIERS[prof]
+    : {};
+
   const regionMods = REGION_MODIFIERS[regionKey] || {
     hpMult: 1,
     atkMult: 1,
@@ -29,56 +43,103 @@ export function resolveEnemy(raw, regionKey, tier) {
     speedMult: 1,
     elementAffinity: {}
   };
+
   const level = raw.level || 1;
 
+  /************************************************************
+   * BASE STATS
+   ************************************************************/
   let hpMax = raw.baseHP || 1;
   let atk = raw.baseATK || 1;
   let def = raw.baseDEF || 0;
   let speed = raw.speed || Math.max(5, Math.floor(level * 0.2));
 
+  /************************************************************
+   * FAMILY MODIFIERS
+   ************************************************************/
   if (famMods.hp) hpMax = Math.floor(hpMax * famMods.hp);
   if (famMods.atk) atk = Math.floor(atk * famMods.atk);
   if (famMods.def) def = Math.floor(def * famMods.def);
 
+  /************************************************************
+   * RARITY MULTIPLIERS
+   ************************************************************/
   if (rarityData.hpMult) hpMax = Math.floor(hpMax * rarityData.hpMult);
   if (rarityData.atkMult) atk = Math.floor(atk * rarityData.atkMult);
   if (rarityData.defMult) def = Math.floor(def * rarityData.defMult);
 
+  /************************************************************
+   * VARIANT MULTIPLIERS
+   ************************************************************/
   if (v && v.hpMult) hpMax = Math.floor(hpMax * v.hpMult);
   if (v && v.atkMult) atk = Math.floor(atk * v.atkMult);
   if (v && v.defMult) def = Math.floor(def * v.defMult);
   if (v && v.speedMult) speed = Math.floor(speed * v.speedMult);
 
+  /************************************************************
+   * PROFESSION SYNERGY MODIFIERS
+   ************************************************************/
   if (profStats.hpMult) hpMax = Math.floor(hpMax * profStats.hpMult);
   if (profStats.atkMult) atk = Math.floor(atk * profStats.atkMult);
   if (profStats.defMult) def = Math.floor(def * profStats.defMult);
   if (profStats.speedMult) speed = Math.floor(speed * profStats.speedMult);
 
+  /************************************************************
+   * REGION MODIFIERS
+   ************************************************************/
   if (regionMods.hpMult) hpMax = Math.floor(hpMax * regionMods.hpMult);
   if (regionMods.atkMult) atk = Math.floor(atk * regionMods.atkMult);
   if (regionMods.defMult) def = Math.floor(def * regionMods.defMult);
   if (regionMods.speedMult) speed = Math.floor(speed * regionMods.speedMult);
 
+  /************************************************************
+   * TAG MODIFIERS
+   ************************************************************/
   const tagged = applyTagModifiers({ hpMax, atk, def, speed }, tags);
   hpMax = tagged.hpMax;
   atk = tagged.atk;
   def = tagged.def;
   speed = tagged.speed;
 
+  /************************************************************
+   * LEVEL SCALING
+   ************************************************************/
   hpMax = Math.floor(hpMax * (1 + level * 0.08));
   atk = Math.floor(atk * (1 + level * 0.06));
   def = Math.floor(def * (1 + level * 0.05));
   speed = Math.floor(speed * (1 + level * 0.02));
 
+  /************************************************************
+   * ELEMENT AFFINITY MERGE
+   ************************************************************/
   const elementAffinity = {};
-  if (family.elementAffinity) Object.assign(elementAffinity, family.elementAffinity);
-  if (regionMods.elementAffinity) Object.assign(elementAffinity, regionMods.elementAffinity);
-  if (profStats.elementAffinity) Object.assign(elementAffinity, profStats.elementAffinity);
-  if (raw.element) elementAffinity[raw.element] = (elementAffinity[raw.element] || 0) + 0.1;
 
-  const abilities = prof && ABILITY_DEFINITIONS[prof] ? Object.values(ABILITY_DEFINITIONS[prof]).filter(Boolean) : [];
-  const ultimate = prof && ENEMY_ULTIMATES[prof] ? ENEMY_ULTIMATES[prof] : null;
+  if (family.elementAffinity)
+    Object.assign(elementAffinity, family.elementAffinity);
 
+  if (regionMods.elementAffinity)
+    Object.assign(elementAffinity, regionMods.elementAffinity);
+
+  if (profStats.elementAffinity)
+    Object.assign(elementAffinity, profStats.elementAffinity);
+
+  if (raw.element)
+    elementAffinity[raw.element] = (elementAffinity[raw.element] || 0) + 0.1;
+
+  /************************************************************
+   * ABILITIES + ULTIMATE
+   ************************************************************/
+  const abilities = prof && ABILITY_DEFINITIONS[prof]
+    ? Object.values(ABILITY_DEFINITIONS[prof]).filter(Boolean)
+    : [];
+
+  const ultimate = prof && ENEMY_ULTIMATES[prof]
+    ? ENEMY_ULTIMATES[prof]
+    : null;
+
+  /************************************************************
+   * FINAL RUNTIME OBJECT
+   ************************************************************/
   return {
     key: raw.key || raw.name,
     name: raw.name || raw.key,
@@ -91,19 +152,24 @@ export function resolveEnemy(raw, regionKey, tier) {
     tags,
     level,
     elementAffinity,
+
     hpCurrent: hpMax,
     hpMax,
     atk,
     def,
     speed,
+
     abilities,
     ultimate,
+
     isBoss: tags.includes("boss"),
+
     statusEffects: [],
     cooldowns: {},
     pendingAction: null,
     currentCharge: 0,
     ultimateUses: {},
+
     adaptiveProfile: {
       playerHeals: 0,
       playerBuffs: 0,
@@ -111,6 +177,7 @@ export function resolveEnemy(raw, regionKey, tier) {
       playerDOTsApplied: 0,
       playerCCsApplied: 0
     },
+
     lootContext: {
       region: regionKey || raw.region || null,
       rarity,
@@ -118,12 +185,14 @@ export function resolveEnemy(raw, regionKey, tier) {
       profession: prof,
       variant
     },
+
     behaviorProfile: {
       aggression: family.aggression || 1,
       caution: family.caution || 1,
       burst: family.burst || 1,
       sustain: family.sustain || 1
     },
+
     isPlayer: false
   };
 }
