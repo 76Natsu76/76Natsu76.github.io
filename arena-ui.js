@@ -5,7 +5,7 @@
 import { ArenaEngine } from './arena-engine.js';
 import { ArenaLeaderboard } from './arena-leaderboard.js';
 import { ArenaHistory } from './arena-history.js';
-import { ARENA_CONFIG } from './arena.json';
+import { ARENA } from './arena.js';
 import { getPlayerById } from './player-registry.js';
 
 let currentPlayer = null;
