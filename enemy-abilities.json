@@ -1,80 +1,219 @@
 {
-  "enemy_basic": {
-    "key": "enemy_basic",
-    "name": "Claw Swipe",
-    "basePower": 1.0,
-    "scaling": 0.05,
-    "description": "A simple physical attack."
+  "basic_attack": {
+    "key": "basic_attack",
+    "name": "Basic Attack",
+    "type": "physical",
+    "power": 1.0,
+    "cooldown": 0,
+    "description": "A standard physical strike."
   },
 
-  "feral_bite": {
-    "key": "feral_bite",
-    "name": "Feral Bite",
-    "basePower": 1.4,
-    "scaling": 0.10,
-    "statusEffects": [
-      { "type": "bleed", "power": 4, "duration": 2, "stack": "add" }
-    ],
-    "description": "A vicious bite that causes bleeding."
+  "heavy_strike": {
+    "key": "heavy_strike",
+    "name": "Heavy Strike",
+    "type": "physical",
+    "power": 1.4,
+    "cooldown": 1,
+    "description": "A powerful melee blow."
   },
 
-  "pounce": {
-    "key": "pounce",
-    "name": "Pounce",
-    "basePower": 1.2,
-    "scaling": 0.08,
-    "statusEffects": [
-      { "type": "stun", "power": 0, "duration": 1, "stack": "replace" }
-    ],
-    "description": "A sudden leap that stuns the target."
+  "quick_slash": {
+    "key": "quick_slash",
+    "name": "Quick Slash",
+    "type": "physical",
+    "power": 0.9,
+    "cooldown": 0,
+    "description": "A fast, low‑power attack."
   },
 
-  "rot_touch": {
-    "key": "rot_touch",
-    "name": "Rot Touch",
-    "basePower": 1.3,
-    "scaling": 0.10,
-    "statusEffects": [
-      { "type": "poison", "power": 5, "duration": 3, "stack": "add" }
-    ],
-    "description": "A decaying touch that inflicts poison."
+  "poison_bite": {
+    "key": "poison_bite",
+    "name": "Poison Bite",
+    "type": "poison",
+    "power": 1.0,
+    "cooldown": 1,
+    "statusEffect": {
+      "type": "poison",
+      "chance": 0.20,
+      "duration": 3
+    },
+    "description": "A venomous bite that may poison the target."
   },
 
-  "bone_crush": {
-    "key": "bone_crush",
-    "name": "Bone Crush",
-    "basePower": 1.6,
-    "scaling": 0.12,
-    "description": "A heavy strike that deals crushing damage."
+  "web_snare": {
+    "key": "web_snare",
+    "name": "Web Snare",
+    "type": "control",
+    "power": 0,
+    "cooldown": 2,
+    "statusEffect": {
+      "type": "slow",
+      "chance": 1.0,
+      "duration": 2
+    },
+    "description": "Immobilizes or slows the target with sticky webbing."
   },
 
-  "flame_burst": {
-    "key": "flame_burst",
-    "name": "Flame Burst",
-    "basePower": 1.5,
-    "scaling": 0.15,
-    "statusEffects": [
-      { "type": "burn", "power": 6, "duration": 2, "stack": "add" }
-    ],
-    "description": "A burst of flame that burns the target."
+  "arcane_bolt": {
+    "key": "arcane_bolt",
+    "name": "Arcane Bolt",
+    "type": "arcane",
+    "power": 1.2,
+    "cooldown": 1,
+    "description": "A focused blast of arcane energy."
   },
 
-  "frost_spike": {
-    "key": "frost_spike",
-    "name": "Frost Spike",
-    "basePower": 1.3,
-    "scaling": 0.12,
-    "statusEffects": [
-      { "type": "slow", "power": 20, "duration": 2, "stack": "replace" }
-    ],
-    "description": "A chilling spike that slows movement."
+  "fireball": {
+    "key": "fireball",
+    "name": "Fireball",
+    "type": "fire",
+    "power": 1.4,
+    "cooldown": 2,
+    "statusEffect": {
+      "type": "burn",
+      "chance": 0.25,
+      "duration": 3
+    },
+    "description": "A fiery explosion that may ignite the target."
   },
 
-  "lightning_arc": {
-    "key": "lightning_arc",
-    "name": "Lightning Arc",
-    "basePower": 1.4,
-    "scaling": 0.15,
-    "description": "A bolt of lightning that shocks the target."
+  "ice_spike": {
+    "key": "ice_spike",
+    "name": "Ice Spike",
+    "type": "ice",
+    "power": 1.3,
+    "cooldown": 1,
+    "statusEffect": {
+      "type": "slow",
+      "chance": 0.20,
+      "duration": 2
+    },
+    "description": "A chilling spike of ice that may slow the target."
+  },
+
+  "lightning_surge": {
+    "key": "lightning_surge",
+    "name": "Lightning Surge",
+    "type": "lightning",
+    "power": 1.5,
+    "cooldown": 2,
+    "description": "A burst of electrical energy that shocks the target."
+  },
+
+  "earth_shatter": {
+    "key": "earth_shatter",
+    "name": "Earth Shatter",
+    "type": "earth",
+    "power": 1.6,
+    "cooldown": 3,
+    "description": "A ground‑breaking slam that deals heavy damage."
+  },
+
+  "wind_cutter": {
+    "key": "wind_cutter",
+    "name": "Wind Cutter",
+    "type": "wind",
+    "power": 1.1,
+    "cooldown": 1,
+    "description": "A slicing gust of wind."
+  },
+
+  "holy_smite": {
+    "key": "holy_smite",
+    "name": "Holy Smite",
+    "type": "holy",
+    "power": 1.4,
+    "cooldown": 2,
+    "description": "A radiant strike empowered by holy energy."
+  },
+
+  "shadow_bolt": {
+    "key": "shadow_bolt",
+    "name": "Shadow Bolt",
+    "type": "dark",
+    "power": 1.3,
+    "cooldown": 1,
+    "description": "A bolt of shadowy energy."
+  },
+
+  "void_rend": {
+    "key": "void_rend",
+    "name": "Void Rend",
+    "type": "void",
+    "power": 1.6,
+    "cooldown": 3,
+    "description": "A tear in reality that damages the target."
+  },
+
+  "chaos_spike": {
+    "key": "chaos_spike",
+    "name": "Chaos Spike",
+    "type": "chaos",
+    "power": 1.7,
+    "cooldown": 3,
+    "description": "Chaotic energy lashes out unpredictably."
+  },
+
+  "spirit_drain": {
+    "key": "spirit_drain",
+    "name": "Spirit Drain",
+    "type": "arcane",
+    "power": 1.2,
+    "cooldown": 2,
+    "statusEffect": {
+      "type": "weaken",
+      "chance": 0.20,
+      "duration": 2
+    },
+    "description": "Siphons spiritual energy from the target."
+  },
+
+  "necrotic_touch": {
+    "key": "necrotic_touch",
+    "name": "Necrotic Touch",
+    "type": "dark",
+    "power": 1.1,
+    "cooldown": 1,
+    "statusEffect": {
+      "type": "rot",
+      "chance": 0.25,
+      "duration": 3
+    },
+    "description": "A decaying touch that inflicts rot."
+  },
+
+  "summon_minion": {
+    "key": "summon_minion",
+    "name": "Summon Minion",
+    "type": "special",
+    "power": 0,
+    "cooldown": 3,
+    "description": "Summons a temporary minion to assist in battle."
+  },
+
+  "berserk_rage": {
+    "key": "berserk_rage",
+    "name": "Berserk Rage",
+    "type": "buff",
+    "power": 0,
+    "cooldown": 3,
+    "buff": {
+      "atkMult": 1.25,
+      "duration": 3
+    },
+    "description": "Enters a frenzy, increasing attack power."
+  },
+
+  "stone_skin": {
+    "key": "stone_skin",
+    "name": "Stone Skin",
+    "type": "buff",
+    "power": 0,
+    "cooldown": 3,
+    "buff": {
+      "defMult": 1.25,
+      "duration": 3
+    },
+    "description": "Hardens the body, increasing defense."
   }
 }
