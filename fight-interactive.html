@@ -1229,18 +1229,29 @@
       logBox.innerHTML = "";
     
       const playerState = resolvePlayer(rawPlayer);
-      const enemyState = resolveEnemy( encounter.enemy, encounter.region, encounter.enemy.tier || encounter.tier || 1 );
+      const enemyState = resolveEnemy(
+        encounter.enemy,
+        encounter.region,
+        encounter.enemy.tier || encounter.tier || 1
+      );
     
       combat = {
         playerState,
         enemyState,
-        context: buildCombatContext( encounter.region, encounter.biome, encounter.weather, encounter.event )
+        context: buildCombatContext(
+          encounter.region,
+          encounter.biome,
+          encounter.weather,
+          encounter.event
+        )
       };
+    
       setTimeout(() => {
         renderPanels();
         showActionPanel();
       }, 50);
     }
+
     
     /* ============================================================
        RUN ROUND (WRAPPER AROUND combat-engine)
