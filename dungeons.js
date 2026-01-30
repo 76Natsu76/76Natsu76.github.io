@@ -1,4 +1,4 @@
-{
+export const DUNGEONS = {
   "$schema": "S3VEN_RPG_DUNGEON_SCHEMA_V1",
   "dungeons": {
     "DUNGEON_KEY": {
@@ -176,4 +176,4 @@
       }
     }
   }
-}
+};
