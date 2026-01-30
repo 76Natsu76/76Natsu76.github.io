@@ -1,4 +1,4 @@
-{
+export const ENEMY_VARIANTS = {
   "alpha": {
     "name": "Alpha",
     "flavor": "An empowered version of its species, radiating aggression.",
@@ -271,4 +271,4 @@
       "specialRules": ["shadow_step"]
     }
   }
-}
+};
