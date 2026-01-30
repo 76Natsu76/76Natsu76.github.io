@@ -2,7 +2,7 @@
  * arena-engine.js
  ************************************************************/
 
-import { ARENA_CONFIG } from './arena.json';
+import { ARENA } from './arena.js';
 import { GuildEngine } from './guild-engine.js';
 import { getPlayerById} from './player-registry.js';
 import { runPvPCombat } from './combat-engine.js'; // you’ll wire this
