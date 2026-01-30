@@ -1,3 +1,3 @@
-export const PURCHASES = {
+export const PURCHASE_LOG = {
   _comment:"Dummy text"
 };
