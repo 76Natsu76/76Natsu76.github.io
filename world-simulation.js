@@ -38,8 +38,8 @@ function _getRegionUnlocks() {
    INITIALIZATION — MUST BE CALLED BEFORE USING WORLD SIM
 ============================================================ */
 async function init() {
-  import WORLD_BOSSES from "./world-boss-templates.js";
-  import REGION_UNLOCKS from "./region-unlock.js";
+  import { WORLD_BOSSES } from "./world-boss-templates.js";
+  import { REGION_UNLOCKS } from "./region-unlock.js";
 }
 
 
