@@ -147,3 +147,20 @@ export function detectConflict(local, remote) {
 
   return "match";
 }
+
+export async function getLeaderboardGlobalKV() {
+  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboard/global");
+  return res.json();
+}
+
+export async function getLeaderboardHardcoreKV() {
+  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboard/hardcore");
+  return res.json();
+}
+
+export async function getLeaderboardFriendsKV(username) {
+  const res = await fetch(
+    `https://auth-worker.godeaterspersona.workers.dev/leaderboard/friends/${username}`
+  );
+  return res.json();
+}
