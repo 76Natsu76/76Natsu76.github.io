@@ -1,14 +1,13 @@
 // shop-engine.js
 
-import shopPool from "./shop-pool.json" assert { type: "json" };
-import players from "./players.json" assert { type: "json" };
-import RARITY_WEIGHTS from "./rarity-weights.json" assert { type:"json"};
+import { SHOP_POOL } from "./shop-pool.js";
+import { RARITY_WEIGHTS } from "./rarity-weights.js";
 
-// --------------------------------------------------
-// Weighted random item selection
-// --------------------------------------------------
+/* --------------------------------------------------
+   Weighted random item selection
+-------------------------------------------------- */
 function weightedRandomItem() {
-  const entries = Object.values(shopPool);
+  const entries = SHOP_POOL;
 
   const totalWeight = entries.reduce(
     (sum, item) => sum + (RARITY_WEIGHTS[item.rarity] || 1),
@@ -25,19 +24,17 @@ function weightedRandomItem() {
   return entries[entries.length - 1];
 }
 
-// --------------------------------------------------
-// Generate a single shop item entry
-// --------------------------------------------------
+/* --------------------------------------------------
+   Generate a single shop item entry
+-------------------------------------------------- */
 function generateShopItem(poolEntry) {
   const qty =
-    Math.floor(
-      Math.random() * (poolEntry.maxQty - poolEntry.minQty + 1)
-    ) + poolEntry.minQty;
+    Math.floor(Math.random() * (poolEntry.maxQty - poolEntry.minQty + 1)) +
+    poolEntry.minQty;
 
   const price =
-    Math.floor(
-      Math.random() * (poolEntry.maxPrice - poolEntry.minPrice + 1)
-    ) + poolEntry.minPrice;
+    Math.floor(Math.random() * (poolEntry.maxPrice - poolEntry.minPrice + 1)) +
+    poolEntry.minPrice;
 
   return {
     id: poolEntry.id,
@@ -47,13 +44,12 @@ function generateShopItem(poolEntry) {
   };
 }
 
-// --------------------------------------------------
-// GLOBAL SHOP
-// --------------------------------------------------
-export function generateGlobalShop() {
-  const playerCount = Object.keys(players).length;
+/* --------------------------------------------------
+   GLOBAL SHOP
+   (playerCount must now be passed in)
+-------------------------------------------------- */
+export function generateGlobalShop(playerCount = 1) {
   const itemCount = 25 + 10 * playerCount;
-
   const items = [];
 
   for (let i = 0; i < itemCount; i++) {
@@ -67,9 +63,9 @@ export function generateGlobalShop() {
   };
 }
 
-// --------------------------------------------------
-// DAILY USER SHOP
-// --------------------------------------------------
+/* --------------------------------------------------
+   DAILY USER SHOP
+-------------------------------------------------- */
 export function generateUserShop(username) {
   const itemCount = Math.floor(Math.random() * 8) + 3; // 3–10 items
   const items = [];
@@ -86,9 +82,9 @@ export function generateUserShop(username) {
   };
 }
 
-// --------------------------------------------------
-// DAILY RESET CHECK
-// --------------------------------------------------
+/* --------------------------------------------------
+   DAILY RESET CHECK
+-------------------------------------------------- */
 export function shouldResetShop(lastGeneratedTimestamp) {
   const now = new Date();
   const last = new Date(lastGeneratedTimestamp);
