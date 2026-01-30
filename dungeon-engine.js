@@ -1,10 +1,10 @@
 /************************************************************
- * dungeon-engine.js — Full Version
+ * dungeon-engine.js — Full JS Module Version
  ************************************************************/
 
-import { DUNGEONS } from './dungeons.json';
-import { DUNGEON_EVENTS } from './dungeon-events.json';
-import { LOOT_TABLES } from './dungeon-loot-tables.json';
+import { DUNGEONS } from './dungeons.js';
+import { DUNGEON_EVENTS } from './dungeon-events.js';
+import { LOOT_TABLES } from './dungeon-loot-tables.js';
 
 import { generateEncounter } from './encounter-generator.js';
 import { resolveEnemy } from './resolveEnemy.js';
