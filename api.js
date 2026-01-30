@@ -149,18 +149,18 @@ export function detectConflict(local, remote) {
 }
 
 export async function getLeaderboardGlobalKV() {
-  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboard/global");
+  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboards/global");
   return res.json();
 }
 
 export async function getLeaderboardHardcoreKV() {
-  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboard/hardcore");
+  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboards/hardcore");
   return res.json();
 }
 
 export async function getLeaderboardFriendsKV(username) {
   const res = await fetch(
-    `https://auth-worker.godeaterspersona.workers.dev/leaderboard/friends/${username}`
+    `https://auth-worker.godeaterspersona.workers.dev/leaderboards/friends/${username}`
   );
   return res.json();
 }
