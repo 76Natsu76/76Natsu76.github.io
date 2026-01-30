@@ -615,45 +615,46 @@
       }
     }
 
-    /* Crit flash */
+    /* CRIT FLASH */
     .crit-flash {
-      animation: critFlash 0.4s ease-out;
+      animation: critFlashAnim 0.25s ease-out;
     }
-
-    @keyframes critFlash {
-      0% {
-        box-shadow:0 0 12px rgba(255,255,0,0.9);
-      }
-      100% {
-        box-shadow:0 0 0 rgba(255,255,0,0);
-      }
+    
+    @keyframes critFlashAnim {
+      0% { background-color: rgba(255,255,0,0.4); }
+      100% { background-color: transparent; }
     }
-
-    /* Elemental pulses */
-    .fire-pulse {
-      animation: firePulse 0.5s ease-out;
+    
+    /* ELEMENTAL PULSE */
+    .pulse-fire { animation: pulseFire 0.4s ease-out; }
+    .pulse-ice { animation: pulseIce 0.4s ease-out; }
+    .pulse-nature { animation: pulseNature 0.4s ease-out; }
+    .pulse-dark { animation: pulseDark 0.4s ease-out; }
+    .pulse-light { animation: pulseLight 0.4s ease-out; }
+    
+    @keyframes pulseFire {
+      0% { box-shadow: 0 0 20px #ff4500; }
+      100% { box-shadow: none; }
     }
-
-    @keyframes firePulse {
-      0% {
-        box-shadow:0 0 12px rgba(255,80,0,0.9);
-      }
-      100% {
-        box-shadow:0 0 0 rgba(255,80,0,0);
-      }
+    
+    @keyframes pulseIce {
+      0% { box-shadow: 0 0 20px #00bfff; }
+      100% { box-shadow: none; }
     }
-
-    .ice-pulse {
-      animation: icePulse 0.5s ease-out;
+    
+    @keyframes pulseNature {
+      0% { box-shadow: 0 0 20px #32cd32; }
+      100% { box-shadow: none; }
     }
-
-    @keyframes icePulse {
-      0% {
-        box-shadow:0 0 12px rgba(120,200,255,0.9);
-      }
-      100% {
-        box-shadow:0 0 0 rgba(120,200,255,0);
-      }
+    
+    @keyframes pulseDark {
+      0% { box-shadow: 0 0 20px #551a8b; }
+      100% { box-shadow: none; }
+    }
+    
+    @keyframes pulseLight {
+      0% { box-shadow: 0 0 20px #ffd700; }
+      100% { box-shadow: none; }
     }
 
     .lightning-pulse {
@@ -694,6 +695,19 @@
         background-color:transparent;
       }
     }
+
+    .status-icons {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    
+    .status-icons img {
+      width: 20px;
+      height: 20px;
+      filter: drop-shadow(0 0 3px #000);
+    }
+
 
     /* Modifier row */
     .modifier-row {
@@ -894,6 +908,9 @@
 
       <button id="inspectEnemyBtn" class="btn inspect-btn">Inspect</button>
     </div>
+
+    <div class="status-icons" id="playerStatusIcons"></div>
+    <div class="status-icons" id="enemyStatusIcons"></div>
   </div>
 
   <!-- ============================
@@ -1138,6 +1155,8 @@
       if (!combat) return;
       renderPlayerPanel(combat.playerState);
       renderEnemyPanel(combat.enemyState);
+      renderStatusIcons(combat.playerState, "playerStatusIcons");
+      renderStatusIcons(combat.enemyState, "enemyStatusIcons");
     }
   
     function renderPlayerPanel(p) {
@@ -1618,6 +1637,19 @@
     
       setTimeout(() => div.remove(), 800);
     }
+
+    function renderStatusIcons(entity, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+    
+      (entity.statusEffects || []).forEach(eff => {
+        const img = document.createElement("img");
+        img.src = `/assets/status/${eff.type}.png`;
+        img.title = eff.type;
+        container.appendChild(img);
+      });
+    }
+
 
     /* ============================================================
        BUTTON BINDINGS
