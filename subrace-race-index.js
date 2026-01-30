@@ -1,4 +1,4 @@
-{
+export const SUBRACE_RACE_INDEX = {
   "humanoid": "humanoid",
   "elf": "elf",
   "dwarf": "dwarf",
@@ -72,4 +72,4 @@
   "emotional": "emotional",
   "paradox_god": "paradox_god",
   "multiversal_paragon": "multiversal_paragon"
-}
+};
