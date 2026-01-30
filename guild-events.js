@@ -1,4 +1,4 @@
-{
+export const GUILD_EVENTS = {
   "$schema": "S3VEN_RPG_GUILD_EVENTS_V1",
   "events": {
     "EVENT_KEY": {
@@ -81,4 +81,4 @@
       }
     }
   }
-}
+};
