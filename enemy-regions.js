@@ -1,195 +1,193 @@
 export const ENEMY_REGIONS = {
-  "goblin": ["forest", "plains"],
-  "tiny_slime": ["forest", "swamp"],
-  "slime": ["forest", "cavern", "swamp"],
-  "giant_rat": ["forest", "cavern"],
-  "stray_hound": ["forest"],
-  "sticky_slime": ["forest", "cavern", "swamp"],
-  "bandit": ["forest", "plains"],
-  "feral_tracker": ["forest"],
-  "cave_miner": ["forest", "cavern"],
-  "cult_novice": ["forest", "ruins", "trainers_city"],
-  "wolf": ["forest"],
-  "corrosive_slime": ["forest", "swamp"],
-  "tunnel_delver": ["forest", "cavern"],
-  "sigil_binder": ["forest", "ruins", "arcstone_enclave", "trainers_city"],
-  "hobgoblin": ["forest", "plains"],
-  "kobold": ["forest", "plains"],
-  "alpha_mastiff": ["forest", "plains"],
-  "skeleton": ["forest", "ruins"],
-  "royal_slime": ["forest", "swamp"],
-  "orebreaker": ["forest", "cavern"],
-  "spirit_channeler": ["forest", "ruins", "arcstone_enclave", "trainers_city"],
-  "archer_rogue": ["forest", "plains", "trainers_city"],
-  "howling_warg": ["forest"],
-  "deepstone_foreman": ["forest", "cavern"],
-  "grand_occultist": ["forest", "ruins"],
-  "orc": ["forest", "plains"],
-  "bandit_captain": ["forest", "plains"],
-  "dire_wolf": ["forest", "plains"],
-  "skeleton_archer": ["forest", "plains", "ruins"],
-  "zombie": ["forest", "ruins", "swamp", "outcast_island"],
-  "ghoul": ["forest", "ruins", "swamp", "outcast_island"],
-  "giant_spider": ["forest", "swamp"],
-  "hornet_swarm": ["forest", "swamp"],
+  forest: [
+    "goblin", "tiny_slime", "slime", "giant_rat", "stray_hound",
+    "sticky_slime", "bandit", "feral_tracker", "cave_miner",
+    "cult_novice", "wolf", "corrosive_slime", "tunnel_delver",
+    "sigil_binder", "hobgoblin", "kobold", "alpha_mastiff",
+    "skeleton", "royal_slime", "orebreaker", "spirit_channeler",
+    "archer_rogue", "howling_warg", "deepstone_foreman",
+    "grand_occultist", "orc", "bandit_captain", "dire_wolf",
+    "skeleton_archer", "zombie", "ghoul", "giant_spider",
+    "hornet_swarm"
+  ],
 
-  "barbarian": ["plains", "cavern", "desert", "trainers_city"],
-  "ranger_scout": ["plains", "trainers_city"],
-  "monk_disciple": ["trainers_city"],
-  "witch_apprentice": ["arcstone_enclave", "trainers_city"],
-  "necromancer_adept": ["trainers_city", "outcast_island"],
+  plains: [
+    "goblin", "bandit", "hobgoblin", "kobold", "alpha_mastiff",
+    "orc", "bandit_captain", "dire_wolf", "archer_rogue",
+    "ranger_scout"
+  ],
 
-  "shaman_of_thorns": ["verdant_wildwood"],
-  "druid_of_storms": ["verdant_wildwood"],
-  "warlock_cultist": ["outcast_island"],
+  swamp: [
+    "tiny_slime", "slime", "sticky_slime", "corrosive_slime",
+    "royal_slime", "zombie", "ghoul", "giant_spider",
+    "hornet_swarm"
+  ],
 
-  "paladin_initiate": ["trainers_city", "celestial"],
-  "assassin_shade": ["trainers_city", "outcast_island"],
-  "terror_knight": ["outcast_island"],
-  "minotaur": ["desert", "mountains"],
-  "centaur_lancer": ["outcast_island"],
-  "satyr_trickster": ["verdant_wildwood"],
-  "giant_boar": ["desert", "mountains"],
-  "tiger_warrior": ["verdant_wildwood"],
-  "serpent_guardian": ["desert"],
-  "banshee": ["spirit_kingdom"],
-  "wraith": ["tundra"],
-  "fire_elemental": ["desert", "spirit_kingdom"],
-  "water_elemental": ["spirit_kingdom"],
-  "earth_elemental": ["mountains", "spirit_kingdom"],
-  "wind_elemental": ["tundra", "mountains", "spirit_kingdom"],
-  "treant": ["mountains"],
-  "lightning_elemental": ["mountains", "spirit_kingdom"],
-  "ice_elemental": ["tundra", "spirit_kingdom"],
-  "poison_elemental": ["spirit_kingdom"],
-  "arcane_sentinel": ["arcstone_enclave", "spirit_kingdom"],
-  "metal_golem": ["mountains"],
-  "nature_guardian": ["verdant_wildwood"],
-  "lesser_demon": ["abyssal_scar", "outcast_island"],
-  "hellhound": ["desert", "outcast_island"],
-  "hydra": ["desert"],
-  "imp_warlock": ["desert", "outcast_island"],
+  cavern: [
+    "slime", "giant_rat", "sticky_slime", "cave_miner",
+    "tunnel_delver", "orebreaker", "deepstone_foreman",
+    "barbarian"
+  ],
 
-  "void_reaver": ["void", "abyssal_scar"],
-  "funny_sthreeven_man": ["void"],
-  "abyss_watcher": ["void", "abyssal_scar", "shadow_labyrinth", "outcast_island"],
-  "void_leviathan": ["void"],
-  "chaos_wyrm": ["void", "molten_underdeep"],
+  ruins: [
+    "cult_novice", "sigil_binder", "skeleton", "spirit_channeler",
+    "grand_occultist", "skeleton_archer", "zombie", "ghoul"
+  ],
 
-  "celestial_guardian": ["celestial", "celestial_expanse"],
-  "celestial_herald": ["celestial", "celestial_expanse"],
+  trainers_city: [
+    "cult_novice", "sigil_binder", "spirit_channeler",
+    "archer_rogue", "ranger_scout", "monk_disciple",
+    "witch_apprentice", "necromancer_adept", "paladin_initiate",
+    "assassin_shade", "seraphic_acolyte", "chrono_fractured_adept",
+    "aether_crowned_hexbinder", "spell_eater_homunculus",
+    "halo_crowned_squire", "sword_novice_duelist",
+    "arcane_bloom_student", "shadow_step_initiate",
+    "null_eater_sovereignling", "spell_riven_archonling"
+  ],
 
-  "arcane_chimera": ["arcane_rift"],
-  "infernal_juggernaut": ["abyssal_scar"],
-  "thunder_colossus": ["emberfang_ridge", "stormforge_sanctum", "titanfall"],
-  "glacier_titan": ["titanfall"],
+  verdant_wildwood: [
+    "shaman_of_thorns", "druid_of_storms", "satyr_trickster",
+    "tiger_warrior", "nature_guardian"
+  ],
 
-  "molten_behemoth": ["molten_underdeep"],
-  "storm_sovereign": ["spirit_kingdom"],
-  "nature_colossus": ["primordial_grove", "titanfall"],
+  outcast_island: [
+    "zombie", "ghoul", "warlock_cultist", "assassin_shade",
+    "terror_knight", "necromancer_adept", "abyss_gnawed_shadehound",
+    "nullborn_ravager", "grimhollow_reaperling",
+    "night_torn_specterblade", "soul_husk_devourer",
+    "abyssal_bonecarver", "toxic_mire_stalker",
+    "banished_hex_caller"
+  ],
 
-  "death_knight": ["void_frontier", "shadow_labyrinth"],
-  "arcane_phoenix": ["arcane_rift"],
-  "iron_colossus": ["void_frontier", "titanfall"],
+  desert: [
+    "barbarian", "giant_boar", "serpent_guardian", "hellhound",
+    "hydra", "fire_elemental", "imp_warlock"
+  ],
 
-  "astral_chimera": ["arcane_rift"],
-  "titan_of_ruin": ["void_frontier", "titanfall"],
-  "divine_sentinel": ["eternal_citadel"],
-  "shadow_colossus": ["void_frontier", "stormforge_sanctum", "titanfall"],
-  "primordial_wyrm": ["arcane_rift", "primordial_grove", "stormforge_sanctum"],
-  "storm_titan": ["void_frontier", "stormforge_sanctum", "titanfall"],
-  "infernal_archlord": ["void_frontier"],
-  "celestial_archon": ["celestial_expanse", "eternal_citadel"],
-  "void_monarch": ["void_frontier"],
+  mountains: [
+    "minotaur", "giant_boar", "earth_elemental", "wind_elemental",
+    "treant", "lightning_elemental", "metal_golem"
+  ],
 
-  "world_titan": ["worldbreaker_horizon", "titanfall"],
+  tundra: [
+    "wraith", "wind_elemental", "ice_elemental"
+  ],
 
-  "angel": ["radiant_ascension_spire"],
-  "radiant_dawnstrider": ["radiant_ascension_spire"],
-  "sun_blessed_herald": ["radiant_ascension_spire"],
-  "seraphic_acolyte": ["radiant_ascension_spire", "trainers_city"],
+  spirit_kingdom: [
+    "banshee", "fire_elemental", "water_elemental",
+    "earth_elemental", "wind_elemental", "lightning_elemental",
+    "ice_elemental", "poison_elemental", "arcane_sentinel",
+    "storm_sovereign", "runespun_aetherling",
+    "mana_starved_riftspawn", "ethereal_tidecaller",
+    "frost_veil_apparition", "storm_crowned_tempestling"
+  ],
 
-  "celestial_spearwarden": ["seraphic_crucible"],
-  "luminous_ascendant": ["seraphic_crucible"],
-  "heaven_bound_exemplar": ["seraphic_crucible"],
-  "radiant_choir_seraphling": ["seraphic_crucible", "trainers_city"],
+  arcstone_enclave: [
+    "sigil_binder", "spirit_channeler", "witch_apprentice",
+    "arcane_sentinel"
+  ],
 
-  "verdant_fangprowler": ["elderwood_heart"],
-  "thorn_crowned_druidling": ["elderwood_heart"],
-  "grove_warden_shaman": ["elderwood_heart"],
-  "grove_heart_oracle": ["elderwood_heart"],
+  abyssal_scar: [
+    "lesser_demon", "void_reaver", "abyss_watcher",
+    "infernal_juggernaut"
+  ],
 
-  "elder_thorn_reaver": ["primeval_overgrowth"],
-  "bloom_crowned_archdruid": ["primeval_overgrowth"],
-  "primeval_rootshaper": ["primeval_overgrowth"],
-  "sylvan_apex_behemoth": ["primeval_overgrowth"],
+  void: [
+    "void_reaver", "funny_sthreeven_man", "void_leviathan"
+  ],
 
-  "divine_forged_paragon": ["celestial_horizon"],
-  "halo_crested_archsentinel": ["celestial_horizon"],
-  "seraphic_dawn_warden": ["celestial_horizon"],
-  "eternal_light_sovereign": ["celestial_horizon"],
+  molten_underdeep: [
+    "chaos_wyrm", "molten_behemoth"
+  ],
 
-  "titan_blooded_ruinshaper": ["worlds_end_expanse", "titanfall"],
-  "cosmic_crowned_terminarch": ["worlds_end_expanse", "titanfall"],
-  "god": ["worlds_end_expanse"],
-  "void_god": ["worlds_end_expanse"],
+  celestial: [
+    "paladin_initiate"
+  ],
 
-  "plink_of_the_seventh_dimension": ["astral_nexus"],
-  "sthreevens_chaotic_doppelcat": ["astral_nexus"],
-  "umbral_skitterfiend": ["astral_nexus"],
-  "hollowbone_stalker": ["astral_nexus"],
-  "abyss_gnawed_shadehound": ["astral_nexus", "outcast_island"],
-  "nullborn_ravager": ["astral_nexus", "outcast_island"],
-  "runespun_aetherling": ["astral_nexus", "spirit_kingdom"],
-  "eclipse_marked_assassin": ["astral_nexus"],
-  "spellforged_myrmidon": ["astral_nexus"],
-  "astral_thread_weaver": ["astral_nexus", "spirit_kingdom"],
-  "warped_soulrender": ["astral_nexus"],
-  "mana_starved_riftspawn": ["astral_nexus", "spirit_kingdom"],
-  "grimhollow_reaperling": ["astral_nexus", "outcast_island"],
-  "arc_bound_sentinel": ["astral_nexus"],
-  "hate_crowned_dreadmonger": ["astral_nexus"],
-  "arcane_pulse_serpent": ["astral_nexus"],
-  "root_bound_sentinel": ["astral_nexus"],
-  "null_eater_sovereignling": ["astral_nexus", "trainers_city"],
-  "spell_riven_archonling": ["astral_nexus", "trainers_city"],
-  "mana_crested_riftlord": ["astral_nexus"],
-  "astral_veined_oracle": ["astral_nexus"],
-  "chrono_shattered_warden": ["astral_nexus"],
-  "null_crowned_riftbeast": ["astral_nexus"],
-  "abyss_forged_harrower": ["astral_nexus"],
-  "eldritch_maw_tyrant": ["astral_nexus"],
-  "void_sundered_reaver": ["astral_nexus"],
-  "nullborn_rift_prophet": ["astral_nexus"],
-  "eternal_rift_warden": ["astral_nexus"],
-  "chaos_spiral_sovereign": ["astral_nexus"],
-  "null_eclipse_archfiend": ["astral_nexus"],
+  celestial_expanse: [
+    "celestial_guardian", "celestial_herald", "celestial_archon"
+  ],
 
-  "chrono_fractured_adept": ["trainers_city"],
-  "aether_crowned_hexbinder": ["trainers_city"],
-  "spell_eater_homunculus": ["trainers_city"],
-  "halo_crowned_squire": ["trainers_city"],
+  arcane_rift: [
+    "arcane_chimera", "arcane_phoenix", "astral_chimera",
+    "primordial_wyrm"
+  ],
 
-  "night_torn_specterblade": ["outcast_island"],
-  "soul_husk_devourer": ["outcast_island"],
-  "abyssal_bonecarver": ["outcast_island"],
+  emberfang_ridge: [
+    "thunder_colossus"
+  ],
 
-  "primeval_hornbeast": ["titanfall"],
+  stormforge_sanctum: [
+    "thunder_colossus", "shadow_colossus", "primordial_wyrm",
+    "storm_titan"
+  ],
 
-  "sword_novice_duelist": ["trainers_city"],
-  "arcane_bloom_student": ["trainers_city"],
-  "shadow_step_initiate": ["trainers_city"],
+  titanfall: [
+    "thunder_colossus", "glacier_titan", "nature_colossus",
+    "iron_colossus", "titan_of_ruin", "storm_titan",
+    "world_titan", "primeval_hornbeast", "ancient_bark_titan",
+    "sky_piercer_colossus", "obsidian_world_breaker",
+    "tide_forged_leviathan"
+  ],
 
-  "ethereal_tidecaller": ["spirit_kingdom"],
-  "frost_veil_apparition": ["spirit_kingdom"],
-  "storm_crowned_tempestling": ["spirit_kingdom"],
+  void_frontier: [
+    "death_knight", "iron_colossus", "titan_of_ruin",
+    "infernal_archlord", "shadow_colossus", "void_monarch"
+  ],
 
-  "shadow_marked_outrider": ["outcast_island"],
-  "toxic_mire_stalker": ["outcast_island"],
-  "banished_hex_caller": ["outcast_island"],
+  shadow_labyrinth: [
+    "abyss_watcher", "death_knight"
+  ],
 
-  "ancient_bark_titan": ["titanfall"],
-  "sky_piercer_colossus": ["titanfall"],
-  "obsidian_world_breaker": ["titanfall"],
-  "tide_forged_leviathan": ["titanfall"]
+  eternal_citadel: [
+    "divine_sentinel", "celestial_archon"
+  ],
+
+  radiant_ascension_spire: [
+    "angel", "radiant_dawnstrider", "sun_blessed_herald",
+    "seraphic_acolyte"
+  ],
+
+  seraphic_crucible: [
+    "celestial_spearwarden", "luminous_ascendant",
+    "heaven_bound_exemplar", "radiant_choir_seraphling"
+  ],
+
+  elderwood_heart: [
+    "verdant_fangprowler", "thorn_crowned_druidling",
+    "grove_warden_shaman", "grove_heart_oracle"
+  ],
+
+  primeval_overgrowth: [
+    "elder_thorn_reaver", "bloom_crowned_archdruid",
+    "primeval_rootshaper", "sylvan_apex_behemoth"
+  ],
+
+  celestial_horizon: [
+    "divine_forged_paragon", "halo_crested_archsentinel",
+    "seraphic_dawn_warden", "eternal_light_sovereign"
+  ],
+
+  worlds_end_expanse: [
+    "titan_blooded_ruinshaper", "cosmic_crowned_terminarch",
+    "god", "void_god"
+  ],
+
+  astral_nexus: [
+    "plink_of_the_seventh_dimension", "sthreevens_chaotic_doppelcat",
+    "umbral_skitterfiend", "hollowbone_stalker",
+    "abyss_gnawed_shadehound", "nullborn_ravager",
+    "runespun_aetherling", "eclipse_marked_assassin",
+    "spellforged_myrmidon", "astral_thread_weaver",
+    "warped_soulrender", "mana_starved_riftspawn",
+    "grimhollow_reaperling", "arc_bound_sentinel",
+    "hate_crowned_dreadmonger", "arcane_pulse_serpent",
+    "root_bound_sentinel", "null_eater_sovereignling",
+    "spell_riven_archonling", "mana_crested_riftlord",
+    "astral_veined_oracle", "chrono_shattered_warden",
+    "null_crowned_riftbeast", "abyss_forged_harrower",
+    "eldritch_maw_tyrant", "void_sundered_reaver",
+    "nullborn_rift_prophet", "eternal_rift_warden",
+    "chaos_spiral_sovereign", "null_eclipse_archfiend"
+  ]
 };
