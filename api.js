@@ -109,18 +109,27 @@ export async function loadPlayerFromKV(username) {
   return getPlayerFromKV(username);
 }
 
-export async function savePlayerToKV(username, data) {
-  const res = await fetch(
-    `https://auth-worker.godeaterspersona.workers.dev/player/save`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, data })
-    }
-  );
+export async function savePlayerToKV(username, player) {
+  const clean = sanitizePlayerForSave(player);
 
-  return res.json();
+  // Optional: quick guard to catch NaN / undefined before hitting the Worker
+  const body = JSON.stringify({ username, player: clean });
+
+  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/player/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    console.error("KV save failed", res.status, text);
+    throw new Error(`KV save failed: ${res.status}`);
+  }
+
+  return await res.json().catch(() => ({}));
 }
+
 
 /* ============================================================
    LOAD + CONFLICT DETECTION
