@@ -1,4 +1,4 @@
-{
+export const ENEMY_ABILITIES = {
   "basic_attack": {
     "key": "basic_attack",
     "name": "Basic Attack",
@@ -216,4 +216,4 @@
     },
     "description": "Hardens the body, increasing defense."
   }
-}
+};
