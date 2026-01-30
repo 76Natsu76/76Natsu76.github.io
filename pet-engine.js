@@ -2,7 +2,7 @@
  * pet-engine.js
  ************************************************************/
 
-import { PETS } from "./pets.json";
+import { PETS } from "./pets.js";
 
 export const PetEngine = {
   getPet(key) {
