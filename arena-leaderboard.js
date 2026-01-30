@@ -2,8 +2,8 @@
  * arena-leaderboard.js
  ************************************************************/
 
-import { getAllPlayers } from './player-registry.js';
-import { GUILDS } from './guilds.json';
+import { getAllPlayers } from "./player-registry.js";
+import { GUILDS } from "./guilds.js";
 
 export const ArenaLeaderboard = {
   getSoloTop(limit = 20) {
