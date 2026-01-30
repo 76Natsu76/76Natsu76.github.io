@@ -1,4 +1,4 @@
-{
+export const ARENA = {
   "modes": {
     "solo_1v1": {
       "name": "Solo Duel (1v1)",
@@ -60,4 +60,4 @@
       }
     }
   }
-}
+};
