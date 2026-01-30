@@ -153,7 +153,8 @@ function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
   if (pool.length) return pick(pool);
 
   // 5. FINAL FALLBACK: ANY ENEMY
-  return pick(allEnemies);
+  console.warn("No valid enemies for region", regionKey, "— using region-only fallback.");
+  return pick(allEnemies.filter(e => allowedKeys.includes(e.key)));
 }
 
 // ------------------------------------------------------------
