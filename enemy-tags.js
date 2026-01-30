@@ -186,3 +186,31 @@ export const ENEMY_TAGS = {
     }
   }
 };
+
+export function applyTagModifiers(stats, tags) {
+  let { hpMax, atk, def, speed } = stats;
+
+  for (const tag of tags) {
+    const data = ENEMY_TAGS[tag];
+    if (!data || !data.effects) continue;
+
+    const eff = data.effects;
+
+    // Flat multipliers
+    if (eff.damageBoost) atk = Math.floor(atk * (1 + eff.damageBoost));
+    if (eff.damageReduction) def = Math.floor(def * (1 + eff.damageReduction));
+    if (eff.defenceBoost) def = Math.floor(def * (1 + eff.defenceBoost));
+    if (eff.hastePenalty) speed = Math.floor(speed * (1 - eff.hastePenalty));
+
+    // Evasion / accuracy
+    if (eff.evadeBonus) speed = Math.floor(speed * (1 + eff.evadeBonus));
+
+    // HP scaling (rare)
+    if (eff.hpMult) hpMax = Math.floor(hpMax * eff.hpMult);
+
+    // No stat changes for: bleedChance, burnChance, poisonChance, aiBias, immuneTo, resistances, weakTo
+    // Those are handled in combat-engine or ability-resolver
+  }
+
+  return { hpMax, atk, def, speed };
+}
