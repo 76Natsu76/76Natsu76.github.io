@@ -2,7 +2,7 @@
  * crafting-engine.js
  ************************************************************/
 
-import { RECIPES } from "./recipes.json";
+import { RECIPES } from "./recipes.js";
 
 export const CraftingEngine = {
   getAllRecipes() {
