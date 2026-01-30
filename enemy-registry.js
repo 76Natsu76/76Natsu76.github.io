@@ -72,6 +72,7 @@ export const EnemyRegistry = {
   // BUILD ENEMY TEMPLATE
   // ---------------------------------------------------------
   buildEnemyTemplate(key) {
+    console.log("buildEnemyTemplate in enemy-registry received key =", key);
     const raw = this.getEnemy(key);
     if (!raw) throw new Error("Unknown enemy: " + key);
 
