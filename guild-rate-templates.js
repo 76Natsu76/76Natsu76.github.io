@@ -1,4 +1,4 @@
-{
+export const GUILD_RATE_TEMPLATES = {
   "$schema": "S3VEN_RPG_GUILD_RAID_TEMPLATES_V1",
   "raids": {
     "void_citadel": {
@@ -30,4 +30,4 @@
       }
     }
   }
-}
+};
