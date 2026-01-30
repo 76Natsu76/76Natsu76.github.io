@@ -2,7 +2,7 @@
  * guild-raid-engine.js
  ************************************************************/
 
-import { GUILD_RAIDS } from "./guild-raid-templates.json";
+import { GUILD_RAIDS } from "./guild-raid-templates.js";
 
 export const GuildRaidEngine = {
   getRaid(key) {
