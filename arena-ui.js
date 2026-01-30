@@ -1,5 +1,5 @@
 /************************************************************
- * arena-ui.js
+ * arena-ui.js — Modernized JS Module Version
  ************************************************************/
 
 import { ArenaEngine } from './arena-engine.js';
@@ -12,7 +12,7 @@ let currentPlayer = null;
 
 export function initArenaUI(playerId) {
   currentPlayer = getPlayerById(playerId);
-  showLobby();
+  window.showLobby();
 }
 
 /************************************************************
@@ -20,10 +20,10 @@ export function initArenaUI(playerId) {
  ************************************************************/
 window.showLobby = function() {
   const rating = currentPlayer.arenaRating ?? 1000;
-  const season = ARENA_CONFIG.seasons.currentSeason;
-  const seasonName = ARENA_CONFIG.seasons.seasonConfig[season].name;
+  const season = ARENA.seasons.currentSeason;
+  const seasonName = ARENA.seasons.seasonConfig[season].name;
 
-  const modes = Object.entries(ARENA_CONFIG.modes)
+  const modes = Object.entries(ARENA.modes)
     .map(([key, m]) => `
       <button onclick="queueMode('${key}')">${m.name}</button>
     `)
@@ -41,7 +41,7 @@ window.showLobby = function() {
 
 window.queueMode = function(modeKey) {
   ArenaEngine.queuePlayer(modeKey, currentPlayer.id);
-  alert(`Queued for ${ARENA_CONFIG.modes[modeKey].name}`);
+  alert(`Queued for ${ARENA.modes[modeKey].name}`);
 };
 
 /************************************************************
