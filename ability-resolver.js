@@ -2,8 +2,8 @@
  * ability-resolver.js — Fully Implemented Modern Version
  ************************************************************/
 
-import { ABILITY_DEFINITIONS } from './ability-definitions.json';
-import { SUBRACE_ABILITY_DEFINITIONS } from './subrace-ability-definitions.json';
+import { ABILITY_DEFINITIONS } from './ability-definitions.js';
+import { SUBRACE_ABILITY_DEFINITIONS } from './subrace-ability-definitions.js';
 
 import { applyStatusEffect, processStatusesAtTurnStart } from './status-engine.js';
 import { scheduleDOT, scheduleHOT } from './dot-hot-engine.js';
