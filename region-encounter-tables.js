@@ -1,4 +1,4 @@
-{
+export const REGION_ENCOUNTER_TABLES = {
   "forest-edge": {
     "common":   { "tiers": [1, 2] },
     "uncommon": { "tiers": [2] },
@@ -191,4 +191,4 @@
     "rare":     { "tiers": [6, 7] },
     "boss":     { "tiers": [7] }
   }
-}
+};
