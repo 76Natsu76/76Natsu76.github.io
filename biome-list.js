@@ -1,4 +1,4 @@
-{
+export const BIOMES = {
   "forest": {
     "name": "Forest",
     "flavor": [
@@ -1378,4 +1378,4 @@
       "notes": "The deepest reaches of the abyss, where even gods fear to gaze."
     }
   }
-}
+};
