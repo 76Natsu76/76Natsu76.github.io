@@ -1,4 +1,4 @@
-{
+export const MERCHANT_TYPES = {
   "general": {
     "allowedCategories": [
       "cooking",
@@ -144,4 +144,4 @@
     "guaranteed": [],
     "banned": []
   }
-}
+};
