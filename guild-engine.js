@@ -2,7 +2,7 @@
  * guild-engine.js — Full Guild System
  ************************************************************/
 
-import { GUILDS } from "./guilds.json";
+import { GUILDS } from "./guilds.js";
 // If you later persist to storage, you’ll replace these
 // in-memory mutations with save/load helpers.
 
