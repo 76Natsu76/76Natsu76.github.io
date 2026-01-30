@@ -1,4 +1,4 @@
-{
+export const MERCHANT_INSTANCES = {
   "draugr_the_dwarf": {
     "type": "blacksmith",
     "personality": "dwarven_smith",
@@ -38,4 +38,4 @@
     "overrides": ["glyph_of_precision"],
     "banned": []
   }
-}
+};
