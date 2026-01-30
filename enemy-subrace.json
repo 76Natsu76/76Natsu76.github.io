@@ -336,7 +336,7 @@
     "notes": "Direct elemental subtype"
   },
   "funny_sthreeven_man": {
-    "subrace": "chaosling",
+    "subrace": "humanoid",
     "profession": "trickster",
     "element": "chaos",
     "notes": "Chaotic anomaly"
@@ -618,13 +618,13 @@
     "notes": "Poison‑infused slime variant"
   },
   "plink": {
-    "subrace": "chaosling",
+    "subrace": "beastkin",
     "profession": "trickster",
     "element": "chaos",
     "notes": "Unpredictable chaos creature"
   },
   "plink_of_the_seventh_dimension": {
-    "subrace": "chaosling",
+    "subrace": "beastkin",
     "profession": "trickster",
     "element": "chaos",
     "notes": "Unpredictable chaos creature, but multidimensional"
@@ -768,7 +768,7 @@
     "notes": "Baseline slime; warrior fits simple melee pseudopod attacks"
   },
   "soul_husk_devourer": {
-    "subrace": "voidborn",
+    "subrace": "undead",
     "profession": "warrior",
     "element": "void",
     "notes": "Soul‑devouring void creature fits voidborn; warrior role matches feral devourer"
