@@ -1,4 +1,4 @@
-{
+export const ENEMY_ULTIMATES = {
   "boss_ultimate": {
     "key": "boss_ultimate",
     "name": "Cataclysmic Strike",
@@ -378,4 +378,4 @@
     "power": 1.2,
     "flavor": "Mythic energy overwhelms you with unstoppable force!"
   }
-}
+};
