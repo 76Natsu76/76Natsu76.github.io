@@ -1,4 +1,4 @@
-{
+export WORLD_BOSS_LOOT_TABLES = {
   "$schema": "S3VEN_RPG_WORLD_BOSS_LOOT_TABLES_V1",
   "lootTables": {
     "celestial_worldboss_loot": {
@@ -34,4 +34,4 @@
       "guaranteed": ["chaos_dust"]
     }
   }
-}
+};
