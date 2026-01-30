@@ -2,6 +2,7 @@ export const PROFESSION_DEFINITIONS = {
   "beast": {
     "name": "Beast",
     "role": "combat",
+    "nonPlayable": true, // if (!profession.nonPlayable) showInUI();
     "tags": ["feral", "instinct", "physical"],
     "baseBonuses": {
       "atkMult": 1.08,              // Beasts hit harder than humanoids
@@ -43,6 +44,145 @@ export const PROFESSION_DEFINITIONS = {
     "lootKit": {},
     "lootTable": {}
   },
+  "slime": {
+    "name": "Slime",
+    "role": "enemy",
+    "nonPlayable": true,
+    "tags": ["ooze", "amorphous", "physical"],
+  
+    "baseBonuses": {
+      "atkMult": 0.90,
+      "defMult": 1.10,
+      "hpMult": 1.20,
+      "speedMult": 0.80,
+      "critChance": 0.02,
+      "critDamageMult": 1.3,
+      "accuracy": 0.00,
+      "evasion": 0.00
+    },
+  
+    "abilities": ["slime_slam", "acidic_touch"],
+  
+    "equipment": { "weapons": [], "armor": [], "accessories": [] },
+  
+    "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
+  
+    "synergy": {
+      "races": {},
+      "subraces": {},
+      "professions": {},
+      "biomes": {},
+      "weather": {},
+      "elements": {},
+      "statusEffects": {}
+    },
+  
+    "talentTree": {},
+  
+    "starterKit": {
+      "equipment": {},
+      "inventory": [],
+      "abilities": ["slime_slam", "acidic_touch"],
+      "flavor": "A gelatinous creature with simple instincts and corrosive properties."
+    },
+  
+    "lootKit": {},
+    "lootTable": {}
+  },
+  "insectoid": {
+    "name": "Insectoid",
+    "role": "enemy",
+    "nonPlayable": true,
+    "tags": ["swarm", "poison", "fast"],
+  
+    "baseBonuses": {
+      "atkMult": 1.00,
+      "defMult": 0.90,
+      "hpMult": 0.85,
+      "speedMult": 1.20,
+      "critChance": 0.03,
+      "critDamageMult": 1.4,
+      "accuracy": 0.05,
+      "evasion": 0.08
+    },
+  
+    "abilities": ["venom_sting", "swarm_buzz"],
+  
+    "equipment": { "weapons": [], "armor": [], "accessories": [] },
+  
+    "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
+  
+    "synergy": {
+      "races": {},
+      "subraces": {},
+      "professions": {},
+      "biomes": {},
+      "weather": {},
+      "elements": {},
+      "statusEffects": {}
+    },
+  
+    "talentTree": {},
+  
+    "starterKit": {
+      "equipment": {},
+      "inventory": [],
+      "abilities": ["venom_sting", "swarm_buzz"],
+      "flavor": "A buzzing swarm of venomous wings and stingers."
+    },
+  
+    "lootKit": {},
+    "lootTable": {}
+  },
+  "arachnid": {
+    "name": "Arachnid",
+    "role": "enemy",
+    "nonPlayable": true,
+    "tags": ["poison", "ambush", "web"],
+  
+    "baseBonuses": {
+      "atkMult": 1.10,
+      "defMult": 1.00,
+      "hpMult": 1.00,
+      "speedMult": 1.10,
+      "critChance": 0.06,
+      "critDamageMult": 1.5,
+      "accuracy": 0.05,
+      "evasion": 0.05
+    },
+  
+    "abilities": ["venom_bite", "web_snare", "skitter_strike"],
+  
+    "equipment": { "weapons": [], "armor": [], "accessories": [] },
+  
+    "noncombat": { "perks": [], "recipes": {}, "workstations": [] },
+  
+    "synergy": {
+      "races": {},
+      "subraces": {},
+      "professions": {},
+      "biomes": {},
+      "weather": {},
+      "elements": {},
+      "statusEffects": {}
+    },
+  
+    "talentTree": {},
+  
+    "starterKit": {
+      "equipment": {},
+      "inventory": [],
+      "abilities": ["venom_bite", "web_snare", "skitter_strike"],
+      "flavor": "A venomous predator that hunts with webs and sudden strikes."
+    },
+  
+    "lootKit": {},
+    "lootTable": {}
+  },
+
+  
+  
+
   
   "acolyte": {
     "name": "Acolyte",
