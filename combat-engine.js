@@ -277,7 +277,7 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
     defender: defender.name, 
     baseDamage, 
     elemApplied: dmg, 
-    atk, 
+    dmg, 
     def, 
     mitigated, 
     finalDmg });
