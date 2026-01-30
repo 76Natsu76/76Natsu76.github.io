@@ -1,4 +1,4 @@
-{
+export const RECIPES = {
   "$schema": "S3VEN_RPG_CRAFTING_RECIPES_V1",
   "recipes": {
     "iron_sword_basic": {
@@ -61,4 +61,4 @@
       "tags": ["caster", "midgame"]
     }
   }
-}
+};
