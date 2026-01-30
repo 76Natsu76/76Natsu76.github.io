@@ -1,4 +1,4 @@
-{
+export const ENEMY_BEHAVIORS = {
   "aggressive": {
     "description": "Prefers high‑damage attacks and relentless pressure.",
     "behavior": {
@@ -61,4 +61,4 @@
       "defendChance": 0.34
     }
   }
-}
+};
