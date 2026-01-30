@@ -1,4 +1,4 @@
-{
+export const world-boss-templates = {
   "celestial_herald": {
     "name": "Celestial Herald",
     "subrace": "legendary_boss_template",
@@ -127,4 +127,4 @@
       "death": ["The spiral collapses into silence."]
     }
   }
-}
+};
