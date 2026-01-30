@@ -1,4 +1,4 @@
-{
+export const BOSS_LOOT_TABLES = {
   "giant_boar": {
     "guaranteed": [
       "gold_pouch_small",
@@ -461,4 +461,4 @@
       { "item": "astral_crown", "chance": 0.001 }
     ]
   }
-}
+};
