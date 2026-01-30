@@ -4419,9 +4419,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Divine-Touched Arbiter": {
-    "key": "Divine-Touched Arbiter",
-    "name": "Divine-Touched Arbiter",
+  "divine_touched_arbiter": {
+    "key": "divine_touched_arbiter",
+    "name": "divine_touched_arbiter",
     "profession": "cleric",
     "family": "arcane",
     "element": "holy",
@@ -4448,9 +4448,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Bramble-Hide Ravager": {
-    "key": "Bramble-Hide Ravager",
-    "name": "Bramble-Hide Ravager",
+  "bramble_hide_ravager": {
+    "key": "bramble_hide_ravager",
+    "name": "bramble_hide_ravager",
     "profession": "beast",
     "family": "plant",
     "element": "nature",
@@ -4477,9 +4477,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Astral-Veined Oracle": {
-    "key": "Astral-Veined Oracle",
-    "name": "Astral-Veined Oracle",
+  "astral_veined_oracle": {
+    "key": "astral_veined_oracle",
+    "name": "astral_veined_oracle",
     "profession": "cleric",
     "family": "void",
     "element": "arcane",
@@ -4506,9 +4506,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Luminous Ascendant": {
-    "key": "Luminous Ascendant",
-    "name": "Luminous Ascendant",
+  "luminous_ascendant": {
+    "key": "luminous_ascendant",
+    "name": "luminous_ascendant",
     "profession": "mage",
     "family": "arcane",
     "element": "holy",
@@ -4535,9 +4535,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Grove-Warden Shaman": {
-    "key": "Grove-Warden Shaman",
-    "name": "Grove-Warden Shaman",
+  "grove_warden_shaman": {
+    "key": "grove_warden_shaman",
+    "name": "grove_warden_shaman",
     "profession": "shaman",
     "family": "celestial",
     "element": "nature",
@@ -4564,9 +4564,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
- "chrono_Shattered Warden": {
-    "key":"chrono_Shattered Warden",
-    "name":"chrono_Shattered Warden",
+ "chrono_shattered_warden": {
+    "key": "chrono_shattered_warden",
+    "name": "chrono_shattered_warden",
     "profession": "guardian",
     "family": "plant",
     "element": "arcane",
@@ -4593,9 +4593,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Solar-Crested Justicar": {
-    "key": "Solar-Crested Justicar",
-    "name": "Solar-Crested Justicar",
+  "solar_crested_justicar": {
+    "key": "solar_crested_justicar",
+    "name": "solar_crested_justicar",
     "profession": "paladin",
     "family": "arcane",
     "element": "holy",
@@ -4626,9 +4626,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Ancient Bark-Titan": {
-    "key": "Ancient Bark-Titan",
-    "name": "Ancient Bark-Titan",
+  "ancient_bark_titan": {
+    "key": "ancient_bark_titan",
+    "name": "ancient_bark_titan",
     "profession": "guardian",
     "family": "celestial",
     "element": "earth",
@@ -4655,9 +4655,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Heaven_bound_Exemplar": {
-    "key": "Heaven_bound_Exemplar",
-    "name": "Heaven_bound_Exemplar",
+  "heaven_bound_exemplar": {
+    "key": "heaven_bound_exemplar",
+    "name": "heaven_bound_exemplar",
     "profession": "cleric",
     "family": "plant",
     "element": "holy",
@@ -4684,9 +4684,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Sylvan Mooncaller": {
-    "key": "Sylvan Mooncaller",
-    "name": "Sylvan Mooncaller",
+  "sylvan_mooncaller": {
+    "key": "sylvan_mooncaller",
+    "name": "sylvan_mooncaller",
     "profession": "druid",
     "family": "titan",
     "element": "nature",
@@ -4713,9 +4713,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "radiant_Choir_seraphling": {
-    "key": "radiant_Choir_seraphling",
-    "name": "radiant_Choir_seraphling",
+  "radiant_choir_seraphling": {
+    "key": "radiant_choir_seraphling",
+    "name": "radiant_choir_seraphling",
     "profession": "cleric",
     "family": "celestial",
     "element": "light",
@@ -4742,9 +4742,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Primeval Hornbeast": {
-    "key": "Primeval Hornbeast",
-    "name": "Primeval Hornbeast",
+  "primeval_hornbeast": {
+    "key": "primeval_hornbeast",
+    "name": "primeval_hornbeast",
     "profession": "beast",
     "family": "plant",
     "element": "earth",
@@ -4771,9 +4771,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Sunflare_archon": {
-    "key": "Sunflare_archon",
-    "name": "Sunflare_archon",
+  "sunflare_archon": {
+    "key": "sunflare_archon",
+    "name": "sunflare_archon",
     "profession": "guardian",
     "family": "celestial",
     "element": "holy",
@@ -4800,9 +4800,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Grove-Heart Oracle": {
-    "key": "Grove-Heart Oracle",
-    "name": "Grove-Heart Oracle",
+  "grove_heart_oracle": {
+    "key": "grove_heart_oracle",
+    "name": "grove_heart_oracle",
     "profession": "cleric",
     "family": "plant",
     "element": "nature",
@@ -4829,9 +4829,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Celestial Dawn_sovereign": {
-    "key": "Celestial Dawn_sovereign",
-    "name": "Celestial Dawn_sovereign",
+  "celestial_dawn_sovereign": {
+    "key": "celestial_dawn_sovereign",
+    "name": "celestial_dawn_sovereign",
     "profession": "paladin",
     "family": "colossus",
     "element": "holy",
@@ -4847,7 +4847,7 @@ export const ENEMIES = {
       ],
       "items": [
         {
-          "name": "Dawn_sovereign Sigil",
+          "name": "Dawn Sovereign Sigil",
           "chance": 0.29
         },
         {
@@ -4858,9 +4858,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Elder Thorn-Reaver": {
-    "key": "Elder Thorn-Reaver",
-    "name": "Elder Thorn-Reaver",
+  "elder_thorn_reaver": {
+    "key": "elder_thorn_reaver",
+    "name": "elder_thorn_reaver",
     "profession": "warrior",
     "family": "druid",
     "element": "nature",
@@ -4887,9 +4887,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Verdant_colossus": {
-    "key": "Verdant_colossus",
-    "name": "Verdant_colossus",
+  "verdant_colossus": {
+    "key": "verdant_colossus",
+    "name": "verdant_colossus",
     "profession": "guardian",
     "family": "titan",
     "element": "nature",
@@ -4920,9 +4920,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Bloom-Crowned Archdruid": {
-    "key": "Bloom-Crowned Archdruid",
-    "name": "Bloom-Crowned Archdruid",
+  "bloom_crowned_archdruid": {
+    "key": "bloom_crowned_archdruid",
+    "name": "bloom_crowned_archdruid",
     "profession": "druid",
     "family": "plant",
     "element": "nature",
@@ -4949,9 +4949,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Primeval Rootshaper": {
-    "key": "Primeval Rootshaper",
-    "name": "Primeval Rootshaper",
+  "primeval_rootshaper": {
+    "key": "primeval_rootshaper",
+    "name": "primeval_rootshaper",
     "profession": "mage",
     "family": "demigod",
     "element": "earth",
@@ -5027,9 +5027,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Sylvan Apex_behemoth": {
-    "key": "Sylvan Apex_behemoth",
-    "name": "Sylvan Apex_behemoth",
+  "sylvan_apex_behemoth": {
+    "key": "sylvan_apex_behemoth",
+    "name": "sylvan_apex_behemoth",
     "profession": "beast",
     "family": "colossus",
     "element": "nature",
@@ -5056,9 +5056,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Sky-Piercer_colossus": {
-    "key": "Sky-Piercer_colossus",
-    "name": "Sky-Piercer_colossus",
+  "sky_piercer_colossus": {
+    "key": "sky_piercer_colossus",
+    "name": "sky_piercer_colossus",
     "profession": "titan",
     "family": "beast",
     "element": "wind",
@@ -5081,9 +5081,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Tide-Forged_leviathan": {
-    "key": "Tide-Forged_leviathan",
-    "name": "Tide-Forged_leviathan",
+  "tide_forged_leviathan": {
+    "key": "tide_forged_leviathan",
+    "name": "tide_forged_leviathan",
     "profession": "titan",
     "family": "titan",
     "element": "water",
@@ -5106,9 +5106,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Obsidian World-Breaker": {
-    "key": "Obsidian World-Breaker",
-    "name": "Obsidian World-Breaker",
+  "obsidian_world_breaker": {
+    "key": "obsidian_world_breaker",
+    "name": "obsidian_world_breaker",
     "profession": "titan",
     "family": "titan",
     "element": "earth",
@@ -5131,9 +5131,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Null-Crowned Riftbeast": {
-    "key": "Null-Crowned Riftbeast",
-    "name": "Null-Crowned Riftbeast",
+  "null_crowned_riftbeast": {
+    "key": "null_crowned_riftbeast",
+    "name": "null_crowned_riftbeast",
     "profession": "beast",
     "family": "void",
     "element": "void",
@@ -5160,9 +5160,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Abyss-Forged Harrower": {
-    "key": "Abyss-Forged Harrower",
-    "name": "Abyss-Forged Harrower",
+  "abyss_forged_harrower": {
+    "key": "abyss_forged_harrower",
+    "name": "abyss_forged_harrower",
     "profession": "warrior",
     "family": "beast",
     "element": "void",
@@ -5189,9 +5189,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Eldritch Maw-Tyrant": {
-    "key": "Eldritch Maw-Tyrant",
-    "name": "Eldritch Maw-Tyrant",
+  "eldritch_maw_tyrant": {
+    "key": "eldritch_maw_tyrant",
+    "name": "eldritch_maw_tyrant",
     "profession": "beast",
     "family": "void",
     "element": "chaos",
@@ -5218,9 +5218,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Void-Sundered_reaver": {
-    "key": "Void-Sundered_reaver",
-    "name": "Void-Sundered_reaver",
+  "void_sundered_reaver": {
+    "key": "void_sundered_reaver",
+    "name": "void_sundered_reaver",
     "profession": "assassin",
     "family": "void",
     "element": "void",
@@ -5247,9 +5247,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Nullborn Rift-Prophet": {
-    "key": "Nullborn Rift-Prophet",
-    "name": "Nullborn Rift-Prophet",
+  "nullborn_rift_prophet": {
+    "key": "nullborn_rift_prophet",
+    "name": "nullborn_rift_prophet",
     "profession": "mage",
     "family": "beast",
     "element": "void",
@@ -5276,9 +5276,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Sthreeven's Chaotic Doppelcat": {
-    "key": "Sthreeven's Chaotic Doppelcat",
-    "name": "Sthreeven's Chaotic Doppelcat",
+  "sthreeven's_chaotic_doppelcat": {
+    "key": "sthreeven's_chaotic_doppelcat",
+    "name": "sthreeven's_chaotic_doppelcat",
     "profession": "cat",
     "family": "void",
     "element": "void-dark",
@@ -5309,9 +5309,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "abyssal_Crown-Devourer": {
-    "key": "abyssal_Crown-Devourer",
-    "name": "abyssal_Crown-Devourer",
+  "abyssal_crown_devourer": {
+    "key": "abyssal_crown_devourer",
+    "name": "abyssal_crown_devourer",
     "profession": "warlock",
     "family": "beast",
     "element": "void",
@@ -5331,20 +5331,20 @@ export const ENEMIES = {
           "chance": 0.33
         },
         {
-          "name": "abyssal_Diadem Shard",
+          "name": "Abyssal Diadem Shard",
           "chance": 0.12
         },
         {
-          "name": "Void_monarch’s Favor",
+          "name": "Void Monarch’s Favor",
           "chance": 0.06
         }
       ]
     },
     "activeEffects": {}
   },
-  "Eternal Rift-Warden": {
-    "key": "Eternal Rift-Warden",
-    "name": "Eternal Rift-Warden",
+  "eternal_rift_warden": {
+    "key": "eternal_rift_warden",
+    "name": "eternal_rift_warden",
     "profession": "guardian",
     "family": "void",
     "element": "void",
@@ -5371,9 +5371,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Chaos-Spiral_sovereign": {
-    "key": "Chaos-Spiral_sovereign",
-    "name": "Chaos-Spiral_sovereign",
+  "chaos_spiral_sovereign": {
+    "key": "chaos_spiral_sovereign",
+    "name": "chaos_spiral_sovereign",
     "profession": "mage",
     "family": "beast",
     "element": "chaos",
@@ -5404,9 +5404,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Null-Eclipse Archfiend": {
-    "key": "Null-Eclipse Archfiend",
-    "name": "Null-Eclipse Archfiend",
+  "null_eclipse_archfiend": {
+    "key": "null_eclipse_archfiend",
+    "name": "null_eclipse_archfiend",
     "profession": "warlock",
     "family": "void",
     "element": "void",
@@ -5437,9 +5437,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Divine-Forged Paragon": {
-    "key": "Divine-Forged Paragon",
-    "name": "Divine-Forged Paragon",
+  "divine_forged_paragon": {
+    "key": "divine_forged_paragon",
+    "name": "divine_forged_paragon",
     "profession": "paladin",
     "family": "celestial",
     "element": "holy",
@@ -5466,9 +5466,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Halo-Crested Archsentinel": {
-    "key": "Halo-Crested Archsentinel",
-    "name": "Halo-Crested Archsentinel",
+  "halo_crested_archsentinel": {
+    "key": "halo_crested_archsentinel",
+    "name": "halo_crested_archsentinel",
     "profession": "guardian",
     "family": "celestial",
     "element": "holy",
@@ -5524,9 +5524,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Seraphic Dawn-Warden": {
-    "key": "Seraphic Dawn-Warden",
-    "name": "Seraphic Dawn-Warden",
+  "seraphic_dawn_warden": {
+    "key": "seraphic_dawn_warden",
+    "name": "seraphic_dawn_warden",
     "profession": "cleric",
     "family": "celestial",
     "element": "holy",
@@ -5553,9 +5553,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Plink_of_the_Seventh Dimension": {
-    "key": "Plink_of_the_Seventh Dimension",
-    "name": "Plink_of_the_Seventh Dimension",
+  "plink_of_the_seventh_dimension": {
+    "key": "plink_of_the_seventh_dimension",
+    "name": "plink_of_the_seventh_dimension",
     "profession": "cat",
     "family": "humanoid",
     "element": "arcane-void",
@@ -5586,9 +5586,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Celestial Radiant-Tyrant": {
-    "key": "Celestial Radiant-Tyrant",
-    "name": "Celestial Radiant-Tyrant",
+  "celestial_radiant_tyrant": {
+    "key": "celestial_radiant_tyrant",
+    "name": "celestial_radiant_tyrant",
     "profession": "paladin",
     "family": "celestial",
     "element": "holy",
@@ -5619,9 +5619,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Eternal Light-Sovereign": {
-    "key": "Eternal Light-Sovereign",
-    "name": "Eternal Light-Sovereign",
+  "eternal_light_sovereign": {
+    "key": "eternal_light_sovereign",
+    "name": "eternal_light_sovereign",
     "profession": "cleric",
     "family": "celestial",
     "element": "holy",
@@ -5652,9 +5652,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Titan-Blooded Ruinshaper": {
-    "key": "Titan-Blooded Ruinshaper",
-    "name": "Titan-Blooded Ruinshaper",
+  "titan_blooded_ruinshaper": {
+    "key": "titan_blooded_ruinshaper",
+    "name": "titan_blooded_ruinshaper",
     "profession": "guardian",
     "family": "titan",
     "element": "earth",
@@ -5681,9 +5681,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Colossal Doom-Harbinger": {
-    "key": "Colossal Doom-Harbinger",
-    "name": "Colossal Doom-Harbinger",
+  "colossal_doom_harbinger": {
+    "key": "colossal_doom_harbinger",
+    "name": "colossal_doom_harbinger",
     "profession": "berserker",
     "family": "titan",
     "element": "fire-earth",
@@ -5714,9 +5714,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Apocalypse-Crowned Worldrender": {
-    "key": "Apocalypse-Crowned Worldrender",
-    "name": "Apocalypse-Crowned Worldrender",
+  "apocalypse_crowned_worldrender": {
+    "key": "apocalypse_crowned_worldrender",
+    "name": "apocalypse_crowned_worldrender",
     "profession": "guardian",
     "family": "apocalypse",
     "element": "void-earth",
@@ -5736,20 +5736,20 @@ export const ENEMIES = {
           "chance": 0.38
         },
         {
-          "name": "Worldrender_colossus Heart",
+          "name": "Worldrender Colossus Heart",
           "chance": 0.14
         },
         {
-          "name": "End_of_Days Relic",
+          "name": "End of Days Relic",
           "chance": 0.08
         }
       ]
     },
     "activeEffects": {}
   },
-  "Cosmic-Crowned Terminarch": {
-    "key": "Cosmic-Crowned Terminarch",
-    "name": "Cosmic-Crowned Terminarch",
+  "cosmic_crowned_terminarch": {
+    "key": "cosmic_crowned_terminarch",
+    "name": "cosmic_crowned_terminarch",
     "profession": "mage",
     "family": "apocalypse",
     "element": "arcane-void",
@@ -5813,9 +5813,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "void god": {
-    "key": "void god",
-    "name": "void god",
+  "void_god": {
+    "key": "void_god",
+    "name": "void_god",
     "profession": "mage",
     "family": "void",
     "element": "void",
@@ -5838,9 +5838,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "uganda knuckles": {
-    "key": "uganda knuckles",
-    "name": "uganda knuckles",
+  "uganda_knuckles": {
+    "key": "uganda_knuckles",
+    "name": "uganda_knuckles",
     "profession": "berserker",
     "family": "beast",
     "element": "water",
