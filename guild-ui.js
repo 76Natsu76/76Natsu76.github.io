@@ -12,11 +12,11 @@
  *  - PvP
  ************************************************************/
 
-import { GuildEngine } from './guild-engine.js';
-import { getPlayerById } from './player-registry.js';
-import { GUILDS } from './guilds.json';
-import { GUILD_EVENTS } from './guild-events.json';
-import { GUILD_BUFFS } from './guild-buffs.json';
+import { GuildEngine } from "./guild-engine.js";
+import { getPlayerById } from "./player-registry.js";
+import { GUILDS } from "./guilds.js";
+import { GUILD_EVENTS } from "./guild-events.js";
+import { GUILD_BUFFS } from "./guild-buffs.js";
 
 let currentGuild = null;
 let currentPlayer = null;
