@@ -1,4 +1,4 @@
-{
+export const SUBRACE_FAMILY_INDEX = {
   "abyssal_brute": "abyssal_brute_family",
   "wraith": "undead",
   "shadehound": "beast",
@@ -79,4 +79,4 @@
   "water_elemental": "elemental",
   "wind_elemental": "elemental",
   "zombie": "undead"
-}
+};
