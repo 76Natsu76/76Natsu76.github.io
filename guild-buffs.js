@@ -1,4 +1,4 @@
-{
+export const GUILD_BUFFS = {
   "guild_xp_boost_1": {
     "name": "Guild XP Boost I",
     "description": "All guild members gain +5% XP from all sources.",
@@ -22,4 +22,4 @@
       { "type": "drop_rate", "value": 3 }
     ]
   }
-}
+};
