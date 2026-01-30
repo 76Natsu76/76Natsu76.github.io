@@ -140,8 +140,135 @@
       "hpMult": 1.25,
       "atkMult": 1.05,
       "defMult": 1.05,
-      "dotDamageMult": 1.5,
+      "dotDamageMult": 1.50,
       "specialRules": ["rot_spread"]
+    }
+  },
+
+  "infernal_forged": {
+    "name": "Infernal‑Forged",
+    "flavor": "Shaped by hellfire and infernal wrath.",
+    "tags": ["fiery", "demon"],
+    "lootMult": 1.20,
+    "abilities": ["hellfire_burst"],
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.10,
+      "atkMult": 1.20,
+      "defMult": 1.05,
+      "dotDamageMult": 1.25,
+      "specialRules": ["infernal_flame"]
+    }
+  },
+
+  "stormcharged": {
+    "name": "Stormcharged",
+    "flavor": "Crackling with unstable storm energy.",
+    "tags": ["elemental", "lightning"],
+    "lootMult": 1.15,
+    "abilities": ["lightning_arc"],
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.05,
+      "atkMult": 1.15,
+      "defMult": 1.05,
+      "speedBias": 0.10,
+      "accuracyMult": 1.10,
+      "specialRules": ["shock_on_hit"]
+    }
+  },
+
+  "windborne": {
+    "name": "Windborne",
+    "flavor": "Its form moves with impossible swiftness.",
+    "tags": ["elemental", "wind"],
+    "lootMult": 1.10,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 0.95,
+      "atkMult": 1.10,
+      "defMult": 0.90,
+      "speedBias": 0.20,
+      "evasionBias": 0.15,
+      "specialRules": ["gale_step"]
+    }
+  },
+
+  "tidebound": {
+    "name": "Tidebound",
+    "flavor": "Water flows through its body like a living current.",
+    "tags": ["elemental", "water"],
+    "lootMult": 1.10,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.10,
+      "atkMult": 1.05,
+      "defMult": 1.10,
+      "specialRules": ["soak_resistance"]
+    }
+  },
+
+  "magma_blooded": {
+    "name": "Magma‑Blooded",
+    "flavor": "Molten energy churns beneath its skin.",
+    "tags": ["elemental", "fire", "earth"],
+    "lootMult": 1.20,
+    "abilities": ["eruption"],
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.20,
+      "atkMult": 1.15,
+      "defMult": 1.10,
+      "specialRules": ["magma_armor"]
+    }
+  },
+
+  "thorncrowned": {
+    "name": "Thorn‑Crowned",
+    "flavor": "Nature’s wrath coils around its form.",
+    "tags": ["fae", "nature"],
+    "lootMult": 1.15,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.10,
+      "atkMult": 1.10,
+      "defMult": 1.10,
+      "statusEffectChanceMult": 1.20,
+      "specialRules": ["thorn_aura"]
+    }
+  },
+
+  "radiant_touched": {
+    "name": "Radiant‑Touched",
+    "flavor": "Blessed by celestial light.",
+    "tags": ["holy", "divine"],
+    "lootMult": 1.20,
+    "abilities": ["radiant_burst"],
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.15,
+      "atkMult": 1.15,
+      "defMult": 1.10,
+      "specialRules": ["radiant_burn"]
+    }
+  },
+
+  "shadowmarked": {
+    "name": "Shadowmarked",
+    "flavor": "Darkness clings to its every movement.",
+    "tags": ["dark", "void"],
+    "lootMult": 1.15,
+    "abilities": null,
+    "ultimate": null,
+    "combatModifiers": {
+      "hpMult": 1.05,
+      "atkMult": 1.15,
+      "defMult": 1.05,
+      "evasionBias": 0.10,
+      "specialRules": ["shadow_step"]
     }
   }
 }
