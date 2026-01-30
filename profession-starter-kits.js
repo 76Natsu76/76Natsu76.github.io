@@ -1,5 +1,5 @@
-{
-  "acolyte": {
+export const PROFESSION_STARTER_KITS = {
+  acolyte: {
     "weapon": "Ceremonial Mace",
     "armor": "Initiate Vestments",
     "accessory": "Prayer Charm",
@@ -7,7 +7,7 @@
     "abilities": ["minor_heal", "prayer_bolt"],
     "flavor": "A devout initiate serving under higher clergy."
   },
-  "adept": {
+  adept: {
     "weapon": "Adept’s Focus Staff",
     "armor": "Runed Robes",
     "accessory": "Channeling Ring",
@@ -15,7 +15,7 @@
     "abilities": ["arcane_burst", "mana_surge"],
     "flavor": "A practiced caster with growing control over arcane forces."
   },
-  "alchemist": {
+  alchemist: {
     "weapon": "Crystal Mortar",
     "armor": "Alchemist Coat",
     "accessory": "Distillation Coil",
@@ -23,7 +23,7 @@
     "abilities": ["basic_brewing", "simple_infusions"],
     "flavor": "A potion-maker who manipulates volatile reagents."
   },
-  "apocalypse": {
+  apocalypse: {
     "weapon": "Doomhammer",
     "armor": "Endbringer Plate",
     "accessory": "Omen Talisman",
@@ -31,7 +31,7 @@
     "abilities": ["doom_slam", "end_times"],
     "flavor": "A living catastrophe, heralding the end of all things."
   },
-  "apprentice": {
+  apprentice: {
     "weapon": "Apprentice’s Staff",
     "armor": "Simple Robes",
     "accessory": "Faded Charm",
@@ -40,7 +40,7 @@
     "flavor": "A beginner spellcaster learning the fundamentals of magic."
   },
 
-  "archer": {
+  archer: {
     "weapon": "Oak Longbow",
     "armor": "Leather Tunic",
     "accessory": "Feathered Charm",
@@ -48,7 +48,7 @@
     "abilities": ["aimed_shot", "poison_arrow"],
     "flavor": "A precise ranged combatant."
   },
-  "assassin": {
+  assassin: {
     "weapon": "Shadowblade",
     "armor": "Nightstalker Garb",
     "accessory": "Silent Hood",
@@ -56,7 +56,7 @@
     "abilities": ["shadow_strike", "poison_blade"],
     "flavor": "A lethal killer who strikes from the darkness."
   },
-  "berserker": {
+  berserker: {
     "weapon": "Brutal Axe",
     "armor": "Ragebound Harness",
     "accessory": "Bloodstone Charm",
@@ -64,7 +64,7 @@
     "abilities": ["rage_strike", "blood_frenzy"],
     "flavor": "A warrior who channels fury into devastating blows."
   },
-  "bozo": {
+  bozo: {
     "weapon": "Rubber Chicken",
     "armor": "Clown Suit",
     "accessory": "Squeaky Nose",
@@ -72,7 +72,7 @@
     "abilities": ["slap", "trip"],
     "flavor": "A chaotic jester whose antics defy logic."
   },
-  "carpenter": {
+  carpenter: {
     "weapon": "Carpenter’s Saw",
     "armor": "Woodworker Apron",
     "accessory": "Precision Plane",
@@ -80,7 +80,7 @@
     "abilities": ["basic_joinery", "efficient_cutting"],
     "flavor": "A builder who shapes wood into tools and structures."
   },
-  "chef": {
+  chef: {
     "weapon": "Chef’s Knife",
     "armor": "Kitchen Apron",
     "accessory": "Seasoning Pouch",
@@ -88,7 +88,7 @@
     "abilities": ["basic_cooking", "ingredient_prep"],
     "flavor": "A culinary expert who prepares meals with buffs."
   },
-  "cleric": {
+  cleric: {
     "weapon": "Sanctified Mace",
     "armor": "Acolyte Vestments",
     "accessory": "Prayer Beads",
@@ -96,7 +96,7 @@
     "abilities": ["holy_smite", "blessing"],
     "flavor": "A devout servant channeling divine power."
   },
-  "corrupted": {
+  corrupted: {
     "weapon": "Twisted Greatblade",
     "armor": "Corrupted Carapace",
     "accessory": "Blackened Sigil",
@@ -105,7 +105,7 @@
     "flavor": "A once-mortal warrior now warped by malignant forces."
   },
 
-  "druid": {
+  druid: {
     "weapon": "Living Branch",
     "armor": "Grovecloth Vest",
     "accessory": "Naturestone",
@@ -113,7 +113,7 @@
     "abilities": ["thorn_whip", "rejuvenate"],
     "flavor": "A guardian of nature’s balance."
   },
-  "fisherman": {
+  fisherman: {
     "weapon": "Fishing Rod",
     "armor": "Waterproof Waders",
     "accessory": "Reinforced Net",
@@ -121,7 +121,7 @@
     "abilities": ["basic_casting", "line_control"],
     "flavor": "A patient angler who harvests the waters."
   },
-  "guardian": {
+  guardian: {
     "weapon": "Tower Shield",
     "armor": "Guardian Plate",
     "accessory": "Bulwark Sigil",
@@ -129,7 +129,7 @@
     "abilities": ["shield_wall", "taunt"],
     "flavor": "A stalwart protector who shields allies from harm."
   },
-  "healer": {
+  healer: {
     "weapon": "Blessed Staff",
     "armor": "Cleric Vestments",
     "accessory": "Holy Pendant",
@@ -137,7 +137,7 @@
     "abilities": ["heal", "smite"],
     "flavor": "A gentle soul who mends wounds and uplifts allies."
   },
-  "herbalist": {
+  herbalist: {
     "weapon": "Gatherer’s Sickle",
     "armor": "Botanist Wraps",
     "accessory": "Botanist Satchel",
@@ -145,7 +145,7 @@
     "abilities": ["foragers_eye", "basic_drying"],
     "flavor": "A gatherer who knows every leaf and root."
   },
-  "leatherworker": {
+  leatherworker: {
     "weapon": "Leatherworking Awl",
     "armor": "Hide Apron",
     "accessory": "Hide Scraper",
@@ -153,7 +153,7 @@
     "abilities": ["basic_skinning", "basic_tanning"],
     "flavor": "A crafter who molds hides into armor and gear."
   },
-  "mage": {
+  mage: {
     "weapon": "Apprentice’s Wand",
     "armor": "Mystic Robes",
     "accessory": "Arcane Focus",
@@ -162,7 +162,7 @@
     "flavor": "A student of the arcane arts wielding elemental power."
   },
 
-  "miner": {
+  miner: {
     "weapon": "Iron Pickaxe",
     "armor": "Reinforced Work Vest",
     "accessory": "Ore Pouch",
@@ -170,7 +170,7 @@
     "abilities": ["basic_swing", "stone_sense"],
     "flavor": "A hardened worker of the deep earth."
   },
-  "monk": {
+  monk: {
     "weapon": "Handwraps",
     "armor": "Meditation Garb",
     "accessory": "Chi Beads",
@@ -178,7 +178,7 @@
     "abilities": ["palm_strike", "chi_wave"],
     "flavor": "A disciplined martial artist with spiritual focus."
   },
-  "necromancer": {
+  necromancer: {
     "weapon": "Bone Wand",
     "armor": "Graveweave Robes",
     "accessory": "Soulstone",
@@ -186,7 +186,7 @@
     "abilities": ["bone_spike", "rot"],
     "flavor": "A master of decay and the dead."
   },
-  "paladin": {
+  paladin: {
     "weapon": "Blessed Hammer",
     "armor": "Holy Plate",
     "accessory": "Radiant Emblem",
@@ -194,7 +194,7 @@
     "abilities": ["smite_holy", "holy_light"],
     "flavor": "A holy warrior who smites evil and protects the weak."
   },
-  "ranger": {
+  ranger: {
     "weapon": "Hunter’s Bow",
     "armor": "Wildhide Vest",
     "accessory": "Nature’s Loop",
@@ -202,7 +202,7 @@
     "abilities": ["quick_shot", "barbed_arrow"],
     "flavor": "A survivalist attuned to the natural world."
   },
-  "ritualist": {
+  ritualist: {
     "weapon": "Ceremonial Focus",
     "armor": "Threaded Robes",
     "accessory": "Ritual Candle",
@@ -210,7 +210,7 @@
     "abilities": ["chalk_lines", "basic_offerings"],
     "flavor": "A practitioner of ancient rites, channeling unseen forces."
   },
-  "rogue": {
+  rogue: {
     "weapon": "Balanced Shortsword",
     "armor": "Cutpurse Leathers",
     "accessory": "Lockpick Chain",
@@ -218,7 +218,7 @@
     "abilities": ["cheap_shot", "evasive_roll"],
     "flavor": "A street‑hardened fighter who blends agility with dirty tactics."
   },
-  "rot": {
+  rot: {
     "weapon": "Blighted Scepter",
     "armor": "Rot‑eaten Wraps",
     "accessory": "Fetid Charm",
@@ -226,7 +226,7 @@
     "abilities": ["rot_touch", "blight_cloud"],
     "flavor": "A harbinger of decay whose presence withers flesh and soil alike."
   },
-  "shaman": {
+  shaman: {
     "weapon": "Totem Staff",
     "armor": "Stormhide Wraps",
     "accessory": "Spirit Fetish",
@@ -235,7 +235,7 @@
     "flavor": "A conduit of elemental and ancestral power."
   },
 
-  "thief": {
+  thief: {
     "weapon": "Twin Daggers",
     "armor": "Shadow Leathers",
     "accessory": "Silent Footwraps",
@@ -243,7 +243,7 @@
     "abilities": ["backstab", "poison_dagger"],
     "flavor": "A quick and deadly opportunist."
   },
-  "tinkerer": {
+  tinkerer: {
     "weapon": "Clockwork Wrench",
     "armor": "Tinker's Apron",
     "accessory": "Gearchain Locket",
@@ -251,7 +251,7 @@
     "abilities": ["basic_mechanisms", "gadget_pulse"],
     "flavor": "A mechanical savant who builds gadgets and automated tools."
   },
-  "trainee": {
+  trainee: {
     "weapon": "Training Sword",
     "armor": "Padded Vest",
     "accessory": "Practice Band",
@@ -259,7 +259,7 @@
     "abilities": ["basic_strike", "guard_stance"],
     "flavor": "A novice fighter just beginning formal training."
   },
-  "trickster": {
+  trickster: {
     "weapon": "Weighted Dagger",
     "armor": "Mischief Leathers",
     "accessory": "Loaded Dice",
@@ -267,7 +267,7 @@
     "abilities": ["feint_strike", "trick_step"],
     "flavor": "A sly combatant who thrives on misdirection and surprise."
   },
-  "void": {
+  void: {
     "weapon": "Void‑touched Blade",
     "armor": "Hollow Shroud",
     "accessory": "Riftstone Shard",
@@ -275,7 +275,7 @@
     "abilities": ["void_bolt", "rift_step"],
     "flavor": "A warrior who draws power from the emptiness between worlds."
   },
-  "warlock": {
+  warlock: {
     "weapon": "Demonforged Grimoire",
     "armor": "Abyssal Robes",
     "accessory": "Infernal Sigil",
@@ -283,7 +283,7 @@
     "abilities": ["shadow_bolt", "curse_of_agony"],
     "flavor": "A spellcaster empowered by dark pacts."
   },
-  "warrior": {
+  warrior: {
     "weapon": "Iron Greatsword",
     "armor": "Reinforced Breastplate",
     "accessory": "Warrior’s Emblem",
@@ -291,7 +291,7 @@
     "abilities": ["power_strike", "shield_bash"],
     "flavor": "A hardened fighter ready for frontline combat."
   },
-  "weaver": {
+  weaver: {
     "weapon": "Tailor’s Needle",
     "armor": "Weaver Cloak",
     "accessory": "Silk Spindle",
@@ -299,7 +299,7 @@
     "abilities": ["basic_loomwork", "fine_spinning"],
     "flavor": "A skilled artisan who crafts garments and magical cloth."
   },
-  "witch": {
+  witch: {
     "weapon": "Hexwood Staff",
     "armor": "Witch’s Cloak",
     "accessory": "Cursed Locket",
@@ -307,4 +307,4 @@
     "abilities": ["evil_eye", "binding_curse"],
     "flavor": "A wielder of hexes, rituals, and eerie brews."
   }
-}
+};
