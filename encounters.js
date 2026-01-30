@@ -125,9 +125,11 @@ function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
   regionKey = regionKey.toLowerCase().trim();
   const allEnemies = Object.values(EnemyRegistry.enemies);
   const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
+  
   console.log("regionKey =", regionKey);
   console.log("allowedKeys =", allowedKeys);
   console.log("pool(allEnemies) sample =", allEnemies[0]);
+  console.log("ENEMY_REGIONS keys =", Object.keys(ENEMY_REGIONS));
 
   function pick(pool) {
     const chosen = pool[Math.floor(Math.random() * pool.length)];
