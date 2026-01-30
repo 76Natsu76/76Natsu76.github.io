@@ -128,18 +128,54 @@ function clear() {
 // ENEMY TEMPLATE PICKER
 // ------------------------------------------------------------
 function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
+  const allEnemies = EnemyRegistry.enemies;
   const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
 
-  const pool = EnemyRegistry.enemies.filter(e =>
+  // ------------------------------------------------------------
+  // 1. STRICT MATCH: region + family + rarity
+  // ------------------------------------------------------------
+  let pool = allEnemies.filter(e =>
     allowedKeys.includes(e.key) &&
     e.family === family &&
     e.rarity === rarity
   );
 
-  return pool.length
-    ? pool[Math.floor(Math.random() * pool.length)]
-    : null;
+  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+
+  // ------------------------------------------------------------
+  // 2. FALLBACK: region + family
+  // ------------------------------------------------------------
+  pool = allEnemies.filter(e =>
+    allowedKeys.includes(e.key) &&
+    e.family === family
+  );
+
+  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+
+  // ------------------------------------------------------------
+  // 3. FALLBACK: region only
+  // ------------------------------------------------------------
+  pool = allEnemies.filter(e =>
+    allowedKeys.includes(e.key)
+  );
+
+  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+
+  // ------------------------------------------------------------
+  // 4. FALLBACK: biome family (if any enemies match family globally)
+  // ------------------------------------------------------------
+  pool = allEnemies.filter(e =>
+    e.family === family
+  );
+
+  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+
+  // ------------------------------------------------------------
+  // 5. FINAL FALLBACK: ANY ENEMY (global pool)
+  // ------------------------------------------------------------
+  return allEnemies[Math.floor(Math.random() * allEnemies.length)];
 }
+
 
 
 function chooseTemplate(list) {
