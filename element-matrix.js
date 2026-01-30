@@ -210,3 +210,13 @@ export const ELEMENT_MATRIX = {
     void: +0.20, cosmic: +0.10, abyssal: -0.20
   }
 };
+
+export function applyElementalDamage(baseDamage, attackerElement, defenderElement) {
+  if (!attackerElement || !defenderElement) return baseDamage;
+
+  const row = ELEMENT_MATRIX[attackerElement];
+  if (!row) return baseDamage;
+
+  const mult = row[defenderElement] != null ? row[defenderElement] : 1;
+  return Math.floor(baseDamage * mult);
+}
