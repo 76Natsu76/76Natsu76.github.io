@@ -20,7 +20,7 @@ export const EnemyRegistry = {
   abilities: ENEMY_ABILITIES,
   ultimates: ENEMY_ULTIMATES,
 
-  enemies: ENEMIES,
+  enemies: Object.values(ENEMIES),
   regionMap: ENEMY_REGIONS,
   subraceMap: SUBRACE_FAMILY_INDEX,
   raceMap: RACE_FAMILY_INDEX,
