@@ -1,7 +1,7 @@
 // /js/merchant-resolver.js
 // Modern JS‑module version (no JSON, no fetch)
 
-import { LOOT_TABLES } from "./loot-table.js";
+import { LOOT_TABLES } from "./loot-tables.js";
 import { MERCHANT_TYPES } from "./merchant-types.js";
 import { MERCHANT_PERSONALITIES } from "./merchant-personalities.js";
 import { MERCHANT_INSTANCES } from "./merchant-instances.js";
