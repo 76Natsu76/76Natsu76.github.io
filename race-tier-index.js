@@ -1,4 +1,4 @@
-{
+export const RACE_TIER_INDEX = {
   "humanoid": 1,
   "elf": 1,
   "dwarf": 1,
@@ -14,6 +14,7 @@
   "spiritborn": 2,
   "elementalborn": 2,
   "titanborn": 2,
+  
   "giantkin": 2,
   "colossus": 2,
   "fae": 2,
@@ -60,6 +61,7 @@
   "metaphysical_phenomenon": 5,
   "parasite": 5,
   "hivemind": 5,
+  
   "living_location": 5,
   "artificial_life": 5,
   "temporal_entity": 5,
@@ -71,4 +73,4 @@
   "paradox_god": 6,
 
   "multiversal_paragon": 7
-}
+};
