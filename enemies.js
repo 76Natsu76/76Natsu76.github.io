@@ -689,9 +689,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "bandit captain": {
-    "key": "bandit captain",
-    "name": "bandit captain",
+  "bandit_captain": {
+    "key": "bandit_captain",
+    "name": "bandit_captain",
     "profession": "warrior",
     "family": "thief",
     "element": "normal",
@@ -714,9 +714,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "dire wolf": {
-    "key": "dire wolf",
-    "name": "dire wolf",
+  "dire_wolf": {
+    "key": "dire_wolf",
+    "name": "dire_wolf",
     "profession": "beast",
     "family": "beast",
     "element": "nature",
@@ -739,7 +739,7 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "skeleton archer": {
+  "skeleton_archer": {
     "key": "skeleton archer",
     "name": "skeleton archer",
     "profession": "archer",
@@ -814,9 +814,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "giant spider": {
-    "key": "giant spider",
-    "name": "giant spider",
+  "giant_spider": {
+    "key": "giant_spider",
+    "name": "giant_spider",
     "profession": "beast",
     "family": "beast",
     "element": "poison",
@@ -839,9 +839,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Sword-Novice Duelist": {
-    "key": "Sword-Novice Duelist",
-    "name": "Sword-Novice Duelist",
+  "sword_novice_duelist": {
+    "key": "sword_novice_duelist",
+    "name": "sword_novice_duelist",
     "profession": "trainee",
     "family": "warrior",
     "element": "normal",
@@ -859,9 +859,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "hornet swarm": {
-    "key": "hornet swarm",
-    "name": "hornet swarm",
+  "hornet_swarm": {
+    "key": "hornet_swarm",
+    "name": "hornet_swarm",
     "profession": "beast",
     "family": "beast",
     "element": "poison",
@@ -909,9 +909,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Obsidian World‑Breaker": {
-    "key": "Obsidian World‑Breaker",
-    "name": "Obsidian World‑Breaker",
+  "obsidian_world‑breaker": {
+    "key": "obsidian_world‑breaker",
+    "name": "obsidian_world‑breaker",
     "profession": "apprentice",
     "family": "titan",
     "element": "arcane",
@@ -929,9 +929,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "ranger scout": {
-    "key": "ranger scout",
-    "name": "ranger scout",
+  "ranger_scout": {
+    "key": "ranger_scout",
+    "name": "ranger_scout",
     "profession": "ranger",
     "family": "ranger",
     "element": "wind",
@@ -954,9 +954,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "monk disciple": {
-    "key": "monk disciple",
-    "name": "monk disciple",
+  "monk_disciple": {
+    "key": "monk_disciple",
+    "name": "monk_disciple",
     "profession": "monk",
     "family": "monk",
     "element": "light",
@@ -979,9 +979,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Shadow-Step Initiate": {
-    "key": "Shadow-Step Initiate",
-    "name": "Shadow-Step Initiate",
+  "shadow_step_initiate": {
+    "key": "shadow_step_initiate",
+    "name": "shadow_step_initiate",
     "profession": "trainee",
     "family": "assassin",
     "element": "dark",
@@ -999,9 +999,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Arcane-Bloom Student": {
-    "key": "Arcane-Bloom Student",
-    "name": "Arcane-Bloom Student",
+  "arcane_bloom_student": {
+    "key": "arcane_bloom_student",
+    "name": "arcane_bloom_student",
     "profession": "apprentice",
     "family": "arcane",
     "element": "arcane-nature",
@@ -1024,9 +1024,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "witch apprentice": {
-    "key": "witch apprentice",
-    "name": "witch apprentice",
+  "witch_apprentice": {
+    "key": "witch_apprentice",
+    "name": "witch_apprentice",
     "profession": "witch",
     "family": "witch",
     "element": "arcane",
@@ -1049,9 +1049,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "necromancer adept": {
-    "key": "necromancer adept",
-    "name": "necromancer adept",
+  "necromancer_adept": {
+    "key": "necromancer_adept",
+    "name": "necromancer_adept",
     "profession": "necromancer",
     "family": "necromancer",
     "element": "dark",
@@ -1074,9 +1074,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "shaman of thorns": {
-    "key": "shaman of thorns",
-    "name": "shaman of thorns",
+  "shaman_of_thorns": {
+    "key": "shaman_of_thorns",
+    "name": "shaman_of_thorns",
     "profession": "shaman",
     "family": "shaman",
     "element": "nature",
@@ -1099,9 +1099,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "druid of storms": {
-    "key": "druid of storms",
-    "name": "druid of storms",
+  "druid_of_storms": {
+    "key": "druid_of_storms",
+    "name": "druid_of_storms",
     "profession": "druid",
     "family": "druid",
     "element": "wind-lightning",
@@ -1124,9 +1124,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "warlock cultist": {
-    "key": "warlock cultist",
-    "name": "warlock cultist",
+  "warlock_cultist": {
+    "key": "warlock_cultist",
+    "name": "warlock_cultist",
     "profession": "warlock",
     "family": "warlock",
     "element": "dark",
@@ -1149,9 +1149,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "paladin initiate": {
-    "key": "paladin initiate",
-    "name": "paladin initiate",
+  "paladin_initiate": {
+    "key": "paladin_initiate",
+    "name": "paladin_initiate",
     "profession": "paladin",
     "family": "paladin",
     "element": "holy",
@@ -1174,9 +1174,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "assassin shade": {
-    "key": "assassin shade",
-    "name": "assassin shade",
+  "assassin_shade": {
+    "key": "assassin_shade",
+    "name": "assassin_shade",
     "profession": "assassin",
     "family": "assassin",
     "element": "dark",
@@ -1199,9 +1199,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "terror knight": {
-    "key": "terror knight",
-    "name": "terror knight",
+  "terror_knight": {
+    "key": "terror_knight",
+    "name": "terror_knight",
     "profession": "guardian",
     "family": "warrior",
     "element": "dark",
@@ -1253,9 +1253,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "centaur lancer": {
-    "key": "centaur lancer",
-    "name": "centaur lancer",
+  "centaur_lancer": {
+    "key": "centaur_lancer",
+    "name": "centaur_lancer",
     "profession": "warrior",
     "family": "beast",
     "element": "nature",
@@ -1278,9 +1278,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "satyr trickster": {
-    "key": "satyr trickster",
-    "name": "satyr trickster",
+  "satyr_trickster": {
+    "key": "satyr_trickster",
+    "name": "satyr_trickster",
     "profession": "thief",
     "family": "trickster",
     "element": "nature",
@@ -1303,9 +1303,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "giant boar": {
-    "key": "giant boar",
-    "name": "giant boar",
+  "giant_boar": {
+    "key": "giant_boar",
+    "name": "giant_boar",
     "profession": "beast",
     "family": "beast",
     "element": "earth",
@@ -1328,9 +1328,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "tiger warrior": {
-    "key": "tiger warrior",
-    "name": "tiger warrior",
+  "tiger_warrior": {
+    "key": "tiger_warrior",
+    "name": "tiger_warrior",
     "profession": "beast",
     "family": "beast",
     "element": "nature",
@@ -2956,9 +2956,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "titan of ruin": {
-    "key": "titan of ruin",
-    "name": "titan of ruin",
+  "titan_of_ruin": {
+    "key": "titan_of_ruin",
+    "name": "titan_of_ruin",
     "profession": "warrior",
     "family": "titan",
     "element": "void-earth",
@@ -5553,9 +5553,9 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "Plink of the Seventh Dimension": {
-    "key": "Plink of the Seventh Dimension",
-    "name": "Plink of the Seventh Dimension",
+  "Plink_of_the_Seventh Dimension": {
+    "key": "Plink_of_the_Seventh Dimension",
+    "name": "Plink_of_the_Seventh Dimension",
     "profession": "cat",
     "family": "humanoid",
     "element": "arcane-void",
@@ -5740,7 +5740,7 @@ export const ENEMIES = {
           "chance": 0.14
         },
         {
-          "name": "End of Days Relic",
+          "name": "End_of_Days Relic",
           "chance": 0.08
         }
       ]
@@ -5860,7 +5860,7 @@ export const ENEMIES = {
           "chance": 0.76
         },
         {
-          "name": "Flag of Uganda",
+          "name": "Flag_of_Uganda",
           "chance": 0.01
         },
         {
