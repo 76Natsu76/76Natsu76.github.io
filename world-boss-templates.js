@@ -1,4 +1,4 @@
-export const world-boss-templates = {
+export const WORLD_BOSS_TEMPLATES = {
   "celestial_herald": {
     "name": "Celestial Herald",
     "subrace": "legendary_boss_template",
