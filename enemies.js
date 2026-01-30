@@ -1,4 +1,4 @@
-{
+export const ENEMIES = {
   "goblin": {
     "key": "goblin",
     "name": "goblin",
@@ -5871,4 +5871,4 @@
     },
     "activeEffects": {}
   }
-}
+};
