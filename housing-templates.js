@@ -1,4 +1,4 @@
-{
+export const HOUSING_TEMPLATES = {
   "$schema": "S3VEN_RPG_HOUSING_TEMPLATES_V1",
   "homes": {
     "starter_cabin": {
@@ -80,4 +80,4 @@
       "craftRecipe": "craft_pet_perch"
     }
   }
-}
+};
