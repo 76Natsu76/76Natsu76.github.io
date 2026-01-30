@@ -1,0 +1,15 @@
+export const REGION_UNLOCKS = {
+  "unlocks": {
+    "forest": true,
+    "plains": true,
+    "cavern": false,
+    "ruins": false,
+    "swamp": false,
+    "desert": false,
+    "tundra": false,
+    "mountains": false,
+    "void_realm": false,
+    "astral_plane": false,
+    "abyss": false
+  }
+};
