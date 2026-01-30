@@ -1,5 +1,5 @@
 /************************************************************
- * resolveEnemy.js — GitHub-native, fully updated
+ * resolveEnemy.js — GitHub-native, with BIOME modifiers
  ************************************************************/
 
 import { REGION_MODIFIERS } from "./region-modifiers.js";
@@ -13,6 +13,9 @@ import { ENEMY_VARIANTS } from "./enemy-variants.js";
 import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
 import { ENEMY_ULTIMATES } from "./enemy-ultimates.js";
 import { chooseBossActionV3, chooseEnemyActionV3 } from "./enemy-ai.js";
+
+import { REGION_TO_BIOME } from "./region-to-biome.js";
+import { BIOME_MODIFIERS } from "./biomes.js";
 
 /************************************************************
  * MAIN RESOLVER
@@ -91,6 +94,19 @@ export function resolveEnemy(raw, regionKey, tier) {
   if (regionMods.atkMult) atk = Math.floor(atk * regionMods.atkMult);
   if (regionMods.defMult) def = Math.floor(def * regionMods.defMult);
   if (regionMods.speedMult) speed = Math.floor(speed * regionMods.speedMult);
+
+  /************************************************************
+   * BIOME MODIFIERS
+   ************************************************************/
+  const biomeKey = REGION_TO_BIOME[regionKey] || null;
+  const biomeMods = biomeKey ? BIOME_MODIFIERS[biomeKey] : null;
+
+  if (biomeMods) {
+    if (biomeMods.hpMult) hpMax = Math.floor(hpMax * biomeMods.hpMult);
+    if (biomeMods.atkMult) atk = Math.floor(atk * biomeMods.atkMult);
+    if (biomeMods.defMult) def = Math.floor(def * biomeMods.defMult);
+    if (biomeMods.speedMult) speed = Math.floor(speed * biomeMods.speedMult);
+  }
 
   /************************************************************
    * TAG MODIFIERS
