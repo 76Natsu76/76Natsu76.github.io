@@ -987,11 +987,9 @@
     import { requireSession } from "./session-guard.js";
     import { EncounterEngine } from "./encounters.js";
     import { PlayerStorage } from "./player-storage.js";
+    import { resolveEnemy } from "./resolveEnemy.js";
     import { api } from "./api.js";
-    import {
-      buildCombatContext,
-      runCombatRound as engineRunRound
-    } from "./combat-engine.js";
+    import { buildCombatContext, runCombatRound as engineRunRound } from "./combat-engine.js";
   
     /* ============================================================
        SESSION + PLAYER + ENCOUNTER LOAD
