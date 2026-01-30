@@ -1,4 +1,4 @@
-{
+export const RACE_DEFINIIONS = {
   "humanoid": {
     "name": "Humanoid",
     "playable": true,
@@ -746,4 +746,4 @@
     "weaponTagsRestricted": [],
     "notes": "Their will shapes realities, their breath births galaxies, and their silence ends eternity."
   }
-}
+};
