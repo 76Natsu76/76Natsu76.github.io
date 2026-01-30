@@ -38,18 +38,10 @@ function _getRegionUnlocks() {
    INITIALIZATION — MUST BE CALLED BEFORE USING WORLD SIM
 ============================================================ */
 async function init() {
-  WORLD_BOSSES = await loadJSON("./world-boss-templates.json");
-  REGION_UNLOCKS = await loadJSON("./region-unlocks.json");
+  import WORLD_BOSSES from "./world-boss-templates.js";
+  import REGION_UNLOCKS from "./region-unlock.js";
 }
 
-/* ============================================================
-   LOAD JSON SAFELY
-============================================================ */
-async function loadJSON(path) {
-  const res = await fetch(path);
-  if (!res.ok) throw new Error("Failed to load " + path);
-  return res.json();
-}
 
 /* ============================================================
    LOAD / SAVE WORLD STATE
