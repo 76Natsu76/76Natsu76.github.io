@@ -1,4 +1,4 @@
-{
+export const SUBRACE_STAT_PROFILES = {
   "humanoid": {
 
     "occultborn": {
@@ -2754,4 +2754,4 @@
       "description": "The supreme architect of all existence — a being who creates, destroys,\n and governs entire multiverses with a single thought. \nBeyond gods, beyond paradox, beyond narrative. \nThe final and absolute pinnacle of all power."
     }
   }
-}
+};
