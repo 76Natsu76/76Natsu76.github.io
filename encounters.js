@@ -124,31 +124,36 @@ function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
   const allEnemies = Object.values(EnemyRegistry.enemies);
   const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
 
+  function pick(pool) {
+    const chosen = pool[Math.floor(Math.random() * pool.length)];
+    return EnemyRegistry.buildEnemyTemplate(chosen.key);
+  }
+
   // 1. STRICT MATCH: region + family + rarity
   let pool = allEnemies.filter(e =>
     allowedKeys.includes(e.key) &&
     e.family === family &&
     e.rarity === rarity
   );
-  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+  if (pool.length) return pick(pool);
 
   // 2. FALLBACK: region + family
   pool = allEnemies.filter(e =>
     allowedKeys.includes(e.key) &&
     e.family === family
   );
-  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+  if (pool.length) return pick(pool);
 
   // 3. FALLBACK: region only
   pool = allEnemies.filter(e => allowedKeys.includes(e.key));
-  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+  if (pool.length) return pick(pool);
 
   // 4. FALLBACK: biome family (global)
   pool = allEnemies.filter(e => e.family === family);
-  if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+  if (pool.length) return pick(pool);
 
   // 5. FINAL FALLBACK: ANY ENEMY
-  return allEnemies[Math.floor(Math.random() * allEnemies.length)];
+  return pick(allEnemies);
 }
 
 // ------------------------------------------------------------
