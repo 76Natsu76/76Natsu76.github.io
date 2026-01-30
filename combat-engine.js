@@ -75,6 +75,7 @@ export function tickStatusEffects(target, context, logs) {
       const before = target.hpCurrent;
       target.hpCurrent = Math.min(target.hpMax, target.hpCurrent + heal);
       if (logs) logs.push(`${target.name} regenerates ${target.hpCurrent - before} HP.`);
+      window.showPopup("playerPanel", `+${heal}`, "heal");
     }
 
     eff.duration -= 1;
@@ -244,6 +245,12 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
   finalDmg = Math.max(0, finalDmg);
 
   defender.hpCurrent = Math.max(0, defender.hpCurrent - finalDmg);
+
+  if (attacker?.isPlayer) {
+    window.showPopup("enemyPanel", `-${finalDmg}`, "damage");
+  } else {
+    window.showPopup("playerPanel", `-${finalDmg}`, "damage");
+  }
   
   // Ultimate charge gain
   if (attacker && attacker.isPlayer) {
