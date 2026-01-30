@@ -1384,7 +1384,7 @@ export const BIOMES = {
   }
 };
 
-eexport const BIOME_MODIFIERS = {
+export const BIOME_MODIFIERS = {
   "forest": {
     speedMult: 1.05,
     defMult: 1.05,
