@@ -1,12 +1,14 @@
 // world-simulation.js
 // GitHub-native world simulation engine.
-// Handles weather, events, hazards, world boss states, region unlocks,
-// and region pressure.
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { WorldBossAnnouncements } from "./world-boss-announcements.js";
+
+// NEW: import boss + unlock data properly
+import { WORLD_BOSSES } from "./world-boss-templates.js";
+import { REGION_UNLOCKS } from "./region-unlock.js";
 
 export const WorldSim = {
   init,
@@ -19,12 +21,8 @@ export const WorldSim = {
 
 const STORAGE_KEY = "world_state";
 
-// These are filled by init()
-let WORLD_BOSSES = {};
-let REGION_UNLOCKS = { unlocks: {} };
-
 /* ============================================================
-   ACCESSORS FOR OTHER MODULES
+   ACCESSORS
 ============================================================ */
 function _getBossData() {
   return WORLD_BOSSES;
@@ -35,13 +33,12 @@ function _getRegionUnlocks() {
 }
 
 /* ============================================================
-   INITIALIZATION — MUST BE CALLED BEFORE USING WORLD SIM
+   INITIALIZATION — now trivial
 ============================================================ */
 async function init() {
-  import { WORLD_BOSSES } from "./world-boss-templates.js";
-  import { REGION_UNLOCKS } from "./region-unlock.js";
+  // Nothing to load anymore — everything is imported statically.
+  return true;
 }
-
 
 /* ============================================================
    LOAD / SAVE WORLD STATE
