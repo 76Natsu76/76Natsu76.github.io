@@ -130,12 +130,13 @@
       function renderProfessions(list) {
         const container = document.getElementById("professionContainer");
         const out = [];
+        const playable = list.filter(p => !p.nonPlayable);
     
         const canChoose =
           player.level >= 10 &&
           (player.profession === "NONE" || player.profession === null);
     
-        for (const prof of list) {
+        for (const prof of playable) {
           const disabled = !canChoose;
     
           out.push(`
