@@ -1,5 +1,5 @@
 // encounters.js
-// GitHub‑native Encounter Engine (JS‑module version)
+// GitHub‑native Encounter Engine
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
