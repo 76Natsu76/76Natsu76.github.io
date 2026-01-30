@@ -152,7 +152,7 @@ export function resolveEnemy(raw, regionKey, tier) {
     tags,
     level,
     elementAffinity,
-
+    element: raw.element || null,
     hpCurrent: hpMax,
     hpMax,
     atk,
