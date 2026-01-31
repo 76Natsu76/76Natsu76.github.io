@@ -110,7 +110,7 @@
     import { PlayerStorage } from "./player-storage.js";
 
     (async () => {
-      const username = localStorage.getItem("username");
+      const username = session.username;
       document.getElementById("usernameDisplay").textContent =
         username ? "Logged in as: " + username : "No user logged in";
 
@@ -304,6 +304,12 @@
 
       window.goToCharacter = () => (window.location.href = "character.html");
       window.goToMap = () => (window.location.href = "world-map.html");
+      window.refreshInventory = refreshInventory;
+      window.useItem = useItem;
+      window.equipItem = equipItem;
+      window.unequipItem = unequipItem;
+      window.toggleSection = toggleSection;
+
     })();
   </script>
 </body>
