@@ -1316,7 +1316,7 @@
         const rewards = generateRewards(combat.playerState, combat.enemyState, combat.context, outcome);
         const finalRewards = await finalizeRewards(rewards);
       
-        endCombat(finalRewards);
+        endCombat(finalRewards.outcome, finalRewards);
         return;
       }
 
