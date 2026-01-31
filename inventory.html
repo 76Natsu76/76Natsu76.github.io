@@ -189,7 +189,7 @@
       document.getElementById("usernameDisplay").textContent =
         username ? "Logged in as: " + username : "No user logged in";
     
-      let player = JSON.parse(sessionStorage.getItem("player") || "{}");
+      let player = JSON.parse(localStorage.getItem("player") || "{}");
     
       loadInventory();
     
@@ -199,7 +199,7 @@
       }
     
       function loadInventory() {
-        player = JSON.parse(sessionStorage.getItem("player") || "{}");
+        player = JSON.parse(localStorage.getItem("player") || "{}");
         renderInventory(player);
       }
     
@@ -336,7 +336,7 @@
           player.inventory = player.inventory.filter(i => i.id !== itemId);
         }
     
-        sessionStorage.setItem("player", JSON.stringify(player));
+        localStorage.setItem("player", JSON.stringify(player));
         refreshInventory();
       }
     
@@ -346,14 +346,14 @@
     
         player.equipment[item.slot] = item;
     
-        sessionStorage.setItem("player", JSON.stringify(player));
+        localStorage.setItem("player", JSON.stringify(player));
         refreshInventory();
       }
     
       function unequipItem(slot) {
         delete player.equipment[slot];
     
-        sessionStorage.setItem("player", JSON.stringify(player));
+        localStorage.setItem("player", JSON.stringify(player));
         refreshInventory();
       }
     
