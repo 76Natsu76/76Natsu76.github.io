@@ -1072,7 +1072,7 @@
     }
   
     // Cache locally (only if valid)
-    player = ensureVitals(rawPlayer);
+    const player = ensureVitals(rawPlayer);
     PlayerStorage.save(username, player);
   
     const encounter = EncounterEngine.loadFromSession();
@@ -1409,7 +1409,7 @@
       }
     
       // 3. Save locally
-      player = ensureVitals(p);
+      const player = ensureVitals(p);
 
       PlayerStorage.save(username, player);
     
