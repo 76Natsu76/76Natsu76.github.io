@@ -108,28 +108,36 @@
 
   <script type="module">
     import { PlayerStorage } from "./player-storage.js";
+    import { requireSession } from "./session-guard.js";
 
     (async () => {
-      const username = session.username;
+      const session = requireSession();
+      const username = session?.username;
+
       document.getElementById("usernameDisplay").textContent =
         username ? "Logged in as: " + username : "No user logged in";
 
-      let player = PlayerStorage.load(username) ||
-                   JSON.parse(localStorage.getItem("player") || "{}");
+      let player =
+        PlayerStorage.load(username) ||
+        JSON.parse(localStorage.getItem("player_" + username) || "{}");
 
       normalizeInventory(player);
       savePlayer(player);
 
       loadInventory();
 
+      /* ------------------------------
+         REFRESH + LOAD
+      ------------------------------ */
       function refreshInventory() {
         loadInventory();
         document.getElementById("syncIndicator").textContent = "Local Save ✔";
       }
 
       function loadInventory() {
-        player = PlayerStorage.load(username) ||
-                 JSON.parse(localStorage.getItem("player") || "{}");
+        player =
+          PlayerStorage.load(username) ||
+          JSON.parse(localStorage.getItem("player_" + username) || "{}");
 
         normalizeInventory(player);
         savePlayer(player);
@@ -138,18 +146,17 @@
       }
 
       function savePlayer(p) {
-        localStorage.setItem("player", JSON.stringify(p));
+        localStorage.setItem("player_" + username, JSON.stringify(p));
         PlayerStorage.save(username, p);
       }
 
       /* ------------------------------
-         NORMALIZE OLD + NEW ITEMS
+         NORMALIZE OLD ITEMS
       ------------------------------ */
       function normalizeInventory(p) {
         if (!Array.isArray(p.inventory)) p.inventory = [];
 
         p.inventory = p.inventory.map(item => {
-          // Already correct format
           if (item.id && item.quantity !== undefined && item.type) return item;
 
           return {
@@ -210,7 +217,8 @@
             <div class="section-content">
               ${
                 Object.entries(p.equipment || {})
-                  .map(([slot, item]) => `
+                  .map(
+                    ([slot, item]) => `
                     <div class="equipment-card rarity-${(item?.rarity || "common").toLowerCase()}">
                       <img class="item-icon" src="${item?.icon || "/assets/items/default.png"}">
                       <div class="item-info">
@@ -225,7 +233,8 @@
                           : ""
                       }
                     </div>
-                  `)
+                  `
+                  )
                   .join("")
               }
             </div>
@@ -243,7 +252,9 @@
               ${
                 items.length === 0
                   ? "<div>No items.</div>"
-                  : items.map(item => `
+                  : items
+                      .map(
+                        item => `
                         <div class="item-card rarity-${(item.rarity || "common").toLowerCase()}">
                           <img class="item-icon" src="${item.icon}">
                           <div class="item-info">
@@ -255,7 +266,9 @@
                             ${allowUse ? `<button onclick="useItem('${item.id}')">Use</button>` : ""}
                           </div>
                         </div>
-                      `).join("")
+                      `
+                      )
+                      .join("")
               }
             </div>
           </div>
@@ -302,14 +315,17 @@
         return String(str).toLowerCase().replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       }
 
-      window.goToCharacter = () => (window.location.href = "character.html");
-      window.goToMap = () => (window.location.href = "world-map.html");
+      /* ------------------------------
+         EXPOSE GLOBALS FOR BUTTONS
+      ------------------------------ */
       window.refreshInventory = refreshInventory;
       window.useItem = useItem;
       window.equipItem = equipItem;
       window.unequipItem = unequipItem;
       window.toggleSection = toggleSection;
 
+      window.goToCharacter = () => (window.location.href = "character.html");
+      window.goToMap = () => (window.location.href = "world-map.html");
     })();
   </script>
 </body>
