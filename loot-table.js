@@ -1,16 +1,16 @@
 export const LOOT_TABLES = [
-    {
-        "id": "broken_sword",
-        "name": "Broken Sword",
-        "rarity": "common",
-        "tier": 1,
-        "type": "weapon",
-        "tags": ["weapon", "sword", "metal", "hostile"],
-        "topCategory": "weapons",
-        "subCategory": "swords",
-        "group": "basic"
-    },
-    {
+  {
+    "id": "broken_sword",
+    "name": "Broken Sword",
+    "rarity": "common",
+    "tier": 1,
+    "type": "weapon",
+    "tags": ["weapon", "sword", "metal", "hostile"],
+    "topCategory": "weapons",
+    "subCategory": "swords",
+    "group": "basic"
+  },
+  {
     "id": "iron_sword",
     "name": "Iron Sword",
     "rarity": "uncommon",
