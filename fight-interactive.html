@@ -1030,6 +1030,19 @@
   
     await requireSession();
     const { local, remote, conflict, username } = window.syncState;
+
+    function ensureVitals(p) {
+      if (!p) return p;
+    
+      if (typeof p.hpMax !== "number") p.hpMax = 20;
+      if (typeof p.hpCurrent !== "number") p.hpCurrent = p.hpMax;
+    
+      if (typeof p.manaMax !== "number") p.manaMax = 10;
+      if (typeof p.mana !== "number") p.mana = p.manaMax;
+    
+      return p;
+    }
+
   
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
@@ -1059,7 +1072,8 @@
     }
   
     // Cache locally (only if valid)
-    PlayerStorage.save(username, rawPlayer);
+    player = ensureVitals(rawPlayer);
+    PlayerStorage.save(username, player);
   
     const encounter = EncounterEngine.loadFromSession();
     if (!encounter) {
@@ -1264,10 +1278,12 @@
     ============================================================ */
     async function beginFight() {
       logBox.innerHTML = "";
-  
-      const playerState = resolvePlayer(rawPlayer);
+    
+      // Always load the freshest player state
+      const latest = PlayerStorage.load(username) || rawPlayer;
+      const playerState = resolvePlayer(latest);
       const enemyState = resolveEnemyFromEncounter(encounter.enemy);
-  
+    
       combat = {
         playerState,
         enemyState,
@@ -1278,10 +1294,7 @@
           encounter.event
         )
       };
-      // 🔍 DEBUG: log resolved stats 
-      console.log("DEBUG RESOLVED PLAYER:", combat.playerState); 
-      console.log("DEBUG RESOLVED ENEMY:", combat.enemyState);
-  
+    
       setTimeout(() => {
         renderPanels();
         showActionPanel();
@@ -1337,6 +1350,18 @@
        FINALIZE REWARDS (LOCAL + KV)
     ============================================================ */
 
+    function persistVitalsAfterCombat() {
+      const latest = PlayerStorage.load(username) || rawPlayer;
+      if (!latest || !combat || !combat.playerState) return;
+    
+      latest.hpCurrent = combat.playerState.hpCurrent;
+      latest.hpMax = combat.playerState.hpMax;
+      latest.mana = combat.playerState.manaCurrent;
+      latest.manaMax = combat.playerState.manaMax;
+    
+      PlayerStorage.save(username, latest);
+    }
+
     function generateRewards(player, enemy, context, outcome) {
       if (outcome !== "victory") {
         return { outcome };
@@ -1384,10 +1409,12 @@
       }
     
       // 3. Save locally
-      PlayerStorage.save(username, p);
+      player = ensureVitals(p);
+
+      PlayerStorage.save(username, player);
     
       // 4. Save to KV
-      await api.savePlayer(username, p);
+      await api.savePlayer(username, player);
     
       // 5. Return rewards so UI can render loot
       return result;
@@ -1688,6 +1715,7 @@
       }
     
       rewardPanel.innerHTML = lootHtml;
+      persistVitalsAfterCombat();
       document.body.appendChild(rewardPanel);
     }
 
