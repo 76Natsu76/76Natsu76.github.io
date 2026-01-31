@@ -12,9 +12,21 @@
       padding:24px;
     }
 
-    h1 { color:#7fffd4; margin-bottom:4px; }
-    #usernameDisplay { opacity:0.8; margin-bottom:6px; }
-    #syncIndicator { font-size:13px; opacity:0.7; margin-bottom:16px; }
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:6px;
+    }
+
+    #syncIndicator {
+      font-size:13px;
+      opacity:0.7;
+      margin-bottom:16px;
+    }
 
     .btn {
       margin-top:16px;
@@ -27,8 +39,12 @@
       width:100%;
       text-align:center;
     }
-    .btn:hover { background:#222832; }
 
+    .btn:hover {
+      background:#222832;
+    }
+
+    /* Collapsible sections */
     .section {
       margin-top:24px;
       padding:16px;
@@ -36,6 +52,7 @@
       border-radius:8px;
       border:1px solid #262a36;
     }
+
     .section h2 {
       margin-top:0;
       font-size:18px;
@@ -45,11 +62,24 @@
       justify-content:space-between;
       align-items:center;
     }
-    .collapse-arrow { font-size:16px; opacity:0.7; transition:0.2s; }
-    .collapsed .collapse-arrow { transform:rotate(-90deg); }
-    .collapsed .section-content { display:none; }
 
-    .item-card, .equipment-card {
+    .collapse-arrow {
+      font-size:16px;
+      opacity:0.7;
+      transition:0.2s;
+    }
+
+    .collapsed .collapse-arrow {
+      transform:rotate(-90deg);
+    }
+
+    .collapsed .section-content {
+      display:none;
+    }
+
+    /* Item cards */
+    .item-card,
+    .equipment-card {
       padding:10px;
       margin:8px 0;
       background:#1a1d24;
@@ -60,7 +90,11 @@
       gap:12px;
       position:relative;
     }
-    .item-card:hover, .equipment-card:hover { background:#222832; }
+
+    .item-card:hover,
+    .equipment-card:hover {
+      background:#222832;
+    }
 
     .item-icon {
       width:48px;
@@ -70,9 +104,20 @@
       object-fit:cover;
     }
 
-    .item-info { flex-grow:1; }
-    .item-name { font-weight:600; font-size:15px; }
-    .item-qty { opacity:0.8; font-size:13px; margin-top:4px; }
+    .item-info {
+      flex-grow:1;
+    }
+
+    .item-name {
+      font-weight:600;
+      font-size:15px;
+    }
+
+    .item-qty {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
 
     .item-actions button {
       padding:6px 10px;
@@ -84,8 +129,32 @@
       font-size:12px;
       margin-left:6px;
     }
-    .item-actions button:hover { background:#222832; }
 
+    .item-actions button:hover {
+      background:#222832;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      display:none;
+      position:absolute;
+      left:10px;
+      top:100%;
+      background:#11141c;
+      border:1px solid #262a36;
+      padding:10px;
+      border-radius:6px;
+      width:260px;
+      z-index:1000;
+      font-size:13px;
+    }
+
+    .item-card:hover .tooltip,
+    .equipment-card:hover .tooltip {
+      display:block;
+    }
+
+    /* Rarity glows */
     .rarity-common { box-shadow:0 0 6px #bfbfbf55; }
     .rarity-uncommon { box-shadow:0 0 8px #7fff7f88; }
     .rarity-rare { box-shadow:0 0 8px #7fcfff88; }
@@ -107,80 +176,38 @@
   <button class="btn" onclick="goToMap()">World Map</button>
 
   <script type="module">
-    import { PlayerStorage } from "./player-storage.js";
     import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
 
     (async () => {
-      const session = requireSession();
-      const username = session?.username;
+      const session = await requireSession();
+      if (!session || !session.username) {
+        document.getElementById("usernameDisplay").textContent = "No user logged in";
+        document.getElementById("inventoryContainer").textContent = "No active session.";
+        return;
+      }
 
+      const username = session.username;
       document.getElementById("usernameDisplay").textContent =
-        username ? "Logged in as: " + username : "No user logged in";
+        "Logged in as: " + username;
 
-      let player =
-        PlayerStorage.load(username) ||
-        JSON.parse(localStorage.getItem("player_" + username) || "{}");
+      let player = PlayerStorage.load(username);
 
-      normalizeInventory(player);
-      savePlayer(player);
+      function loadInventory() {
+        player = PlayerStorage.load(username);
+        renderInventory(player);
+      }
 
-      loadInventory();
-
-      /* ------------------------------
-         REFRESH + LOAD
-      ------------------------------ */
       function refreshInventory() {
         loadInventory();
         document.getElementById("syncIndicator").textContent = "Local Save ✔";
       }
 
-      function loadInventory() {
-        player =
-          PlayerStorage.load(username) ||
-          JSON.parse(localStorage.getItem("player_" + username) || "{}");
+      // expose for button onclick
+      window.refreshInventory = refreshInventory;
 
-        normalizeInventory(player);
-        savePlayer(player);
+      loadInventory();
 
-        renderInventory(player);
-      }
-
-      function savePlayer(p) {
-        localStorage.setItem("player_" + username, JSON.stringify(p));
-        PlayerStorage.save(username, p);
-      }
-
-      /* ------------------------------
-         NORMALIZE OLD ITEMS
-      ------------------------------ */
-      function normalizeInventory(p) {
-        if (!Array.isArray(p.inventory)) p.inventory = [];
-
-        p.inventory = p.inventory.map(item => {
-          if (item.id && item.quantity !== undefined && item.type) return item;
-
-          return {
-            id: crypto.randomUUID(),
-            name: item.name,
-            quantity: item.quantity ?? item.qty ?? 1,
-            rarity: item.rarity ?? "common",
-            type: inferItemType(item.name),
-            icon: "/assets/items/default.png"
-          };
-        });
-      }
-
-      function inferItemType(name) {
-        const n = name.toLowerCase();
-        if (n.includes("meat") || n.includes("herb") || n.includes("potion")) return "consumable";
-        if (n.includes("pelt") || n.includes("ore") || n.includes("bark") || n.includes("leaf")) return "material";
-        if (n.includes("token") || n.includes("trophy") || n.includes("map")) return "quest";
-        return "misc";
-      }
-
-      /* ------------------------------
-         RENDERING
-      ------------------------------ */
       function renderInventory(p) {
         const container = document.getElementById("inventoryContainer");
         const out = [];
@@ -190,12 +217,21 @@
         const quest = [];
         const misc = [];
 
-        for (const item of p.inventory) {
-          switch (item.type) {
-            case "consumable": consumables.push(item); break;
-            case "material": materials.push(item); break;
-            case "quest": quest.push(item); break;
-            default: misc.push(item); break;
+        for (const item of p.inventory || []) {
+          const type = item.type || "misc";
+          switch (type) {
+            case "consumable":
+              consumables.push(item);
+              break;
+            case "material":
+              materials.push(item);
+              break;
+            case "quest":
+              quest.push(item);
+              break;
+            default:
+              misc.push(item);
+              break;
           }
         }
 
@@ -219,8 +255,12 @@
                 Object.entries(p.equipment || {})
                   .map(
                     ([slot, item]) => `
-                    <div class="equipment-card rarity-${(item?.rarity || "common").toLowerCase()}">
-                      <img class="item-icon" src="${item?.icon || "/assets/items/default.png"}">
+                    <div class="equipment-card rarity-${(
+                      item?.rarity || "common"
+                    ).toLowerCase()}">
+                      <img class="item-icon" src="${
+                        item?.icon || "/assets/items/default.png"
+                      }">
                       <div class="item-info">
                         <div class="item-name">${item ? item.name : "—"}</div>
                         <div class="item-qty">${format(slot)}</div>
@@ -254,19 +294,32 @@
                   ? "<div>No items.</div>"
                   : items
                       .map(
-                        item => `
-                        <div class="item-card rarity-${(item.rarity || "common").toLowerCase()}">
-                          <img class="item-icon" src="${item.icon}">
-                          <div class="item-info">
-                            <div class="item-name">${item.name}</div>
-                            <div class="item-qty">x${item.quantity}</div>
-                          </div>
-                          <div class="item-actions">
-                            ${item.slot ? `<button onclick="equipItem('${item.id}')">Equip</button>` : ""}
-                            ${allowUse ? `<button onclick="useItem('${item.id}')">Use</button>` : ""}
-                          </div>
-                        </div>
-                      `
+                        item => {
+                          const qty = item.quantity ?? item.qty ?? 1;
+                          const rarity = (item.rarity || "common").toLowerCase();
+                          const icon = item.icon || "/assets/items/default.png";
+                          return `
+                            <div class="item-card rarity-${rarity}">
+                              <img class="item-icon" src="${icon}">
+                              <div class="item-info">
+                                <div class="item-name">${item.name}</div>
+                                <div class="item-qty">x${qty}</div>
+                              </div>
+                              <div class="item-actions">
+                                ${
+                                  item.slot && item.id
+                                    ? `<button onclick="equipItem('${item.id}')">Equip</button>`
+                                    : ""
+                                }
+                                ${
+                                  allowUse && item.id
+                                    ? `<button onclick="useItem('${item.id}')">Use</button>`
+                                    : ""
+                                }
+                              </div>
+                            </div>
+                          `;
+                        }
                       )
                       .join("")
               }
@@ -275,19 +328,22 @@
         `;
       }
 
-      /* ------------------------------
-         ITEM ACTIONS
-      ------------------------------ */
       function useItem(itemId) {
         const item = player.inventory.find(i => i.id === itemId);
         if (!item) return;
 
-        item.quantity -= 1;
-        if (item.quantity <= 0) {
+        const currentQty = item.quantity ?? item.qty ?? 1;
+        const newQty = currentQty - 1;
+
+        if ("quantity" in item) item.quantity = newQty;
+        else if ("qty" in item) item.qty = newQty;
+        else item.quantity = newQty;
+
+        if (newQty <= 0) {
           player.inventory = player.inventory.filter(i => i.id !== itemId);
         }
 
-        savePlayer(player);
+        PlayerStorage.save(username, player);
         refreshInventory();
       }
 
@@ -295,15 +351,18 @@
         const item = player.inventory.find(i => i.id === itemId);
         if (!item || !item.slot) return;
 
+        if (!player.equipment) player.equipment = {};
         player.equipment[item.slot] = item;
 
-        savePlayer(player);
+        PlayerStorage.save(username, player);
         refreshInventory();
       }
 
       function unequipItem(slot) {
+        if (!player.equipment) return;
         delete player.equipment[slot];
-        savePlayer(player);
+
+        PlayerStorage.save(username, player);
         refreshInventory();
       }
 
@@ -312,13 +371,13 @@
       }
 
       function format(str) {
-        return String(str).toLowerCase().replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+        return String(str)
+          .toLowerCase()
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, c => c.toUpperCase());
       }
 
-      /* ------------------------------
-         EXPOSE GLOBALS FOR BUTTONS
-      ------------------------------ */
-      window.refreshInventory = refreshInventory;
+      // expose for inline handlers
       window.useItem = useItem;
       window.equipItem = equipItem;
       window.unequipItem = unequipItem;
