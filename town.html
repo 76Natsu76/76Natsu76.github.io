@@ -5,8 +5,32 @@
   </style>
 </head>
 <body>
+  <!-- button addition 'Rest at Inn' -->
   <script>
+    function restAtInn() {
+      const p = PlayerStorage.load(username);
+      const { hpPerMinute, mpPerMinute } = getRegenRates(p);
     
+      // Full heal instantly (or use regen formula if you want slower)
+      p.hpCurrent = p.hpMax;
+      p.mana = p.manaMax;
+    
+      PlayerStorage.save(username, p);
+      renderTown(p);
+    }
+
+    function applyAmbientRegen() {
+      const p = PlayerStorage.load(username);
+      const { hpPerMinute, mpPerMinute } = getRegenRates(p);
+    
+      // Regen 1 minute worth each time they return to map
+      p.hpCurrent = Math.min(p.hpMax, p.hpCurrent + hpPerMinute);
+      p.mana = Math.min(p.manaMax, p.mana + mpPerMinute);
+    
+      PlayerStorage.save(username, p);
+    }
+
+
   </script>
 </body>
 </html>
