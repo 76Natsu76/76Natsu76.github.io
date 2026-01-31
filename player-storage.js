@@ -10,52 +10,27 @@ export const PlayerStorage = {
 };
 
 // ---- INTERNAL: ensure vital fields & migrate legacy names ----
-function ensureVitalFields(p, userId) {
-  if (!p || typeof p !== "object") return p;
+function ensureVitals(p) {
+  if (!p) return p;
 
-  // Legacy → canonical migration
-  // hp / hpMax → hpCurrent / hpMax
-  if (typeof p.hpMax === "number") {
-    // keep existing hpMax
-  } else if (typeof p.maxhp === "number") {
-    p.hpMax = p.maxhp;
-  } else {
-    p.hpMax = 20;
+  // HP
+  if (typeof p.hpMax !== "number") p.hpMax = 20;
+  if (typeof p.hpCurrent !== "number") p.hpCurrent = p.hpMax;
+
+  // MP (canonical)
+  if (typeof p.manaMax !== "number") {
+    if (typeof p.maxmp === "number") p.manaMax = p.maxmp;
+    else p.manaMax = 10;
   }
 
-  if (typeof p.hpCurrent === "number") {
-    // keep existing
-  } else if (typeof p.hp === "number") {
-    p.hpCurrent = p.hp;
-  } else {
-    p.hpCurrent = p.hpMax;
+  if (typeof p.mana !== "number") {
+    if (typeof p.mp === "number") p.mana = p.mp;
+    else p.mana = p.manaMax;
   }
 
-  // mp / maxmp → mana / manaMax
-  if (typeof p.manaMax === "number") {
-    // keep existing
-  } else if (typeof p.maxmp === "number") {
-    p.manaMax = p.maxmp;
-  } else {
-    p.manaMax = 10;
-  }
-
-  if (typeof p.mana === "number") {
-    // keep existing
-  } else if (typeof p.mp === "number") {
-    p.mana = p.mp;
-  } else {
-    p.mana = p.manaMax;
-  }
-
-  // Basic identity defaults
-  if (!p.id) p.id = userId;
-  if (!p.name) p.name = userId;
-
-  // Ensure arrays/objects exist
-  if (!Array.isArray(p.inventory)) p.inventory = [];
-  if (typeof p.equipment !== "object" || p.equipment === null) p.equipment = {};
-  if (!Array.isArray(p.logs)) p.logs = [];
+  // Remove legacy fields so they never overwrite again
+  delete p.mp;
+  delete p.maxmp;
 
   return p;
 }
