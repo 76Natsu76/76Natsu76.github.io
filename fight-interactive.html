@@ -1313,11 +1313,13 @@
       const outcome = checkOutcome(combat.playerState, combat.enemyState);
       if (outcome) {
         addLog("Combat ended: " + outcome.toUpperCase());
-        await finalizeRewards(outcome);
-        endCombat(outcome);
+        const rewards = generateRewards(combat.playerState, combat.enemyState, combat.context, outcome);
+        const finalRewards = await finalizeRewards(rewards);
+      
+        endCombat(finalRewards);
         return;
       }
-  
+
       if (autoBattle) {
         autoLoop();
       } else {
@@ -1333,6 +1335,26 @@
     /* ============================================================
        FINALIZE REWARDS (LOCAL + KV)
     ============================================================ */
+
+    function generateRewards(player, enemy, context, outcome) {
+      if (outcome !== "victory") {
+        return { outcome };
+      }
+    
+      // XP + Gold placeholders (tune later)
+      const xp = enemy.level * 2;
+      const gold = enemy.level * 1;
+    
+      // Loot placeholder (you can replace this with your real loot resolver)
+      const loot = enemy.loot || [];
+    
+      return {
+        outcome,
+        xp,
+        gold,
+        loot
+      };
+    }
     
     async function finalizeRewards(result) {
       // result = { outcome, xp, gold, loot, ... }
