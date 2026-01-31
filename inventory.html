@@ -263,12 +263,14 @@
       function renderInventory(p) {
         const container = document.getElementById("inventoryContainer");
         const out = [];
-
-        const consumables = sortItems(consumables);
-        const materials = sortItems(materials);
-        const quest = sortItems(quest);
-        const misc = sortItems(misc);
-        
+      
+        // 1. Create empty arrays FIRST
+        const consumables = [];
+        const materials = [];
+        const quest = [];
+        const misc = [];
+      
+        // 2. Fill them
         for (const item of p.inventory || []) {
           const type = item.type || "misc";
           switch (type) {
@@ -286,13 +288,20 @@
               break;
           }
         }
-
+      
+        // 3. Sort AFTER arrays are populated
+        sortItems(consumables);
+        sortItems(materials);
+        sortItems(quest);
+        sortItems(misc);
+      
+        // 4. Render
         out.push(renderEquipment(p));
         out.push(renderCategory("Consumables", consumables, true));
         out.push(renderCategory("Materials", materials, false));
         out.push(renderCategory("Quest Items", quest, false));
         out.push(renderCategory("Misc", misc, false));
-
+      
         container.innerHTML = out.join("");
       }
 
