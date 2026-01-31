@@ -86,6 +86,7 @@
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
+    import { getRegenRates } from "./regen.js";
 
     await requireSession();
     const { username } = window.syncState || {};
