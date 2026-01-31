@@ -1374,11 +1374,11 @@
         if (!Array.isArray(p.inventory)) p.inventory = [];
     
         for (const item of result.loot) {
-          const existing = p.inventory.find(i => i.name === item.name);
+          const existing = p.inventory.find(i => i.name === item.name && i.type === item.type);
           if (existing) {
-            existing.qty = (existing.qty || 1) + (item.qty || 1);
+            existing.quantity = (existing.quantity || 1) + (item.quantity || 1);
           } else {
-            p.inventory.push({ ...item });
+            p.inventory.push(item);
           }
         }
       }
@@ -1763,31 +1763,59 @@
     
       const basePool = table[rarity] || [];
       if (basePool.length) {
-        const item = pick(basePool);
-        results.push({ name: item, qty: 1 });
+        const name = pick(basePool);
+        results.push(makeItem(name, rarity));
       }
     
       // 2. Weather modifiers
       const weather = context.weatherKey;
       if (table.weatherModifiers?.[weather]) {
-        const item = pick(table.weatherModifiers[weather]);
-        results.push({ name: item, qty: 1 });
+        const name = pick(table.weatherModifiers[weather]);
+        results.push(makeItem(name, rarity));
       }
     
       // 3. Event modifiers
       const event = context.eventKey;
       if (table.eventModifiers?.[event]) {
-        const item = pick(table.eventModifiers[event]);
-        results.push({ name: item, qty: 1 });
+        const name = pick(table.eventModifiers[event]);
+        results.push(makeItem(name, rarity));
       }
     
       // 4. Profession modifiers
       if (table.professionModifiers?.[player.profession]) {
-        const item = pick(table.professionModifiers[player.profession]);
-        results.push({ name: item, qty: 1 });
+        const name = pick(table.professionModifiers[player.profession]);
+        results.push(makeItem(name, rarity));
       }
+    
       return results;
     }
+    
+    function makeItem(name, rarity) {
+      return {
+        id: crypto.randomUUID(),
+        name,
+        quantity: 1,
+        rarity: rarity || "common",
+        type: inferItemType(name),
+        icon: "/assets/items/default.png"
+      };
+    }
+    
+    function inferItemType(name) {
+      const n = name.toLowerCase();
+    
+      if (n.includes("meat") || n.includes("potion") || n.includes("herb"))
+        return "consumable";
+    
+      if (n.includes("ore") || n.includes("bark") || n.includes("leaf") || n.includes("root"))
+        return "material";
+    
+      if (n.includes("token") || n.includes("trophy") || n.includes("map"))
+        return "quest";
+    
+      return "misc";
+    }
+
     
     function pick(arr) {
       return arr[Math.floor(Math.random() * arr.length)];
