@@ -1333,19 +1333,40 @@
     /* ============================================================
        FINALIZE REWARDS (LOCAL + KV)
     ============================================================ */
-  
-    async function finalizeRewards(outcome) {
-      if (outcome !== "victory") return;
-  
+    
+    async function finalizeRewards(result) {
+      // result = { outcome, xp, gold, loot, ... }
+      if (!result || result.outcome !== "victory") return result;
+    
       const p = PlayerStorage.load(username);
-      if (!p) return;
-  
-      // Placeholder rewards — tune later
-      p.xp = (p.xp || 0) + 10;
-      p.gold = (p.gold || 0) + 5;
-  
+      if (!p) return result;
+    
+      // 1. Apply XP + Gold
+      p.xp = (p.xp || 0) + (result.xp || 0);
+      p.gold = (p.gold || 0) + (result.gold || 0);
+    
+      // 2. Merge LOOT into inventory
+      if (Array.isArray(result.loot) && result.loot.length > 0) {
+        if (!Array.isArray(p.inventory)) p.inventory = [];
+    
+        for (const item of result.loot) {
+          const existing = p.inventory.find(i => i.name === item.name);
+          if (existing) {
+            existing.qty = (existing.qty || 1) + (item.qty || 1);
+          } else {
+            p.inventory.push({ ...item });
+          }
+        }
+      }
+    
+      // 3. Save locally
       PlayerStorage.save(username, p);
-      await api.savePlayer(username, p); // autoSync inside api
+    
+      // 4. Save to KV
+      await api.savePlayer(username, p);
+    
+      // 5. Return rewards so UI can render loot
+      return result;
     }
   
     /* ============================================================
