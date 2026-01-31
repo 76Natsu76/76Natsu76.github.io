@@ -1,6 +1,6 @@
 // player-storage.js
 // GitHub-native replacement for Code.gs backend.
-// Stores all player data in sessionStorage or localStorage.
+// Stores all player data in localStorage.
 
 export const PlayerStorage = {
   load,
@@ -8,6 +8,57 @@ export const PlayerStorage = {
   updateField,
   appendLog
 };
+
+// ---- INTERNAL: ensure vital fields & migrate legacy names ----
+function ensureVitalFields(p, userId) {
+  if (!p || typeof p !== "object") return p;
+
+  // Legacy → canonical migration
+  // hp / hpMax → hpCurrent / hpMax
+  if (typeof p.hpMax === "number") {
+    // keep existing hpMax
+  } else if (typeof p.maxhp === "number") {
+    p.hpMax = p.maxhp;
+  } else {
+    p.hpMax = 20;
+  }
+
+  if (typeof p.hpCurrent === "number") {
+    // keep existing
+  } else if (typeof p.hp === "number") {
+    p.hpCurrent = p.hp;
+  } else {
+    p.hpCurrent = p.hpMax;
+  }
+
+  // mp / maxmp → mana / manaMax
+  if (typeof p.manaMax === "number") {
+    // keep existing
+  } else if (typeof p.maxmp === "number") {
+    p.manaMax = p.maxmp;
+  } else {
+    p.manaMax = 10;
+  }
+
+  if (typeof p.mana === "number") {
+    // keep existing
+  } else if (typeof p.mp === "number") {
+    p.mana = p.mp;
+  } else {
+    p.mana = p.manaMax;
+  }
+
+  // Basic identity defaults
+  if (!p.id) p.id = userId;
+  if (!p.name) p.name = userId;
+
+  // Ensure arrays/objects exist
+  if (!Array.isArray(p.inventory)) p.inventory = [];
+  if (typeof p.equipment !== "object" || p.equipment === null) p.equipment = {};
+  if (!Array.isArray(p.logs)) p.logs = [];
+
+  return p;
+}
 
 // Load player from localStorage or create new
 function load(userId) {
@@ -26,28 +77,34 @@ function load(userId) {
       console.warn("PlayerStorage.load: Parsed data invalid for", key, parsed);
       return createNewPlayer(userId);
     }
-    return parsed;
+
+    const normalized = ensureVitalFields(parsed, userId);
+    save(userId, normalized); // persist migration
+    return normalized;
   } catch (e) {
     console.error("PlayerStorage.load: JSON parse failed for", key, raw, e);
     return createNewPlayer(userId);
   }
 }
 
-// Create a brand-new player object
+// Create a brand-new player object (canonical fields)
 function createNewPlayer(userId) {
-  const newPlayer = {
-    id: userId,
-    name: userId,
-    level: 1,
-    hp: 20,
-    hpMax: 20,
-    mp: 10,
-    maxmp: 10,
-    gold: 0,
-    inventory: [],
-    equipment: {},
-    logs: []
-  };
+  const newPlayer = ensureVitalFields(
+    {
+      id: userId,
+      name: userId,
+      level: 1,
+      hpMax: 20,
+      hpCurrent: 20,
+      manaMax: 10,
+      mana: 10,
+      gold: 0,
+      inventory: [],
+      equipment: {},
+      logs: []
+    },
+    userId
+  );
 
   save(userId, newPlayer);
   return newPlayer;
