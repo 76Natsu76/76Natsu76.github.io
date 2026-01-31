@@ -180,21 +180,46 @@
     import { PlayerStorage } from "./player-storage.js";
 
     (async () => {
-      const session = await requireSession();
-      if (!session || !session.username) {
+      // Match landing/world-map pattern: requireSession populates window.syncState
+      await requireSession();
+      const { local, remote, conflict, username } = window.syncState || {};
+
+      if (!username) {
         document.getElementById("usernameDisplay").textContent = "No user logged in";
         document.getElementById("inventoryContainer").textContent = "No active session.";
         return;
       }
 
-      const username = session.username;
       document.getElementById("usernameDisplay").textContent =
         "Logged in as: " + username;
 
-      let player = PlayerStorage.load(username);
+      // Resolve player using same conflict logic as other pages
+      let rawPlayer = null;
+      if (conflict === "remote-only") rawPlayer = remote;
+      else if (conflict === "local-only") rawPlayer = local;
+      else if (conflict === "match") rawPlayer = local || remote;
+      else if (conflict === "conflict") rawPlayer = remote || local;
+      else rawPlayer = local || remote;
+
+      // Fallback to PlayerStorage if syncState is empty
+      if (!rawPlayer) {
+        const fallback = PlayerStorage.load(username);
+        if (fallback) rawPlayer = fallback;
+      }
+
+      if (!rawPlayer) {
+        document.getElementById("inventoryContainer").textContent =
+          "No player data found. Visit the landing page first.";
+        return;
+      }
+
+      // Cache resolved player locally (keeps everything consistent)
+      PlayerStorage.save(username, rawPlayer);
+
+      let player = rawPlayer;
 
       function loadInventory() {
-        player = PlayerStorage.load(username);
+        player = PlayerStorage.load(username) || rawPlayer;
         renderInventory(player);
       }
 
@@ -293,34 +318,32 @@
                 items.length === 0
                   ? "<div>No items.</div>"
                   : items
-                      .map(
-                        item => {
-                          const qty = item.quantity ?? item.qty ?? 1;
-                          const rarity = (item.rarity || "common").toLowerCase();
-                          const icon = item.icon || "/assets/items/default.png";
-                          return `
-                            <div class="item-card rarity-${rarity}">
-                              <img class="item-icon" src="${icon}">
-                              <div class="item-info">
-                                <div class="item-name">${item.name}</div>
-                                <div class="item-qty">x${qty}</div>
-                              </div>
-                              <div class="item-actions">
-                                ${
-                                  item.slot && item.id
-                                    ? `<button onclick="equipItem('${item.id}')">Equip</button>`
-                                    : ""
-                                }
-                                ${
-                                  allowUse && item.id
-                                    ? `<button onclick="useItem('${item.id}')">Use</button>`
-                                    : ""
-                                }
-                              </div>
+                      .map(item => {
+                        const qty = item.quantity ?? item.qty ?? 1;
+                        const rarity = (item.rarity || "common").toLowerCase();
+                        const icon = item.icon || "/assets/items/default.png";
+                        return `
+                          <div class="item-card rarity-${rarity}">
+                            <img class="item-icon" src="${icon}">
+                            <div class="item-info">
+                              <div class="item-name">${item.name}</div>
+                              <div class="item-qty">x${qty}</div>
                             </div>
-                          `;
-                        }
-                      )
+                            <div class="item-actions">
+                              ${
+                                item.slot && item.id
+                                  ? `<button onclick="equipItem('${item.id}')">Equip</button>`
+                                  : ""
+                              }
+                              ${
+                                allowUse && item.id
+                                  ? `<button onclick="useItem('${item.id}')">Use</button>`
+                                  : ""
+                              }
+                            </div>
+                          </div>
+                        `;
+                      })
                       .join("")
               }
             </div>
