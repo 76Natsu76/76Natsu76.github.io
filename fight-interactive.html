@@ -1645,47 +1645,50 @@
        END COMBAT / REWARDS
     ============================================================ */
   
-    function endCombat(outcome) {
+    function endCombat(outcome, rewards = null) {
       hideActionPanel();
-  
+    
       const rewardPanel = document.createElement("div");
       rewardPanel.className = "reward-panel";
-  
+    
       let lootHtml = "";
-  
+    
       if (outcome === "victory") {
+        // Build loot HTML
+        let lootList = "No loot";
+    
+        if (rewards && Array.isArray(rewards.loot) && rewards.loot.length > 0) {
+          lootList = rewards.loot
+            .map(item => `<div>${item.name} x${item.qty || 1}</div>`)
+            .join("");
+        }
+    
         lootHtml = `
           <h2>Victory!</h2>
           <p>You defeated ${combat.enemyState.name}!</p>
-          <div class="loot-box">Loot goes here…</div>
+          <div class="loot-box">${lootList}</div>
           <button class="btn" onclick="continueExploring()">Continue Exploring</button>
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
-      } else if (outcome === "defeat") {
+      } 
+      else if (outcome === "defeat") {
         lootHtml = `
           <h2>Defeat…</h2>
           <p>You were defeated by ${combat.enemyState.name}.</p>
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
-      } else {
+      } 
+      else {
         lootHtml = `
           <h2>Battle Over</h2>
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
       }
-  
+    
       rewardPanel.innerHTML = lootHtml;
       document.body.appendChild(rewardPanel);
     }
-  
-    function continueExploring() {
-      window.location.href = "world-map.html";
-    }
-  
-    function goToMap() {
-      window.location.href = "world-map.html";
-    }
-  
+
     /* ============================================================
        HELPERS
     ============================================================ */
