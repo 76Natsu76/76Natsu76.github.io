@@ -12,21 +12,9 @@
       padding:24px;
     }
 
-    h1 {
-      color:#7fffd4;
-      margin-bottom:4px;
-    }
-
-    #usernameDisplay {
-      opacity:0.8;
-      margin-bottom:6px;
-    }
-
-    #syncIndicator {
-      font-size:13px;
-      opacity:0.7;
-      margin-bottom:16px;
-    }
+    h1 { color:#7fffd4; margin-bottom:4px; }
+    #usernameDisplay { opacity:0.8; margin-bottom:6px; }
+    #syncIndicator { font-size:13px; opacity:0.7; margin-bottom:16px; }
 
     .btn {
       margin-top:16px;
@@ -39,12 +27,8 @@
       width:100%;
       text-align:center;
     }
+    .btn:hover { background:#222832; }
 
-    .btn:hover {
-      background:#222832;
-    }
-
-    /* Collapsible sections */
     .section {
       margin-top:24px;
       padding:16px;
@@ -52,7 +36,6 @@
       border-radius:8px;
       border:1px solid #262a36;
     }
-
     .section h2 {
       margin-top:0;
       font-size:18px;
@@ -62,24 +45,11 @@
       justify-content:space-between;
       align-items:center;
     }
+    .collapse-arrow { font-size:16px; opacity:0.7; transition:0.2s; }
+    .collapsed .collapse-arrow { transform:rotate(-90deg); }
+    .collapsed .section-content { display:none; }
 
-    .collapse-arrow {
-      font-size:16px;
-      opacity:0.7;
-      transition:0.2s;
-    }
-
-    .collapsed .collapse-arrow {
-      transform:rotate(-90deg);
-    }
-
-    .collapsed .section-content {
-      display:none;
-    }
-
-    /* Item cards */
-    .item-card,
-    .equipment-card {
+    .item-card, .equipment-card {
       padding:10px;
       margin:8px 0;
       background:#1a1d24;
@@ -90,11 +60,7 @@
       gap:12px;
       position:relative;
     }
-
-    .item-card:hover,
-    .equipment-card:hover {
-      background:#222832;
-    }
+    .item-card:hover, .equipment-card:hover { background:#222832; }
 
     .item-icon {
       width:48px;
@@ -104,20 +70,9 @@
       object-fit:cover;
     }
 
-    .item-info {
-      flex-grow:1;
-    }
-
-    .item-name {
-      font-weight:600;
-      font-size:15px;
-    }
-
-    .item-qty {
-      opacity:0.8;
-      font-size:13px;
-      margin-top:4px;
-    }
+    .item-info { flex-grow:1; }
+    .item-name { font-weight:600; font-size:15px; }
+    .item-qty { opacity:0.8; font-size:13px; margin-top:4px; }
 
     .item-actions button {
       padding:6px 10px;
@@ -129,32 +84,8 @@
       font-size:12px;
       margin-left:6px;
     }
+    .item-actions button:hover { background:#222832; }
 
-    .item-actions button:hover {
-      background:#222832;
-    }
-
-    /* Tooltip */
-    .tooltip {
-      display:none;
-      position:absolute;
-      left:10px;
-      top:100%;
-      background:#11141c;
-      border:1px solid #262a36;
-      padding:10px;
-      border-radius:6px;
-      width:260px;
-      z-index:1000;
-      font-size:13px;
-    }
-
-    .item-card:hover .tooltip,
-    .equipment-card:hover .tooltip {
-      display:block;
-    }
-
-    /* Rarity glows */
     .rarity-common { box-shadow:0 0 6px #bfbfbf55; }
     .rarity-uncommon { box-shadow:0 0 8px #7fff7f88; }
     .rarity-rare { box-shadow:0 0 8px #7fcfff88; }
@@ -176,70 +107,100 @@
   <button class="btn" onclick="goToMap()">World Map</button>
 
   <script type="module">
+    import { PlayerStorage } from "./player-storage.js";
+
     (async () => {
-      const { requireSession } = await import("./session-guard.js");
-      const session = requireSession();
-      if (!session) {
-        document.getElementById("inventoryContainer").textContent =
-          "No active session.";
-        return;
-      }
-    
-      const username = session.username;
+      const username = localStorage.getItem("username");
       document.getElementById("usernameDisplay").textContent =
         username ? "Logged in as: " + username : "No user logged in";
-    
-      let player = JSON.parse(localStorage.getItem("player") || "{}");
-    
+
+      let player = PlayerStorage.load(username) ||
+                   JSON.parse(localStorage.getItem("player") || "{}");
+
+      normalizeInventory(player);
+      savePlayer(player);
+
       loadInventory();
-    
+
       function refreshInventory() {
         loadInventory();
         document.getElementById("syncIndicator").textContent = "Local Save ✔";
       }
-    
+
       function loadInventory() {
-        player = JSON.parse(localStorage.getItem("player") || "{}");
+        player = PlayerStorage.load(username) ||
+                 JSON.parse(localStorage.getItem("player") || "{}");
+
+        normalizeInventory(player);
+        savePlayer(player);
+
         renderInventory(player);
       }
-    
-      // ... keep the rest of your functions exactly as-is ..
-  
+
+      function savePlayer(p) {
+        localStorage.setItem("player", JSON.stringify(p));
+        PlayerStorage.save(username, p);
+      }
+
+      /* ------------------------------
+         NORMALIZE OLD + NEW ITEMS
+      ------------------------------ */
+      function normalizeInventory(p) {
+        if (!Array.isArray(p.inventory)) p.inventory = [];
+
+        p.inventory = p.inventory.map(item => {
+          // Already correct format
+          if (item.id && item.quantity !== undefined && item.type) return item;
+
+          return {
+            id: crypto.randomUUID(),
+            name: item.name,
+            quantity: item.quantity ?? item.qty ?? 1,
+            rarity: item.rarity ?? "common",
+            type: inferItemType(item.name),
+            icon: "/assets/items/default.png"
+          };
+        });
+      }
+
+      function inferItemType(name) {
+        const n = name.toLowerCase();
+        if (n.includes("meat") || n.includes("herb") || n.includes("potion")) return "consumable";
+        if (n.includes("pelt") || n.includes("ore") || n.includes("bark") || n.includes("leaf")) return "material";
+        if (n.includes("token") || n.includes("trophy") || n.includes("map")) return "quest";
+        return "misc";
+      }
+
+      /* ------------------------------
+         RENDERING
+      ------------------------------ */
       function renderInventory(p) {
         const container = document.getElementById("inventoryContainer");
         const out = [];
-    
+
         const consumables = [];
         const materials = [];
         const quest = [];
         const misc = [];
-    
-        for (const item of p.inventory || []) {
+
+        for (const item of p.inventory) {
           switch (item.type) {
-            case "consumable":
-              consumables.push(item);
-              break;
-            case "material":
-              materials.push(item);
-              break;
-            case "quest":
-              quest.push(item);
-              break;
-            default:
-              misc.push(item);
-              break;
+            case "consumable": consumables.push(item); break;
+            case "material": materials.push(item); break;
+            case "quest": quest.push(item); break;
+            default: misc.push(item); break;
           }
         }
-    
+
         out.push(renderEquipment(p));
         out.push(renderCategory("Consumables", consumables, true));
         out.push(renderCategory("Materials", materials, false));
         out.push(renderCategory("Quest Items", quest, false));
         out.push(renderCategory("Misc", misc, false));
-    
+
         container.innerHTML = out.join("");
       }
-    
+
       function renderEquipment(p) {
         return `
           <div class="section collapsible">
@@ -249,20 +210,13 @@
             <div class="section-content">
               ${
                 Object.entries(p.equipment || {})
-                  .map(
-                    ([slot, item]) => `
-                    <div class="equipment-card rarity-${(
-                      item?.rarity || "common"
-                    ).toLowerCase()}">
-                      <img class="item-icon" src="${
-                        item?.icon || "/assets/items/default.png"
-                      }">
-    
+                  .map(([slot, item]) => `
+                    <div class="equipment-card rarity-${(item?.rarity || "common").toLowerCase()}">
+                      <img class="item-icon" src="${item?.icon || "/assets/items/default.png"}">
                       <div class="item-info">
                         <div class="item-name">${item ? item.name : "—"}</div>
                         <div class="item-qty">${format(slot)}</div>
                       </div>
-    
                       ${
                         item
                           ? `<div class="item-actions">
@@ -271,15 +225,14 @@
                           : ""
                       }
                     </div>
-                  `
-                  )
+                  `)
                   .join("")
               }
             </div>
           </div>
         `;
       }
-    
+
       function renderCategory(title, items, allowUse) {
         return `
           <div class="section collapsible">
@@ -290,84 +243,65 @@
               ${
                 items.length === 0
                   ? "<div>No items.</div>"
-                  : items
-                      .map(
-                        item => `
-                        <div class="item-card rarity-${(
-                          item.rarity || "common"
-                        ).toLowerCase()}">
-                          <img class="item-icon" src="${
-                            item.icon || "/assets/items/default.png"
-                          }">
-    
+                  : items.map(item => `
+                        <div class="item-card rarity-${(item.rarity || "common").toLowerCase()}">
+                          <img class="item-icon" src="${item.icon}">
                           <div class="item-info">
                             <div class="item-name">${item.name}</div>
                             <div class="item-qty">x${item.quantity}</div>
                           </div>
-    
                           <div class="item-actions">
-                            ${
-                              item.slot
-                                ? `<button onclick="equipItem('${item.id}')">Equip</button>`
-                                : ""
-                            }
-                            ${
-                              allowUse
-                                ? `<button onclick="useItem('${item.id}')">Use</button>`
-                                : ""
-                            }
+                            ${item.slot ? `<button onclick="equipItem('${item.id}')">Equip</button>` : ""}
+                            ${allowUse ? `<button onclick="useItem('${item.id}')">Use</button>` : ""}
                           </div>
                         </div>
-                      `
-                      )
-                      .join("")
+                      `).join("")
               }
             </div>
           </div>
         `;
       }
-    
+
+      /* ------------------------------
+         ITEM ACTIONS
+      ------------------------------ */
       function useItem(itemId) {
         const item = player.inventory.find(i => i.id === itemId);
         if (!item) return;
-    
+
         item.quantity -= 1;
         if (item.quantity <= 0) {
           player.inventory = player.inventory.filter(i => i.id !== itemId);
         }
-    
-        localStorage.setItem("player", JSON.stringify(player));
+
+        savePlayer(player);
         refreshInventory();
       }
-    
+
       function equipItem(itemId) {
         const item = player.inventory.find(i => i.id === itemId);
         if (!item || !item.slot) return;
-    
+
         player.equipment[item.slot] = item;
-    
-        localStorage.setItem("player", JSON.stringify(player));
+
+        savePlayer(player);
         refreshInventory();
       }
-    
+
       function unequipItem(slot) {
         delete player.equipment[slot];
-    
-        localStorage.setItem("player", JSON.stringify(player));
+        savePlayer(player);
         refreshInventory();
       }
-    
+
       function toggleSection(header) {
         header.parentElement.classList.toggle("collapsed");
       }
-    
+
       function format(str) {
-        return String(str)
-          .toLowerCase()
-          .replace(/_/g, " ")
-          .replace(/\b\w/g, c => c.toUpperCase());
+        return String(str).toLowerCase().replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
       }
-    
+
       window.goToCharacter = () => (window.location.href = "character.html");
       window.goToMap = () => (window.location.href = "world-map.html");
     })();
