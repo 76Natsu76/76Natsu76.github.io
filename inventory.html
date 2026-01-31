@@ -178,6 +178,7 @@
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
+    import { ITEM_DEFINITIONS } from "./item-definitions.js";
 
     (async () => {
       // Match landing/world-map pattern: requireSession populates window.syncState
@@ -233,15 +234,41 @@
 
       loadInventory();
 
+      function sortItems(items) {
+        const rarityOrder = {
+          common: 1,
+          uncommon: 2,
+          rare: 3,
+          epic: 4,
+          legendary: 5,
+          mythic: 6
+        };
+      
+        return items.sort((a, b) => {
+          const rA = rarityOrder[a.rarity?.toLowerCase()] || 0;
+          const rB = rarityOrder[b.rarity?.toLowerCase()] || 0;
+      
+          if (rA !== rB) return rA - rB;
+      
+          const nameA = a.name.toLowerCase();
+          const nameB = b.name.toLowerCase();
+          if (nameA !== nameB) return nameA.localeCompare(nameB);
+      
+          const qA = a.quantity ?? a.qty ?? 1;
+          const qB = b.quantity ?? b.qty ?? 1;
+          return qB - qA;
+        });
+      }
+
       function renderInventory(p) {
         const container = document.getElementById("inventoryContainer");
         const out = [];
 
-        const consumables = [];
-        const materials = [];
-        const quest = [];
-        const misc = [];
-
+        const consumables = sortItems(consumables);
+        const materials = sortItems(materials);
+        const quest = sortItems(quest);
+        const misc = sortItems(misc);
+        
         for (const item of p.inventory || []) {
           const type = item.type || "misc";
           switch (type) {
@@ -270,43 +297,64 @@
       }
 
       function renderEquipment(p) {
+        const groups = {
+          weapon: [],
+          armor: [],
+          accessory: [],
+          other: []
+        };
+      
+        for (const [slot, item] of Object.entries(p.equipment || {})) {
+          if (groups[slot]) groups[slot].push({ slot, item });
+          else groups.other.push({ slot, item });
+        }
+      
         return `
           <div class="section collapsible">
             <h2 onclick="toggleSection(this)">
               Equipment <span class="collapse-arrow">▼</span>
             </h2>
             <div class="section-content">
-              ${
-                Object.entries(p.equipment || {})
-                  .map(
-                    ([slot, item]) => `
-                    <div class="equipment-card rarity-${(
-                      item?.rarity || "common"
-                    ).toLowerCase()}">
-                      <img class="item-icon" src="${
-                        item?.icon || "/assets/items/default.png"
-                      }">
-                      <div class="item-info">
-                        <div class="item-name">${item ? item.name : "—"}</div>
-                        <div class="item-qty">${format(slot)}</div>
-                      </div>
-                      ${
-                        item
-                          ? `<div class="item-actions">
-                               <button onclick="unequipItem('${slot}')">Unequip</button>
-                             </div>`
-                          : ""
-                      }
-                    </div>
-                  `
-                  )
-                  .join("")
-              }
+      
+              ${renderEquipGroup("Weapons", groups.weapon)}
+              ${renderEquipGroup("Armor", groups.armor)}
+              ${renderEquipGroup("Accessories", groups.accessory)}
+              ${groups.other.length ? renderEquipGroup("Other", groups.other) : ""}
+      
             </div>
           </div>
         `;
       }
 
+      function renderEquipGroup(title, items) {
+        if (!items.length) return "";
+      
+        return `
+          <div class="subsection">
+            <h3 style="margin:10px 0 6px; color:#c0faff;">${title}</h3>
+            ${items
+              .map(({ slot, item }) => {
+                const rarity = (item?.rarity || "common").toLowerCase();
+                const icon = item?.icon || "/assets/items/default.png";
+      
+                return `
+                  <div class="equipment-card rarity-${rarity}">
+                    <img class="item-icon" src="${icon}">
+                    <div class="item-info">
+                      <div class="item-name">${item.name}</div>
+                      <div class="item-qty">${format(slot)}</div>
+                    </div>
+                    <div class="item-actions">
+                      <button onclick="unequipItem('${slot}')">Unequip</button>
+                    </div>
+                  </div>
+                `;
+              })
+              .join("")}
+          </div>
+        `;
+      }
+      
       function renderCategory(title, items, allowUse) {
         return `
           <div class="section collapsible">
@@ -321,25 +369,27 @@
                       .map(item => {
                         const qty = item.quantity ?? item.qty ?? 1;
                         const rarity = (item.rarity || "common").toLowerCase();
-                        const icon = item.icon || "/assets/items/default.png";
+                        const icon =
+                          ITEM_DEFINITIONS[item.name]?.icon ||
+                          item.icon ||
+                          "/assets/items/default.png";
+
                         return `
                           <div class="item-card rarity-${rarity}">
                             <img class="item-icon" src="${icon}">
+                            
                             <div class="item-info">
                               <div class="item-name">${item.name}</div>
                               <div class="item-qty">x${qty}</div>
                             </div>
+                          
+                            <div class="tooltip">
+                              ${ITEM_DEFINITIONS[item.name]?.description || "No description available."}
+                            </div>
+                          
                             <div class="item-actions">
-                              ${
-                                item.slot && item.id
-                                  ? `<button onclick="equipItem('${item.id}')">Equip</button>`
-                                  : ""
-                              }
-                              ${
-                                allowUse && item.id
-                                  ? `<button onclick="useItem('${item.id}')">Use</button>`
-                                  : ""
-                              }
+                              ${item.slot ? `<button onclick="equipItem('${item.id}')">Equip</button>` : ""}
+                              ${allowUse ? `<button onclick="useItem('${item.id}')">Use</button>` : ""}
                             </div>
                           </div>
                         `;
