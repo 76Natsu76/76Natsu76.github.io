@@ -3,10 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <title>Dungeon Failed</title>
+
   <style>
-    body { background:#0d0f14; color:#e8e8e8; font-family:system-ui; padding:24px; }
-    .box { background:#14171f; border:1px solid #333; padding:20px; border-radius:8px; }
-    .btn { padding:10px 14px; border-radius:6px; border:1px solid #444; background:#1a1d24; color:#eee; cursor:pointer; width:100%; margin-top:12px; }
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+      text-align:center;
+    }
+    .summary-box {
+      background:#14171f;
+      border:1px solid #333;
+      padding:24px;
+      border-radius:10px;
+      max-width:500px;
+      margin:40px auto;
+    }
+    .btn {
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      margin-top:12px;
+      width:100%;
+    }
     .btn:hover { background:#222832; }
   </style>
 </head>
@@ -14,12 +37,13 @@
 <body>
 
   <h1>Dungeon Failed</h1>
-  <div class="box">
-    <p>You were defeated inside the dungeon.</p>
-    <p>Your run has ended.</p>
-  </div>
+  <div id="usernameDisplay"></div>
 
-  <button class="btn" onclick="goToTown()">Return to Town</button>
+  <div id="summary" class="summary-box">
+    <p>You were defeated...</p>
+    <button class="btn" onclick="retry()">Retry Dungeon</button>
+    <button class="btn" onclick="town()">Return to Town</button>
+  </div>
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
@@ -29,10 +53,20 @@
     const { username } = window.syncState;
 
     const player = PlayerStorage.load(username);
-    player.activeDungeonRun = null;
-    PlayerStorage.save(username, player);
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
 
-    window.goToTown = () => window.location.href = "town.html";
+    window.retry = () => {
+      player.activeDungeonRun = null;
+      PlayerStorage.save(username, player);
+      window.location.href = "dungeon-select.html";
+    };
+
+    window.town = () => {
+      player.activeDungeonRun = null;
+      PlayerStorage.save(username, player);
+      window.location.href = "town.html";
+    };
   </script>
 
 </body>
