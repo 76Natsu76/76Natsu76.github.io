@@ -1,6 +1,6 @@
 // merchant-inventory.js
 
-import { ITEM_REGISTRY } from "./item-registry.js";
+import { ITEMS } from "./items.js";
 import { weightedRandom } from "./weighted.js";
 
 /* ============================================================
