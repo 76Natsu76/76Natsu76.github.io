@@ -1,5 +1,6 @@
 // profession-loot.js
-// Adapter layer that extracts loot from PROFESSION_DEFINITIONS
+// Adapter layer that extracts loot from PROFESSION_DEFINITIONS.
+// This keeps profession loot centralized and future-proof.
 
 import { PROFESSION_DEFINITIONS } from "./profession-definitions.js";
 
@@ -7,13 +8,16 @@ export const professionLoot = {};
 
 for (const key in PROFESSION_DEFINITIONS) {
   const def = PROFESSION_DEFINITIONS[key];
-  if (!def.lootKit && !def.lootTable) continue;
+  const lower = key.toLowerCase();
 
-  professionLoot[key.toLowerCase()] = {
-    weapons: def.lootKit?.weapons || [],
-    armor: def.lootKit?.armor || [],
-    consumables: def.lootKit?.consumables || [],
-    misc: def.lootKit?.misc || [],
+  // Normalize lootKit structure
+  const kit = def.lootKit || {};
+
+  professionLoot[lower] = {
+    weapons: kit.weapons || [],
+    armor: kit.armor || [],
+    consumables: kit.consumables || [],
+    misc: kit.misc || [],
     table: def.lootTable || {}
   };
 }
