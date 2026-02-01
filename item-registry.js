@@ -2,7 +2,7 @@
 // Canonical loot + item access layer
 
 import { ITEMS as items} from "./items.js";
-import { LOOT_TABLES as lootTables } from "./loot-tables.js";
+import { LOOT_TABLES as lootTables } from "./loot-table.js";
 import { professionLoot } from "./profession-loot.js";
 import { biomeLoot } from "./biome-loot.js";
 import { REGION_LOOT_TABLES as regionLoot } from "./region-loot-tables.js";
