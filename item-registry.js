@@ -5,7 +5,8 @@ import { items } from "./items.js";
 import { lootTables } from "./loot-tables.js";
 import { professionLoot } from "./profession-loot.js";
 import { biomeLoot } from "./biome-loot.js";
-import { regionLoot } from "./region-loot.js";
+import { regionLoot } from "./region-loot-tables.js";
+import { ENEMY_VARIANTS } from "./enemy-variants.js";
 import { enemyLootConfig } from "./enemy-loot-config.js";
 
 // -----------------------------
