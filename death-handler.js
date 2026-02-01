@@ -1,17 +1,46 @@
-function pickWeightedRandomItem(items) {
-  const weights = {
-    common: 60,
-    uncommon: 25,
-    rare: 10,
-    epic: 4,
-    legendary: 1,
-    mythic: 0.2,
-    artifact: 0.05
-  };
+// death-handler.js
 
+import { PlayerStorage } from "./player-storage.js";
+import { api } from "./api.js";
+
+/* ============================
+   RARITY WEIGHTS
+============================ */
+const RARITY_WEIGHTS = {
+  common: 60,
+  uncommon: 25,
+  rare: 10,
+  epic: 4,
+  legendary: 1,
+  mythic: 0.2,
+  artifact: 0.05
+};
+
+/* ============================
+   HELPERS
+============================ */
+function buildEligibleLossPool(player) {
+  const equippedIds = Object.values(player.equipment || {})
+    .filter(eq => eq)
+    .map(eq => eq.id);
+
+  return (player.inventory || []).filter(item => {
+    if (!item) return false;
+
+    // Exclude equipped
+    if (equippedIds.includes(item.id)) return false;
+
+    // Exclude critical quest items
+    if (item.isQuestCritical) return false;
+
+    return true;
+  });
+}
+
+function pickWeightedRandomItem(items) {
   const pool = items.map(item => ({
     item,
-    weight: weights[item.rarity || "common"] ?? 1
+    weight: RARITY_WEIGHTS[item.rarity || "common"] ?? 1
   }));
 
   const total = pool.reduce((sum, p) => sum + p.weight, 0);
@@ -32,10 +61,10 @@ function applyItemLoss(player) {
   if (itemsToLose <= 0) return player;
 
   let eligible = buildEligibleLossPool(player);
-  if (eligible.length === 0) return player;
+  if (!eligible.length) return player;
 
   for (let i = 0; i < itemsToLose; i++) {
-    if (eligible.length === 0) break;
+    if (!eligible.length) break;
 
     const chosen = pickWeightedRandomItem(eligible);
 
@@ -50,19 +79,53 @@ function applyItemLoss(player) {
   return player;
 }
 
-function buildEligibleLossPool(player) {
-  const equippedIds = Object.values(player.equipment || {})
-    .filter(eq => eq)
-    .map(eq => eq.id);
+function applyLevelLoss(player) {
+  const currentLevel = player.level || 1;
+  if (currentLevel <= 1) return player;
 
-  return player.inventory.filter(item => {
-    // Exclude equipped items
-    if (equippedIds.includes(item.id)) return false;
+  player.level = currentLevel - 1;
+  player.xp = 0;
+  return player;
+}
 
-    // Exclude critical quest items
-    if (item.isQuestCritical) return false;
+/* ============================
+   RESPAWN STATE
+============================ */
+function applyRespawnState(player) {
+  player.hpCurrent = player.hpMax;
+  player.mana = 0;
+  player.currentRegion = "town";
+  player.justRespawned = true;
+  return player;
+}
 
-    // Everything else is eligible
-    return true;
-  });
+/* ============================
+   PUBLIC API
+============================ */
+
+export async function handleSafeRespawn(username) {
+  const player = PlayerStorage.load(username);
+  if (!player) return;
+
+  applyItemLoss(player);
+  applyRespawnState(player);
+
+  PlayerStorage.save(username, player);
+  await api.savePlayer(username, player);
+
+  // 1-hour lock could be tracked via timestamp if you want later
+  window.location.href = "town.html";
+}
+
+export async function handleRiskyRespawn(username) {
+  const player = PlayerStorage.load(username);
+  if (!player) return;
+
+  applyLevelLoss(player);
+  applyRespawnState(player);
+
+  PlayerStorage.save(username, player);
+  await api.savePlayer(username, player);
+
+  window.location.href = "town.html";
 }
