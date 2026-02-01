@@ -39,7 +39,9 @@ function ensureVitals(p) {
   }
 
   if (!p.flags || typeof p.flags !== "object") p.flags = {};
-
+  if (!p.lastEndlessRun) p.lastEndlessRun = null;
+  if (!p.endlessRecord) p.endlessRecord = null;
+  
   return p;
 }
 
@@ -84,7 +86,9 @@ function createNewPlayer(userId) {
     equipment: {},
     logs: [],
     activeDungeonRun: null,
-    flags: {}
+    flags: {},
+    lastEndlessRun: null,
+    endlessRecord: null
   });
 
   save(userId, newPlayer);
