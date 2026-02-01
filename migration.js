@@ -8,9 +8,9 @@ import { PlayerStorage } from "./player-storage.js";
 // ---------------------------------------------
 import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
 import { RACE_DEFINITIONS } from "./race-definitions.js";
-import { SUBRACE_PROFILES } from "./subrace-stat-profiles.js";
+import { SUBRACE_STAT_PROFILES as SUBRACE_PROFILES } from "./subrace-stat-profiles.js";
 import { PROFESSION_DEFINITIONS } from "./profession-definitions.js";
-import { TALENT_TREES } from "./profession-talent-trees.js";
+import { PROFESSION_TALENT_TREES as TALENT_TREES } from "./profession-talent-trees.js";
 
 // Aliases for readability
 const abilityDefs = ABILITY_DEFINITIONS;
