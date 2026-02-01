@@ -1,7 +1,7 @@
 // item-registry.js
 // Canonical loot + item access layer
 
-import { items } from "./items.js";
+import { ITEMS as items} from "./items.js";
 import { lootTables } from "./loot-tables.js";
 import { professionLoot } from "./profession-loot.js";
 import { biomeLoot } from "./biome-loot.js";
