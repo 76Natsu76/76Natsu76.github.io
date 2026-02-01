@@ -1350,7 +1350,15 @@
             showDeathModal();
             return;
           }
-        
+          if (outcome === "victory" && combat.enemyState.isWorldBoss) {
+            const bossKey = combat.enemyState.bossKey;
+          
+            const worldState = WorldSim.getState();
+            handleBossDefeat(worldState, bossKey);
+            WorldSim.save();
+          
+            addLog(`You have defeated the World Boss: ${bossKey}!`);
+          }
           const rewards = generateRewards(combat.playerState, combat.enemyState, combat.context, outcome);
           const finalRewards = await finalizeRewards(rewards);
         
