@@ -437,31 +437,32 @@
             </h2>
             <div class="section-content">
               ${
-                (p.abilities || [])
-                  .map(a => {
-                    const A = normalizeAbility(a);
-                    return `
-                      <div class="ability-card">
-                        <img class="ability-icon"
-                             src="${A.icon || "/assets/abilities/default.png"}"
-                             onerror="this.src='/assets/abilities/default.png'">
-                        <div>
-                          <strong>${A.name}</strong>
-                          <div class="tooltip">
-                            <strong>${A.name}</strong><br>
-                            ${A.description}<br>
-                            Cooldown: ${A.cooldown}
+                (p.abilities || []).length === 0
+                  ? "<div>No abilities</div>"
+                  : p.abilities
+                      .map(
+                        (a) => `
+                          <div class="ability-card">
+                            <img class="ability-icon"
+                                 src="${a.icon || "/assets/abilities/default.png"}"
+                                 onerror="this.src='/assets/abilities/default.png'">
+                            <div>
+                              <strong>${a.name}</strong>
+                              <div class="tooltip">
+                                <strong>${a.name}</strong><br>
+                                ${a.description}<br>
+                                Cooldown: ${a.cooldown}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    `;
-                  })
-                  .join("")
+                        `
+                      )
+                      .join("")
               }
             </div>
           </div>
         `);
-  
+
         /* ULTIMATE */
         out.push(`
           <div class="section collapsible">
