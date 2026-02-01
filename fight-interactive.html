@@ -1355,7 +1355,7 @@
 
   async function runRound(playerAction) {
     hideActionPanel();
-
+  
     const logs = [];
     const result = engineRunRound(
       combat.playerState,
@@ -1364,130 +1364,150 @@
       playerAction,
       logs
     );
-
+  
     combat.playerState = result.player;
     combat.enemyState = result.enemy;
     combat.context = result.context;
-
+  
     renderLogs(result.logs || logs);
     renderPanels();
-
+  
     const outcome = checkOutcome(combat.playerState, combat.enemyState);
-    if (outcome) {
-      addLog("Combat ended: " + outcome.toUpperCase());
-
-      if (outcome === "defeat") {
-        
-        if (!isEndless) {
-          const p = PlayerStorage.load(username);
-          p.activeDungeonRun = null;
-          PlayerStorage.save(username, p);
-        
-          window.location.href = "dungeon-failed.html";
-          return;
+    if (!outcome) {
+      // No outcome yet — continue or return control
+      if (autoBattle) {
+        if (!autoLoopHandle) {
+          autoLoopHandle = setTimeout(autoLoop, 1000);
         }
-        // If in dungeon, mark run failed (scaffolding)
-        if (combat.context.dungeonRun) {
-          const run = combat.context.dungeonRun;
-          run.state = "failed";
-          const p = PlayerStorage.load(username);
-          if (p) {
-            p.activeDungeonRun = run;
-            PlayerStorage.save(username, p);
-          }
-        }
-
-        showDeathModal();
-        autoBattle = false;
-        if (autoLoopHandle) {
-          clearTimeout(autoLoopHandle);
-          autoLoopHandle = null;
-        }
-        return;
-      }
-
-      // World boss progression
-      if (outcome === "victory" && combat.enemyState.isWorldBoss) {
-        const bossKey = combat.enemyState.bossKey;
-        const worldState = WorldSim.getState();
-        const p = PlayerStorage.load(username);
-        p.flags = p.flags || {};
-        p.flags[`${bossKey}_defeated`] = true;
-        PlayerStorage.save(username, p);
-        handleBossDefeat(worldState, bossKey);
-        WorldSim.save();
-        addLog(`You have defeated the World Boss: ${bossKey}!`);
-      }
-      
-      if (outcome === "victory" && combat.context.dungeonRun) {
-        const p = PlayerStorage.load(username);
-        const run = combat.context.dungeonRun;
-      
-        const isEndless = DungeonEngine.isEndless(run);
-      
-        if (run.state === "boss" && !isEndless) {
-          DungeonEngine.completeDungeon(run);
-          addLog("You have cleared the dungeon!");
-      
-          // 🔹 Record dungeon clear
-          p.dungeonRecords = p.dungeonRecords || {};
-          const rec = p.dungeonRecords[run.dungeonKey] || { clears: 0 };
-          p.lastCompletedDungeonRun = { 
-            dungeonKey: run.dungeonKey, xp: result.xp, 
-            gold: result.gold, items: result.loot || [] 
-          };
-          rec.clears += 1;
-          p.dungeonRecords[run.dungeonKey] = rec;
-        } else {
-          DungeonEngine.completeFloor(run);
-      
-        if (isEndless) {
-          // Save last run summary
-          const p = PlayerStorage.load(username);
-          p.lastEndlessRun = {
-            floor: run.highestFloor || run.currentFloor,
-            score: run.highestFloor || run.currentFloor
-          };
-          p.activeDungeonRun = null;
-          PlayerStorage.save(username, p);
-        
-          window.location.href = "endless-summary.html";
-          return;
-        }
-      
-        if (p) {
-          p.activeDungeonRun = run;
-          PlayerStorage.save(username, p);
-        }
-      }
-      
-      const rewards = generateRewards(
-        combat.playerState,
-        combat.enemyState,
-        combat.context,
-        outcome
-      );
-      const finalRewards = await finalizeRewards(rewards);
-
-      endCombat(finalRewards.outcome, finalRewards);
-      autoBattle = false;
-      if (autoLoopHandle) {
-        clearTimeout(autoLoopHandle);
-        autoLoopHandle = null;
+      } else {
+        showActionPanel();
       }
       return;
     }
-
-    // No outcome yet — continue or return control
-    if (autoBattle) {
-      // Let autoLoop schedule the next action
-      if (!autoLoopHandle) {
-        autoLoopHandle = setTimeout(autoLoop, 1000);
+  
+    // ============================================================
+    // OUTCOME HANDLING
+    // ============================================================
+    addLog("Combat ended: " + outcome.toUpperCase());
+  
+    const p = PlayerStorage.load(username);
+    const run = combat.context.dungeonRun || null;
+    const isEndless = run ? DungeonEngine.isEndless(run) : false;
+  
+    // ============================================================
+    // DEFEAT
+    // ============================================================
+    if (outcome === "defeat") {
+  
+      if (run && !isEndless) {
+        // Normal dungeon defeat → summary page
+        p.activeDungeonRun = null;
+        PlayerStorage.save(username, p);
+        window.location.href = "dungeon-failed.html";
+        return;
       }
-    } else {
-      showActionPanel();
+  
+      if (run && isEndless) {
+        // Endless defeat → summary page
+        p.lastEndlessRun = {
+          floor: run.highestFloor || run.currentFloor,
+          score: run.highestFloor || run.currentFloor
+        };
+        p.activeDungeonRun = null;
+        PlayerStorage.save(username, p);
+        window.location.href = "endless-summary.html";
+        return;
+      }
+  
+      // Non-dungeon defeat → normal death modal
+      showDeathModal();
+      autoBattle = false;
+      if (autoLoopHandle) clearTimeout(autoLoopHandle);
+      return;
     }
+  
+    // ============================================================
+    // WORLD BOSS VICTORY
+    // ============================================================
+    if (combat.enemyState.isWorldBoss) {
+      const bossKey = combat.enemyState.bossKey;
+      const worldState = WorldSim.getState();
+  
+      p.flags = p.flags || {};
+      p.flags[`${bossKey}_defeated`] = true;
+      PlayerStorage.save(username, p);
+  
+      handleBossDefeat(worldState, bossKey);
+      WorldSim.save();
+      addLog(`You have defeated the World Boss: ${bossKey}!`);
+    }
+  
+    // ============================================================
+    // DUNGEON VICTORY
+    // ============================================================
+    if (run) {
+  
+      if (!isEndless && run.state === "boss") {
+        // Normal dungeon final boss
+        DungeonEngine.completeDungeon(run);
+  
+        p.dungeonRecords = p.dungeonRecords || {};
+        const rec = p.dungeonRecords[run.dungeonKey] || { clears: 0 };
+        rec.clears += 1;
+        p.dungeonRecords[run.dungeonKey] = rec;
+  
+        p.lastCompletedDungeonRun = {
+          dungeonKey: run.dungeonKey,
+          xp: result.xp,
+          gold: result.gold,
+          items: result.loot || []
+        };
+  
+        p.activeDungeonRun = null;
+        PlayerStorage.save(username, p);
+  
+        window.location.href = "dungeon-complete.html";
+        return;
+      }
+  
+      if (isEndless) {
+        // Endless victory (any floor)
+        DungeonEngine.completeFloor(run);
+  
+        p.lastEndlessRun = {
+          floor: run.highestFloor || run.currentFloor,
+          score: run.highestFloor || run.currentFloor
+        };
+  
+        p.activeDungeonRun = null;
+        PlayerStorage.save(username, p);
+  
+        window.location.href = "endless-summary.html";
+        return;
+      }
+  
+      // Normal dungeon floor victory
+      DungeonEngine.completeFloor(run);
+      p.activeDungeonRun = run;
+      PlayerStorage.save(username, p);
+    }
+  
+    // ============================================================
+    // NORMAL REWARD FLOW (non-dungeon)
+    // ============================================================
+    const rewards = generateRewards(
+      combat.playerState,
+      combat.enemyState,
+      combat.context,
+      outcome
+    );
+    const finalRewards = await finalizeRewards(rewards);
+  
+    endCombat(finalRewards.outcome, finalRewards);
+    autoBattle = false;
+    if (autoLoopHandle) clearTimeout(autoLoopHandle);
   }
+
 
   /* ============================================================
      FINALIZE REWARDS (LOCAL + KV)
