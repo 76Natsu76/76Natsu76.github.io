@@ -1212,6 +1212,7 @@
   }
 
   function checkOutcome(player, enemy) {
+    if (!player || !enemy) return null;
     if (player.hpCurrent <= 0 && enemy.hpCurrent <= 0) return "draw";
     if (player.hpCurrent <= 0) return "defeat";
     if (enemy.hpCurrent <= 0) return "victory";
@@ -1238,7 +1239,7 @@
   ============================================================ */
 
   function renderPanels() {
-    if (!combat) return;
+    if (!combat || !combat.playerState || !combat.enemyState) return;
     renderPlayerPanel(combat.playerState);
     renderEnemyPanel(combat.enemyState);
     renderStatusIcons(combat.playerState, "playerStatusIcons");
