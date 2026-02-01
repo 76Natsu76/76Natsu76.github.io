@@ -1409,7 +1409,7 @@
         WorldSim.save();
         addLog(`You have defeated the World Boss: ${bossKey}!`);
       }
-
+      
       if (outcome === "victory" && combat.context.dungeonRun) {
         const p = PlayerStorage.load(username);
         const run = combat.context.dungeonRun;
@@ -1417,20 +1417,19 @@
         const isEndless = DungeonEngine.isEndless(run);
       
         if (run.state === "boss" && !isEndless) {
-          // Normal dungeon: final boss
           DungeonEngine.completeDungeon(run);
-          const p = PlayerStorage.load(username);
-          p.flags = p.flags || {};
-          p.flags[`${run.dungeonKey}_cleared`] = true;
-          PlayerStorage.save(username, p);
           addLog("You have cleared the dungeon!");
+      
+          // 🔹 Record dungeon clear
+          p.dungeonRecords = p.dungeonRecords || {};
+          const rec = p.dungeonRecords[run.dungeonKey] || { clears: 0 };
+          rec.clears += 1;
+          p.dungeonRecords[run.dungeonKey] = rec;
         } else {
-          // Endless or normal floor
           DungeonEngine.completeFloor(run);
       
           if (isEndless) {
             addLog(`Endless Abyss: you reach floor ${run.currentFloor}.`);
-            // Persist best record on player
             p.endlessRecord = p.endlessRecord || { highestFloor: 0, score: 0 };
             p.endlessRecord.highestFloor = Math.max(
               p.endlessRecord.highestFloor,
@@ -1447,7 +1446,7 @@
           PlayerStorage.save(username, p);
         }
       }
-
+      
       const rewards = generateRewards(
         combat.playerState,
         combat.enemyState,
