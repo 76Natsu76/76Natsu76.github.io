@@ -14,23 +14,20 @@ export const PlayerStorage = {
 function ensureVitals(p) {
   if (!p) return p;
 
-  // HP
-  if (typeof p.hpMax === "undefined" || p.hpMax === null) {
-    p.hpMax = 20;
-  }
-  if (typeof p.hpCurrent === "undefined" || p.hpCurrent === null) {
+  if (typeof p.hpMax !== "number") p.hpMax = 20;
+
+  if (p.hpCurrent === undefined || p.hpCurrent === null) {
     p.hpCurrent = p.hpMax;
+  } else {
+    p.hpCurrent = Math.min(p.hpCurrent, p.hpMax);
   }
 
-  // MP (canonical)
-  if (typeof p.manaMax === undefined || p.manaMax === null) {
-    if (typeof p.maxmp === "number") p.manaMax = p.maxmp;
-    else p.manaMax = 10;
-  }
+  if (typeof p.manaMax !== "number") p.manaMax = 10;
 
-  if (typeof p.mana === undefined || p.mana === null) {
-    if (typeof p.mp === "number") p.mana = p.mp;
-    else p.mana = p.manaMax;
+  if (p.mana === undefined || p.mana === null) {
+    p.mana = p.manaMax;
+  } else {
+    p.mana = Math.min(p.mana, p.manaMax);
   }
 
   // Remove legacy fields so they never overwrite again
