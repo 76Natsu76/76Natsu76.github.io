@@ -126,3 +126,20 @@ export async function initShopPage() {
   await loadMerchantFromDOM();
   await renderInventoryPanel();
 }
+
+export function renderGlobalMerchant(worldState) {
+  const m = worldState.globalMerchant;
+  const remaining = Math.ceil((m.nextRotation - Date.now()) / 60000);
+
+  return `
+    <div class="merchant-header">
+      <h2>${m.type.toUpperCase()} Merchant</h2>
+      <p>Personality: ${m.personality}</p>
+      <p>Next rotation in: ${remaining} minutes</p>
+    </div>
+
+    <div class="merchant-items">
+      ${m.inventory.map(renderItem).join("")}
+    </div>
+  `;
+}
