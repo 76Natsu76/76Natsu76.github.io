@@ -1377,6 +1377,15 @@
       addLog("Combat ended: " + outcome.toUpperCase());
 
       if (outcome === "defeat") {
+        
+        if (!isEndless) {
+          const p = PlayerStorage.load(username);
+          p.activeDungeonRun = null;
+          PlayerStorage.save(username, p);
+        
+          window.location.href = "dungeon-failed.html";
+          return;
+        }
         // If in dungeon, mark run failed (scaffolding)
         if (combat.context.dungeonRun) {
           const run = combat.context.dungeonRun;
@@ -1423,6 +1432,10 @@
           // 🔹 Record dungeon clear
           p.dungeonRecords = p.dungeonRecords || {};
           const rec = p.dungeonRecords[run.dungeonKey] || { clears: 0 };
+          p.lastCompletedDungeonRun = { 
+            dungeonKey: run.dungeonKey, xp: result.xp, 
+            gold: result.gold, items: result.loot || [] 
+          };
           rec.clears += 1;
           p.dungeonRecords[run.dungeonKey] = rec;
         } else {
