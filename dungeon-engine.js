@@ -1,4 +1,3 @@
-// dungeon-engine.js
 import { DUNGEONS } from "./dungeons.js";
 import { DUNGEON_EVENTS } from "./dungeon-events.js";
 import { DUNGEON_LOOT_TABLES } from "./dungeon-loot-tables.js";
@@ -7,41 +6,54 @@ import { rollLootTable } from "./loot-tables.js";
 import { resolveEnemy } from "./resolveEnemy.js";
 
 export const DungeonEngine = {
-  /* -----------------------------
-     RUN LIFECYCLE
-  ----------------------------- */
+  // --- RUN LIFECYCLE --- //
   createRun(player, dungeonKey) {
     const dungeon = DUNGEONS[dungeonKey];
 
-    return {
+    const run = {
       dungeonKey,
       currentFloor: 1,
       state: "exploring",
       modifiers: {
-        ...dungeon.dungeonModifiers
+        ...(dungeon.dungeonModifiers || {})
       },
-      noHealing: !!dungeon.dungeonModifiers.noHealing,
-      doubleLoot: !!dungeon.dungeonModifiers.doubleLoot,
-      enemyScaling: dungeon.dungeonModifiers.enemyScaling || 1.0,
+      noHealing: !!(dungeon.dungeonModifiers && dungeon.dungeonModifiers.noHealing),
+      doubleLoot: !!(dungeon.dungeonModifiers && dungeon.dungeonModifiers.doubleLoot),
+      enemyScaling:
+        (dungeon.dungeonModifiers && dungeon.dungeonModifiers.enemyScaling) || 1.0,
       completed: false,
       failed: false,
       startedAt: Date.now(),
       progress: []
     };
+
+    if (dungeon.type === "endless") {
+      run.highestFloor = 1;
+      run.endlessScore = 0;
+    }
+
+    return run;
+  },
+
+  isEndless(run) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+    return dungeon && dungeon.type === "endless";
   },
 
   getCurrentFloor(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
-    if (DungeonEngine.isEndless(run)) {
-      DungeonEngine.updateEndlessScore(run);
-    }
+    if (!dungeon || dungeon.type === "endless") return null;
     return dungeon.floors[run.currentFloor - 1];
   },
 
-  /* -----------------------------
-     ROOM GENERATION
-  ----------------------------- */
+  //  --- ROOM GENERATION --- //
   generateRoom(run) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+
+    if (dungeon.type === "endless") {
+      return this.generateEndlessRoom(run);
+    }
+
     const floor = this.getCurrentFloor(run);
     const roll = Math.random();
 
@@ -54,9 +66,29 @@ export const DungeonEngine = {
     return { type: "treasure", lootTable: floor.lootTable };
   },
 
-  /* -----------------------------
-     EVENTS
-  ----------------------------- */
+  generateEndlessRoom(run) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+    const floor = run.currentFloor;
+
+    // Boss cadence
+    if (floor % dungeon.megaBossEvery === 0) {
+      return { type: "boss", tier: "mega" };
+    }
+    if (floor % dungeon.bossEvery === 0) {
+      return { type: "boss", tier: "mini" };
+    }
+
+    const roll = Math.random();
+    if (roll < 0.6) {
+      return { type: "encounter", enemies: dungeon.baseEncounterTable };
+    }
+    if (roll < 0.8) {
+      return { type: "event", events: ["rift_anomaly"] };
+    }
+    return { type: "treasure", lootTable: dungeon.baseLootTable };
+  },
+
+  //  --- EVENTS --- //
   resolveEvent(eventKey, player, run, logs) {
     const event = DUNGEON_EVENTS[eventKey];
     if (!event) return;
@@ -80,9 +112,14 @@ export const DungeonEngine = {
         break;
       case "heal":
         if (run.noHealing) {
-          logs.push("A healing force tries to reach you, but the dungeon forbids it.");
+          logs.push(
+            "A healing force tries to reach you, but the dungeon forbids it."
+          );
         } else {
-          player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + effect.value);
+          player.hpCurrent = Math.min(
+            player.hpMax,
+            player.hpCurrent + effect.value
+          );
           logs.push(`You recover ${effect.value} HP.`);
         }
         break;
@@ -100,9 +137,7 @@ export const DungeonEngine = {
     }
   },
 
-  /* -----------------------------
-     TREASURE
-  ----------------------------- */
+  //  --- TREASURE --- //
   resolveTreasure(lootTableKey, run, logs) {
     const table = DUNGEON_LOOT_TABLES[lootTableKey];
     if (!table) return null;
@@ -120,24 +155,39 @@ export const DungeonEngine = {
     return loot;
   },
 
-  /* -----------------------------
-     BOSS
-  ----------------------------- */
+  //  --- BOSS --- //
   generateBoss(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
+
+    if (dungeon.type === "endless") {
+      const tier = run.nextBossTier || "mini";
+      const key =
+        tier === "mega" ? dungeon.megaBossEnemyKey : dungeon.bossEnemyKey;
+      const enemy = resolveEnemy(key);
+      enemy.isDungeonBoss = true;
+      enemy.dungeonKey = run.dungeonKey;
+      return enemy;
+    }
+
     const enemy = resolveEnemy(dungeon.boss.enemyKey);
     enemy.isDungeonBoss = true;
     enemy.dungeonKey = run.dungeonKey;
     return enemy;
   },
 
-  /* -----------------------------
-     FLOOR / DUNGEON PROGRESSION
-  ----------------------------- */
+  //  --- FLOOR / DUNGEON PROGRESSION --- //
   completeFloor(run) {
-    run.currentFloor++;
     const dungeon = DUNGEONS[run.dungeonKey];
 
+    if (dungeon.type === "endless") {
+      run.currentFloor++;
+      run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
+      run.endlessScore = run.highestFloor;
+      run.state = "exploring";
+      return;
+    }
+
+    run.currentFloor++;
     if (run.currentFloor > dungeon.floors.length) {
       run.state = "boss";
     }
@@ -151,128 +201,27 @@ export const DungeonEngine = {
   failDungeon(run) {
     run.failed = true;
     run.state = "failed";
+  },
+
+  applyEndlessScaling(enemy, run) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+    const floor = run.currentFloor;
+
+    const hpMult = Math.pow(dungeon.scaling.enemyHP, floor - 1);
+    const atkMult = Math.pow(dungeon.scaling.enemyATK, floor - 1);
+
+    if (typeof enemy.hp === "number") {
+      enemy.hp = Math.floor(enemy.hp * hpMult);
+    }
+    if (typeof enemy.attack === "number") {
+      enemy.attack = Math.floor(enemy.attack * atkMult);
+    }
+
+    return enemy;
+  },
+
+  updateEndlessScore(run) {
+    run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
+    run.endlessScore = run.highestFloor;
   }
 };
-
-isEndless(state) {
-  const dungeon = DUNGEONS[state.dungeonKey];
-  return dungeon && dungeon.type === "endless";
-},
-
-getCurrentFloor(state) {
-  const dungeon = DUNGEONS[state.dungeonKey];
-  if (!dungeon || dungeon.type === "endless") return null;
-  return dungeon.floors[state.currentFloor - 1];
-},
-
-generateBoss(state) {
-  const dungeon = DUNGEONS[state.dungeonKey];
-
-  if (dungeon.type === "endless") {
-    const tier = state.nextBossTier || "mini";
-    const key =
-      tier === "mega" ? dungeon.megaBossEnemyKey : dungeon.bossEnemyKey;
-    return resolveEnemy(key);
-  }
-
-  return resolveEnemy(dungeon.boss.enemyKey);
-},
-completeFloor(state) {
-  const dungeon = DUNGEONS[state.dungeonKey];
-
-  if (dungeon.type === "endless") {
-    state.currentFloor++;
-    state.highestFloor = Math.max(state.highestFloor || 1, state.currentFloor);
-    state.endlessScore = state.highestFloor;
-    state.state = "exploring";
-    return;
-  }
-
-  state.currentFloor++;
-  if (state.currentFloor > dungeon.floors.length) {
-    state.state = "boss";
-  }
-},
-
-failDungeon(state) {
-  state.state = "failed";
-}
-
-generateRoom(state) {
-  const dungeon = DUNGEONS[state.dungeonKey];
-
-  if (dungeon.type === "endless") {
-    return this.generateEndlessRoom(state);
-  }
-
-  const floor = this.getCurrentFloor(state);
-  const roll = Math.random();
-
-  if (roll < 0.6) {
-    return { type: "encounter", enemies: floor.encounterTable };
-  }
-  if (roll < 0.8) {
-    return { type: "event", events: floor.events };
-  }
-  return { type: "treasure", lootTable: floor.lootTable };
-},
-
-generateEndlessRoom(state) {
-  const dungeon = DUNGEONS[state.dungeonKey];
-  const floor = state.currentFloor;
-
-  // Boss cadence
-  if (floor % dungeon.megaBossEvery === 0) {
-    return { type: "boss", tier: "mega" };
-  }
-  if (floor % dungeon.bossEvery === 0) {
-    return { type: "boss", tier: "mini" };
-  }
-
-  const roll = Math.random();
-  if (roll < 0.6) {
-    return { type: "encounter", enemies: dungeon.baseEncounterTable };
-  }
-  if (roll < 0.8) {
-    return { type: "event", events: ["rift_anomaly"] };
-  }
-  return { type: "treasure", lootTable: dungeon.baseLootTable };
-},
-
-applyEndlessScaling(enemy, run) {
-  const dungeon = DUNGEONS[run.dungeonKey];
-  const floor = run.currentFloor;
-
-  const hpMult = Math.pow(dungeon.scaling.enemyHP, floor - 1);
-  const atkMult = Math.pow(dungeon.scaling.enemyATK, floor - 1);
-
-  enemy.hp = Math.floor(enemy.hp * hpMult);
-  enemy.attack = Math.floor(enemy.attack * atkMult);
-
-  return enemy;
-}
-
-updateEndlessScore(run) {
-  run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
-  run.endlessScore = run.highestFloor;
-}
-
-startDungeon(player, dungeonKey) {
-  const dungeon = DUNGEONS[dungeonKey];
-
-  const state = {
-    dungeonKey,
-    currentFloor: 1,
-    state: "exploring",
-    modifiers: { ...(dungeon.dungeonModifiers || {}) },
-    completed: false,
-    progress: []
-  };
-
-  if (dungeon.type === "endless") {
-    state.highestFloor = 1;
-    state.endlessScore = 0;
-  }
-
-  return state;
-},
