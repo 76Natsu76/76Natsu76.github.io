@@ -1387,7 +1387,7 @@
         const p = PlayerStorage.load(username);
         DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
       }
-      
+    
       // No outcome yet — continue or return control
       if (autoBattle) {
         if (!autoLoopHandle) {
@@ -1415,8 +1415,7 @@
   
       if (run && !isEndless) {
         // Normal dungeon defeat → summary page
-        p.activeDungeonRun = null;
-        PlayerStorage.save(username, p);
+        DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
         window.location.href = "dungeon-failed.html";
         return;
       }
@@ -1427,8 +1426,7 @@
           floor: run.highestFloor || run.currentFloor,
           score: run.highestFloor || run.currentFloor
         };
-        p.activeDungeonRun = null;
-        PlayerStorage.save(username, p);
+        DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
         window.location.href = "endless-summary.html";
         return;
       }
@@ -1477,9 +1475,7 @@
           items: result.loot || []
         };
   
-        p.activeDungeonRun = null;
-        PlayerStorage.save(username, p);
-  
+        DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
         window.location.href = "dungeon-complete.html";
         return;
       }
@@ -1493,9 +1489,7 @@
           score: run.highestFloor || run.currentFloor
         };
   
-        p.activeDungeonRun = null;
-        PlayerStorage.save(username, p);
-  
+        DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
         window.location.href = "endless-summary.html";
         return;
       }
