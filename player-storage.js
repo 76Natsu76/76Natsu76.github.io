@@ -15,8 +15,12 @@ function ensureVitals(p) {
   if (!p) return p;
 
   // HP
-  if (typeof p.hpMax === undefined || p.hpMax === null) p.hpMax = 20;
-  if (typeof p.hpCurrent === undefined || p.hpCurrent === null) p.hpCurrent = p.hpMax;
+  if (typeof p.hpMax === "undefined" || p.hpMax === null) {
+    p.hpMax = 20;
+  }
+  if (typeof p.hpCurrent === "undefined" || p.hpCurrent === null) {
+    p.hpCurrent = p.hpMax;
+  }
 
   // MP (canonical)
   if (typeof p.manaMax === undefined || p.manaMax === null) {
