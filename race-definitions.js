@@ -1,4 +1,4 @@
-export const RACE_DEFINIIONS = {
+export const RACE_DEFINITIONS = {
   "humanoid": {
     "name": "Humanoid",
     "playable": true,
