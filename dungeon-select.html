@@ -89,6 +89,23 @@
       window.location.href = "world-map.html";
     });
 
+    function canEnter(player, dungeon) {
+      const req = dungeon.entryRequirements || {};
+      if (req.minLevel && player.level < req.minLevel) return false;
+      
+      if (req.requiredItems) {
+        for (const item of req.requiredItems) {
+          if (!player.inventory.some(i => i.id === item)) return false;
+        }
+      }
+      if (req.requiredFlags) {
+        for (const flag of req.requiredFlags) {
+          if (!player.flags || !player.flags[flag]) return false;
+        }
+      }
+      return true;
+    }
+
     function goBack() {
       window.location.href = "town.html";
     }
