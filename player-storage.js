@@ -38,6 +38,8 @@ function ensureVitals(p) {
     delete p.activeDungeonRun;
   }
 
+  if (!p.flags || typeof p.flags !== "object") p.flags = {};
+
   return p;
 }
 
@@ -81,7 +83,8 @@ function createNewPlayer(userId) {
     inventory: [],
     equipment: {},
     logs: [],
-    activeDungeonRun: null
+    activeDungeonRun: null,
+    flags: {}
   });
 
   save(userId, newPlayer);
