@@ -2030,15 +2030,16 @@
     const modal = document.getElementById("deathModal");
     modal.classList.remove("hidden");
 
+    // Attach handlers immediately
     const safeBtn = document.getElementById("safeRespawnBtn");
     const riskyBtn = document.getElementById("riskyRespawnBtn");
-
+    
     safeBtn.onclick = async () => {
       safeBtn.disabled = true;
       riskyBtn.disabled = true;
       await handleSafeRespawn(username);
     };
-
+    
     riskyBtn.onclick = async () => {
       safeBtn.disabled = true;
       riskyBtn.disabled = true;
