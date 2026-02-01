@@ -154,26 +154,88 @@ export const DungeonEngine = {
   }
 };
 
-isEndless(run) {
-  return DUNGEONS[run.dungeonKey].type === "endless";
+isEndless(state) {
+  const dungeon = DUNGEONS[state.dungeonKey];
+  return dungeon && dungeon.type === "endless";
 },
 
-generateEndlessRoom(run) {
-  const dungeon = DUNGEONS[run.dungeonKey];
-  const floor = run.currentFloor;
+getCurrentFloor(state) {
+  const dungeon = DUNGEONS[state.dungeonKey];
+  if (!dungeon || dungeon.type === "endless") return null;
+  return dungeon.floors[state.currentFloor - 1];
+},
 
-  // Boss floors
+generateBoss(state) {
+  const dungeon = DUNGEONS[state.dungeonKey];
+
+  if (dungeon.type === "endless") {
+    const tier = state.nextBossTier || "mini";
+    const key =
+      tier === "mega" ? dungeon.megaBossEnemyKey : dungeon.bossEnemyKey;
+    return resolveEnemy(key);
+  }
+
+  return resolveEnemy(dungeon.boss.enemyKey);
+},
+completeFloor(state) {
+  const dungeon = DUNGEONS[state.dungeonKey];
+
+  if (dungeon.type === "endless") {
+    state.currentFloor++;
+    state.highestFloor = Math.max(state.highestFloor || 1, state.currentFloor);
+    state.endlessScore = state.highestFloor;
+    state.state = "exploring";
+    return;
+  }
+
+  state.currentFloor++;
+  if (state.currentFloor > dungeon.floors.length) {
+    state.state = "boss";
+  }
+},
+
+failDungeon(state) {
+  state.state = "failed";
+}
+
+generateRoom(state) {
+  const dungeon = DUNGEONS[state.dungeonKey];
+
+  if (dungeon.type === "endless") {
+    return this.generateEndlessRoom(state);
+  }
+
+  const floor = this.getCurrentFloor(state);
+  const roll = Math.random();
+
+  if (roll < 0.6) {
+    return { type: "encounter", enemies: floor.encounterTable };
+  }
+  if (roll < 0.8) {
+    return { type: "event", events: floor.events };
+  }
+  return { type: "treasure", lootTable: floor.lootTable };
+},
+
+generateEndlessRoom(state) {
+  const dungeon = DUNGEONS[state.dungeonKey];
+  const floor = state.currentFloor;
+
+  // Boss cadence
   if (floor % dungeon.megaBossEvery === 0) {
-    return { type: "megaBoss" };
+    return { type: "boss", tier: "mega" };
   }
   if (floor % dungeon.bossEvery === 0) {
-    return { type: "boss" };
+    return { type: "boss", tier: "mini" };
   }
 
-  // Normal floors
   const roll = Math.random();
-  if (roll < 0.6) return { type: "encounter", enemies: dungeon.baseEncounterTable };
-  if (roll < 0.8) return { type: "event", events: ["rift_anomaly"] };
+  if (roll < 0.6) {
+    return { type: "encounter", enemies: dungeon.baseEncounterTable };
+  }
+  if (roll < 0.8) {
+    return { type: "event", events: ["rift_anomaly"] };
+  }
   return { type: "treasure", lootTable: dungeon.baseLootTable };
 },
 
@@ -194,3 +256,23 @@ updateEndlessScore(run) {
   run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
   run.endlessScore = run.highestFloor;
 }
+
+startDungeon(player, dungeonKey) {
+  const dungeon = DUNGEONS[dungeonKey];
+
+  const state = {
+    dungeonKey,
+    currentFloor: 1,
+    state: "exploring",
+    modifiers: { ...(dungeon.dungeonModifiers || {}) },
+    completed: false,
+    progress: []
+  };
+
+  if (dungeon.type === "endless") {
+    state.highestFloor = 1;
+    state.endlessScore = 0;
+  }
+
+  return state;
+},
