@@ -1107,6 +1107,15 @@
     window.location.href = "world-map.html";
   }
 
+  const p = PlayerStorage.load(username);
+  if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
+    if (!p.activeDungeonRun) {
+      alert("Dungeon run lost. Returning to dungeon select.");
+      window.location.href = "dungeon-select.html";
+      return;
+    }
+  }
+
   /* ============================================================
      RUNTIME ENTITIES
   ============================================================ */
@@ -1374,6 +1383,11 @@
   
     const outcome = checkOutcome(combat.playerState, combat.enemyState);
     if (!outcome) {
+      if (combat.context.dungeonRun) {
+        const p = PlayerStorage.load(username);
+        DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+      }
+      
       // No outcome yet — continue or return control
       if (autoBattle) {
         if (!autoLoopHandle) {
