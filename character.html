@@ -597,7 +597,8 @@
             <div class="talent-branch">
               <div class="branch-title">${format(branchName)}</div>
               <div class="branch-nodes">
-                ${nodes.map(n => renderTalentNode(n, chosen)).join("")}
+                const rendered = nodes.map(n => renderTalentNode(n, chosen)).join("");
+                if (!rendered) return ""; // hide branch entirely
               </div>
             </div>
           `;
