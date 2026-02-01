@@ -10,8 +10,7 @@ import {
 } from "./weatherTable.js";
 import {
   computeHitData,
-  computeFinalDamage,
-  applyDamage
+  computeFinalDamage
 } from "./ability-resolver.js";
 
 
@@ -248,7 +247,7 @@ function computeElementMultiplier(attackerElement, defenderElement) {
   return mult;
 }
 
-export function applyDamage(attacker, defender, baseDamage, context, logs, opts = {}) {
+export function applyDamage(attacker, defender, baseDamage, context, logs, opts = {}) { // we can use opts.crit
   const weatherKey = context.weatherKey || "clear";
 
   let dmg = baseDamage;
@@ -322,7 +321,15 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
 
   const dmg = computeFinalDamage(attacker, defender, ability, hitData, context);
 
-  applyDamage(attacker, defender, ability, dmg, hitData, logs);
+  const finalDmg = applyDamage(attacker, defender, dmg, context, logs, {
+    isAbility: true,
+    abilityKey: ability.key,
+    isCrit: hitData.isCrit
+  });
+
+  if (hitData.isCrit && logs && finalDmg > 0) {
+    logs.push("Critical hit!");
+  }
 
   if (ability.statusEffects && ability.statusEffects.length) {
     for (const eff of ability.statusEffects) {
@@ -344,26 +351,27 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
  ****************************************************/
 
 export function resolveBasicAttack(attacker, defender, context, logs) {
-  const hitChance = computeHitChance(attacker, defender, context);
-  if (!rollChance(hitChance)) {
+  const basicAbility = {
+    key: "attack",
+    name: "Attack",
+    basePower: 1.0
+  };
+
+  const hitData = computeHitData(attacker, defender, basicAbility, context);
+
+  if (!hitData.isHit) {
     if (logs) logs.push(`${attacker.name}'s attack misses!`);
     return;
   }
 
-  const critChance = computeCritChance(attacker, context);
-  const isCrit = rollChance(critChance);
+  const dmg = computeFinalDamage(attacker, defender, basicAbility, hitData, context);
 
-  let baseDamage = attacker.atk;
-  if (isCrit) {
-    const critMult = attacker.critDamageMult || 1.5;
-    baseDamage = Math.floor(baseDamage * critMult);
-  }
-
-  const dmg = applyDamage(attacker, defender, baseDamage, context, logs, {
-    isBasic: true
+  const finalDmg = applyDamage(attacker, defender, dmg, context, logs, {
+    isBasic: true,
+    isCrit: hitData.isCrit
   });
 
-  if (isCrit && logs && dmg > 0) {
+  if (hitData.isCrit && logs && finalDmg > 0) {
     logs.push("Critical hit!");
   }
 }
