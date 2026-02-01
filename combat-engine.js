@@ -102,8 +102,6 @@ export function tickStatusEffects(target, context, logs) {
       logs.push(`${target.name} is no longer affected by ${eff.type || "a status"}.`);
     }
   }
-  player.manaCurrent = Math.min(player.manaMax, player.manaCurrent + mpPerMinute);
-  player.manaCurrent = Math.min(player.manaMax, player.manaCurrent + player.manaRegenPerTurn);
   target.statusEffects = remaining;
 }
 
