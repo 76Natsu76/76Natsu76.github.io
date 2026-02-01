@@ -341,8 +341,7 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
   }
 
   // Deduct MP
-  if (attacker.mana !== undefined) attacker.mana -= cost;
-  if (attacker.manaCurrent !== undefined) attacker.manaCurrent -= cost;
+  attacker.mana = Math.max(0, attacker.mana - cost);
   if (attacker.mp !== undefined) attacker.mp -= cost;
 
   // --- HIT / CRIT ---
