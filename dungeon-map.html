@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dungeon Map</title>
+
+  <style>
+    body { background:#0d0f14; color:#e8e8e8; font-family:system-ui; padding:24px; }
+    .floor {
+      padding:10px;
+      margin:8px 0;
+      border-radius:6px;
+      border:1px solid #333;
+      background:#14171f;
+    }
+    .current { border-color:#7fffd4; box-shadow:0 0 8px #7fffd455; }
+    .completed { opacity:0.6; }
+    .boss { border-color:#ff7f7f; }
+    .btn {
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      margin-top:12px;
+    }
+    .btn:hover { background:#222832; }
+  </style>
+</head>
+
+<body>
+
+  <h1>Dungeon Map</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="mapContainer"></div>
+
+  <button class="btn" onclick="continueRun()">Continue</button>
+  <button class="btn" onclick="leaveDungeon()">Leave Dungeon</button>
+
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { DUNGEONS } from "./dungeons.js";
+
+    await requireSession();
+    const { username } = window.syncState;
+
+    const player = PlayerStorage.load(username);
+    const run = player.activeDungeonRun;
+
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+
+    if (!run) {
+      document.getElementById("mapContainer").innerHTML =
+        "<p>No active dungeon run.</p>";
+      return;
+    }
+
+    const dungeon = DUNGEONS[run.dungeonKey];
+    const container = document.getElementById("mapContainer");
+
+    for (let i = 1; i <= dungeon.floors.length; i++) {
+      const div = document.createElement("div");
+      div.className = "floor";
+
+      if (i < run.currentFloor) div.classList.add("completed");
+      if (i === run.currentFloor) div.classList.add("current");
+      if (i === dungeon.floors.length) div.classList.add("boss");
+
+      div.textContent = `Floor ${i}`;
+      container.appendChild(div);
+    }
+
+    window.continueRun = () => {
+      window.location.href = "dungeon-room.html";
+    };
+
+    window.leaveDungeon = () => {
+      PlayerStorage.save(username, player);
+      window.location.href = "town.html";
+    };
+  </script>
+
+</body>
+</html>
