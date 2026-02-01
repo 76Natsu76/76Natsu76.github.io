@@ -1041,6 +1041,9 @@
     } from "./combat-engine.js";
     import { REGION_LOOT_TABLES } from "./region-loot-tables.js";
     import { handleSafeRespawn, handleRiskyRespawn } from "./death-handler.js";
+    import { WorldSim } from "./world-simulation.js";
+    import { handleBossDefeat } from "./world-boss-progression.js";
+
   
     /* ============================================================
        SESSION + PLAYER + ENCOUNTER LOAD
@@ -1343,28 +1346,38 @@
       renderPanels();
   
       const outcome = checkOutcome(combat.playerState, combat.enemyState);
-        if (outcome) {
-          addLog("Combat ended: " + outcome.toUpperCase());
-        
-          if (outcome === "defeat") {
-            showDeathModal();
-            return;
-          }
-          if (outcome === "victory" && combat.enemyState.isWorldBoss) {
-            const bossKey = combat.enemyState.bossKey;
-          
-            const worldState = WorldSim.getState();
-            handleBossDefeat(worldState, bossKey);
-            WorldSim.save();
-          
-            addLog(`You have defeated the World Boss: ${bossKey}!`);
-          }
-          const rewards = generateRewards(combat.playerState, combat.enemyState, combat.context, outcome);
-          const finalRewards = await finalizeRewards(rewards);
-        
-          endCombat(finalRewards.outcome, finalRewards);
+      if (outcome) {
+        addLog("Combat ended: " + outcome.toUpperCase());
+      
+        // Player defeated
+        if (outcome === "defeat") {
+          showDeathModal();
           return;
         }
+      
+        // Player victory — check for world boss
+        if (outcome === "victory" && combat.enemyState.isWorldBoss) {
+          const bossKey = combat.enemyState.bossKey;
+      
+          const worldState = WorldSim.getState();
+          handleBossDefeat(worldState, bossKey);
+          WorldSim.save();
+      
+          addLog(`You have defeated the World Boss: ${bossKey}!`);
+        }
+      
+        // Normal reward flow
+        const rewards = generateRewards(
+          combat.playerState,
+          combat.enemyState,
+          combat.context,
+          outcome
+        );
+        const finalRewards = await finalizeRewards(rewards);
+      
+        endCombat(finalRewards.outcome, finalRewards);
+        return;
+      }
 
       if (autoBattle) {
         autoLoop();
