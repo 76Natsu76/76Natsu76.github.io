@@ -1062,17 +1062,26 @@
 
   function ensureVitals(p) {
     if (!p) return p;
-
+  
     if (typeof p.hpMax !== "number") p.hpMax = 20;
+  
     if (p.hpCurrent === undefined || p.hpCurrent === null) {
       p.hpCurrent = p.hpMax;
-    };
-
+    } else {
+      p.hpCurrent = Math.min(p.hpCurrent, p.hpMax);
+    }
+  
     if (typeof p.manaMax !== "number") p.manaMax = 10;
-    if (typeof p.mana !== "number") p.mana = p.manaMax;
-
+  
+    if (p.mana === undefined || p.mana === null) {
+      p.mana = p.manaMax;
+    } else {
+      p.mana = Math.min(p.mana, p.manaMax);
+    }
+  
     return p;
   }
+
 
   document.getElementById("usernameDisplay").textContent =
     "Logged in as: " + username;
