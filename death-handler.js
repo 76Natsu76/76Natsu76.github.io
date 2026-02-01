@@ -141,3 +141,26 @@ export function getSafeRespawnRemaining(player) {
 
   return diff > 0 ? diff : 0;
 }
+
+export function startRespawnLockCountdown(player, elementId) {
+  function update() {
+    const remaining = getSafeRespawnRemaining(player);
+    const el = document.getElementById(elementId);
+
+    if (!el) return;
+
+    if (remaining <= 0) {
+      el.textContent = "Safe Respawn Ready";
+      return;
+    }
+
+    const mins = Math.floor(remaining / 60000);
+    const secs = Math.floor((remaining % 60000) / 1000);
+
+    el.textContent = `Safe Respawn in ${mins}m ${secs}s`;
+
+    requestAnimationFrame(update);
+  }
+
+  update();
+}
