@@ -453,13 +453,5 @@ export function runCombatRound(player, enemy, context, playerAction, logs) {
   }
 
   context.turn += 1;
-  if (event.miss) {
-    logs.push(`${player.name}'s attack misses!`);
-    return;
-  }
-
-  const abilityName = event.ability?.name || "Attack";
-  logs.push(`${player.name} uses ${abilityName}!`);
-
   return { player, enemy, context, logs };
 }
