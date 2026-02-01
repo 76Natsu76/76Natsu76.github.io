@@ -991,6 +991,23 @@
   </div>
 
   <!-- ============================
+        DEATH MODAL
+  ============================= -->
+  <div id="deathModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>You Have Fallen...</h2>
+    <p>Choose how you will return:</p>
+    <button class="btn" id="safeRespawnBtn">
+      Safe Respawn (Lose items, 0 MP)
+    </button>
+    <button class="btn" id="riskyRespawnBtn">
+      Risky Respawn (Lose 1 level, 0 MP)
+    </button>
+  </div>
+</div>
+
+
+  <!-- ============================
         TURN-BASED COMBAT WIRING
   ============================= -->
   <script>
@@ -1023,6 +1040,7 @@
       runCombatRound as engineRunRound
     } from "./combat-engine.js";
     import { REGION_LOOT_TABLES } from "./region-loot-tables.js";
+    import { handleSafeRespawn, handleRiskyRespawn } from "./death-handler.js";
   
     /* ============================================================
        SESSION + PLAYER + ENCOUNTER LOAD
@@ -1325,14 +1343,20 @@
       renderPanels();
   
       const outcome = checkOutcome(combat.playerState, combat.enemyState);
-      if (outcome) {
-        addLog("Combat ended: " + outcome.toUpperCase());
-        const rewards = generateRewards(combat.playerState, combat.enemyState, combat.context, outcome);
-        const finalRewards = await finalizeRewards(rewards);
-      
-        endCombat(finalRewards.outcome, finalRewards);
-        return;
-      }
+        if (outcome) {
+          addLog("Combat ended: " + outcome.toUpperCase());
+        
+          if (outcome === "defeat") {
+            showDeathModal();
+            return;
+          }
+        
+          const rewards = generateRewards(combat.playerState, combat.enemyState, combat.context, outcome);
+          const finalRewards = await finalizeRewards(rewards);
+        
+          endCombat(finalRewards.outcome, finalRewards);
+          return;
+        }
 
       if (autoBattle) {
         autoLoop();
@@ -1864,6 +1888,31 @@
       EncounterEngine.clear();
       window.location.href = "world-map.html";
     }
+
+    /* ============================================================
+       DEATH MODAL + RESPAWN
+    ============================================================ */
+    
+    function showDeathModal() {
+      const modal = document.getElementById("deathModal");
+      modal.classList.remove("hidden");
+    
+      const safeBtn = document.getElementById("safeRespawnBtn");
+      const riskyBtn = document.getElementById("riskyRespawnBtn");
+    
+      safeBtn.onclick = async () => {
+        safeBtn.disabled = true;
+        riskyBtn.disabled = true;
+        await handleSafeRespawn(username);
+      };
+    
+      riskyBtn.onclick = async () => {
+        safeBtn.disabled = true;
+        riskyBtn.disabled = true;
+        await handleRiskyRespawn(username);
+      };
+    }
+
     
     /* ============================================================
        BUTTON BINDINGS
