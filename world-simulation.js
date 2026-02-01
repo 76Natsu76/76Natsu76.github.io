@@ -25,7 +25,11 @@ export const WorldSim = {
       this._state = {
         tickCount: 0,
         globalMerchant: null,
-        lastTick: Date.now()
+        lastTick: Date.now(),
+      
+        // NEW: world boss progression
+        bosses: {},            // bossKey → { active, hp, maxHP, region, respawnAt }
+        regionUnlocks: {},     // regionKey → boolean
       };
     }
 
