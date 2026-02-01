@@ -1,53 +1,52 @@
 const DUNGEONS = {
-		"caverns_first_echo": {
-    		"name": "Caverns of the First Echo",
-        "recommendedLevel": 5,
-        "floors": [{
-            "floorIndex": 1,
-            "type": "normal",
-            "encounterTable": ["cave_miner", "tunnel_delver", "sticky_slime"],
-            "events": ["echo_shrine"],
-            "lootTable": "cavern_floor_1",
-            "modifiers": {
-                "biome": "cave",
-                "weather": "none",
-                "globalBuffs": [],
-                "globalDebuffs": []
-            }
-        },
-        {
-            "floorIndex": 2,
-            "type": "elite",
-            "encounterTable": ["deepstone_foreman", "orebreaker"],
-            "events": ["collapsed_passage"],
-            "lootTable": "cavern_floor_2",
-            "modifiers": {
-                "biome": "cave",
-                "weather": "none",
-                "globalBuffs": [],
-                "globalDebuffs": ["darkness"]
-            }
-        }],
-        "boss": {
-            "enemyKey": "Obsidian World‑Breaker",
-            "lootTable": "cavern_boss"
-        },
-        "dungeonModifiers": {
-            "noHealing": false,
-            "doubleLoot": false,
-            "enemyScaling": 1.15
-        },
-        "rewards": {
-            "xp": 300,
-            "gold": 120,
-            "items": ["obsidian_fragment"]
-        }
+  "caverns_first_echo": {
+    name: "Caverns of the First Echo",
+    recommendedLevel: 5,
+    floors: [{
+      "floorIndex": 1,
+      "type": "normal",
+      "encounterTable": ["cave_miner", "tunnel_delver", "sticky_slime"],
+      "events": ["echo_shrine"],
+      "lootTable": "cavern_floor_1",
+      "modifiers": {
+        "biome": "cave",
+        "weather": "none",
+        "globalBuffs": [],
+        "globalDebuffs": []
+      }
+    },{
+      "floorIndex": 2,
+      "type": "elite",
+      "encounterTable": ["deepstone_foreman", "orebreaker"],
+      "events": ["collapsed_passage"],
+      "lootTable": "cavern_floor_2",
+      "modifiers": {
+        "biome": "cave",
+        "weather": "none",
+        "globalBuffs": [],
+        "globalDebuffs": ["darkness"]
+      }
+    }],
+    "boss": {
+      "enemyKey": "Obsidian World‑Breaker",
+      "lootTable": "cavern_boss"
     },
-
-    "stormspire_ascent": {
-        "name": "Stormspire Ascent",
-        "recommendedLevel": 15,
-        "floors": [
+    "dungeonModifiers": {
+      "noHealing": false,
+      "doubleLoot": false,
+      "enemyScaling": 1.15
+    },
+    "rewards": {
+      "xp": 300,
+      "gold": 120,
+      "items": ["obsidian_fragment"]
+    }
+  },
+  
+  "stormspire_ascent": {
+        name: "Stormspire Ascent",
+        recommendedLevel: 15,
+        floors: [
         {
             "floorIndex": 1,
             "type": "normal",
@@ -90,9 +89,9 @@ const DUNGEONS = {
         }
     },
     "astral_rift_labyrinth": {
-        "name": "Astral Rift Labyrinth",
-        "recommendedLevel": 25,
-        "floors": [
+        name: "Astral Rift Labyrinth",
+        recommendedLevel: 25,
+        floors: [
         {
             "floorIndex": 1,
             "type": "normal",
@@ -133,29 +132,41 @@ const DUNGEONS = {
             "gold": 500,
             "items": ["astral_shard"]
         }
-    },
-    
-    "endless_abyss": {
-        "name": "Endless Abyss",
-        "type": "endless",
-        "recommendedLevel": 10,
-        "entryRequirements": {
-            "minLevel": 10,
-            "requiredItems": [],
-            "requiredFlags": []
-        },
-        "scaling": {
-            "enemyHP": 1.05,
-            "enemyATK": 1.05,
-            "lootMult": 1.02
-        },
-        "baseEncounterTable": [
-            "abyss_shade",
-            "voidling",
-            "hollow_stalker"
-        ],
-        "baseLootTable": "endless_base",
-        "bossEvery": 10,
-        "megaBossEvery": 50
+  },
+  "endless_abyss": {
+      name: "Endless Abyss",
+      type: "endless",
+      recommendedLevel: 10,
+      entryRequirements: {
+        minLevel: 10,
+        requiredItems: [],
+        requiredFlags: []
+      },
+      // Used for normal floors
+      baseEncounterTable: [
+        "abyss_shade",
+        "voidling",
+        "hollow_stalker"
+      ],
+      baseLootTable: "endless_base",
+      // Boss cadence
+      bossEvery: 10,
+      megaBossEvery: 50,
+      // Endless scaling
+      scaling: {
+        enemyHP: 1.05,
+        enemyATK: 1.05,
+        lootMult: 1.02
+      },
+      // Optional: used by DungeonEngine.generateBoss for boss floors
+      bossEnemyKey: "Abyssal Warden",
+      megaBossEnemyKey: "Depth‑Crowned Cataclysm",
+      dungeonModifiers: {
+        noHealing: false,
+        doubleLoot: false,
+        enemyScaling: 1.0
+      },
+      // No fixed rewards; score is the reward
+      rewards: null
     }
 };
