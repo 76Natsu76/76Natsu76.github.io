@@ -679,20 +679,28 @@
       }
 
       function normalizeAbility(a) {
-        if (!a) return { name: "Unknown Ability", description: "", cooldown: 0 };
+        if (!a) {
+          return {
+            name: "Unknown Ability",
+            description: "",
+            cooldown: 0,
+            icon: "assets/abilities/default.png"
+          };
+        }
       
         // Case 1: modern ability object
         if (a.name) return a;
       
-        // Case 2: legacy nested ability object
+        // Case 2: legacy nested object: { backstab: { ... } }
         const key = Object.keys(a)[0];
-        const def = a[key];
+        const def = a[key] || {};
+      
         return {
           key,
           name: def.name || key,
           description: def.description || "",
-          cooldown: def.cooldown || 0,
-          icon: def.icon || "/assets/abilities/default.png"
+          cooldown: def.cooldown ?? 0,
+          icon: def.icon || `assets/abilities/${key}.png`
         };
       }
 
