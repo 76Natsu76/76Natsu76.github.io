@@ -594,7 +594,7 @@
   
         for (const [branchName, nodes] of Object.entries(branches)) {
           const rendered = nodes.map(n => renderTalentNode(n, chosen)).join("");
-          if (!rendered) return ""; // hide branch entirely
+          if (rendered) return ""; // hide branch entirely
           out += `
             <div class="talent-branch">
               <div class="branch-title">${format(branchName)}</div>
