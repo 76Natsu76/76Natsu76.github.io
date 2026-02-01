@@ -333,7 +333,9 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
 
   // --- MP CHECK ---
   const cost = ability.manaCost || ability.mpCost || 0;
-  if ((attacker.mana ?? attacker.manaCurrent ?? 0) < cost) {
+  const currentMP = attacker.mana ?? attacker.manaCurrent ?? 0;
+
+  if (currentMP < cost) {
     logs.push(`${attacker.name} does not have enough MP for ${abilityName}.`);
     return;
   }
@@ -342,13 +344,15 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
   if (attacker.mana !== undefined) attacker.mana -= cost;
   if (attacker.manaCurrent !== undefined) attacker.manaCurrent -= cost;
 
+  // --- HIT / CRIT ---
   const hitData = computeHitData(attacker, defender, ability, context);
 
   if (!hitData.isHit) {
-    logs.push(`${attacker.name}'s ${ability.name || ability.key} misses!`);
+    logs.push(`${attacker.name}'s ${abilityName} misses!`);
     return;
   }
 
+  // --- DAMAGE ---
   const dmg = computeFinalDamage(attacker, defender, ability, hitData, context);
 
   const finalDmg = applyDamage(attacker, defender, dmg, context, logs, {
@@ -361,21 +365,22 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
     logs.push("Critical hit!");
   }
 
-  if (ability.statusEffects && ability.statusEffects.length) {
+  // --- STATUS EFFECTS ---
+  if (ability.statusEffects) {
     for (const eff of ability.statusEffects) {
       applyStatusEffect(defender, eff);
-      if (logs) logs.push(`${defender.name} is affected by ${eff.type}.`);
+      logs.push(`${defender.name} is affected by ${eff.type}.`);
     }
   }
 
-  if (ability.selfStatusEffects && ability.selfStatusEffects.length) {
+  if (ability.selfStatusEffects) {
     for (const eff of ability.selfStatusEffects) {
       applyStatusEffect(attacker, eff);
-      if (logs) logs.push(`${attacker.name} gains ${eff.type}.`);
+      logs.push(`${attacker.name} gains ${eff.type}.`);
     }
   }
 
-    // --- APPLY COOLDOWN ---
+  // --- APPLY COOLDOWN ---
   attacker.cooldowns[ability.key] = ability.cooldown || 0;
 }
 
