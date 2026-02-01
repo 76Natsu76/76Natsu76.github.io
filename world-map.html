@@ -108,59 +108,33 @@
       const username = "s3ven_six";
     
       const p = await api.getPlayer(username);
-      console.log("Before manual fix:", p);
+      console.log("Before ability fix:", p.abilities);
     
-      // -----------------------------------
-      // 1) Set the TRUE core stats you want
-      //    (tweak these to your desired values)
-      // -----------------------------------
-      p.hpMax = 128;
-      p.hpCurrent = 128;
+      function unwrapAbility(a) {
+        // Case 1: already correct
+        if (a && a.key && typeof a.key === "string") return a;
     
-      p.atk = 299;
-      p.def = 107;
-      p.speed = 496;
+        // Case 2: double-wrapped: { key: { key, name, ... }, name: { ... } }
+        if (a && typeof a.key === "object") {
+          return a.key; // the real ability object
+        }
     
-      // Crit as a fraction (0.06 = 6%)
-      p.crit = 0.06;
-      p.critDmg = 1.5;
+        // Case 3: legacy string
+        if (typeof a === "string") {
+          return { key: a, name: a };
+        }
     
-      // If you want to keep evade from profession/equipment:
-      p.evade = p.evade ?? 0.05;
+        return a;
+      }
     
-      // XP / Gold — set to what you know is correct
-      p.xp = 113000;      // or whatever your real value is
-      p.gold = 8553;      // your remembered gold
+      p.abilities = (p.abilities || []).map(unwrapAbility);
     
-      // -----------------------------------
-      // 2) Rebuild stats + derived
-      // -----------------------------------
-      p.stats = {
-        hp: p.hpMax,
-        atk: p.atk,
-        def: p.def,
-        speed: p.speed,
-        crit: p.crit,
-        critDmg: p.critDmg
-      };
+      console.log("After ability fix:", p.abilities);
     
-      p.derived = {
-        evade: Number(((p.evade ?? 0) + (p.speed || 0) * 0.002).toFixed(3)),
-        block: Number(((p.def || 0) * 0.001).toFixed(3)),
-        critChance: Number((p.crit || 0).toFixed(3)),
-        critDamage: Number((p.critDmg || 1.5).toFixed(3)),
-        powerScore: Math.floor(
-          (p.atk || 0) * 1.5 + (p.def || 0) * 1.2 + (p.hpMax || 0) * 0.3
-        )
-      };
-    
-      // -----------------------------------
-      // 3) Save back to KV
-      // -----------------------------------
       await api.savePlayer(username, p);
       PlayerStorage.save(username, p);
     
-      console.log("After manual fix:", p);
+      console.log("%cAbilities successfully repaired!", "color: lime; font-size: 16px");
     })();
 
     
