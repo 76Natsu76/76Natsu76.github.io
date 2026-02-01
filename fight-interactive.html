@@ -1362,6 +1362,11 @@
   ============================================================ */
 
   async function runRound(playerAction) {
+    if (!combat || !combat.playerState || !combat.enemyState) { 
+      console.warn("runRound called before combat initialized"); 
+      return; 
+    }
+    
     hideActionPanel();
   
     const logs = [];
