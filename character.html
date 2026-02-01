@@ -295,8 +295,13 @@
               <div class="stat-row"><span>Profession</span><span>${format(p.profession)}</span></div>
               <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
               <div class="stat-row"><span>Element</span><span>${format(p.element)}</span></div>
-              <div class="stat-row"><span>Family</span><span>${format(p.family)}</span></div>
-  
+              <div class="stat-row">
+                <span>Race Profile</span>
+                <span>
+                  ${titleCase(p.race)}${p.subrace ? " : " + titleCase(p.subrace) : ""}
+                </span>
+              </div>
+
               <div style="margin-top:10px;">XP: ${p.xp} / ${p.xpRequired}</div>
               <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
   
@@ -423,7 +428,7 @@
             </div>
           </div>
         `);
-  
+
         /* ABILITIES */
         out.push(`
           <div class="section collapsible">
@@ -432,27 +437,26 @@
             </h2>
             <div class="section-content">
               ${
-                (p.abilities || []).length === 0
-                  ? "<div>No abilities</div>"
-                  : p.abilities
-                      .map(
-                        (a) => `
-                          <div class="ability-card">
-                            <img class="ability-icon"
-                                 src="${a.icon || "/assets/abilities/default.png"}"
-                                 onerror="this.src='/assets/abilities/default.png'">
-                            <div>
-                              <strong>${a.name}</strong>
-                              <div class="tooltip">
-                                <strong>${a.name}</strong><br>
-                                ${a.description}<br>
-                                Cooldown: ${a.cooldown}
-                              </div>
-                            </div>
+                (p.abilities || [])
+                  .map(a => {
+                    const A = normalizeAbility(a);
+                    return `
+                      <div class="ability-card">
+                        <img class="ability-icon"
+                             src="${A.icon || "/assets/abilities/default.png"}"
+                             onerror="this.src='/assets/abilities/default.png'">
+                        <div>
+                          <strong>${A.name}</strong>
+                          <div class="tooltip">
+                            <strong>${A.name}</strong><br>
+                            ${A.description}<br>
+                            Cooldown: ${A.cooldown}
                           </div>
-                        `
-                      )
-                      .join("")
+                        </div>
+                      </div>
+                    `;
+                  })
+                  .join("")
               }
             </div>
           </div>
@@ -669,7 +673,32 @@
           .map(([k, v]) => `${format(k)}: +${v}`)
           .join("<br>");
       }
-  
+
+      function normalizeAbility(a) {
+        if (!a) return { name: "Unknown Ability", description: "", cooldown: 0 };
+      
+        // Case 1: modern ability object
+        if (a.name) return a;
+      
+        // Case 2: legacy nested ability object
+        const key = Object.keys(a)[0];
+        const def = a[key];
+        return {
+          key,
+          name: def.name || key,
+          description: def.description || "",
+          cooldown: def.cooldown || 0,
+          icon: def.icon || "/assets/abilities/default.png"
+        };
+      }
+
+      function titleCase(str) {
+        return (str || "")
+          .split("_")
+          .map(s => s.charAt(0).toUpperCase() + s.slice(1))
+          .join(" ");
+      }
+
       /* ---------------------------------------------------------
          NAVIGATION
       --------------------------------------------------------- */
