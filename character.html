@@ -597,7 +597,7 @@
             <div class="talent-branch">
               <div class="branch-title">${format(branchName)}</div>
               <div class="branch-nodes">
-                ${nodes.map(n => renderTalentNode(n, chosen)).join("")}
+                ${nodes.map(n => renderTalentNode(n, chosen)).join("") || "<div class='no-talents'>No talents chosen in this branch</div>"}
               </div>
             </div>
           `;
@@ -617,12 +617,10 @@
   
       function renderTalentNode(node, chosen, isCapstone = false) {
         const isChosen = chosen.some(c => c.id === node.id);
-        const locked = node.requires && !chosen.some(c => c.id === node.requires);
-  
+        if (!isChosen) return ""; // hide unchosen nodes
+      
         return `
-          <div class="talent-node ${isChosen ? "chosen" : ""} ${
-          locked ? "locked" : ""
-        } ${isCapstone ? "capstone" : ""}">
+          <div class="talent-node chosen ${isCapstone ? "capstone" : ""}">
             <div class="talent-name">${node.name}</div>
             <div class="talent-desc">${node.description}</div>
             <div class="talent-bonus">${renderTalentBonuses(node.bonuses)}</div>
