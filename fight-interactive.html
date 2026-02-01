@@ -1406,19 +1406,34 @@
         addLog(`You have defeated the World Boss: ${bossKey}!`);
       }
 
-      // Dungeon progression (normal + endless scaffolding)
       if (outcome === "victory" && combat.context.dungeonRun) {
         const p = PlayerStorage.load(username);
         const run = combat.context.dungeonRun;
-
-        if (run.state === "boss") {
+      
+        const isEndless = DungeonEngine.isEndless(run);
+      
+        if (run.state === "boss" && !isEndless) {
+          // Normal dungeon: final boss
           DungeonEngine.completeDungeon(run);
           addLog("You have cleared the dungeon!");
         } else {
+          // Endless or normal floor
           DungeonEngine.completeFloor(run);
-          addLog(`You advance to floor ${run.currentFloor}.`);
+      
+          if (isEndless) {
+            addLog(`Endless Abyss: you reach floor ${run.currentFloor}.`);
+            // Persist best record on player
+            p.endlessRecord = p.endlessRecord || { highestFloor: 0, score: 0 };
+            p.endlessRecord.highestFloor = Math.max(
+              p.endlessRecord.highestFloor,
+              run.highestFloor || run.currentFloor
+            );
+            p.endlessRecord.score = p.endlessRecord.highestFloor;
+          } else {
+            addLog(`You advance to floor ${run.currentFloor}.`);
+          }
         }
-
+      
         if (p) {
           p.activeDungeonRun = run;
           PlayerStorage.save(username, p);
