@@ -593,8 +593,6 @@
         `;
   
         for (const [branchName, nodes] of Object.entries(branches)) {
-          const rendered = nodes.map(n => renderTalentNode(n, chosen)).join("");
-          if (rendered) return ""; // hide branch entirely
           out += `
             <div class="talent-branch">
               <div class="branch-title">${format(branchName)}</div>
@@ -620,6 +618,9 @@
       function renderTalentNode(node, chosen, isCapstone = false) {
         const isChosen = chosen.some(c => c.id === node.id);
         if (!isChosen) return ""; // hide unchosen nodes
+        
+        const rendered = nodes.map(n => renderTalentNode(n, chosen)).join("");
+        if (!rendered) return ""; // hide branch entirely
       
         return `
           <div class="talent-node chosen ${isCapstone ? "capstone" : ""}">
