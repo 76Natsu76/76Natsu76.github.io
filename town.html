@@ -219,9 +219,13 @@
       }
     
       renderTown(player);
-    
+
       if (flavor) content.insertAdjacentHTML("beforeend", flavor);
       if (lockUI) content.insertAdjacentHTML("beforeend", lockUI);
+      
+      if (player.safeRespawnLockUntil) {
+        startRespawnLockCountdown(player);
+      }
     }
 
     function startRespawnLockCountdown(player) {
