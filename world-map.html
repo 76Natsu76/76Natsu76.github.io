@@ -107,23 +107,60 @@
     (async () => {
       const username = "s3ven_six";
     
-      // 1. Load current KV player
-      const raw = await api.getPlayer(username);
-      console.log("Loaded raw KV player:", raw);
+      const p = await api.getPlayer(username);
+      console.log("Before manual fix:", p);
     
-      // 2. Import the migration module
-      const mod = await import("./migration.js");
-      const { resolveLegacyPlayer } = mod;
+      // -----------------------------------
+      // 1) Set the TRUE core stats you want
+      //    (tweak these to your desired values)
+      // -----------------------------------
+      p.hpMax = 128;
+      p.hpCurrent = 128;
     
-      // 3. Rebuild the full canonical player
-      const rebuilt = resolveLegacyPlayer(raw);
-      console.log("Rebuilt player:", rebuilt);
+      p.atk = 299;
+      p.def = 107;
+      p.speed = 496;
     
-      // 4. Save back to KV
-      PlayerStorage.save(username, rebuilt);
-      await api.savePlayer(username, rebuilt);
+      // Crit as a fraction (0.06 = 6%)
+      p.crit = 0.06;
+      p.critDmg = 1.5;
     
-      console.log("%cPlayer successfully repaired!", "color: lime; font-size: 16px");
+      // If you want to keep evade from profession/equipment:
+      p.evade = p.evade ?? 0.05;
+    
+      // XP / Gold — set to what you know is correct
+      p.xp = 113000;      // or whatever your real value is
+      p.gold = 8553;      // your remembered gold
+    
+      // -----------------------------------
+      // 2) Rebuild stats + derived
+      // -----------------------------------
+      p.stats = {
+        hp: p.hpMax,
+        atk: p.atk,
+        def: p.def,
+        speed: p.speed,
+        crit: p.crit,
+        critDmg: p.critDmg
+      };
+    
+      p.derived = {
+        evade: Number(((p.evade ?? 0) + (p.speed || 0) * 0.002).toFixed(3)),
+        block: Number(((p.def || 0) * 0.001).toFixed(3)),
+        critChance: Number((p.crit || 0).toFixed(3)),
+        critDamage: Number((p.critDmg || 1.5).toFixed(3)),
+        powerScore: Math.floor(
+          (p.atk || 0) * 1.5 + (p.def || 0) * 1.2 + (p.hpMax || 0) * 0.3
+        )
+      };
+    
+      // -----------------------------------
+      // 3) Save back to KV
+      // -----------------------------------
+      await api.savePlayer(username, p);
+      PlayerStorage.save(username, p);
+    
+      console.log("After manual fix:", p);
     })();
 
     
