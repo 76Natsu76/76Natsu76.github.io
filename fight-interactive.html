@@ -1911,9 +1911,15 @@
         riskyBtn.disabled = true;
         await handleRiskyRespawn(username);
       };
+    
+      // 🔥 Safe Respawn Lock Check
+      const stored = PlayerStorage.load(username);
+      if (stored.safeRespawnLockUntil && getSafeRespawnRemaining(stored) > 0) {
+        safeBtn.disabled = true;
+        safeBtn.textContent = "Safe Respawn (Locked)";
+      }
     }
 
-    
     /* ============================================================
        BUTTON BINDINGS
     ============================================================ */
