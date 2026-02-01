@@ -120,8 +120,7 @@
         `;
   
         document.getElementById("fightBtn").onclick = () => {
-          player.activeDungeonRun = run;
-          PlayerStorage.save(username, player);
+          DungeonEngine.saveRun(player, run, username);
   
           const encounter = {
             type: "dungeon",
@@ -161,8 +160,7 @@
   
           document.getElementById("continueBtn").onclick = () => {
             DungeonEngine.completeFloor(run);
-            player.activeDungeonRun = run;
-            PlayerStorage.save(username, player);
+            DungeonEngine.saveRun(player, run, username);
             window.location.reload();
           };
         };
@@ -198,8 +196,7 @@
   
           document.getElementById("continueBtn").onclick = () => {
             DungeonEngine.completeFloor(run);
-            player.activeDungeonRun = run;
-            PlayerStorage.save(username, player);
+            DungeonEngine.saveRun(player, run, username);
             window.location.reload();
           };
         };
@@ -227,8 +224,7 @@
             boss: true
           };
   
-          player.activeDungeonRun = run;
-          PlayerStorage.save(username, player);
+          DungeonEngine.saveRun(player, run, username);
   
           localStorage.setItem("current_encounter", JSON.stringify(encounter));
           window.location.href = "fight-interactive.html";
