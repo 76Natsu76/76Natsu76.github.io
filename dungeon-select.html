@@ -36,6 +36,9 @@
   <div id="usernameDisplay"></div>
 
   <div id="dungeonList">Loading...</div>
+  <button class="btn" data-key="${key}" ${canEnter(player, d) ? "" : "disabled"}>
+    ${canEnter(player, d) ? "Start Run" : "Locked"}
+  </button>
 
   <button class="btn" onclick="goBack()">Return to Town</button>
 
