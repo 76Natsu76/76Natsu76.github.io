@@ -110,6 +110,16 @@
       // --- APPLY OFFLINE REGEN (Phase 4) --- //
       player = applyOfflineRegen(player);
       PlayerStorage.save(username, player);
+
+      // --- APPLY AMBIENT REGEN WHILE IN TOWN --- //
+      const { hpPerMinute, mpPerMinute } = getRegenRates(player);
+      
+      // HP regen
+      player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
+      
+      // MP regen
+      player.mana = Math.min(player.manaMax, player.mana + mpPerMinute);
+      PlayerStorage.save(username, player);
     
       let flavor = "";
       let lockUI = "";
