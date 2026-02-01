@@ -1,36 +1,45 @@
-/************************************************************
- * dungeon-engine.js — Full JS Module Version
- ************************************************************/
+// dungeon-engine.js
+import { DUNGEONS } from "./dungeons.js";
+import { DUNGEON_EVENTS } from "./dungeon-events.js";
+import { DUNGEON_LOOT_TABLES } from "./dungeon-loot-tables.js";
 
-import { DUNGEONS } from './dungeons.js';
-import { DUNGEON_EVENTS } from './dungeon-events.js';
-import { LOOT_TABLES } from './dungeon-loot-tables.js';
-
-import { generateEncounter } from './encounter-generator.js';
-import { resolveEnemy } from './resolveEnemy.js';
-import { rollLootTable } from './loot-tables.js';
+import { rollLootTable } from "./loot-tables.js";
+import { resolveEnemy } from "./resolveEnemy.js";
 
 export const DungeonEngine = {
-  startDungeon(player, dungeonKey) {
+  /* -----------------------------
+     RUN LIFECYCLE
+  ----------------------------- */
+  createRun(player, dungeonKey) {
     const dungeon = DUNGEONS[dungeonKey];
 
     return {
       dungeonKey,
       currentFloor: 1,
       state: "exploring",
-      modifiers: { ...dungeon.dungeonModifiers },
+      modifiers: {
+        ...dungeon.dungeonModifiers
+      },
+      noHealing: !!dungeon.dungeonModifiers.noHealing,
+      doubleLoot: !!dungeon.dungeonModifiers.doubleLoot,
+      enemyScaling: dungeon.dungeonModifiers.enemyScaling || 1.0,
       completed: false,
+      failed: false,
+      startedAt: Date.now(),
       progress: []
     };
   },
 
-  getCurrentFloor(state) {
-    const dungeon = DUNGEONS[state.dungeonKey];
-    return dungeon.floors[state.currentFloor - 1];
+  getCurrentFloor(run) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+    return dungeon.floors[run.currentFloor - 1];
   },
 
-  generateRoom(state) {
-    const floor = this.getCurrentFloor(state);
+  /* -----------------------------
+     ROOM GENERATION
+  ----------------------------- */
+  generateRoom(run) {
+    const floor = this.getCurrentFloor(run);
     const roll = Math.random();
 
     if (roll < 0.6) {
@@ -42,69 +51,102 @@ export const DungeonEngine = {
     return { type: "treasure", lootTable: floor.lootTable };
   },
 
-  resolveEvent(eventKey, player, state, logs) {
+  /* -----------------------------
+     EVENTS
+  ----------------------------- */
+  resolveEvent(eventKey, player, run, logs) {
     const event = DUNGEON_EVENTS[eventKey];
+    if (!event) return;
 
     logs.push(`Event: ${event.name}`);
 
     for (const effect of event.effects) {
-      this.applyEventEffect(effect, player, state, logs);
+      this.applyEventEffect(effect, player, run, logs);
     }
   },
 
-  applyEventEffect(effect, player, state, logs) {
+  applyEventEffect(effect, player, run, logs) {
     switch (effect.type) {
       case "buff":
         player.atk += effect.value;
         logs.push(`You feel empowered (+${effect.value} ATK).`);
         break;
-
       case "debuff":
         player.def -= effect.value;
         logs.push(`A curse weakens you (-${effect.value} DEF).`);
         break;
-
       case "heal":
-        player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + effect.value);
-        logs.push(`You recover ${effect.value} HP.`);
+        if (run.noHealing) {
+          logs.push("A healing force tries to reach you, but the dungeon forbids it.");
+        } else {
+          player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + effect.value);
+          logs.push(`You recover ${effect.value} HP.`);
+        }
         break;
-
       case "damage":
         player.hpCurrent = Math.max(0, player.hpCurrent - effect.value);
         logs.push(`You take ${effect.value} damage.`);
         break;
-
-      case "modifier":
-        // Example: "enemyScaling+0.1"
+      case "modifier": {
         const [key, delta] = effect.value.split("+");
-        state.modifiers[key] += parseFloat(delta);
-        logs.push(`Dungeon shifts: ${key} increased.`);
+        const amount = parseFloat(delta);
+        run.modifiers[key] = (run.modifiers[key] || 0) + amount;
+        logs.push(`Dungeon shifts: ${key} increased by ${amount}.`);
         break;
+      }
     }
   },
 
-  resolveTreasure(lootTableKey, player, logs) {
-    const loot = rollLootTable(LOOT_TABLES[lootTableKey]);
+  /* -----------------------------
+     TREASURE
+  ----------------------------- */
+  resolveTreasure(lootTableKey, run, logs) {
+    const table = DUNGEON_LOOT_TABLES[lootTableKey];
+    if (!table) return null;
+
+    let loot = rollLootTable(table);
+    if (run.doubleLoot) {
+      const extra = rollLootTable(table);
+      loot.gold += extra.gold;
+      loot.xp += extra.xp;
+      loot.items.push(...extra.items);
+      logs.push("Dungeon modifier: Double loot!");
+    }
+
     logs.push(`You found: ${JSON.stringify(loot)}`);
     return loot;
   },
 
-  generateBoss(state) {
-    const dungeon = DUNGEONS[state.dungeonKey];
-    return resolveEnemy(dungeon.boss.enemyKey);
+  /* -----------------------------
+     BOSS
+  ----------------------------- */
+  generateBoss(run) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+    const enemy = resolveEnemy(dungeon.boss.enemyKey);
+    enemy.isDungeonBoss = true;
+    enemy.dungeonKey = run.dungeonKey;
+    return enemy;
   },
 
-  completeFloor(state) {
-    state.currentFloor++;
-    const dungeon = DUNGEONS[state.dungeonKey];
+  /* -----------------------------
+     FLOOR / DUNGEON PROGRESSION
+  ----------------------------- */
+  completeFloor(run) {
+    run.currentFloor++;
+    const dungeon = DUNGEONS[run.dungeonKey];
 
-    if (state.currentFloor > dungeon.floors.length) {
-      state.state = "boss";
+    if (run.currentFloor > dungeon.floors.length) {
+      run.state = "boss";
     }
   },
 
-  completeDungeon(state) {
-    state.completed = true;
-    state.state = "completed";
+  completeDungeon(run) {
+    run.completed = true;
+    run.state = "completed";
+  },
+
+  failDungeon(run) {
+    run.failed = true;
+    run.state = "failed";
   }
 };
