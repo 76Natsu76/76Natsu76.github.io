@@ -2,6 +2,11 @@ export const DUNGEONS = {
   caverns_first_echo: {
     name: "Caverns of the First Echo",
     recommendedLevel: 5,
+    entryRequirements: {
+      minLevel: 1,
+      requiredItems: [],
+      requiredFlags: []
+    },
     floors: [
       {
         floorIndex: 1,
@@ -49,6 +54,11 @@ export const DUNGEONS = {
   stormspire_ascent: {
     name: "Stormspire Ascent",
     recommendedLevel: 15,
+    entryRequirements: {
+      minLevel: 10,
+      requiredItems: [],
+      requiredFlags: ["forest_boss_defeated"]
+    },
     floors: [
       {
         floorIndex: 1,
@@ -99,6 +109,11 @@ export const DUNGEONS = {
   astral_rift_labyrinth: {
     name: "Astral Rift Labyrinth",
     recommendedLevel: 25,
+    entryRequirements: {
+      minLevel: 20,
+      requiredItems: ["astral_key"],
+      requiredFlags: ["stormspire_boss_defeated"]
+    },
     floors: [
       {
         floorIndex: 1,
