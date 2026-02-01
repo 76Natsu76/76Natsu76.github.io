@@ -1,9 +1,5 @@
 // world-simulation.js
-// Unified, persistent, merchant-aware world simulation engine.
-
-import { WORLD_DATA } from "./world-data.js";
-import { BIOMES } from "./biomes.js";
-import { REGION_TO_BIOME } from "./region-to-biome.js";
+// Unified, persistent, merchant-aware, boss-aware world simulation engine.
 
 import { WORLD_BOSSES } from "./world-boss-templates.js";
 import { REGION_UNLOCKS } from "./region-unlock.js";
@@ -27,21 +23,22 @@ export const WorldSim = {
         tickCount: 0,
         globalMerchant: null,
         lastTick: Date.now(),
-      
-        // NEW: world boss progression
-        bosses: {},            // bossKey → { active, hp, maxHP, region, respawnAt }
-        regionUnlocks: {},     // regionKey → boolean
-        // Update world bosses
-        this._state = updateWorldBosses(this._state);
+
+        // World boss progression
+        bosses: {},        // bossKey → { active, hp, maxHP, region, respawnAt }
+        regionUnlocks: {}  // regionKey → boolean
       };
+
+      // Initialize boss states immediately
+      this._state = updateWorldBosses(this._state);
     }
 
-    // Run a tick immediately to process offline time
+    // Process offline time immediately
     this.tick();
   },
 
   /* ============================================================
-     TICK — advances world time + rotates merchants
+     TICK — advances world time + rotates merchants + bosses
   ============================================================ */
   tick() {
     const now = Date.now();
@@ -52,10 +49,12 @@ export const WorldSim = {
     // Advance world time
     this._state.lastTick = now;
 
-    // Merchant rotation (global + future biome/region/event merchants)
+    // Merchant rotation
     this._state = rotateMerchants(this._state);
 
-    // Future Phase 6: world boss progression
+    // World boss progression
+    this._state = updateWorldBosses(this._state);
+
     // Future Phase 7: dungeon resets
     // Future Phase 8: weather/events/hazards reintegration
 
@@ -88,6 +87,5 @@ function _getRegionUnlocks() {
   return REGION_UNLOCKS;
 }
 
-// Attach accessors to the main object
 WorldSim._getBossData = _getBossData;
 WorldSim._getRegionUnlocks = _getRegionUnlocks;
