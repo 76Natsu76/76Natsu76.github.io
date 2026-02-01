@@ -1428,17 +1428,18 @@
         } else {
           DungeonEngine.completeFloor(run);
       
-          if (isEndless) {
-            addLog(`Endless Abyss: you reach floor ${run.currentFloor}.`);
-            p.endlessRecord = p.endlessRecord || { highestFloor: 0, score: 0 };
-            p.endlessRecord.highestFloor = Math.max(
-              p.endlessRecord.highestFloor,
-              run.highestFloor || run.currentFloor
-            );
-            p.endlessRecord.score = p.endlessRecord.highestFloor;
-          } else {
-            addLog(`You advance to floor ${run.currentFloor}.`);
-          }
+        if (isEndless) {
+          // Save last run summary
+          const p = PlayerStorage.load(username);
+          p.lastEndlessRun = {
+            floor: run.highestFloor || run.currentFloor,
+            score: run.highestFloor || run.currentFloor
+          };
+          p.activeDungeonRun = null;
+          PlayerStorage.save(username, p);
+        
+          window.location.href = "endless-summary.html";
+          return;
         }
       
         if (p) {
