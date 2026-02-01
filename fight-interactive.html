@@ -1064,7 +1064,9 @@
     if (!p) return p;
 
     if (typeof p.hpMax !== "number") p.hpMax = 20;
-    if (typeof p.hpCurrent !== "number") p.hpCurrent = p.hpMax;
+    if (p.hpCurrent === undefined || p.hpCurrent === null) {
+      p.hpCurrent = p.hpMax;
+    };
 
     if (typeof p.manaMax !== "number") p.manaMax = 10;
     if (typeof p.mana !== "number") p.mana = p.manaMax;
@@ -1137,7 +1139,8 @@
       race: raw.race,
       subrace: raw.subrace,
 
-      hpCurrent: (raw.hpCurrent !== undefined ? raw.hpCurrent : hpMax),
+      hpCurrent: (raw.hpCurrent !== undefined && raw.hpCurrent !== null)
+        ? Number(raw.hpCurrent) : hpMax,
       hpMax,
       manaCurrent: raw.mana ?? manaMax,
       manaMax,
