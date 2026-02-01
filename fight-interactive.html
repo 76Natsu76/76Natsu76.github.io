@@ -1041,6 +1041,7 @@
     } from "./combat-engine.js";
     import { REGION_LOOT_TABLES } from "./region-loot-tables.js";
     import { handleSafeRespawn, handleRiskyRespawn } from "./death-handler.js";
+    import { DungeonEngine } from "./dungeon-engine.js";
     import { WorldSim } from "./world-simulation.js";
     import { handleBossDefeat } from "./world-boss-progression.js";
 
@@ -1349,24 +1350,42 @@
       if (outcome) {
         addLog("Combat ended: " + outcome.toUpperCase());
       
-        // Player defeated
         if (outcome === "defeat") {
+          // If in dungeon, mark run failed
+          if (combat.context.dungeonRun) {
+            const run = combat.context.dungeonRun;
+            DungeonEngine.failDungeon(run);
+            localStorage.setItem("active_dungeon_run", JSON.stringify(run));
+          }
+      
           showDeathModal();
           return;
         }
       
-        // Player victory — check for world boss
+        // World boss progression (already added)
         if (outcome === "victory" && combat.enemyState.isWorldBoss) {
           const bossKey = combat.enemyState.bossKey;
-      
           const worldState = WorldSim.getState();
           handleBossDefeat(worldState, bossKey);
           WorldSim.save();
-      
           addLog(`You have defeated the World Boss: ${bossKey}!`);
         }
       
-        // Normal reward flow
+        // Dungeon progression
+        if (outcome === "victory" && combat.context.dungeonRun) {
+          const run = combat.context.dungeonRun;
+      
+          if (run.state === "boss") {
+            DungeonEngine.completeDungeon(run);
+            localStorage.setItem("active_dungeon_run", JSON.stringify(run));
+            addLog("You have cleared the dungeon!");
+          } else {
+            DungeonEngine.completeFloor(run);
+            localStorage.setItem("active_dungeon_run", JSON.stringify(run));
+            addLog(`You advance to floor ${run.currentFloor}.`);
+          }
+        }
+      
         const rewards = generateRewards(
           combat.playerState,
           combat.enemyState,
@@ -1379,17 +1398,6 @@
         return;
       }
 
-      if (autoBattle) {
-        autoLoop();
-      } else {
-        showActionPanel();
-      }
-  
-      if (combat.context.fled) {
-        endCombat("fled");
-        return;
-      }
-    }
   
     /* ============================================================
        FINALIZE REWARDS (LOCAL + KV)
