@@ -1137,7 +1137,7 @@
       race: raw.race,
       subrace: raw.subrace,
 
-      hpCurrent: raw.hpCurrent ?? hpMax,
+      hpCurrent: (raw.hpCurrent !== undefined ? raw.hpCurrent : hpMax),
       hpMax,
       manaCurrent: raw.mana ?? manaMax,
       manaMax,
@@ -1326,6 +1326,7 @@
     // Always load the freshest player state
     const latest = PlayerStorage.load(username) || rawPlayer;
     const playerState = resolvePlayer(latest);
+    
     const enemyState = resolveEnemyFromEncounter(encounter.enemy);
 
     // Build context (region/biome/weather/event + dungeon info if any)
