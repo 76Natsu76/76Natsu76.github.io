@@ -200,9 +200,9 @@
               <span>World Boss</span>
               <span>
                 ${
-                  worldState.bosses[bossKey]?.active
+                  worldState.bosses?.[regionKey]?.active
                     ? "Active"
-                    : worldState.regionUnlocks[regionKey]
+                    : worldState.regionUnlocks?.[regionKey]
                     ? "Defeated"
                     : "Locked"
                 }
