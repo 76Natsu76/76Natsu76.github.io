@@ -1043,8 +1043,7 @@
   import {
     handleSafeRespawn,
     handleRiskyRespawn,
-    getSafeRespawnRemaining,
-    startRespawnLockCountdown
+    getSafeRespawnRemaining
   } from "./death-handler.js";
   import { DungeonEngine } from "./dungeon-engine.js";
   import { WorldSim } from "./world-simulation.js";
@@ -2044,9 +2043,6 @@
     if (stored.safeRespawnLockUntil && getSafeRespawnRemaining(stored) > 0) {
       safeBtn.disabled = true;
       safeBtn.textContent = "Safe Respawn (Locked)";
-    }
-    if (stored.safeRespawnLockUntil) {
-      startRespawnLockCountdown(stored);
     }
   }
 
