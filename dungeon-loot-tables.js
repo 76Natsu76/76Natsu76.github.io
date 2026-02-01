@@ -24,5 +24,15 @@ export const DUNGEON_LOOT_TABLES = {
       { "itemKey": "astral_shard", "weight": 10, "min": 1, "max": 1 },
       { "itemKey": "riftcore", "weight": 2, "min": 1, "max": 1 }
     ]
+  },
+
+  "endless_base": {
+    goldRange: [10, 25],
+    xpRange: [15, 35],
+    items: [
+      { itemKey: "abyss_dust", weight: 10, min: 1, max: 2 },
+      { itemKey: "void_fragment", weight: 4, min: 1, max: 1 },
+      { itemKey: "shimmering_essence", weight: 2, min: 1, max: 1 }
+    ]
   }
 };
