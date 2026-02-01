@@ -8,6 +8,7 @@
  */
 
 import { REGION_BIOMES, getWeatherDefinition } from "./world-simulation.js";
+import { rotateMerchants } from "./merchant-rotation.js";
 
 const BIOME_WEATHER_POOLS = {
   forest: ["clear", "rain", "fog"],
@@ -71,5 +72,6 @@ export function tickWorld(worldState, deltaMinutes) {
       }
     }
   }
+  worldState = rotateMerchants(worldState);
   return worldState;
 }
