@@ -307,9 +307,11 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
  ****************************************************/
 
 export function resolveAbilityUse(attacker, defender, ability, context, logs) {
+  const abilityName = ability?.name || ability?.key || "ability";
+
   const hitChance = computeHitChance(attacker, defender, context);
   if (!rollChance(hitChance)) {
-    if (logs) logs.push(`${attacker.name}'s ${ability.name} misses!`);
+    logs.push(`${attacker.name}'s ${abilityName} misses!`);
     return;
   }
 
