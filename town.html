@@ -183,11 +183,27 @@
        INITIAL LOAD
     --------------------------------------------------------- */
     let player = PlayerStorage.load(username);
+    const content = document.getElementById("townContent");
+    
     if (!player) {
-      document.getElementById("townContent").innerHTML =
-        "<div>Failed to load player.</div>";
+      content.innerHTML = "<div>Failed to load player.</div>";
     } else {
+      let flavor = "";
+      if (player.justRespawned) {
+        flavor = `
+          <div class="section">
+            <p>You awaken in town, your body restored but your spirit drained. Your MP is completely depleted.</p>
+          </div>
+        `;
+        delete player.justRespawned;
+        PlayerStorage.save(username, player);
+      }
+    
       renderTown(player);
+    
+      if (flavor) {
+        content.insertAdjacentHTML("beforeend", flavor);
+      }
     }
   </script>
 </body>
