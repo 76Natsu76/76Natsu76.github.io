@@ -1918,6 +1918,9 @@
         safeBtn.disabled = true;
         safeBtn.textContent = "Safe Respawn (Locked)";
       }
+      if (stored.safeRespawnLockUntil) {
+        startRespawnLockCountdown(stored);
+      }
     }
 
     /* ============================================================
