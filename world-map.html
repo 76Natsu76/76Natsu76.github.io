@@ -171,7 +171,9 @@
         const [minLevel, maxLevel] = region.levelRange || [1, 999];
         const levelLocked = playerLevel < minLevel;
   
-        const globallyUnlocked = REGION_UNLOCKS.unlocks[regionKey] ?? false;
+        const globallyUnlocked = WorldSim._state.regionUnlocks[regionKey] ||
+          REGION_UNLOCKS.unlocks[regionKey] || false;
+
         const bossActive = !!state.worldBoss;
         const bossLocked = !globallyUnlocked;
   
@@ -196,9 +198,17 @@
   
             <div class="stat-row">
               <span>World Boss</span>
-              <span>${bossActive ? "Active" : globallyUnlocked ? "Defeated" : "Locked"}</span>
+              <span>
+                ${
+                  worldState.bosses[bossKey]?.active
+                    ? "Active"
+                    : worldState.regionUnlocks[regionKey]
+                    ? "Defeated"
+                    : "Locked"
+                }
+              </span>
             </div>
-  
+
             <div class="stat-row">
               <span>Level Range</span>
               <span>${minLevel} - ${maxLevel}</span>
