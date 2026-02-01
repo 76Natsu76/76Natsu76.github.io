@@ -94,7 +94,10 @@
     <div class="tab active" id="tab-global" onclick="switchTab('global')">Global</div>
     <div class="tab" id="tab-hardcore" onclick="switchTab('hardcore')">Hardcore</div>
     <div class="tab" id="tab-friends" onclick="switchTab('friends')">Friends</div>
+    <div class="tab" id="tab-dungeons" onclick="switchTab('dungeons')">Dungeons</div>
+    <div class="tab" id="tab-endless" onclick="switchTab('endless')">Endless</div>
   </div>
+
 
   <div id="leaderboardContainer">Loading...</div>
 
@@ -125,32 +128,94 @@
     async function loadLeaderboard() {
       const container = document.getElementById("leaderboardContainer");
       container.textContent = "Loading...";
-
+    
       try {
         let data = [];
-
+    
         if (currentTab === "global") {
           data = await api.getLeaderboardGlobalKV();
         } else if (currentTab === "hardcore") {
           data = await api.getLeaderboardHardcoreKV();
         } else if (currentTab === "friends") {
           data = await api.getLeaderboardFriendsKV(username);
+        } else if (currentTab === "dungeons") {
+          data = await api.getLeaderboardDungeonsKV();
+        } else if (currentTab === "endless") {
+          data = await api.getLeaderboardEndlessKV();
         }
-
+    
         renderLeaderboard(data);
       } catch (err) {
         container.textContent = "Error loading leaderboard: " + err.message;
       }
     }
 
+
     function renderLeaderboard(list) {
       const container = document.getElementById("leaderboardContainer");
-
+    
       if (!list || list.length === 0) {
         container.innerHTML = "<div>No data available.</div>";
         return;
       }
-
+    
+      if (currentTab === "dungeons") {
+        const header = `
+          <div class="leaderboard-row header-row">
+            <div>#</div>
+            <div>Username</div>
+            <div>Total Clears</div>
+            <div colspan="2">Top Dungeons</div>
+          </div>
+        `;
+    
+        const rows = list
+          .map(
+            (p, i) => `
+            <div class="leaderboard-row">
+              <div>${i + 1}</div>
+              <div>${p.username}</div>
+              <div>${p.totalClears}</div>
+              <div colspan="2">${Object.keys(p.records || {}).join(", ")}</div>
+            </div>
+          `
+          )
+          .join("");
+    
+        container.innerHTML = header + rows;
+        return;
+      }
+    
+      if (currentTab === "endless") {
+        const header = `
+          <div class="leaderboard-row header-row">
+            <div>#</div>
+            <div>Username</div>
+            <div>Highest Floor</div>
+            <div>Score</div>
+            <div></div>
+          </div>
+        `;
+    
+        const rows = list
+          .map(
+            (p, i) => `
+            <div class="leaderboard-row">
+              <div>${i + 1}</div>
+              <div>${p.username}</div>
+              <div>${p.highestFloor}</div>
+              <div>${p.score}</div>
+              <div></div>
+            </div>
+          `
+          )
+          .join("");
+    
+        container.innerHTML = header + rows;
+        return;
+      }
+    
+      // default: global/hardcore/friends
       const header = `
         <div class="leaderboard-row header-row">
           <div>#</div>
@@ -160,7 +225,7 @@
           <div>Max HP</div>
         </div>
       `;
-
+    
       const rows = list
         .map(
           (p, i) => `
@@ -174,9 +239,10 @@
         `
         )
         .join("");
-
+    
       container.innerHTML = header + rows;
     }
+
 
     function refresh() {
       loadLeaderboard();
