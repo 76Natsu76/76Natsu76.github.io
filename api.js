@@ -269,7 +269,3 @@ export async function getLeaderboardDungeonsKV() {
 export async function getLeaderboardEndlessKV() {
   return fetchJSON(`${BASE_URL}/leaderboards/endless`);
 }
-
-export async function getLeaderboardFriendsKV(username) {
-  return fetchJSON(`${BASE_URL}/leaderboards/friends/${username}`);
-}
