@@ -1,8 +1,12 @@
 // world-boss-progression.js
+// Persistent world boss progression system.
 
 import { WORLD_BOSSES } from "./world-boss-templates.js";
 import { REGION_UNLOCKS } from "./region-unlock.js";
 
+/* ============================================================
+   UPDATE WORLD BOSSES (spawn / respawn)
+============================================================ */
 export function updateWorldBosses(worldState) {
   const now = Date.now();
 
@@ -23,7 +27,7 @@ export function updateWorldBosses(worldState) {
 
     const boss = worldState.bosses[bossKey];
 
-    // If boss is active, nothing to do here
+    // If boss is active, nothing to do
     if (boss.active) continue;
 
     // If boss is inactive but respawn timer not reached, skip
@@ -37,27 +41,29 @@ export function updateWorldBosses(worldState) {
     }
   }
 
-  export function handleBossDefeat(worldState, bossKey) {
-    const boss = worldState.bosses[bossKey];
-    const bossDef = WORLD_BOSSES[bossKey];
-  
-    if (!boss || !boss.active) return worldState;
-  
-    // Mark boss defeated
-    boss.active = false;
-    boss.hp = 0;
-  
-    // Set respawn timer
-    const hours = bossDef.spawnRules.respawnHours || 24;
-    boss.respawnAt = Date.now() + hours * 60 * 60 * 1000;
-  
-    // Unlock region
-    const region = bossDef.spawnRules.region;
-    worldState.regionUnlocks[region] = true;
-  
-    return worldState;
-  }
+  return worldState;
+}
 
+/* ============================================================
+   HANDLE BOSS DEFEAT (combat → world progression)
+============================================================ */
+export function handleBossDefeat(worldState, bossKey) {
+  const boss = worldState.bosses[bossKey];
+  const bossDef = WORLD_BOSSES[bossKey];
+
+  if (!boss || !boss.active) return worldState;
+
+  // Mark boss defeated
+  boss.active = false;
+  boss.hp = 0;
+
+  // Set respawn timer
+  const hours = bossDef.spawnRules.respawnHours || 24;
+  boss.respawnAt = Date.now() + hours * 60 * 60 * 1000;
+
+  // Unlock region
+  const region = bossDef.spawnRules.region;
+  worldState.regionUnlocks[region] = true;
 
   return worldState;
 }
