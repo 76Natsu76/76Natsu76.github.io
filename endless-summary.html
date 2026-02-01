@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Endless Summary</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+      text-align:center;
+    }
+    .summary-box {
+      background:#14171f;
+      border:1px solid #333;
+      padding:24px;
+      border-radius:10px;
+      max-width:500px;
+      margin:40px auto;
+    }
+    .btn {
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      margin-top:12px;
+      width:100%;
+    }
+    .btn:hover { background:#222832; }
+    .record {
+      color:#7fffd4;
+      font-weight:bold;
+      margin-top:10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Endless Abyss — Run Summary</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="summary" class="summary-box">Loading...</div>
+
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+
+    await requireSession();
+    const { username } = window.syncState;
+
+    const player = PlayerStorage.load(username);
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+
+    const summaryBox = document.getElementById("summary");
+
+    const record = player.endlessRecord || { highestFloor: 0, score: 0 };
+    const lastRun = player.lastEndlessRun || { floor: 0, score: 0 };
+
+    const isNewRecord = lastRun.score > record.score;
+
+    if (isNewRecord) {
+      player.endlessRecord = {
+        highestFloor: lastRun.floor,
+        score: lastRun.score
+      };
+      PlayerStorage.save(username, player);
+    }
+
+    summaryBox.innerHTML = `
+      <h2>Run Complete</h2>
+      <p>You reached <strong>Floor ${lastRun.floor}</strong></p>
+      <p>Your Score: <strong>${lastRun.score}</strong></p>
+      ${isNewRecord ? `<p class="record">New Record!</p>` : ""}
+      <button class="btn" onclick="retry()">Try Again</button>
+      <button class="btn" onclick="leaderboard()">View Leaderboard</button>
+      <button class="btn" onclick="town()">Return to Town</button>
+    `;
+
+    window.retry = () => {
+      // Clear old run
+      player.activeDungeonRun = null;
+      PlayerStorage.save(username, player);
+      window.location.href = "dungeon-select.html";
+    };
+
+    window.leaderboard = () => {
+      window.location.href = "leaderboards.html#endless";
+    };
+
+    window.town = () => {
+      player.activeDungeonRun = null;
+      PlayerStorage.save(username, player);
+      window.location.href = "town.html";
+    };
+  </script>
+
+</body>
+</html>
