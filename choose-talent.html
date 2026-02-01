@@ -94,171 +94,262 @@
     import { PlayerStorage } from "./player-storage.js";
     import { savePlayerToKV } from "./api.js";
     import { PROFESSION_TALENT_TREES as TALENT_TREES } from "./profession-talent-trees.js";
-    
+  
     await requireSession();
     const { username } = window.syncState;
-    
+  
     let player = PlayerStorage.load(username);
-    
-    /* ============================================================
-       FIX LEGACY FORMATS
-       - If talentTree is missing or is NOT an array, convert it.
-    ============================================================ */
+  
+    // Ensure canonical format: array of { id }
     if (!Array.isArray(player.talentTree)) {
       player.talentTree = [];
       PlayerStorage.save(username, player);
     }
-    
-    /* ============================================================
-       LOAD TALENT TREE DEFINITIONS
-    ============================================================ */
+  
     const profession = player.profession;
     const talentDefs = TALENT_TREES;
-    
+  
     if (!talentDefs[profession]) {
       document.body.innerHTML = "<h2>No talent tree found for this profession.</h2>";
       throw new Error("No talent tree");
     }
-    
-    /* ============================================================
-       DETERMINE WHICH TIER IS AVAILABLE
-    ============================================================ */
-    function hasTier(tierId) {
-      return player.talentTree.some(n => n.id.startsWith(tierId));
+  
+    /* ------------------------------------------------------------
+       TIER HELPERS
+    ------------------------------------------------------------ */
+    function getChosenIds() {
+      return new Set(player.talentTree.map(n => n.id));
     }
-    
-    let tier = null;
-    
-    if (!hasTier("thief_nimble") && !hasTier("tier1")) {
-      if (player.level < 10) {
-        document.body.innerHTML = "<h2>You are not eligible for Tier 1 talents yet.</h2>";
-        throw new Error("Tier 1 locked");
+  
+    function isTierComplete(tierKey) {
+      const tierDef = talentDefs[profession][tierKey];
+      if (!tierDef) return true;
+  
+      const chosen = getChosenIds();
+      const branches = tierDef.branches || {};
+      for (const nodes of Object.values(branches)) {
+        for (const n of nodes) {
+          if (!chosen.has(n.id)) return false;
+        }
       }
-      tier = "tier1";
+      if (tierDef.capstone && !chosen.has(tierDef.capstone.id)) return false;
+      return true;
     }
-    else if (!hasTier("tier2")) {
-      if (player.level < 100) {
-        document.body.innerHTML = "<h2>You are not eligible for Tier 2 talents yet.</h2>";
-        throw new Error("Tier 2 locked");
+  
+    function determineTier() {
+      // Tier 1
+      if (!isTierComplete("tier1")) {
+        if (player.level < 10) {
+          document.body.innerHTML = "<h2>You are not eligible for Tier 1 talents yet.</h2>";
+          throw new Error("Tier 1 locked");
+        }
+        return "tier1";
       }
-      tier = "tier2";
-    }
-    else if (!hasTier("tier3")) {
-      if (player.level < 1000) {
-        document.body.innerHTML = "<h2>You are not eligible for Tier 3 talents yet.</h2>";
-        throw new Error("Tier 3 locked");
+      // Tier 2
+      if (!isTierComplete("tier2")) {
+        if (player.level < 100) {
+          document.body.innerHTML = "<h2>You are not eligible for Tier 2 talents yet.</h2>";
+          throw new Error("Tier 2 locked");
+        }
+        return "tier2";
       }
-      tier = "tier3";
-    }
-    else {
+      // Tier 3
+      if (!isTierComplete("tier3")) {
+        if (player.level < 1000) {
+          document.body.innerHTML = "<h2>You are not eligible for Tier 3 talents yet.</h2>";
+          throw new Error("Tier 3 locked");
+        }
+        return "tier3";
+      }
+  
       document.body.innerHTML = "<h2>You have already selected all available talents.</h2>";
       throw new Error("All tiers chosen");
     }
-    
-    /* ============================================================
-       RENDER TALENT BRANCHES
-    ============================================================ */
+  
+    const tier = determineTier();
     const tierData = talentDefs[profession][tier];
     const branches = tierData.branches || {};
-    let selectedBranch = null;
-    
-    renderBranches();
-    
-    function renderBranches() {
+  
+    let selectedNodeId = null;
+  
+    renderTier();
+  
+    /* ------------------------------------------------------------
+       RENDER TIER (BRANCHES + NODES)
+    ------------------------------------------------------------ */
+    function renderTier() {
       const container = document.getElementById("talentContainer");
-      container.innerHTML = `<h2>Select a Tier ${tier.replace("tier","")} Talent</h2>`;
-    
+      const chosen = getChosenIds();
+  
+      container.innerHTML = `
+        <h2>Select a Tier ${tier.replace("tier","")} Talent</h2>
+        <p>Talent Points: ${player.talentPoints || 0}</p>
+      `;
+  
       for (const [branchKey, nodes] of Object.entries(branches)) {
-        const div = document.createElement("div");
-        div.className = "branch-card";
-        div.innerHTML = `
-          <strong>${format(branchKey)}</strong><br>
-          ${renderNodes(nodes)}
-        `;
-        div.onclick = () => selectBranch(branchKey, div);
-        container.appendChild(div);
+        const branchDiv = document.createElement("div");
+        branchDiv.className = "branch-card";
+        branchDiv.innerHTML = `<strong>${format(branchKey)}</strong><br>`;
+  
+        const nodesHtml = nodes.map(n => {
+          const isChosen = chosen.has(n.id);
+          const locked = n.requires && !chosen.has(n.requires);
+          const classes = [
+            "node",
+            isChosen ? "node-chosen" : "",
+            locked ? "node-locked" : ""
+          ].join(" ");
+  
+          return `
+            <div class="${classes}" data-node-id="${n.id}">
+              <strong>${n.name}</strong><br>
+              <span style="opacity:0.8;">${n.description}</span>
+            </div>
+          `;
+        }).join("");
+  
+        branchDiv.innerHTML += nodesHtml;
+        container.appendChild(branchDiv);
       }
-    }
-    
-    function renderNodes(nodes) {
-      return nodes.map((n, i) => `
-        <div class="node ${i === 0 ? "" : "node-locked"}">
-          <strong>${n.name}</strong><br>
-          <span style="opacity:0.8;">${n.description}</span>
-        </div>
-      `).join("");
-    }
-    
-    function selectBranch(branchKey, element) {
-      selectedBranch = branchKey;
-    
-      document.querySelectorAll(".branch-card").forEach(el => el.classList.remove("selected"));
-      element.classList.add("selected");
-    
-      document.getElementById("confirmBtn").style.display = "block";
-    }
-    
-    /* ============================================================
-       SAVE TALENT CHOICE (LOCAL + KV)
-    ============================================================ */
-    document.getElementById("confirmBtn").onclick = async () => {
-      if (!selectedBranch) return;
-    
-      const nodes = branches[selectedBranch];
-    
-      // Add all nodes in this branch to the player's talentTree
-      nodes.forEach(n => {
-        if (!player.talentTree.some(c => c.id === n.id)) {
-          player.talentTree.push({ id: n.id });
-        }
-      });
-    
-      // Add capstone if exists
+  
+      // Capstone
       if (tierData.capstone) {
         const cap = tierData.capstone;
-        if (!player.talentTree.some(c => c.id === cap.id)) {
-          player.talentTree.push({ id: cap.id });
+        const chosenCap = chosen.has(cap.id);
+        const allNodesChosen = Object.values(branches).every(nodes =>
+          nodes.every(n => chosen.has(n.id))
+        );
+        const lockedCap = !allNodesChosen;
+  
+        const capDiv = document.createElement("div");
+        capDiv.className = "branch-card capstone-card";
+        capDiv.innerHTML = `
+          <strong>Capstone</strong><br>
+          <div class="node ${chosenCap ? "node-chosen" : ""} ${lockedCap ? "node-locked" : ""}" data-node-id="${cap.id}">
+            <strong>${cap.name}</strong><br>
+            <span style="opacity:0.8;">${cap.description}</span>
+          </div>
+        `;
+        container.appendChild(capDiv);
+      }
+  
+      // Attach click handlers
+      container.querySelectorAll(".node").forEach(nodeEl => {
+        nodeEl.addEventListener("click", () => onNodeClick(nodeEl));
+      });
+  
+      // Reset selection + buttons
+      selectedNodeId = null;
+      document.getElementById("confirmBtn").style.display = "none";
+      document.getElementById("returnBtn").style.display = "block";
+      document.getElementById("saveStatus").textContent = "";
+    }
+  
+    function onNodeClick(nodeEl) {
+      const nodeId = nodeEl.getAttribute("data-node-id");
+      const chosen = getChosenIds();
+  
+      // Already chosen → ignore
+      if (chosen.has(nodeId)) return;
+  
+      // Find node definition
+      const node = findNodeById(nodeId);
+      if (!node) return;
+  
+      // Check lock (requires)
+      if (node.requires && !chosen.has(node.requires)) {
+        document.getElementById("saveStatus").textContent = "You must unlock the previous talent first.";
+        return;
+      }
+  
+      // Check capstone lock
+      if (tierData.capstone && nodeId === tierData.capstone.id) {
+        const allNodesChosen = Object.values(branches).every(nodes =>
+          nodes.every(n => chosen.has(n.id))
+        );
+        if (!allNodesChosen) {
+          document.getElementById("saveStatus").textContent = "Unlock all Tier talents before the capstone.";
+          return;
         }
       }
-    
-      // Deduct talent points
-      const cost = parseInt(tier.replace("tier",""));
-      player.talentPoints = (player.talentPoints || 0) - cost;
-    
+  
+      // Check talent points
+      if ((player.talentPoints || 0) <= 0) {
+        document.getElementById("saveStatus").textContent = "Not enough talent points.";
+        return;
+      }
+  
+      // Select node
+      selectedNodeId = nodeId;
+      document.querySelectorAll(".node").forEach(el => el.classList.remove("node-selected"));
+      nodeEl.classList.add("node-selected");
+      document.getElementById("confirmBtn").style.display = "block";
+      document.getElementById("saveStatus").textContent = `Ready to learn: ${node.name}`;
+    }
+  
+    function findNodeById(id) {
+      for (const nodes of Object.values(branches)) {
+        const found = nodes.find(n => n.id === id);
+        if (found) return found;
+      }
+      if (tierData.capstone && tierData.capstone.id === id) return tierData.capstone;
+      return null;
+    }
+  
+    /* ------------------------------------------------------------
+       SAVE TALENT CHOICE (ONE NODE)
+    ------------------------------------------------------------ */
+    document.getElementById("confirmBtn").onclick = async () => {
+      if (!selectedNodeId) return;
+  
+      const chosen = getChosenIds();
+      if (chosen.has(selectedNodeId)) return;
+  
+      const node = findNodeById(selectedNodeId);
+      if (!node) return;
+  
+      if ((player.talentPoints || 0) <= 0) {
+        document.getElementById("saveStatus").textContent = "Not enough talent points.";
+        return;
+      }
+  
+      // Apply choice
+      player.talentTree.push({ id: node.id });
+      player.talentPoints = (player.talentPoints || 0) - 1;
+  
       // Save locally
       PlayerStorage.save(username, player);
-    
+  
       // Save to KV
       const res = await savePlayerToKV(username, player);
-    
+  
       const status = document.getElementById("saveStatus");
       if (res && res.ok) {
-        status.textContent = "Saved to KV ✔";
-        document.getElementById("returnBtn").style.display = "block";
-        document.getElementById("confirmBtn").style.display = "none";
+        status.textContent = "Talent learned and saved to KV ✔";
       } else {
         status.textContent = "Error saving to KV.";
       }
+  
+      // Re-render tier with updated state
+      renderTier();
     };
-    
-    /* ============================================================
+  
+    /* ------------------------------------------------------------
        RETURN BUTTON
-    ============================================================ */
+    ------------------------------------------------------------ */
     document.getElementById("returnBtn").onclick = () => {
       window.location.href = "character.html";
     };
-    
-    /* ============================================================
+  
+    /* ------------------------------------------------------------
        HELPERS
-    ============================================================ */
+    ------------------------------------------------------------ */
     function format(str) {
       return String(str)
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-    
-    </script>
-
+  </script>
 
 </body>
 </html>
