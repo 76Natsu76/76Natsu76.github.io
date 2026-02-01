@@ -94,49 +94,56 @@
     import { PlayerStorage } from "./player-storage.js";
     import { savePlayerToKV } from "./api.js";
     import { PROFESSION_TALENT_TREES as TALENT_TREES } from "./profession-talent-trees.js";
-
+    
     await requireSession();
     const { username } = window.syncState;
-
+    
     let player = PlayerStorage.load(username);
-
-    // Fix legacy talentTree formats
-    if (!player.talentTree || Array.isArray(player.talentTree)) {
-      player.talentTree = chosenNodes.map(n => ({ id: n.id }));
+    
+    /* ============================================================
+       FIX LEGACY FORMATS
+       - If talentTree is missing or is NOT an array, convert it.
+    ============================================================ */
+    if (!Array.isArray(player.talentTree)) {
+      player.talentTree = [];
       PlayerStorage.save(username, player);
     }
-
+    
     /* ============================================================
-       LOAD TALENT TREE DEFINITIONS (JS MODULE)
+       LOAD TALENT TREE DEFINITIONS
     ============================================================ */
     const profession = player.profession;
     const talentDefs = TALENT_TREES;
-
+    
     if (!talentDefs[profession]) {
       document.body.innerHTML = "<h2>No talent tree found for this profession.</h2>";
       throw new Error("No talent tree");
     }
-
+    
     /* ============================================================
        DETERMINE WHICH TIER IS AVAILABLE
     ============================================================ */
+    function hasTier(tierId) {
+      return player.talentTree.some(n => n.id.startsWith(tierId));
+    }
+    
     let tier = null;
-
-    if (!player.talentTree.tier1) {
+    
+    if (!hasTier("thief_nimble") && !hasTier("tier1")) {
       if (player.level < 10) {
         document.body.innerHTML = "<h2>You are not eligible for Tier 1 talents yet.</h2>";
         throw new Error("Tier 1 locked");
       }
       tier = "tier1";
     }
-    else if (!player.talentTree.tier2) {
+    else if (!hasTier("tier2")) {
       if (player.level < 100) {
         document.body.innerHTML = "<h2>You are not eligible for Tier 2 talents yet.</h2>";
         throw new Error("Tier 2 locked");
       }
       tier = "tier2";
     }
-    else if (!player.talentTree.tier3) {
+    else if (!hasTier("tier3")) {
       if (player.level < 1000) {
         document.body.innerHTML = "<h2>You are not eligible for Tier 3 talents yet.</h2>";
         throw new Error("Tier 3 locked");
@@ -147,20 +154,20 @@
       document.body.innerHTML = "<h2>You have already selected all available talents.</h2>";
       throw new Error("All tiers chosen");
     }
-
+    
     /* ============================================================
        RENDER TALENT BRANCHES
     ============================================================ */
     const tierData = talentDefs[profession][tier];
     const branches = tierData.branches || {};
     let selectedBranch = null;
-
+    
     renderBranches();
-
+    
     function renderBranches() {
       const container = document.getElementById("talentContainer");
       container.innerHTML = `<h2>Select a Tier ${tier.replace("tier","")} Talent</h2>`;
-
+    
       for (const [branchKey, nodes] of Object.entries(branches)) {
         const div = document.createElement("div");
         div.className = "branch-card";
@@ -172,7 +179,7 @@
         container.appendChild(div);
       }
     }
-
+    
     function renderNodes(nodes) {
       return nodes.map((n, i) => `
         <div class="node ${i === 0 ? "" : "node-locked"}">
@@ -181,34 +188,49 @@
         </div>
       `).join("");
     }
-
+    
     function selectBranch(branchKey, element) {
       selectedBranch = branchKey;
-
+    
       document.querySelectorAll(".branch-card").forEach(el => el.classList.remove("selected"));
       element.classList.add("selected");
-
+    
       document.getElementById("confirmBtn").style.display = "block";
     }
-
+    
     /* ============================================================
        SAVE TALENT CHOICE (LOCAL + KV)
     ============================================================ */
     document.getElementById("confirmBtn").onclick = async () => {
       if (!selectedBranch) return;
-
-      player.talentTree[tier] = selectedBranch;
-
-      // Deduct talent points (1 for tier1, 2 for tier2, 3 for tier3)
+    
+      const nodes = branches[selectedBranch];
+    
+      // Add all nodes in this branch to the player's talentTree
+      nodes.forEach(n => {
+        if (!player.talentTree.some(c => c.id === n.id)) {
+          player.talentTree.push({ id: n.id });
+        }
+      });
+    
+      // Add capstone if exists
+      if (tierData.capstone) {
+        const cap = tierData.capstone;
+        if (!player.talentTree.some(c => c.id === cap.id)) {
+          player.talentTree.push({ id: cap.id });
+        }
+      }
+    
+      // Deduct talent points
       const cost = parseInt(tier.replace("tier",""));
       player.talentPoints = (player.talentPoints || 0) - cost;
-
+    
       // Save locally
       PlayerStorage.save(username, player);
-
+    
       // Save to KV
       const res = await savePlayerToKV(username, player);
-
+    
       const status = document.getElementById("saveStatus");
       if (res && res.ok) {
         status.textContent = "Saved to KV ✔";
@@ -218,14 +240,14 @@
         status.textContent = "Error saving to KV.";
       }
     };
-
+    
     /* ============================================================
        RETURN BUTTON
     ============================================================ */
     document.getElementById("returnBtn").onclick = () => {
       window.location.href = "character.html";
     };
-
+    
     /* ============================================================
        HELPERS
     ============================================================ */
@@ -234,8 +256,9 @@
         .replace(/_/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
+    
+    </script>
 
-  </script>
 
 </body>
 </html>
