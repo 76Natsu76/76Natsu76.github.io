@@ -126,7 +126,9 @@ export const PlayerRegistry = {
       hardcore: raw.hardcore || false,
       transcension: raw.transcension || 0,
 
-      hpCurrent: Number(raw.hpCurrent || 0),
+      hpCurrent: (raw.hpCurrent !== undefined && raw.hpCurrent !== null)
+        ? Number(raw.hpCurrent) : Number(raw.hpMax ?? raw.stats?.hp ?? 1),
+
       manaCurrent: Number(raw.manaCurrent || 0),
       speedBase: Number(raw.speedBase || 0),
 
