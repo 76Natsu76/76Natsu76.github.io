@@ -87,6 +87,7 @@
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
     import { getRegenRates } from "./regen.js";
+    import { getSafeRespawnRemaining } from "./death-handler.js";
 
     await requireSession();
     const { username } = window.syncState || {};
@@ -189,21 +190,58 @@
       content.innerHTML = "<div>Failed to load player.</div>";
     } else {
       let flavor = "";
+      let lockUI = "";
+    
+      // Respawn flavor
       if (player.justRespawned) {
         flavor = `
           <div class="section">
-            <p>You awaken in town, your body restored but your spirit drained. Your MP is completely depleted.</p>
+            <p>You awaken in town, restored but drained. Your MP is completely depleted.</p>
           </div>
         `;
         delete player.justRespawned;
         PlayerStorage.save(username, player);
       }
     
+      // Safe respawn lock UI
+      const remaining = getSafeRespawnRemaining(player);
+      if (remaining > 0) {
+        const minutes = Math.ceil(remaining / 60000);
+        lockUI = `
+          <div class="section" id="respawnLockBox">
+            <p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>
+          </div>
+        `;
+      } else if (player.safeRespawnLockUntil) {
+        // Lock expired — clean it up
+        delete player.safeRespawnLockUntil;
+        PlayerStorage.save(username, player);
+      }
+    
       renderTown(player);
     
-      if (flavor) {
-        content.insertAdjacentHTML("beforeend", flavor);
-      }
+      if (flavor) content.insertAdjacentHTML("beforeend", flavor);
+      if (lockUI) content.insertAdjacentHTML("beforeend", lockUI);
+    }
+
+    function startRespawnLockCountdown(player) {
+      const box = document.getElementById("respawnLockBox");
+      if (!box) return;
+    
+      const interval = setInterval(() => {
+        const remaining = getSafeRespawnRemaining(player);
+    
+        if (remaining <= 0) {
+          box.innerHTML = "<p><strong>Safe Respawn Lock:</strong> Ready.</p>";
+          delete player.safeRespawnLockUntil;
+          PlayerStorage.save(username, player);
+          clearInterval(interval);
+          return;
+        }
+    
+        const minutes = Math.ceil(remaining / 60000);
+        box.innerHTML = `<p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>`;
+      }, 10000); // update every 10 seconds
     }
   </script>
 </body>
