@@ -9,3 +9,12 @@ export function pickWeighted(list) {
   }
   return list[0].id;
 }
+
+// NEW — matches merchant-inventory.js expectations
+export function weightedRandom(list, weightFn) {
+  const weightedList = list.map(item => ({
+    id: item,
+    weight: weightFn(item)
+  }));
+  return pickWeighted(weightedList);
+}
