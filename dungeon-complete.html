@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dungeon Cleared</title>
+  <style>
+    body { background:#0d0f14; color:#e8e8e8; font-family:system-ui; padding:24px; }
+    .box { background:#14171f; border:1px solid #333; padding:20px; border-radius:8px; }
+    .btn { padding:10px 14px; border-radius:6px; border:1px solid #444; background:#1a1d24; color:#eee; cursor:pointer; width:100%; margin-top:12px; }
+    .btn:hover { background:#222832; }
+  </style>
+</head>
+
+<body>
+
+  <h1>Dungeon Cleared!</h1>
+  <div id="summaryBox" class="box">Loading...</div>
+
+  <button class="btn" onclick="goToTown()">Return to Town</button>
+
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { DUNGEONS } from "./dungeons.js";
+    import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
+
+    await requireSession();
+    const { username } = window.syncState;
+
+    const player = PlayerStorage.load(username);
+    const run = player.activeDungeonRun;
+
+    if (!run || !run.completed) {
+      document.getElementById("summaryBox").innerHTML = "<p>No completed dungeon run found.</p>";
+      return;
+    }
+
+    const dungeon = DUNGEONS[run.dungeonKey];
+    const summary = summarizeDungeonRewards(player, dungeon);
+
+    document.getElementById("summaryBox").innerHTML = `
+      <h2>${dungeon.name}</h2>
+      <p>You conquered the dungeon!</p>
+      <p><strong>XP:</strong> ${summary.xp}</p>
+      <p><strong>Gold:</strong> ${summary.gold}</p>
+      <p><strong>Items:</strong> ${summary.items.join(", ") || "None"}</p>
+    `;
+
+    // Clear run
+    player.activeDungeonRun = null;
+    PlayerStorage.save(username, player);
+
+    window.goToTown = () => window.location.href = "town.html";
+  </script>
+
+</body>
+</html>
