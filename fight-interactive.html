@@ -1400,6 +1400,9 @@
     combat.playerState = result.player;
     combat.enemyState = result.enemy;
     combat.context = result.context;
+    
+    PlayerStorage.save(username, combat.playerState);
+    await api.savePlayer(username, combat.playerState);
   
     renderLogs(result.logs || logs);
     renderPanels();
