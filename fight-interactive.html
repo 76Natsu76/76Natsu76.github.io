@@ -1401,6 +1401,10 @@
       if (outcome === "victory" && combat.enemyState.isWorldBoss) {
         const bossKey = combat.enemyState.bossKey;
         const worldState = WorldSim.getState();
+        const p = PlayerStorage.load(username);
+        p.flags = p.flags || {};
+        p.flags[`${bossKey}_defeated`] = true;
+        PlayerStorage.save(username, p);
         handleBossDefeat(worldState, bossKey);
         WorldSim.save();
         addLog(`You have defeated the World Boss: ${bossKey}!`);
@@ -1415,6 +1419,10 @@
         if (run.state === "boss" && !isEndless) {
           // Normal dungeon: final boss
           DungeonEngine.completeDungeon(run);
+          const p = PlayerStorage.load(username);
+          p.flags = p.flags || {};
+          p.flags[`${run.dungeonKey}_cleared`] = true;
+          PlayerStorage.save(username, p);
           addLog("You have cleared the dungeon!");
         } else {
           // Endless or normal floor
