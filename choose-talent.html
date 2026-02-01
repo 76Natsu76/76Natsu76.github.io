@@ -93,7 +93,7 @@
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
     import { savePlayerToKV } from "./api.js";
-    import { TALENT_TREES } from "./profession-talent-trees.js";
+    import { PROFESSION_TALENT_TREES as TALENT_TREES } from "./profession-talent-trees.js";
 
     await requireSession();
     const { username } = window.syncState;
