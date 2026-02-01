@@ -131,7 +131,7 @@
       const { hpPerMinute, mpPerMinute } = getRegenRates(player);
     
       player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
-      player.mana = Math.min(player.manaMax, player.mana + mpPerMinute);
+      player.manaCurrent = Math.min(player.manaMax, player.manaCurrent + mpPerMinute);
     
       PlayerStorage.save(username, player);
     }
