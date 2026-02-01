@@ -9,6 +9,7 @@ import { WORLD_BOSSES } from "./world-boss-templates.js";
 import { REGION_UNLOCKS } from "./region-unlock.js";
 
 import { rotateMerchants } from "./merchant-rotation.js";
+import { updateWorldBosses } from "./world-boss-progression.js";
 
 export const WorldSim = {
   _state: null,
@@ -30,6 +31,8 @@ export const WorldSim = {
         // NEW: world boss progression
         bosses: {},            // bossKey → { active, hp, maxHP, region, respawnAt }
         regionUnlocks: {},     // regionKey → boolean
+        // Update world bosses
+        this._state = updateWorldBosses(this._state);
       };
     }
 
