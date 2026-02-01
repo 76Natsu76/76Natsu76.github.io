@@ -1615,7 +1615,17 @@
 
   async function chooseAbility(key) {
     closeAbilityMenu();
-    await runRound({ type: "ability", ability: { key } });
+  
+    const ability = combat.playerState.abilities.find(a => a.key === key);
+    if (!ability) {
+      addLog("Ability not found!");
+      return;
+    }
+  
+    await runRound({
+      type: "ability",
+      ability
+    });
   }
 
   async function chooseUltimate() {
