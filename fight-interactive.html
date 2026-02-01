@@ -1397,12 +1397,12 @@
   ============================================================ */
 
   async function runRound(playerAction) {
-    console.log("[fight] runRound called with", playerAction); 
-    if (!combat || !combat.playerState || !combat.enemyState) { 
-      console.warn("runRound called before combat initialized"); 
-      return; 
+    console.log("[fight] runRound called with", playerAction);
+    if (!combat || !combat.playerState || !combat.enemyState) {
+      console.warn("runRound called before combat initialized");
+      return;
     }
-    
+  
     hideActionPanel();
   
     const logs = [];
@@ -1414,10 +1414,12 @@
       logs
     );
   
-    combat.playerState = hydrateAbilities(structuredClone(player));
+    // ✅ use the engine result, do NOT rehydrate from base player here
+    combat.playerState = result.player;
     combat.enemyState = result.enemy;
     combat.context = result.context;
-    
+  
+    // ✅ now persist the updated player (with new mana, hp, cooldowns, etc.)
     PlayerStorage.save(username, combat.playerState);
     await api.savePlayer(username, combat.playerState);
   
@@ -1430,8 +1432,7 @@
         const p = PlayerStorage.load(username);
         DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
       }
-    
-      // No outcome yet — continue or return control
+  
       if (autoBattle) {
         if (!autoLoopHandle) {
           autoLoopHandle = setTimeout(autoLoop, 1000);
