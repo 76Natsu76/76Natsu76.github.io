@@ -1316,6 +1316,7 @@
   ============================================================ */
 
   async function beginFight() {
+    console.log("[fight] beginFight called");
     logBox.innerHTML = "";
 
     // Always load the freshest player state
@@ -1362,6 +1363,7 @@
   ============================================================ */
 
   async function runRound(playerAction) {
+    console.log("[fight] runRound called with", playerAction); 
     if (!combat || !combat.playerState || !combat.enemyState) { 
       console.warn("runRound called before combat initialized"); 
       return; 
@@ -2027,6 +2029,7 @@
   ============================================================ */
 
   function showDeathModal() {
+    console.log("[fight] showDeathModal called");
     const modal = document.getElementById("deathModal");
     modal.classList.remove("hidden");
 
