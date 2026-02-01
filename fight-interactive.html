@@ -1751,23 +1751,40 @@
   /* ============================================================
      ABILITY MENU
   ============================================================ */
-
+  
   function openAbilityMenu() {
     if (!combat || !combat.playerState) return;
-
+  
     const list = document.getElementById("abilityList");
     list.innerHTML = "";
-
-    const abilities = combat.playerState.abilities || [];
-
+  
+    const p = combat.playerState;
+    const abilities = p.abilities || [];
+  
     abilities.forEach(a => {
       const btn = document.createElement("button");
       btn.className = "btn ability-btn";
-      btn.textContent = a.name;
+  
+      const cd = p.cooldowns?.[a.key] || 0;
+      const mp = p.mana ?? p.manaCurrent ?? 0;
+      const cost = a.manaCost || a.mpCost || 0;
+  
+      // Button label
+      if (cd > 0) {
+        btn.textContent = `${a.name} (${cd})`;
+      } else if (cost > 0) {
+        btn.textContent = `${a.name} -${cost} MP`;
+      } else {
+        btn.textContent = a.name;
+      }
+  
+      // Disable if on cooldown or insufficient MP
+      btn.disabled = cd > 0 || mp < cost;
+  
       btn.onclick = () => chooseAbility(a.key);
       list.appendChild(btn);
     });
-
+  
     abilityPanel.style.display = "block";
   }
 
