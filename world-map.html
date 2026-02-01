@@ -101,7 +101,12 @@
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
     import { getRegenRates } from "./regen.js";   // Regen module
-  
+    import { applyOfflineRegen } from "./offline-regen.js";
+
+    player = applyOfflineRegen(player);
+    PlayerStorage.save(username, player);
+
+    
     /* ------------------------------------------------------------
        AMBIENT REGEN (Phase 2)
     ------------------------------------------------------------ */
