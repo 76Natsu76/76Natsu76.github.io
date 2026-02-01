@@ -100,51 +100,44 @@
     import { WorldSim } from "./world-simulation.js";
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
-    import { getRegenRates } from "./regen.js";   // Regen module
+    import { getRegenRates } from "./regen.js";
     import { applyOfflineRegen } from "./offline-regen.js";
-
-    player = applyOfflineRegen(player);
-    PlayerStorage.save(username, player);
-
     
-    /* ------------------------------------------------------------
-       AMBIENT REGEN (Phase 2)
-    ------------------------------------------------------------ */
-    function applyAmbientRegen(player, username) {
-      const { hpPerMinute, mpPerMinute } = getRegenRates(player);
-  
-      player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
-      player.mana = Math.min(player.manaMax, player.mana + mpPerMinute);
-  
-      PlayerStorage.save(username, player);
-    }
-  
-    /* ------------------------------------------------------------
-       SESSION + INITIALIZATION
-    ------------------------------------------------------------ */
+    // --- SESSION + INITIALIZATION --- //
     await requireSession();
     await initEncounters();
     await EnemyRegistry.loadAll();
     await WorldSim.init();
-  
+    
     const { username } = window.syncState;
-  
+    
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
-  
-    /* ------------------------------------------------------------
-       LOAD PLAYER + APPLY AMBIENT REGEN
-    ------------------------------------------------------------ */
+    
+    // --- LOAD PLAYER --- //
     let player = PlayerStorage.load(username);
-  
+    
     if (!player) {
       alert("No player data found.");
       window.location.href = "landing.html";
     }
-  
-    // Apply regen every time player returns to world map
+    
+    // --- APPLY OFFLINE REGEN (Phase 4) --- //
+    player = applyOfflineRegen(player);
+    PlayerStorage.save(username, player);
+    
+    // --- APPLY AMBIENT REGEN (Phase 2) --- //
+    function applyAmbientRegen(player, username) {
+      const { hpPerMinute, mpPerMinute } = getRegenRates(player);
+    
+      player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
+      player.mana = Math.min(player.manaMax, player.mana + mpPerMinute);
+    
+      PlayerStorage.save(username, player);
+    }
+    
     applyAmbientRegen(player, username);
-  
+    
     const playerLevel = Number(player.level || 1);
   
     /* ------------------------------------------------------------
