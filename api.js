@@ -242,19 +242,34 @@ export function detectConflict(local, remote) {
   return "match";
 }
 
-export async function getLeaderboardGlobalKV() {
-  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboards/global");
+const BASE_URL = "https://auth-worker.godeaterspersona.workers.dev";
+
+async function fetchJSON(url) {
+  const res = await fetch(url, { method: "GET" });
+  if (!res.ok) throw new Error(await res.text());
   return res.json();
+}
+
+export async function getLeaderboardGlobalKV() {
+  return fetchJSON(`${BASE_URL}/leaderboards/global`);
 }
 
 export async function getLeaderboardHardcoreKV() {
-  const res = await fetch("https://auth-worker.godeaterspersona.workers.dev/leaderboards/hardcore");
-  return res.json();
+  return fetchJSON(`${BASE_URL}/leaderboards/hardcore`);
 }
 
 export async function getLeaderboardFriendsKV(username) {
-  const res = await fetch(
-    `https://auth-worker.godeaterspersona.workers.dev/leaderboards/friends/${username}`
-  );
-  return res.json();
+  return fetchJSON(`${BASE_URL}/leaderboards/friends/${encodeURIComponent(username)}`);
+}
+
+export async function getLeaderboardDungeonsKV() {
+  return fetchJSON(`${BASE_URL}/leaderboards/dungeons`);
+}
+
+export async function getLeaderboardEndlessKV() {
+  return fetchJSON(`${BASE_URL}/leaderboards/endless`);
+}
+
+export async function getLeaderboardFriendsKV(username) {
+  return fetchJSON(`${BASE_URL}/leaderboards/friends/${username}`);
 }
