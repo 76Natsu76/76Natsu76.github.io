@@ -45,7 +45,8 @@
 
   <div id="dungeonInfo"></div>
   <div id="roomContainer" class="room-box">Loading...</div>
-
+  
+  <button class="btn" onclick="openMap()">View Dungeon Map</button>
   <button class="btn" onclick="leaveDungeon()">Leave Dungeon</button>
 
   <script type="module">
@@ -244,7 +245,10 @@
       PlayerStorage.save(username, player);
       window.location.href = "town.html";
     }
-  
+    
+    window.openMap = () => {
+      window.location.href = "dungeon-map.html";
+    };
     window.leaveDungeon = leaveDungeon;
   </script>
 </body>
