@@ -110,12 +110,15 @@ export async function handleSafeRespawn(username) {
   applyItemLoss(player);
   applyRespawnState(player);
 
+  // 1-hour lock timestamp
+  player.safeRespawnLockUntil = Date.now() + (60 * 60 * 1000);
+
   PlayerStorage.save(username, player);
   await api.savePlayer(username, player);
 
-  // 1-hour lock could be tracked via timestamp if you want later
   window.location.href = "town.html";
 }
+
 
 export async function handleRiskyRespawn(username) {
   const player = PlayerStorage.load(username);
