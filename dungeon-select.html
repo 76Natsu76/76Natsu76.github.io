@@ -27,6 +27,11 @@
       margin-top:10px;
     }
     .btn:hover { background:#222832; }
+    .locked-text {
+      color:#ff7777;
+      font-size:13px;
+      margin-top:6px;
+    }
   </style>
 </head>
 
@@ -36,9 +41,6 @@
   <div id="usernameDisplay"></div>
 
   <div id="dungeonList">Loading...</div>
-  <button class="btn" data-key="${key}" ${canEnter(player, d) ? "" : "disabled"}>
-    ${canEnter(player, d) ? "Start Run" : "Locked"}
-  </button>
 
   <button class="btn" onclick="goBack()">Return to Town</button>
 
@@ -60,26 +62,47 @@
 
     for (const key in DUNGEONS) {
       const d = DUNGEONS[key];
+      const allowed = canEnter(player, d);
 
       const div = document.createElement("div");
       div.className = "dungeon-card";
 
+      const floorsLabel = d.type === "endless"
+        ? "∞"
+        : d.floors.length;
+
+      const bossLabel = d.type === "endless"
+        ? "Endless"
+        : d.boss.enemyKey;
+
       div.innerHTML = `
         <h2>${d.name}</h2>
         <p>Recommended Level: ${d.recommendedLevel}</p>
-        <p>Floors: ${d.floors.length}</p>
-        <p>Boss: ${d.boss.enemyKey}</p>
-        <button class="btn" data-key="${key}">Start Run</button>
+        <p>Floors: ${floorsLabel}</p>
+        <p>Boss: ${bossLabel}</p>
+
+        <button class="btn" data-key="${key}" ${allowed ? "" : "disabled"}>
+          ${allowed ? "Start Run" : "Locked"}
+        </button>
+
+        ${!allowed ? `<div class="locked-text">${explainRequirements(player, d)}</div>` : ""}
       `;
 
       container.appendChild(div);
     }
 
+    // Handle clicking a dungeon card button
     container.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-key]");
       if (!btn) return;
 
       const dungeonKey = btn.getAttribute("data-key");
+      const dungeon = DUNGEONS[dungeonKey];
+
+      if (!canEnter(player, dungeon)) {
+        alert("You do not meet the entry requirements for this dungeon.");
+        return;
+      }
 
       // Create run
       const run = DungeonEngine.createRun(player, dungeonKey);
@@ -88,25 +111,56 @@
       player.activeDungeonRun = run;
       PlayerStorage.save(username, player);
 
-      // Redirect to world map (or a dedicated dungeon page)
-      window.location.href = "world-map.html";
+      // Go to dungeon-room
+      window.location.href = "dungeon-room.html";
     });
 
+    /* ============================================================
+       ENTRY REQUIREMENT CHECKS
+    ============================================================ */
     function canEnter(player, dungeon) {
       const req = dungeon.entryRequirements || {};
+
+      // Level requirement
       if (req.minLevel && player.level < req.minLevel) return false;
-      
-      if (req.requiredItems) {
+
+      // Required items
+      if (req.requiredItems && req.requiredItems.length > 0) {
         for (const item of req.requiredItems) {
-          if (!player.inventory.some(i => i.id === item)) return false;
+          const hasItem = player.inventory?.some(i =>
+            i.id === item || i.key === item
+          );
+          if (!hasItem) return false;
         }
       }
-      if (req.requiredFlags) {
+
+      // Required flags
+      if (req.requiredFlags && req.requiredFlags.length > 0) {
         for (const flag of req.requiredFlags) {
           if (!player.flags || !player.flags[flag]) return false;
         }
       }
+
       return true;
+    }
+
+    function explainRequirements(player, dungeon) {
+      const req = dungeon.entryRequirements || {};
+      const parts = [];
+
+      if (req.minLevel && player.level < req.minLevel) {
+        parts.push(`Requires level ${req.minLevel}`);
+      }
+
+      if (req.requiredItems?.length) {
+        parts.push(`Requires items: ${req.requiredItems.join(", ")}`);
+      }
+
+      if (req.requiredFlags?.length) {
+        parts.push(`Requires: ${req.requiredFlags.join(", ")}`);
+      }
+
+      return parts.join(" • ");
     }
 
     function goBack() {
