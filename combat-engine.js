@@ -333,7 +333,7 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
 
   // --- MP CHECK ---
   const cost = ability.manaCost || ability.mpCost || 0;
-  const currentMP = attacker.mana ?? attacker.manaCurrent ?? 0;
+  const currentMP = attacker.mana ?? attacker.manaCurrent ?? attacker.mp ?? 0;
 
   if (currentMP < cost) {
     logs.push(`${attacker.name} does not have enough MP for ${abilityName}.`);
@@ -343,6 +343,7 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
   // Deduct MP
   if (attacker.mana !== undefined) attacker.mana -= cost;
   if (attacker.manaCurrent !== undefined) attacker.manaCurrent -= cost;
+  if (attacker.mp !== undefined) attacker.mp -= cost;
 
   // --- HIT / CRIT ---
   const hitData = computeHitData(attacker, defender, ability, context);
