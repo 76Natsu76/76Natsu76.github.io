@@ -6,7 +6,8 @@ export const PlayerStorage = {
   load,
   save,
   updateField,
-  appendLog
+  appendLog,
+  clearDungeonRun
 };
 
 // ---- INTERNAL: ensure vital fields & migrate legacy names ----
@@ -32,6 +33,11 @@ function ensureVitals(p) {
   delete p.mp;
   delete p.maxmp;
 
+  // Dungeon run persistence
+  if (p.activeDungeonRun && typeof p.activeDungeonRun !== "object") {
+    delete p.activeDungeonRun;
+  }
+
   return p;
 }
 
@@ -40,7 +46,6 @@ function load(userId) {
   const key = "player_" + userId;
   const raw = localStorage.getItem(key);
 
-  // --- SAFETY GUARD: prevent crashes from "undefined" or invalid JSON ---
   if (!raw || raw === "undefined") {
     console.warn("PlayerStorage.load: No valid data found for", key, "→ creating new player.");
     return createNewPlayer(userId);
@@ -53,7 +58,7 @@ function load(userId) {
       return createNewPlayer(userId);
     }
 
-    const normalized = ensureVitalFields(parsed, userId);
+    const normalized = ensureVitals(parsed);
     save(userId, normalized); // persist migration
     return normalized;
   } catch (e) {
@@ -64,22 +69,20 @@ function load(userId) {
 
 // Create a brand-new player object (canonical fields)
 function createNewPlayer(userId) {
-  const newPlayer = ensureVitalFields(
-    {
-      id: userId,
-      name: userId,
-      level: 1,
-      hpMax: 20,
-      hpCurrent: 20,
-      manaMax: 10,
-      mana: 10,
-      gold: 0,
-      inventory: [],
-      equipment: {},
-      logs: []
-    },
-    userId
-  );
+  const newPlayer = ensureVitals({
+    id: userId,
+    name: userId,
+    level: 1,
+    hpMax: 20,
+    hpCurrent: 20,
+    manaMax: 10,
+    mana: 10,
+    gold: 0,
+    inventory: [],
+    equipment: {},
+    logs: [],
+    activeDungeonRun: null
+  });
 
   save(userId, newPlayer);
   return newPlayer;
@@ -89,7 +92,6 @@ function createNewPlayer(userId) {
 function save(userId, data) {
   const key = "player_" + userId;
 
-  // --- SAFETY GUARD: never save undefined/null ---
   if (!data || typeof data !== "object") {
     console.error("PlayerStorage.save: Attempted to save invalid data for", key, data);
     return;
@@ -117,5 +119,12 @@ function appendLog(userId, message) {
     message,
     time: Date.now()
   });
+  save(userId, p);
+}
+
+// Clear dungeon run safely
+function clearDungeonRun(userId) {
+  const p = load(userId);
+  p.activeDungeonRun = null;
   save(userId, p);
 }
