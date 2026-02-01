@@ -58,6 +58,15 @@ export function applyStatusEffect(target, effect) {
   target.statusEffects.push(eff);
 }
 
+function tickCooldowns(entity) {
+  if (!entity.cooldowns) return;
+  for (const key in entity.cooldowns) {
+    if (entity.cooldowns[key] > 0) {
+      entity.cooldowns[key] -= 1;
+    }
+  }
+}
+
 export function tickStatusEffects(target, context, logs) {
   if (!target.statusEffects || !target.statusEffects.length) return;
 
@@ -366,6 +375,9 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
       if (logs) logs.push(`${attacker.name} gains ${eff.type}.`);
     }
   }
+
+    // --- APPLY COOLDOWN ---
+  attacker.cooldowns[ability.key] = ability.cooldown || 0;
 }
 
 /****************************************************
@@ -472,6 +484,9 @@ export function runCombatRound(player, enemy, context, playerAction, logs) {
       return { player, enemy, context, logs };
     }
   }
+  
+  tickCooldowns(player);
+  tickCooldowns(enemy);
 
   context.turn += 1;
   return { player, enemy, context, logs };
