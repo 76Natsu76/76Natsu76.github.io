@@ -224,4 +224,9 @@ export const DungeonEngine = {
     run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
     run.endlessScore = run.highestFloor;
   }
+
+  saveRun(player, run, username) {
+    player.activeDungeonRun = run;
+    PlayerStorage.save(username, player);
+  }
 };
