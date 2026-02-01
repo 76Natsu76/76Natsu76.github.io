@@ -1011,964 +1011,1001 @@
         TURN-BASED COMBAT WIRING
   ============================= -->
   <script>
-    window.showPopup = function(panelId, text, type) {
-      const panel = document.getElementById(panelId);
-      if (!panel) return;
-    
-      const div = document.createElement("div");
-      div.className = "popup " + type;
-      div.textContent = text;
-    
-      panel.appendChild(div);
-    
-      setTimeout(() => {
-        div.style.opacity = "0";
-        div.style.transform = "translateY(-20px)";
-      }, 10);
-    
-      setTimeout(() => div.remove(), 1000);
-    };
-    </script>
-
-  <script type="module">
-    import { requireSession } from "./session-guard.js";
-    import { EncounterEngine } from "./encounters.js";
-    import { PlayerStorage } from "./player-storage.js";
-    import { api } from "./api.js";
-    import {
-      buildCombatContext,
-      runCombatRound as engineRunRound
-    } from "./combat-engine.js";
-    import { REGION_LOOT_TABLES } from "./region-loot-tables.js";
-    import { handleSafeRespawn, handleRiskyRespawn } from "./death-handler.js";
-    import { DungeonEngine } from "./dungeon-engine.js";
-    import { WorldSim } from "./world-simulation.js";
-    import { handleBossDefeat } from "./world-boss-progression.js";
-
+  window.showPopup = function(panelId, text, type) {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
   
-    /* ============================================================
-       SESSION + PLAYER + ENCOUNTER LOAD
-    ============================================================ */
+    const div = document.createElement("div");
+    div.className = "popup " + type;
+    div.textContent = text;
   
-    await requireSession();
-    const { local, remote, conflict, username } = window.syncState;
+    panel.appendChild(div);
+  
+    setTimeout(() => {
+      div.style.opacity = "0";
+      div.style.transform = "translateY(-20px)";
+    }, 10);
+  
+    setTimeout(() => div.remove(), 1000);
+  };
+</script>
 
-    function ensureVitals(p) {
-      if (!p) return p;
-    
-      if (typeof p.hpMax !== "number") p.hpMax = 20;
-      if (typeof p.hpCurrent !== "number") p.hpCurrent = p.hpMax;
-    
-      if (typeof p.manaMax !== "number") p.manaMax = 10;
-      if (typeof p.mana !== "number") p.mana = p.manaMax;
-    
-      return p;
+<script type="module">
+  import { requireSession } from "./session-guard.js";
+  import { EncounterEngine } from "./encounters.js";
+  import { PlayerStorage } from "./player-storage.js";
+  import { api } from "./api.js";
+  import {
+    buildCombatContext,
+    runCombatRound as engineRunRound
+  } from "./combat-engine.js";
+  import { REGION_LOOT_TABLES } from "./region-loot-tables.js";
+  import {
+    handleSafeRespawn,
+    handleRiskyRespawn,
+    getSafeRespawnRemaining,
+    startRespawnLockCountdown
+  } from "./death-handler.js";
+  import { DungeonEngine } from "./dungeon-engine.js";
+  import { WorldSim } from "./world-simulation.js";
+  import { handleBossDefeat } from "./world-boss-progression.js";
+
+  /* ============================================================
+     SESSION + PLAYER + ENCOUNTER LOAD
+  ============================================================ */
+
+  await requireSession();
+  const { local, remote, conflict, username } = window.syncState;
+
+  function ensureVitals(p) {
+    if (!p) return p;
+
+    if (typeof p.hpMax !== "number") p.hpMax = 20;
+    if (typeof p.hpCurrent !== "number") p.hpCurrent = p.hpMax;
+
+    if (typeof p.manaMax !== "number") p.manaMax = 10;
+    if (typeof p.mana !== "number") p.mana = p.manaMax;
+
+    return p;
+  }
+
+  document.getElementById("usernameDisplay").textContent =
+    "Logged in as: " + username;
+
+  let combat = null;
+  let autoBattle = false;
+  let autoLoopHandle = null;
+
+  // Choose player version from syncState
+  let rawPlayer = null;
+  if (conflict === "remote-only") rawPlayer = remote;
+  else if (conflict === "local-only") rawPlayer = local;
+  else if (conflict === "match") rawPlayer = local || remote;
+  else if (conflict === "conflict") rawPlayer = remote || local;
+  else rawPlayer = local || remote;
+
+  // Fallback: if syncState has nothing, try local PlayerStorage
+  if (!rawPlayer) {
+    const fallback = PlayerStorage.load(username);
+    if (fallback) {
+      rawPlayer = fallback;
     }
+  }
 
-  
-    document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
-  
-    let combat = null;
-    let autoBattle = false;
-  
-    // Choose player version from syncState
-    let rawPlayer = null;
-    if (conflict === "remote-only") rawPlayer = remote;
-    else if (conflict === "local-only") rawPlayer = local;
-    else if (conflict === "match") rawPlayer = local || remote;
-    else if (conflict === "conflict") rawPlayer = remote || local;
-    else rawPlayer = local || remote;
-  
-    // Fallback: if syncState has nothing, try local PlayerStorage
-    if (!rawPlayer) {
-      const fallback = PlayerStorage.load(username);
-      if (fallback) {
-        rawPlayer = fallback;
+  if (!rawPlayer) {
+    alert("No player data found.");
+    window.location.href = "world-map.html";
+  }
+
+  // Cache locally (only if valid)
+  const player = ensureVitals(rawPlayer);
+  PlayerStorage.save(username, player);
+
+  const encounter = EncounterEngine.loadFromSession();
+  if (!encounter) {
+    alert("No encounter found. Returning to map.");
+    window.location.href = "world-map.html";
+  }
+
+  /* ============================================================
+     RUNTIME ENTITIES
+  ============================================================ */
+
+  function resolvePlayer(raw) {
+    const stats = raw.stats || {};
+    const derived = raw.derived || {};
+
+    const hpMax = raw.hpMax ?? stats.hp ?? 1;
+    const manaMax = raw.manaMax ?? 0;
+
+    return {
+      id: raw.username,
+      name: raw.username,
+      level: raw.level || 1,
+      profession: raw.profession,
+      race: raw.race,
+      subrace: raw.subrace,
+
+      hpCurrent: raw.hpCurrent ?? hpMax,
+      hpMax,
+      manaCurrent: raw.mana ?? manaMax,
+      manaMax,
+
+      atk: stats.atk ?? 1,
+      def: stats.def ?? 0,
+      speed: stats.speed ?? 1,
+
+      critChance: derived.critChance ?? raw.crit ?? 0.05,
+      critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
+
+      element: raw.element || null,
+      statusEffects: raw.statusEffects || [],
+      cooldowns: raw.cooldowns || {},
+      pendingAction: null,
+
+      abilities: raw.abilities || [],
+      ultimate: raw.ultimate || null,
+      ultimateCharge: raw.ultimateCharge || 0,
+      ultimateChargeRequired:
+        raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
+
+      equipment: raw.equipment || {},
+      talentTree: raw.talentTree || {},
+      talentPoints: raw.talentPoints || 0,
+
+      inventory: raw.inventory || [],
+
+      isPlayer: true,
+      lastAction: null,
+      lastActionType: null
+    };
+  }
+
+  // Use the already-built enemy instance from EncounterEngine
+  function resolveEnemyFromEncounter(encounterEnemy) {
+    const hpMax = encounterEnemy.hpMax ?? encounterEnemy.hp ?? 1;
+
+    return {
+      id: encounterEnemy.key,
+      name: encounterEnemy.name,
+      level: encounterEnemy.level || 1,
+      element: encounterEnemy.element || "neutral",
+
+      hpCurrent: hpMax,
+      hpMax,
+
+      atk: encounterEnemy.atk ?? encounterEnemy.attack ?? 1,
+      def: encounterEnemy.def ?? encounterEnemy.defense ?? 0,
+      speed: encounterEnemy.speed || 1,
+
+      manaCurrent: encounterEnemy.mana ?? 0,
+      manaMax: encounterEnemy.manaMax ?? 0,
+
+      statusEffects: encounterEnemy.statusEffects || [],
+      cooldowns: {},
+      isPlayer: false,
+
+      // World boss flags (if present)
+      isWorldBoss: !!encounterEnemy.isWorldBoss,
+      bossKey: encounterEnemy.bossKey || null
+    };
+  }
+
+  /* ============================================================
+     COMBAT STATE
+  ============================================================ */
+
+  const logBox = document.getElementById("combatLog");
+  const actionPanel = document.getElementById("actionPanel");
+  const abilityPanel = document.getElementById("abilityPanel");
+  const itemModal = document.getElementById("itemModal");
+
+  function isDead(entity) {
+    return !entity || entity.hpCurrent <= 0;
+  }
+
+  function checkOutcome(player, enemy) {
+    if (player.hpCurrent <= 0 && enemy.hpCurrent <= 0) return "draw";
+    if (player.hpCurrent <= 0) return "defeat";
+    if (enemy.hpCurrent <= 0) return "victory";
+    return null;
+  }
+
+  /* ============================================================
+     LOGGING
+  ============================================================ */
+
+  function addLog(line) {
+    const div = document.createElement("div");
+    div.innerHTML = formatLog(line);
+    logBox.appendChild(div);
+    logBox.scrollTop = logBox.scrollHeight;
+  }
+
+  function renderLogs(logs) {
+    for (const line of logs) addLog(line);
+  }
+
+  /* ============================================================
+     HUD RENDERING
+  ============================================================ */
+
+  function renderPanels() {
+    if (!combat) return;
+    renderPlayerPanel(combat.playerState);
+    renderEnemyPanel(combat.enemyState);
+    renderStatusIcons(combat.playerState, "playerStatusIcons");
+    renderStatusIcons(combat.enemyState, "enemyStatusIcons");
+  }
+
+  function renderPlayerPanel(p) {
+    if (!p) return;
+
+    document.getElementById("playerName").textContent = p.name || "Player";
+    document.getElementById("playerLevel").textContent = "Lv " + (p.level || 1);
+
+    updateHPBar("playerHpFill", "playerHpText", p.hpCurrent, p.hpMax);
+    updateManaBar("playerManaFill", "playerManaText", p.manaCurrent, p.manaMax);
+    updateUltimateBar(p);
+  }
+
+  function renderEnemyPanel(e) {
+    if (!e) return;
+
+    document.getElementById("enemyName").textContent = e.name || "Enemy";
+    document.getElementById("enemyLevel").textContent = "Lv " + (e.level || 1);
+
+    updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
+    updateManaBar(
+      "enemyManaFill",
+      "enemyManaText",
+      e.manaCurrent || 0,
+      e.manaMax || 0
+    );
+  }
+
+  function updateHPBar(fillId, textId, current, max) {
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
+
+    current = current || 0;
+    max = max || 1;
+
+    const pct = Math.max(0, Math.min(100, (current / max) * 100));
+
+    if (fill) fill.style.width = pct + "%";
+    if (text) text.textContent = `HP ${current} / ${max}`;
+  }
+
+  function updateManaBar(fillId, textId, current, max) {
+    const fill = document.getElementById(fillId);
+    const text = document.getElementById(textId);
+
+    current = current || 0;
+    max = max || 0;
+
+    const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
+
+    if (fill) fill.style.width = pct + "%";
+    if (text) text.textContent = `MP ${current} / ${max}`;
+  }
+
+  function updateUltimateBar(playerState) {
+    const fill = document.getElementById("playerUltFill");
+    const text = document.getElementById("playerUltText");
+
+    const charge = playerState.ultimateCharge || 0;
+    const required = playerState.ultimateChargeRequired || 100;
+
+    const pct = Math.max(0, Math.min(100, (charge / required) * 100));
+
+    if (fill) fill.style.width = pct + "%";
+    if (text) text.textContent = `ULT ${Math.round(pct)}%`;
+  }
+
+  /* ============================================================
+     START FIGHT
+  ============================================================ */
+
+  async function beginFight() {
+    logBox.innerHTML = "";
+
+    // Always load the freshest player state
+    const latest = PlayerStorage.load(username) || rawPlayer;
+    const playerState = resolvePlayer(latest);
+    const enemyState = resolveEnemyFromEncounter(encounter.enemy);
+
+    // Build context (region/biome/weather/event + dungeon info if any)
+    const context = buildCombatContext(
+      encounter.region,
+      encounter.biome,
+      encounter.weather,
+      encounter.event
+    );
+
+    // If this encounter came from a dungeon, attach dungeonRun context
+    if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
+      // Assume dungeon-room stored the run in player.activeDungeonRun
+      const p = PlayerStorage.load(username);
+      if (p && p.activeDungeonRun) {
+        context.dungeonRun = p.activeDungeonRun;
       }
     }
-  
-    if (!rawPlayer) {
-      alert("No player data found.");
-      window.location.href = "world-map.html";
+
+    combat = {
+      playerState,
+      enemyState,
+      context
+    };
+
+    // Optional: cinematic intro for bosses
+    if (enemyState.isWorldBoss || encounter.isBoss) {
+      showCinematicIntro(enemyState);
     }
-  
-    // Cache locally (only if valid)
-    const player = ensureVitals(rawPlayer);
-    PlayerStorage.save(username, player);
-  
-    const encounter = EncounterEngine.loadFromSession();
-    if (!encounter) {
-      alert("No encounter found. Returning to map.");
-      window.location.href = "world-map.html";
-    }
-  
-    /* ============================================================
-       RUNTIME ENTITIES
-    ============================================================ */
-  
-    function resolvePlayer(raw) {
-      const stats = raw.stats || {};
-      const derived = raw.derived || {};
-  
-      const hpMax = raw.hpMax ?? stats.hp ?? 1;
-      const manaMax = raw.manaMax ?? 0;
-  
-      return {
-        id: raw.username,
-        name: raw.username,
-        level: raw.level || 1,
-        profession: raw.profession,
-        race: raw.race,
-        subrace: raw.subrace,
-  
-        hpCurrent: raw.hpCurrent ?? hpMax,
-        hpMax,
-        manaCurrent: raw.mana ?? manaMax,
-        manaMax,
-  
-        atk: stats.atk ?? 1,
-        def: stats.def ?? 0,
-        speed: stats.speed ?? 1,
-  
-        critChance: derived.critChance ?? raw.crit ?? 0.05,
-        critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
-  
-        element: raw.element || null,
-        statusEffects: raw.statusEffects || [],
-        cooldowns: raw.cooldowns || {},
-        pendingAction: null,
-  
-        abilities: raw.abilities || [],
-        ultimate: raw.ultimate || null,
-        ultimateCharge: raw.ultimateCharge || 0,
-        ultimateChargeRequired:
-          raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
-  
-        equipment: raw.equipment || {},
-        talentTree: raw.talentTree || {},
-        talentPoints: raw.talentPoints || 0,
-  
-        inventory: raw.inventory || [],
-  
-        isPlayer: true,
-        lastAction: null,
-        lastActionType: null
-      };
-    }
-  
-    // Use the already-built enemy instance from EncounterEngine
-    function resolveEnemyFromEncounter(encounterEnemy) {
-      const hpMax = encounterEnemy.hpMax ?? encounterEnemy.hp ?? 1;
-  
-      return {
-        id: encounterEnemy.key,
-        name: encounterEnemy.name,
-        level: encounterEnemy.level || 1,
-        element: encounterEnemy.element || "neutral",
-  
-        hpCurrent: hpMax,
-        hpMax,
-  
-        atk: encounterEnemy.atk ?? encounterEnemy.attack ?? 1,
-        def: encounterEnemy.def ?? encounterEnemy.defense ?? 0,
-        speed: encounterEnemy.speed || 1,
-  
-        manaCurrent: encounterEnemy.mana ?? 0,
-        manaMax: encounterEnemy.manaMax ?? 0,
-  
-        statusEffects: encounterEnemy.statusEffects || [],
-        cooldowns: {},
-        isPlayer: false
-      };
-    }
-  
-    /* ============================================================
-       COMBAT STATE
-    ============================================================ */
-  
-    const logBox = document.getElementById("combatLog");
-    const actionPanel = document.getElementById("actionPanel");
-    const abilityPanel = document.getElementById("abilityPanel");
-    const itemModal = document.getElementById("itemModal");
-  
-    function isDead(entity) {
-      return !entity || entity.hpCurrent <= 0;
-    }
-  
-    function checkOutcome(player, enemy) {
-      if (player.hpCurrent <= 0 && enemy.hpCurrent <= 0) return "draw";
-      if (player.hpCurrent <= 0) return "defeat";
-      if (enemy.hpCurrent <= 0) return "victory";
-      return null;
-    }
-  
-    /* ============================================================
-       LOGGING
-    ============================================================ */
-  
-    function addLog(line) {
-      const div = document.createElement("div");
-      div.innerHTML = formatLog(line);
-      logBox.appendChild(div);
-      logBox.scrollTop = logBox.scrollHeight;
-    }
-  
-    function renderLogs(logs) {
-      for (const line of logs) addLog(line);
-    }
-  
-    /* ============================================================
-       HUD RENDERING
-    ============================================================ */
-  
-    function renderPanels() {
-      if (!combat) return;
-      renderPlayerPanel(combat.playerState);
-      renderEnemyPanel(combat.enemyState);
-      renderStatusIcons(combat.playerState, "playerStatusIcons");
-      renderStatusIcons(combat.enemyState, "enemyStatusIcons");
-    }
-  
-    function renderPlayerPanel(p) {
-      if (!p) return;
-  
-      document.getElementById("playerName").textContent = p.name || "Player";
-      document.getElementById("playerLevel").textContent = "Lv " + (p.level || 1);
-  
-      updateHPBar("playerHpFill", "playerHpText", p.hpCurrent, p.hpMax);
-      updateManaBar("playerManaFill", "playerManaText", p.manaCurrent, p.manaMax);
-      updateUltimateBar(p);
-    }
-  
-    function renderEnemyPanel(e) {
-      if (!e) return;
-  
-      document.getElementById("enemyName").textContent = e.name || "Enemy";
-      document.getElementById("enemyLevel").textContent = "Lv " + (e.level || 1);
-  
-      updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
-      updateManaBar(
-        "enemyManaFill",
-        "enemyManaText",
-        e.manaCurrent || 0,
-        e.manaMax || 0
-      );
-    }
-  
-    function updateHPBar(fillId, textId, current, max) {
-      const fill = document.getElementById(fillId);
-      const text = document.getElementById(textId);
-  
-      current = current || 0;
-      max = max || 1;
-  
-      const pct = Math.max(0, Math.min(100, (current / max) * 100));
-  
-      if (fill) fill.style.width = pct + "%";
-      if (text) text.textContent = `HP ${current} / ${max}`;
-    }
-  
-    function updateManaBar(fillId, textId, current, max) {
-      const fill = document.getElementById(fillId);
-      const text = document.getElementById(textId);
-  
-      current = current || 0;
-      max = max || 0;
-  
-      const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
-  
-      if (fill) fill.style.width = pct + "%";
-      if (text) text.textContent = `MP ${current} / ${max}`;
-    }
-  
-    function updateUltimateBar(playerState) {
-      const fill = document.getElementById("playerUltFill");
-      const text = document.getElementById("playerUltText");
-  
-      const charge = playerState.ultimateCharge || 0;
-      const required = playerState.ultimateChargeRequired || 100;
-  
-      const pct = Math.max(0, Math.min(100, (charge / required) * 100));
-  
-      if (fill) fill.style.width = pct + "%";
-      if (text) text.textContent = `ULT ${Math.round(pct)}%`;
-    }
-  
-    /* ============================================================
-       START FIGHT
-    ============================================================ */
-    async function beginFight() {
-      logBox.innerHTML = "";
-    
-      // Always load the freshest player state
-      const latest = PlayerStorage.load(username) || rawPlayer;
-      const playerState = resolvePlayer(latest);
-      const enemyState = resolveEnemyFromEncounter(encounter.enemy);
-    
-      combat = {
-        playerState,
-        enemyState,
-        context: buildCombatContext(
-          encounter.region,
-          encounter.biome,
-          encounter.weather,
-          encounter.event
-        )
-      };
-    
-      setTimeout(() => {
-        renderPanels();
-        showActionPanel();
-      }, 50);
-    }
-  
-    /* ============================================================
-       RUN ROUND (WRAPPER AROUND combat-engine)
-    ============================================================ */
-  
-    async function runRound(playerAction) {
-      hideActionPanel();
-  
-      const logs = [];
-      const result = engineRunRound(
+
+    setTimeout(() => {
+      renderPanels();
+      showActionPanel();
+    }, 50);
+  }
+
+  /* ============================================================
+     MAIN ROUND RESOLUTION
+  ============================================================ */
+
+  async function runRound(playerAction) {
+    hideActionPanel();
+
+    const logs = [];
+    const result = engineRunRound(
+      combat.playerState,
+      combat.enemyState,
+      combat.context,
+      playerAction,
+      logs
+    );
+
+    combat.playerState = result.player;
+    combat.enemyState = result.enemy;
+    combat.context = result.context;
+
+    renderLogs(result.logs || logs);
+    renderPanels();
+
+    const outcome = checkOutcome(combat.playerState, combat.enemyState);
+    if (outcome) {
+      addLog("Combat ended: " + outcome.toUpperCase());
+
+      if (outcome === "defeat") {
+        // If in dungeon, mark run failed (scaffolding)
+        if (combat.context.dungeonRun) {
+          const run = combat.context.dungeonRun;
+          run.state = "failed";
+          const p = PlayerStorage.load(username);
+          if (p) {
+            p.activeDungeonRun = run;
+            PlayerStorage.save(username, p);
+          }
+        }
+
+        showDeathModal();
+        autoBattle = false;
+        if (autoLoopHandle) {
+          clearTimeout(autoLoopHandle);
+          autoLoopHandle = null;
+        }
+        return;
+      }
+
+      // World boss progression
+      if (outcome === "victory" && combat.enemyState.isWorldBoss) {
+        const bossKey = combat.enemyState.bossKey;
+        const worldState = WorldSim.getState();
+        handleBossDefeat(worldState, bossKey);
+        WorldSim.save();
+        addLog(`You have defeated the World Boss: ${bossKey}!`);
+      }
+
+      // Dungeon progression (normal + endless scaffolding)
+      if (outcome === "victory" && combat.context.dungeonRun) {
+        const p = PlayerStorage.load(username);
+        const run = combat.context.dungeonRun;
+
+        if (run.state === "boss") {
+          DungeonEngine.completeDungeon(run);
+          addLog("You have cleared the dungeon!");
+        } else {
+          DungeonEngine.completeFloor(run);
+          addLog(`You advance to floor ${run.currentFloor}.`);
+        }
+
+        if (p) {
+          p.activeDungeonRun = run;
+          PlayerStorage.save(username, p);
+        }
+      }
+
+      const rewards = generateRewards(
         combat.playerState,
         combat.enemyState,
         combat.context,
-        playerAction,
-        logs
+        outcome
       );
-  
-      combat.playerState = result.player;
-      combat.enemyState = result.enemy;
-      combat.context = result.context;
-  
-      renderLogs(result.logs || logs);
-      renderPanels();
-  
-      const outcome = checkOutcome(combat.playerState, combat.enemyState);
-      if (outcome) {
-        addLog("Combat ended: " + outcome.toUpperCase());
-      
-        if (outcome === "defeat") {
-          // If in dungeon, mark run failed
-          if (combat.context.dungeonRun) {
-            const run = combat.context.dungeonRun;
-            DungeonEngine.failDungeon(run);
-            localStorage.setItem("active_dungeon_run", JSON.stringify(run));
-          }
-      
-          showDeathModal();
-          return;
-        }
-      
-        // World boss progression (already added)
-        if (outcome === "victory" && combat.enemyState.isWorldBoss) {
-          const bossKey = combat.enemyState.bossKey;
-          const worldState = WorldSim.getState();
-          handleBossDefeat(worldState, bossKey);
-          WorldSim.save();
-          addLog(`You have defeated the World Boss: ${bossKey}!`);
-        }
-      
-        // Dungeon progression
-        if (outcome === "victory" && combat.context.dungeonRun) {
-          const run = combat.context.dungeonRun;
-      
-          if (run.state === "boss") {
-            DungeonEngine.completeDungeon(run);
-            localStorage.setItem("active_dungeon_run", JSON.stringify(run));
-            addLog("You have cleared the dungeon!");
-          } else {
-            DungeonEngine.completeFloor(run);
-            localStorage.setItem("active_dungeon_run", JSON.stringify(run));
-            addLog(`You advance to floor ${run.currentFloor}.`);
-          }
-        }
-      
-        const rewards = generateRewards(
-          combat.playerState,
-          combat.enemyState,
-          combat.context,
-          outcome
-        );
-        const finalRewards = await finalizeRewards(rewards);
-      
-        endCombat(finalRewards.outcome, finalRewards);
-        return;
-      }
+      const finalRewards = await finalizeRewards(rewards);
 
-  
-    /* ============================================================
-       FINALIZE REWARDS (LOCAL + KV)
-    ============================================================ */
-
-    function persistVitalsAfterCombat() {
-      const latest = PlayerStorage.load(username) || rawPlayer;
-      if (!latest || !combat || !combat.playerState) return;
-    
-      latest.hpCurrent = combat.playerState.hpCurrent;
-      latest.hpMax = combat.playerState.hpMax;
-      latest.mana = combat.playerState.manaCurrent;
-      latest.manaMax = combat.playerState.manaMax;
-    
-      PlayerStorage.save(username, latest);
-    }
-
-    function generateRewards(player, enemy, context, outcome) {
-      if (outcome !== "victory") {
-        return { outcome };
-      }
-    
-      // XP + Gold placeholders (tune later)
-      const xp = enemy.level * 2;
-      const gold = enemy.level * 1;
-    
-      // Use region loot tables
-      const lootRegionKey = mapRegionToLootKey(context.regionKey || encounter.region);
-      const loot = rollLoot(lootRegionKey, context, player);
-    
-      return {
-        outcome,
-        xp,
-        gold,
-        loot
-      };
-    }
-
-    async function finalizeRewards(result) {
-      // result = { outcome, xp, gold, loot, ... }
-      if (!result || result.outcome !== "victory") return result;
-    
-      const p = PlayerStorage.load(username);
-      if (!p) return result;
-    
-      // 1. Apply XP + Gold
-      p.xp = (p.xp || 0) + (result.xp || 0);
-      p.gold = (p.gold || 0) + (result.gold || 0);
-    
-      // 2. Merge LOOT into inventory
-      if (Array.isArray(result.loot) && result.loot.length > 0) {
-        if (!Array.isArray(p.inventory)) p.inventory = [];
-    
-        for (const item of result.loot) {
-          const existing = p.inventory.find(i => i.name === item.name && i.type === item.type);
-          if (existing) {
-            existing.quantity = (existing.quantity || 1) + (item.quantity || 1);
-          } else {
-            p.inventory.push(item);
-          }
-        }
-      }
-    
-      // 3. Save locally
-      const player = ensureVitals(p);
-
-      PlayerStorage.save(username, player);
-    
-      // 4. Save to KV
-      await api.savePlayer(username, player);
-    
-      // 5. Return rewards so UI can render loot
-      return result;
-    }
-  
-    /* ============================================================
-       PLAYER ACTIONS
-    ============================================================ */
-  
-    async function chooseBasicAttack() {
-      await runRound({ type: "basic" });
-    }
-  
-    async function chooseAbility(key) {
-      closeAbilityMenu();
-      await runRound({ type: "ability", ability: { key } });
-    }
-  
-    async function chooseUltimate() {
-      const p = combat.playerState;
-      if ((p.ultimateCharge || 0) < (p.ultimateChargeRequired || 100)) {
-        addLog("Ultimate not ready!");
-        return;
-      }
-      await runRound({ type: "ability", ability: p.ultimate, isUltimate: true });
-    }
-  
-    async function chooseItem(itemId) {
-      closeItemModal();
-      await runRound({ type: "item", itemId });
-    }
-  
-    async function chooseFlee() {
-      await runRound({ type: "flee" });
-    }
-  
-    /* ============================================================
-       AUTO-BATTLE
-    ============================================================ */
-  
-    function toggleAutoBattle() {
-      autoBattle = !autoBattle;
-      addLog("Auto-battle: " + (autoBattle ? "ON" : "OFF"));
-    
-      if (autoBattle) {
-        autoLoop();
-      } else {
+      endCombat(finalRewards.outcome, finalRewards);
+      autoBattle = false;
+      if (autoLoopHandle) {
         clearTimeout(autoLoopHandle);
         autoLoopHandle = null;
       }
+      return;
     }
 
-  
-    let autoLoopHandle = null;
+    // No outcome yet — continue or return control
+    if (autoBattle) {
+      // Let autoLoop schedule the next action
+      if (!autoLoopHandle) {
+        autoLoopHandle = setTimeout(autoLoop, 1000);
+      }
+    } else {
+      showActionPanel();
+    }
+  }
 
-    async function autoLoop() {
-      // If auto is off or combat ended, stop immediately
-      if (!autoBattle || !combat) return;
-    
-      // Schedule the next loop AFTER the delay
-      autoLoopHandle = setTimeout(async () => {
-        // Check again after the delay
-        if (!autoBattle || !combat) return;
-    
-        const action = pickAutoAction(combat.playerState);
-        await runRound(action);
-    
-        // If combat ended, stop
-        if (!combat || combat.enemyState.hpCurrent <= 0 || combat.playerState.hpCurrent <= 0) {
-          autoBattle = false;
-          return;
+  /* ============================================================
+     FINALIZE REWARDS (LOCAL + KV)
+  ============================================================ */
+
+  function persistVitalsAfterCombat() {
+    const latest = PlayerStorage.load(username) || rawPlayer;
+    if (!latest || !combat || !combat.playerState) return;
+
+    latest.hpCurrent = combat.playerState.hpCurrent;
+    latest.hpMax = combat.playerState.hpMax;
+    latest.mana = combat.playerState.manaCurrent;
+    latest.manaMax = combat.playerState.manaMax;
+
+    PlayerStorage.save(username, latest);
+  }
+
+  function generateRewards(player, enemy, context, outcome) {
+    if (outcome !== "victory") {
+      return { outcome };
+    }
+
+    const xp = enemy.level * 2;
+    const gold = enemy.level * 1;
+
+    const lootRegionKey = mapRegionToLootKey(context.regionKey || encounter.region);
+    const loot = rollLoot(lootRegionKey, context, player);
+
+    return {
+      outcome,
+      xp,
+      gold,
+      loot
+    };
+  }
+
+  async function finalizeRewards(result) {
+    if (!result || result.outcome !== "victory") return result;
+
+    const p = PlayerStorage.load(username);
+    if (!p) return result;
+
+    p.xp = (p.xp || 0) + (result.xp || 0);
+    p.gold = (p.gold || 0) + (result.gold || 0);
+
+    if (Array.isArray(result.loot) && result.loot.length > 0) {
+      if (!Array.isArray(p.inventory)) p.inventory = [];
+
+      for (const item of result.loot) {
+        const existing = p.inventory.find(
+          i => i.name === item.name && i.type === item.type
+        );
+        if (existing) {
+          existing.quantity = (existing.quantity || 1) + (item.quantity || 1);
+        } else {
+          p.inventory.push(item);
         }
-        // Continue looping
-        autoLoop();
-      }, 1000);
-    }
-
-  
-    function pickAutoAction(player) {
-      // Ultimate ready?
-      if (
-        player.ultimate &&
-        player.ultimateCharge >= (player.ultimateChargeRequired || 100)
-      ) {
-        return {
-          type: "ability",
-          ability: player.ultimate,
-          isUltimate: true
-        };
-      }
-    
-      // Usable abilities
-      const abilities = player.abilities || [];
-      const usable = abilities.filter(a => {
-        const cd = player.cooldowns?.[a.key] || 0;
-        const manaCost = a.manaCost || 0;
-        return cd <= 0 && player.manaCurrent >= manaCost;
-      });
-    
-      // 40% chance to use ability
-      if (usable.length && Math.random() < 0.40) {
-        const ability = usable[Math.floor(Math.random() * usable.length)];
-        return { type: "ability", ability };
-      }
-    
-      // Default
-      return { type: "basic" };
-    }
-
-    /* ============================================================
-       ITEM SYSTEM
-    ============================================================ */
-  
-    function openItemModal() {
-      itemModal.classList.remove("hidden");
-      loadCombatItems();
-    }
-  
-    function closeItemModal() {
-      itemModal.classList.add("hidden");
-    }
-  
-    function loadCombatItems() {
-      const list = document.getElementById("itemList");
-      list.innerHTML = "";
-  
-      if (!combat || !combat.playerState) {
-        list.innerHTML = "<div>No usable items.</div>";
-        return;
-      }
-  
-      const inv = combat.playerState.inventory || [];
-  
-      if (!inv.length) {
-        list.innerHTML = "<div>No usable items.</div>";
-        return;
-      }
-  
-      inv.forEach(item => {
-        const btn = document.createElement("button");
-        btn.className = "btn item-btn";
-        btn.textContent = `${item.name} (${item.qty ?? item.quantity ?? 1})`;
-        btn.onclick = () => chooseItem(item.id);
-        list.appendChild(btn);
-      });
-    }
-  
-    /* ============================================================
-       ABILITY MENU
-    ============================================================ */
-  
-    function openAbilityMenu() {
-      if (!combat || !combat.playerState) return;
-  
-      const list = document.getElementById("abilityList");
-      list.innerHTML = "";
-  
-      const abilities = combat.playerState.abilities || [];
-  
-      abilities.forEach(a => {
-        const btn = document.createElement("button");
-        btn.className = "btn ability-btn";
-        btn.textContent = a.name;
-        btn.onclick = () => chooseAbility(a.key);
-        list.appendChild(btn);
-      });
-  
-      abilityPanel.style.display = "block";
-    }
-  
-    function closeAbilityMenu() {
-      abilityPanel.style.display = "none";
-    }
-  
-    /* ============================================================
-       VFX
-    ============================================================ */
-  
-    function screenShake(intensity = 5, duration = 150) {
-      const root = document.body;
-      root.classList.add("screen-shake");
-      setTimeout(() => root.classList.remove("screen-shake"), duration);
-    }
-  
-    function critFlash() {
-      logBox.classList.add("crit-flash");
-      setTimeout(() => logBox.classList.remove("crit-flash"), 200);
-    }
-  
-    function elementalPulse(element) {
-      const hud = document.getElementById("combatHud");
-      hud.classList.add(`pulse-${element}`);
-      setTimeout(() => hud.classList.remove(`pulse-${element}`), 300);
-    }
-  
-    function applyVFX(event) {
-      if (!event || !event.type) return;
-  
-      switch (event.type) {
-        case "crit":
-          critFlash();
-          break;
-        case "big_hit":
-          screenShake();
-          break;
-        case "elemental_hit":
-          if (event.payload?.element) elementalPulse(event.payload.element);
-          break;
-      }
-    }
-  
-    /* ============================================================
-       CINEMATIC INTRO
-    ============================================================ */
-  
-    function showCinematicIntro(enemy) {
-      const intro = document.getElementById("cinematicIntro");
-      const name = document.getElementById("cinematicName");
-  
-      name.textContent = enemy.name || "Unknown Foe";
-  
-      intro.style.display = "flex";
-      intro.style.opacity = 0;
-  
-      setTimeout(() => {
-        intro.style.opacity = 1;
-      }, 50);
-  
-      setTimeout(() => {
-        intro.style.opacity = 0;
-        setTimeout(() => (intro.style.display = "none"), 300);
-      }, 2000);
-    }
-  
-    /* ============================================================
-       INSPECT ENEMY
-    ============================================================ */
-  
-    function inspectEnemy() {
-      if (!combat || !combat.enemyState) {
-        alert("Enemy not initialized yet.");
-        return;
-      }
-  
-      const e = combat.enemyState;
-      alert(
-        `${e.name}\n` +
-        `Level: ${e.level}\n` +
-        `HP: ${e.hpCurrent}/${e.hpMax}\n` +
-        `ATK: ${e.atk}\n` +
-        `DEF: ${e.def}\n` +
-        `Element: ${e.element}`
-      );
-    }
-  
-    /* ============================================================
-       END COMBAT / REWARDS
-    ============================================================ */
-  
-    function endCombat(outcome, rewards = null) {
-      hideActionPanel();
-    
-      const rewardPanel = document.createElement("div");
-      rewardPanel.className = "reward-panel";
-    
-      let lootHtml = "";
-    
-      if (outcome === "victory") {
-        // Build loot HTML
-        let lootList = "No loot";
-    
-        if (rewards && Array.isArray(rewards.loot) && rewards.loot.length > 0) {
-          lootList = rewards.loot
-            .map(item => `<div>${item.name} x${item.qty || 1}</div>`)
-            .join("");
-        }
-    
-        lootHtml = `
-          <h2>Victory!</h2>
-          <p>You defeated ${combat.enemyState.name}!</p>
-          <div class="loot-box">${lootList}</div>
-          <button class="btn" onclick="continueExploring()">Continue Exploring</button>
-          <button class="btn" onclick="goToMap()">Return to Map</button>
-        `;
-      } 
-      else if (outcome === "defeat") {
-        lootHtml = `
-          <h2>Defeat…</h2>
-          <p>You were defeated by ${combat.enemyState.name}.</p>
-          <button class="btn" onclick="goToMap()">Return to Map</button>
-        `;
-      } 
-      else {
-        lootHtml = `
-          <h2>Battle Over</h2>
-          <button class="btn" onclick="goToMap()">Return to Map</button>
-        `;
-      }
-    
-      rewardPanel.innerHTML = lootHtml;
-      persistVitalsAfterCombat();
-      document.body.appendChild(rewardPanel);
-    }
-
-    /* ============================================================
-       HELPERS
-    ============================================================ */
-  
-    function format(num) {
-      return Number(num).toLocaleString();
-    }
-  
-    function formatLog(text) {
-      return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    }
-  
-    function showActionPanel() {
-      actionPanel.style.display = "block";
-    }
-  
-    function hideActionPanel() {
-      actionPanel.style.display = "none";
-    }
-
-    function showPopup(targetPanelId, text, type="damage") {
-      const panel = document.getElementById(targetPanelId);
-      if (!panel) return;
-    
-      const div = document.createElement("div");
-      div.className = type === "heal" ? "heal-popup" : "damage-popup";
-      div.textContent = text;
-    
-      panel.appendChild(div);
-    
-      setTimeout(() => div.remove(), 800);
-    }
-
-    function renderStatusIcons(entity, containerId) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-    
-      (entity.statusEffects || []).forEach(eff => {
-        const img = document.createElement("img");
-        img.src = `/assets/status/${eff.type}.png`;
-        img.title = eff.type;
-        container.appendChild(img);
-      });
-    }
-
-    function mapRegionToLootKey(regionKey) {
-      switch ((regionKey || "").toLowerCase()) {
-        case "forest":
-          return "forest-edge";   // or "deep-forest" later if you want
-        case "plains":
-          return "plains-field";
-        default:
-          return "forest-edge";   // safe fallback
       }
     }
 
-    function rollLoot(regionKey, context, player) {
-      const table = REGION_LOOT_TABLES[regionKey];
-      if (!table) return [];
-    
-      const results = [];
-    
-      // 1. Base rarity roll
-      const rarityRoll = Math.random();
-      let rarity = "common";
-      if (rarityRoll > 0.97) rarity = "mythic";
-      else if (rarityRoll > 0.90) rarity = "epic";
-      else if (rarityRoll > 0.75) rarity = "rare";
-      else if (rarityRoll > 0.50) rarity = "uncommon";
-    
-      const basePool = table[rarity] || [];
-      if (basePool.length) {
-        const name = pick(basePool);
-        results.push(makeItem(name, rarity));
-      }
-    
-      // 2. Weather modifiers
-      const weather = context.weatherKey;
-      if (table.weatherModifiers?.[weather]) {
-        const name = pick(table.weatherModifiers[weather]);
-        results.push(makeItem(name, rarity));
-      }
-    
-      // 3. Event modifiers
-      const event = context.eventKey;
-      if (table.eventModifiers?.[event]) {
-        const name = pick(table.eventModifiers[event]);
-        results.push(makeItem(name, rarity));
-      }
-    
-      // 4. Profession modifiers
-      if (table.professionModifiers?.[player.profession]) {
-        const name = pick(table.professionModifiers[player.profession]);
-        results.push(makeItem(name, rarity));
-      }
-    
-      return results;
+    const player = ensureVitals(p);
+    PlayerStorage.save(username, player);
+    await api.savePlayer(username, player);
+
+    return result;
+  }
+
+  /* ============================================================
+     PLAYER ACTIONS
+  ============================================================ */
+
+  async function chooseBasicAttack() {
+    await runRound({ type: "basic" });
+  }
+
+  async function chooseAbility(key) {
+    closeAbilityMenu();
+    await runRound({ type: "ability", ability: { key } });
+  }
+
+  async function chooseUltimate() {
+    const p = combat.playerState;
+    if ((p.ultimateCharge || 0) < (p.ultimateChargeRequired || 100)) {
+      addLog("Ultimate not ready!");
+      return;
     }
-    
-    function makeItem(name, rarity) {
+    await runRound({ type: "ability", ability: p.ultimate, isUltimate: true });
+  }
+
+  async function chooseItem(itemId) {
+    closeItemModal();
+    await runRound({ type: "item", itemId });
+  }
+
+  async function chooseFlee() {
+    await runRound({ type: "flee" });
+  }
+
+  /* ============================================================
+     AUTO-BATTLE (Summoners War–style toggle)
+  ============================================================ */
+
+  function toggleAutoBattle() {
+    autoBattle = !autoBattle;
+    addLog("Auto-battle: " + (autoBattle ? "ON" : "OFF"));
+
+    if (!autoBattle && autoLoopHandle) {
+      clearTimeout(autoLoopHandle);
+      autoLoopHandle = null;
+      showActionPanel();
+      return;
+    }
+
+    if (autoBattle && combat && !autoLoopHandle) {
+      autoLoopHandle = setTimeout(autoLoop, 300);
+    }
+  }
+
+  async function autoLoop() {
+    if (!autoBattle || !combat) {
+      autoLoopHandle = null;
+      return;
+    }
+
+    const action = pickAutoAction(combat.playerState);
+    await runRound(action);
+
+    if (!autoBattle || !combat) {
+      autoLoopHandle = null;
+      return;
+    }
+
+    autoLoopHandle = setTimeout(autoLoop, 1000);
+  }
+
+  function pickAutoAction(player) {
+    if (
+      player.ultimate &&
+      player.ultimateCharge >= (player.ultimateChargeRequired || 100)
+    ) {
       return {
-        id: crypto.randomUUID(),
-        name,
-        quantity: 1,
-        rarity: rarity || "common",
-        type: inferItemType(name),
-        icon: "/assets/items/default.png"
+        type: "ability",
+        ability: player.ultimate,
+        isUltimate: true
       };
     }
-    
-    function inferItemType(name) {
-      const n = name.toLowerCase();
-    
-      if (n.includes("meat") || n.includes("potion") || n.includes("herb"))
-        return "consumable";
-    
-      if (n.includes("ore") || n.includes("bark") || n.includes("leaf") || n.includes("root"))
-        return "material";
-    
-      if (n.includes("token") || n.includes("trophy") || n.includes("map"))
-        return "quest";
-    
-      return "misc";
+
+    const abilities = player.abilities || [];
+    const usable = abilities.filter(a => {
+      const cd = player.cooldowns?.[a.key] || 0;
+      const manaCost = a.manaCost || 0;
+      return cd <= 0 && player.manaCurrent >= manaCost;
+    });
+
+    if (usable.length && Math.random() < 0.40) {
+      const ability = usable[Math.floor(Math.random() * usable.length)];
+      return { type: "ability", ability };
     }
 
-    
-    function pick(arr) {
-      return arr[Math.floor(Math.random() * arr.length)];
+    return { type: "basic" };
+  }
+
+  /* ============================================================
+     ITEM SYSTEM
+  ============================================================ */
+
+  function openItemModal() {
+    itemModal.classList.remove("hidden");
+    loadCombatItems();
+  }
+
+  function closeItemModal() {
+    itemModal.classList.add("hidden");
+  }
+
+  function loadCombatItems() {
+    const list = document.getElementById("itemList");
+    list.innerHTML = "";
+
+    if (!combat || !combat.playerState) {
+      list.innerHTML = "<div>No usable items.</div>";
+      return;
     }
 
-    function continueExploring() {
-      const panel = document.querySelector(".reward-panel");
-      if (panel) panel.remove();
-    
-      // Clear encounter so a new one can be generated
-      EncounterEngine.clear();
-    
-      // Go back to world map (where a new encounter can be rolled)
+    const inv = combat.playerState.inventory || [];
+
+    if (!inv.length) {
+      list.innerHTML = "<div>No usable items.</div>";
+      return;
+    }
+
+    inv.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "btn item-btn";
+      btn.textContent = `${item.name} (${item.qty ?? item.quantity ?? 1})`;
+      btn.onclick = () => chooseItem(item.id);
+      list.appendChild(btn);
+    });
+  }
+
+  /* ============================================================
+     ABILITY MENU
+  ============================================================ */
+
+  function openAbilityMenu() {
+    if (!combat || !combat.playerState) return;
+
+    const list = document.getElementById("abilityList");
+    list.innerHTML = "";
+
+    const abilities = combat.playerState.abilities || [];
+
+    abilities.forEach(a => {
+      const btn = document.createElement("button");
+      btn.className = "btn ability-btn";
+      btn.textContent = a.name;
+      btn.onclick = () => chooseAbility(a.key);
+      list.appendChild(btn);
+    });
+
+    abilityPanel.style.display = "block";
+  }
+
+  function closeAbilityMenu() {
+    abilityPanel.style.display = "none";
+  }
+
+  /* ============================================================
+     VFX
+  ============================================================ */
+
+  function screenShake(intensity = 5, duration = 150) {
+    const root = document.body;
+    root.classList.add("screen-shake");
+    setTimeout(() => root.classList.remove("screen-shake"), duration);
+  }
+
+  function critFlash() {
+    logBox.classList.add("crit-flash");
+    setTimeout(() => logBox.classList.remove("crit-flash"), 200);
+  }
+
+  function elementalPulse(element) {
+    const hud = document.getElementById("combatHud");
+    hud.classList.add(`pulse-${element}`);
+    setTimeout(() => hud.classList.remove(`pulse-${element}`), 300);
+  }
+
+  function applyVFX(event) {
+    if (!event || !event.type) return;
+
+    switch (event.type) {
+      case "crit":
+        critFlash();
+        break;
+      case "big_hit":
+        screenShake();
+        break;
+      case "elemental_hit":
+        if (event.payload?.element) elementalPulse(event.payload.element);
+        break;
+    }
+  }
+
+  /* ============================================================
+     CINEMATIC INTRO
+  ============================================================ */
+
+  function showCinematicIntro(enemy) {
+    const intro = document.getElementById("cinematicIntro");
+    const name = document.getElementById("cinematicName");
+
+    name.textContent = enemy.name || "Unknown Foe";
+
+    intro.style.display = "flex";
+    intro.style.opacity = 0;
+
+    setTimeout(() => {
+      intro.style.opacity = 1;
+    }, 50);
+
+    setTimeout(() => {
+      intro.style.opacity = 0;
+      setTimeout(() => (intro.style.display = "none"), 300);
+    }, 2000);
+  }
+
+  /* ============================================================
+     INSPECT ENEMY
+  ============================================================ */
+
+  function inspectEnemy() {
+    if (!combat || !combat.enemyState) {
+      alert("Enemy not initialized yet.");
+      return;
+    }
+
+    const e = combat.enemyState;
+    alert(
+      `${e.name}\n` +
+      `Level: ${e.level}\n` +
+      `HP: ${e.hpCurrent}/${e.hpMax}\n` +
+      `ATK: ${e.atk}\n` +
+      `DEF: ${e.def}\n` +
+      `Element: ${e.element}`
+    );
+  }
+
+  /* ============================================================
+     END COMBAT / REWARDS
+  ============================================================ */
+
+  function endCombat(outcome, rewards = null) {
+    hideActionPanel();
+
+    const rewardPanel = document.createElement("div");
+    rewardPanel.className = "reward-panel";
+
+    let lootHtml = "";
+
+    if (outcome === "victory") {
+      let lootList = "No loot";
+
+      if (rewards && Array.isArray(rewards.loot) && rewards.loot.length > 0) {
+        lootList = rewards.loot
+          .map(item => `<div>${item.name} x${item.qty || item.quantity || 1}</div>`)
+          .join("");
+      }
+
+      const continueLabel = combat.context.dungeonRun
+        ? "Continue Dungeon"
+        : "Continue Exploring";
+
+      lootHtml = `
+        <h2>Victory!</h2>
+        <p>You defeated ${combat.enemyState.name}!</p>
+        <div class="loot-box">${lootList}</div>
+        <button class="btn" onclick="continueExploring()">${continueLabel}</button>
+        <button class="btn" onclick="goToMap()">Return to Map</button>
+      `;
+    } 
+    else if (outcome === "defeat") {
+      lootHtml = `
+        <h2>Defeat…</h2>
+        <p>You were defeated by ${combat.enemyState.name}.</p>
+        <button class="btn" onclick="goToMap()">Return to Map</button>
+      `;
+    } 
+    else {
+      lootHtml = `
+        <h2>Battle Over</h2>
+        <button class="btn" onclick="goToMap()">Return to Map</button>
+      `;
+    }
+
+    rewardPanel.innerHTML = lootHtml;
+    persistVitalsAfterCombat();
+    document.body.appendChild(rewardPanel);
+  }
+
+  /* ============================================================
+     HELPERS
+  ============================================================ */
+
+  function format(num) {
+    return Number(num).toLocaleString();
+  }
+
+  function formatLog(text) {
+    return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+  }
+
+  function showActionPanel() {
+    actionPanel.style.display = "block";
+  }
+
+  function hideActionPanel() {
+    actionPanel.style.display = "none";
+  }
+
+  function showPopup(targetPanelId, text, type = "damage") {
+    const panel = document.getElementById(targetPanelId);
+    if (!panel) return;
+
+    const div = document.createElement("div");
+    div.className = type === "heal" ? "heal-popup" : "damage-popup";
+    div.textContent = text;
+
+    panel.appendChild(div);
+
+    setTimeout(() => div.remove(), 800);
+  }
+
+  function renderStatusIcons(entity, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+
+    (entity.statusEffects || []).forEach(eff => {
+      const img = document.createElement("img");
+      img.src = `/assets/status/${eff.type}.png`;
+      img.title = eff.type;
+      container.appendChild(img);
+    });
+  }
+
+  function mapRegionToLootKey(regionKey) {
+    switch ((regionKey || "").toLowerCase()) {
+      case "forest":
+        return "forest-edge";
+      case "plains":
+        return "plains-field";
+      default:
+        return "forest-edge";
+    }
+  }
+
+  function rollLoot(regionKey, context, player) {
+    const table = REGION_LOOT_TABLES[regionKey];
+    if (!table) return [];
+
+    const results = [];
+
+    const rarityRoll = Math.random();
+    let rarity = "common";
+    if (rarityRoll > 0.97) rarity = "mythic";
+    else if (rarityRoll > 0.90) rarity = "epic";
+    else if (rarityRoll > 0.75) rarity = "rare";
+    else if (rarityRoll > 0.50) rarity = "uncommon";
+
+    const basePool = table[rarity] || [];
+    if (basePool.length) {
+      const name = pick(basePool);
+      results.push(makeItem(name, rarity));
+    }
+
+    const weather = context.weatherKey;
+    if (table.weatherModifiers?.[weather]) {
+      const name = pick(table.weatherModifiers[weather]);
+      results.push(makeItem(name, rarity));
+    }
+
+    const event = context.eventKey;
+    if (table.eventModifiers?.[event]) {
+      const name = pick(table.eventModifiers[event]);
+      results.push(makeItem(name, rarity));
+    }
+
+    if (table.professionModifiers?.[player.profession]) {
+      const name = pick(table.professionModifiers[player.profession]);
+      results.push(makeItem(name, rarity));
+    }
+
+    return results;
+  }
+
+  function makeItem(name, rarity) {
+    return {
+      id: crypto.randomUUID(),
+      name,
+      quantity: 1,
+      rarity: rarity || "common",
+      type: inferItemType(name),
+      icon: "/assets/items/default.png"
+    };
+  }
+
+  function inferItemType(name) {
+    const n = name.toLowerCase();
+
+    if (n.includes("meat") || n.includes("potion") || n.includes("herb"))
+      return "consumable";
+
+    if (n.includes("ore") || n.includes("bark") || n.includes("leaf") || n.includes("root"))
+      return "material";
+
+    if (n.includes("token") || n.includes("trophy") || n.includes("map"))
+      return "quest";
+
+    return "misc";
+  }
+
+  function pick(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function continueExploring() {
+    const panel = document.querySelector(".reward-panel");
+    if (panel) panel.remove();
+
+    EncounterEngine.clear();
+
+    if (combat && combat.context && combat.context.dungeonRun) {
+      window.location.href = "dungeon-room.html";
+    } else {
       window.location.href = "world-map.html";
     }
-    
-    function goToMap() {
-      EncounterEngine.clear();
-      window.location.href = "world-map.html";
-    }
+  }
 
-    /* ============================================================
-       DEATH MODAL + RESPAWN
-    ============================================================ */
-    
-    function showDeathModal() {
-      const modal = document.getElementById("deathModal");
-      modal.classList.remove("hidden");
-    
-      const safeBtn = document.getElementById("safeRespawnBtn");
-      const riskyBtn = document.getElementById("riskyRespawnBtn");
-    
-      safeBtn.onclick = async () => {
-        safeBtn.disabled = true;
-        riskyBtn.disabled = true;
-        await handleSafeRespawn(username);
-      };
-    
-      riskyBtn.onclick = async () => {
-        safeBtn.disabled = true;
-        riskyBtn.disabled = true;
-        await handleRiskyRespawn(username);
-      };
-    
-      // 🔥 Safe Respawn Lock Check
-      const stored = PlayerStorage.load(username);
-      if (stored.safeRespawnLockUntil && getSafeRespawnRemaining(stored) > 0) {
-        safeBtn.disabled = true;
-        safeBtn.textContent = "Safe Respawn (Locked)";
-      }
-      if (stored.safeRespawnLockUntil) {
-        startRespawnLockCountdown(stored);
-      }
-    }
+  function goToMap() {
+    EncounterEngine.clear();
+    window.location.href = "world-map.html";
+  }
 
-    /* ============================================================
-       BUTTON BINDINGS
-    ============================================================ */
-  
-    document.getElementById("startFightBtn").onclick = beginFight;
-    document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
-    document.getElementById("ultimateBtn").onclick = chooseUltimate;
-    document.getElementById("fleeBtn").onclick = chooseFlee;
-    document.getElementById("autoBtn").onclick = toggleAutoBattle;
-    document.getElementById("openItemBtn").onclick = openItemModal;
-    document.getElementById("openAbilitiesBtn").onclick = openAbilityMenu;
-    document.getElementById("inspectEnemyBtn").onclick = inspectEnemy;
-  
-    window.chooseAbility = chooseAbility;
-    window.chooseItem = chooseItem;
-    window.continueExploring = continueExploring;
-    window.goToMap = goToMap;
-  </script>
+  /* ============================================================
+     DEATH MODAL + RESPAWN
+  ============================================================ */
+
+  function showDeathModal() {
+    const modal = document.getElementById("deathModal");
+    modal.classList.remove("hidden");
+
+    const safeBtn = document.getElementById("safeRespawnBtn");
+    const riskyBtn = document.getElementById("riskyRespawnBtn");
+
+    safeBtn.onclick = async () => {
+      safeBtn.disabled = true;
+      riskyBtn.disabled = true;
+      await handleSafeRespawn(username);
+    };
+
+    riskyBtn.onclick = async () => {
+      safeBtn.disabled = true;
+      riskyBtn.disabled = true;
+      await handleRiskyRespawn(username);
+    };
+
+    const stored = PlayerStorage.load(username);
+    if (stored.safeRespawnLockUntil && getSafeRespawnRemaining(stored) > 0) {
+      safeBtn.disabled = true;
+      safeBtn.textContent = "Safe Respawn (Locked)";
+    }
+    if (stored.safeRespawnLockUntil) {
+      startRespawnLockCountdown(stored);
+    }
+  }
+
+  /* ============================================================
+     BUTTON BINDINGS
+  ============================================================ */
+
+  document.getElementById("startFightBtn").onclick = beginFight;
+  document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
+  document.getElementById("ultimateBtn").onclick = chooseUltimate;
+  document.getElementById("fleeBtn").onclick = chooseFlee;
+  document.getElementById("autoBtn").onclick = toggleAutoBattle;
+  document.getElementById("openItemBtn").onclick = openItemModal;
+  document.getElementById("openAbilitiesBtn").onclick = openAbilityMenu;
+  document.getElementById("inspectEnemyBtn").onclick = inspectEnemy;
+
+  window.chooseAbility = chooseAbility;
+  window.chooseItem = chooseItem;
+  window.continueExploring = continueExploring;
+  window.goToMap = goToMap;
+</script>
+
 </body>
 </html>
