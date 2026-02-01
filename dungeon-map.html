@@ -5,17 +5,35 @@
   <title>Dungeon Map</title>
 
   <style>
-    body { background:#0d0f14; color:#e8e8e8; font-family:system-ui; padding:24px; }
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+    .map-box {
+      background:#14171f;
+      border:1px solid #333;
+      padding:20px;
+      border-radius:10px;
+      max-width:500px;
+      margin:0 auto;
+    }
     .floor {
       padding:10px;
-      margin:8px 0;
-      border-radius:6px;
-      border:1px solid #333;
-      background:#14171f;
+      border-bottom:1px solid #333;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
     }
-    .current { border-color:#7fffd4; box-shadow:0 0 8px #7fffd455; }
-    .completed { opacity:0.6; }
-    .boss { border-color:#ff7f7f; }
+    .current {
+      background:#1f2533;
+      border-left:4px solid #7fffd4;
+    }
+    .boss {
+      color:#ff7777;
+      font-weight:bold;
+    }
     .btn {
       padding:10px 14px;
       border-radius:6px;
@@ -23,8 +41,8 @@
       background:#1a1d24;
       color:#eee;
       cursor:pointer;
-      width:100%;
       margin-top:12px;
+      width:100%;
     }
     .btn:hover { background:#222832; }
   </style>
@@ -35,53 +53,95 @@
   <h1>Dungeon Map</h1>
   <div id="usernameDisplay"></div>
 
-  <div id="mapContainer"></div>
+  <div id="map" class="map-box">Loading...</div>
 
-  <button class="btn" onclick="continueRun()">Continue</button>
-  <button class="btn" onclick="leaveDungeon()">Leave Dungeon</button>
+  <button class="btn" onclick="returnToRun()">Return to Run</button>
+  <button class="btn" onclick="abandonRun()">Abandon Run</button>
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
     import { DUNGEONS } from "./dungeons.js";
+    import { DungeonEngine } from "./dungeon-engine.js";
 
     await requireSession();
     const { username } = window.syncState;
 
     const player = PlayerStorage.load(username);
-    const run = player.activeDungeonRun;
-
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
 
+    const run = player.activeDungeonRun;
+    const mapBox = document.getElementById("map");
+
     if (!run) {
-      document.getElementById("mapContainer").innerHTML =
-        "<p>No active dungeon run.</p>";
-      return;
+      mapBox.innerHTML = "<p>No active dungeon run.</p>";
+      throw new Error("No active dungeon run");
     }
 
     const dungeon = DUNGEONS[run.dungeonKey];
-    const container = document.getElementById("mapContainer");
+    const isEndless = DungeonEngine.isEndless(run);
 
-    for (let i = 1; i <= dungeon.floors.length; i++) {
-      const div = document.createElement("div");
-      div.className = "floor";
+    /* ============================================================
+       RENDER MAP
+    ============================================================ */
+    function renderMap() {
+      let html = "";
 
-      if (i < run.currentFloor) div.classList.add("completed");
-      if (i === run.currentFloor) div.classList.add("current");
-      if (i === dungeon.floors.length) div.classList.add("boss");
+      if (isEndless) {
+        // Show last 10 floors + next 3
+        const start = Math.max(1, run.currentFloor - 10);
+        const end = run.currentFloor + 3;
 
-      div.textContent = `Floor ${i}`;
-      container.appendChild(div);
+        for (let f = start; f <= end; f++) {
+          const isBoss =
+            f % dungeon.bossEvery === 0 ||
+            f % dungeon.megaBossEvery === 0;
+
+          html += `
+            <div class="floor ${f === run.currentFloor ? "current" : ""}">
+              <span>Floor ${f}</span>
+              <span class="${isBoss ? "boss" : ""}">
+                ${isBoss ? "Boss" : ""}
+              </span>
+            </div>
+          `;
+        }
+      } else {
+        // Normal dungeon
+        for (let i = 1; i <= dungeon.floors.length; i++) {
+          const isBoss = i === dungeon.floors.length;
+
+          html += `
+            <div class="floor ${i === run.currentFloor ? "current" : ""}">
+              <span>Floor ${i}</span>
+              <span class="${isBoss ? "boss" : ""}">
+                ${isBoss ? "Boss" : ""}
+              </span>
+            </div>
+          `;
+        }
+      }
+
+      mapBox.innerHTML = html;
     }
 
-    window.continueRun = () => {
+    renderMap();
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    window.returnToRun = () => {
       window.location.href = "dungeon-room.html";
     };
 
-    window.leaveDungeon = () => {
+    window.abandonRun = () => {
+      if (!confirm("Are you sure you want to abandon this run?")) return;
+
+      player.activeDungeonRun = null;
       PlayerStorage.save(username, player);
-      window.location.href = "town.html";
+
+      window.location.href = "dungeon-select.html";
     };
   </script>
 
