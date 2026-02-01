@@ -1488,8 +1488,7 @@
   
       // Normal dungeon floor victory
       DungeonEngine.completeFloor(run);
-      p.activeDungeonRun = run;
-      PlayerStorage.save(username, p);
+      DungeonEngine.saveRun(p, run, username);
     }
   
     // ============================================================
