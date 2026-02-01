@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Select Dungeon</title>
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+    .dungeon-card {
+      background:#14171f;
+      border:1px solid #333;
+      padding:16px;
+      border-radius:8px;
+      margin-bottom:20px;
+    }
+    .btn {
+      padding:8px 12px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      margin-top:10px;
+    }
+    .btn:hover { background:#222832; }
+  </style>
+</head>
+
+<body>
+
+  <h1>Select a Dungeon</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="dungeonList">Loading...</div>
+
+  <button class="btn" onclick="goBack()">Return to Town</button>
+
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { DUNGEONS } from "./dungeons.js";
+    import { DungeonEngine } from "./dungeon-engine.js";
+
+    await requireSession();
+    const { username } = window.syncState;
+
+    const player = PlayerStorage.load(username);
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+
+    const container = document.getElementById("dungeonList");
+    container.innerHTML = "";
+
+    for (const key in DUNGEONS) {
+      const d = DUNGEONS[key];
+
+      const div = document.createElement("div");
+      div.className = "dungeon-card";
+
+      div.innerHTML = `
+        <h2>${d.name}</h2>
+        <p>Recommended Level: ${d.recommendedLevel}</p>
+        <p>Floors: ${d.floors.length}</p>
+        <p>Boss: ${d.boss.enemyKey}</p>
+        <button class="btn" data-key="${key}">Start Run</button>
+      `;
+
+      container.appendChild(div);
+    }
+
+    container.addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-key]");
+      if (!btn) return;
+
+      const dungeonKey = btn.getAttribute("data-key");
+
+      // Create run
+      const run = DungeonEngine.createRun(player, dungeonKey);
+
+      // Save to player
+      player.activeDungeonRun = run;
+      PlayerStorage.save(username, player);
+
+      // Redirect to world map (or a dedicated dungeon page)
+      window.location.href = "world-map.html";
+    });
+
+    function goBack() {
+      window.location.href = "town.html";
+    }
+  </script>
+
+</body>
+</html>
