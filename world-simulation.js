@@ -10,6 +10,53 @@ import { WorldBossAnnouncements } from "./world-boss-announcements.js";
 import { WORLD_BOSSES } from "./world-boss-templates.js";
 import { REGION_UNLOCKS } from "./region-unlock.js";
 
+// world-simulation.js
+import { rotateMerchants } from "./merchant-rotation.js";
+
+export const WorldSim = {
+  _state: null,
+
+  async init() {
+    const saved = JSON.parse(localStorage.getItem("world_state"));
+    if (saved) {
+      this._state = saved;
+    } else {
+      this._state = {
+        tickCount: 0,
+        globalMerchant: null,
+        lastTick: Date.now()
+      };
+    }
+
+    // Run a tick on load (offline progression)
+    this.tick();
+  },
+
+  tick() {
+    const now = Date.now();
+    const diffMinutes = Math.floor((now - this._state.lastTick) / 60000);
+
+    if (diffMinutes <= 0) return;
+
+    // Advance world time
+    this._state.lastTick = now;
+
+    // Rotate merchants
+    this._state = rotateMerchants(this._state);
+
+    this.save();
+  },
+
+  save() {
+    localStorage.setItem("world_state", JSON.stringify(this._state));
+  },
+
+  getState() {
+    return this._state;
+  }
+};
+
+
 export const WorldSim = {
   init,
   tick,
