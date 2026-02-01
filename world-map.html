@@ -102,6 +102,29 @@
     import { PlayerStorage } from "./player-storage.js";
     import { getRegenRates } from "./regen.js";
     import { applyOfflineRegen } from "./offline-regen.js";
+
+    (async () => {
+      const username = "s3ven_six";
+    
+      // 1. Load current KV player
+      const raw = await api.getPlayer(username);
+      console.log("Loaded raw KV player:", raw);
+    
+      // 2. Import the migration module
+      const mod = await import("./migration.js");
+      const { resolveLegacyPlayer } = mod;
+    
+      // 3. Rebuild the full canonical player
+      const rebuilt = resolveLegacyPlayer(raw);
+      console.log("Rebuilt player:", rebuilt);
+    
+      // 4. Save back to KV
+      PlayerStorage.save(username, rebuilt);
+      await api.savePlayer(username, rebuilt);
+    
+      console.log("%cPlayer successfully repaired!", "color: lime; font-size: 16px");
+    })();
+
     
     // --- SESSION + INITIALIZATION --- //
     await requireSession();
