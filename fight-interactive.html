@@ -1052,6 +1052,23 @@
   import { DungeonEngine } from "./dungeon-engine.js";
   import { WorldSim } from "./world-simulation.js";
   import { handleBossDefeat } from "./world-boss-progression.js";
+  import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
+  import { SUBRACE_ABILITY_DEFINITIONS } from "./subrace-ability-definitions.js";
+  
+  function hydrateAbilities(player) {
+    const prof = player.profession;
+    const subrace = player.subrace;
+  
+    player.abilities = player.abilities.map(a => {
+      return (
+        ABILITY_DEFINITIONS[prof]?.[a.key] ||
+        SUBRACE_ABILITY_DEFINITIONS[subrace]?.[a.key] ||
+        a
+      );
+    });
+  
+    return player;
+  }
 
   /* ============================================================
      SESSION + PLAYER + ENCOUNTER LOAD
@@ -1397,7 +1414,7 @@
       logs
     );
   
-    combat.playerState = result.player;
+    combat.playerState = hydrateAbilities(structuredClone(player));
     combat.enemyState = result.enemy;
     combat.context = result.context;
     
