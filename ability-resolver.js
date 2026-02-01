@@ -1,11 +1,11 @@
 /************************************************************
- * ability-resolver.js — Fully Implemented Modern Version
+ * ability-resolver.js — Modern Damage + Ability Resolution
  ************************************************************/
 
 import { ABILITY_DEFINITIONS } from './ability-definitions.js';
 import { SUBRACE_ABILITY_DEFINITIONS } from './subrace-ability-definitions.js';
 
-import { applyStatusEffect, processStatusesAtTurnStart } from './status-engine.js';
+import { applyStatusEffect } from './status-engine.js';
 import { scheduleDOT, scheduleHOT } from './dot-hot-engine.js';
 import { applyShield, absorbDamageWithShield } from './shield-engine.js';
 import { cleanseEffects } from './cleanse-engine.js';
@@ -30,35 +30,34 @@ export function castAbility(attacker, defender, abilityKey, context, logs) {
   }
 
   // Mana check
-  if (attacker.manaCurrent < ability.manaCost) {
+  if (attacker.manaCurrent < (ability.manaCost || 0)) {
     logs.push(`${attacker.name} lacks mana for ${ability.name}.`);
     return;
   }
 
-  attacker.manaCurrent -= ability.manaCost;
+  attacker.manaCurrent -= ability.manaCost || 0;
 
-  // Hit / Crit
-  const hitData = resolveHitAndCrit(attacker, defender, context);
-  if (!hitData.hit) {
-    logs.push(`${attacker.name}'s ${ability.name} misses ${defender.name}.`);
+  // Hit / Crit + Damage
+  const hitData = computeHitData(attacker, defender, ability, context);
+
+  if (!hitData.isHit) {
+    logs.push(`${attacker.name}'s ${ability.name || ability.key} misses ${defender.name}.`);
     return;
   }
 
-  // Damage
-  const dmg = calculateAbilityDamage(attacker, defender, ability, hitData, context);
+  const dmg = computeFinalDamage(attacker, defender, ability, hitData, context);
 
-  // Apply damage (with shield absorption)
-  applyDamage(defender, dmg, attacker, logs, { ability });
+  applyDamage(attacker, defender, ability, dmg, hitData, logs);
 
   // Lifesteal
-  if (ability.combatTags?.includes('lifesteal')) {
+  if (ability.combatTags?.includes('lifesteal') && dmg > 0) {
     const heal = Math.floor(dmg * 0.25);
     attacker.hpCurrent = Math.min(attacker.hpMax, attacker.hpCurrent + heal);
     logs.push(`${attacker.name} absorbs ${heal} health through lifesteal.`);
   }
 
   // Status Effects
-  if (ability.statusEffects?.length > 0) {
+  if (ability.statusEffects?.length) {
     for (const effect of ability.statusEffects) {
       if (effect.type === 'shield') {
         applyShield(attacker, effect, logs);
@@ -70,6 +69,7 @@ export function castAbility(attacker, defender, abilityKey, context, logs) {
         scheduleHOT(attacker, effect, attacker, logs);
       } else {
         applyStatusEffect(defender, effect, attacker, logs);
+        logs.push(`${defender.name} is affected by ${effect.type}.`);
       }
     }
   }
@@ -99,70 +99,129 @@ function resolveAbilityObject(attacker, abilityKey) {
   return null;
 }
 
-/************************************************************
- * Hit / Crit
- ************************************************************/
-function resolveHitAndCrit(attacker, defender, context) {
+/****************************************************
+ * HIT / CRIT (modern)
+ ****************************************************/
+export function computeHitData(attacker, defender, ability, context) {
+  // Base hit
   const accuracy = attacker.accuracyMult || 1.0;
   const evade = defender.evadeMult || 1.0;
 
-  let hitChance = 0.95 * accuracy / evade;
+  let hitChance = 0.95 * accuracy / Math.max(0.1, evade);
   hitChance = Math.max(0.05, Math.min(0.99, hitChance));
 
-  const hit = Math.random() <= hitChance;
+  const isHit = Math.random() <= hitChance;
 
+  // Crit
   let critChance = attacker.critChance || 0.05;
   critChance += context?.critBoost || 0;
-  critChance = Math.min(1, Math.max(0, critChance));
+  critChance = Math.max(0, Math.min(critChance, 0.75)); // cap at 75%
 
-  const isCrit = hit && Math.random() <= critChance;
+  const isCrit = isHit && Math.random() <= critChance;
 
   return {
-    hit,
+    isHit,
     isCrit,
-    damageMult: isCrit ? (attacker.critDamage || 1.5) : 1.0
+    damageMult: isCrit ? (attacker.critDamageMult || 1.5) : 1.0
   };
 }
 
-/************************************************************
- * Damage Calculation
- ************************************************************/
-function calculateAbilityDamage(attacker, defender, ability, hitData, context) {
-  const base = Math.max(1, attacker.atk - defender.def);
-  const power = ability.basePower || 1.0;
+/****************************************************
+ * BASE DAMAGE CALCULATION
+ ****************************************************/
+export function calculateBaseDamage(attacker, defender, ability) {
+  const atk = attacker.atk || 1;
+  const def = defender.def || 0;
 
-  let dmg = base * power * hitData.damageMult;
+  const raw = Math.max(1, atk - def * 0.5);
+  const power = ability.basePower || ability.power || 1.0;
 
-  // Level scaling
-  if (ability.scalingPerLevel) {
-    dmg += attacker.level * ability.scalingPerLevel * base;
-  }
-
-  // World modifiers
-  dmg = worldModifiers.modifyDamage(attacker, defender, ability, dmg);
-
-  // Talent modifiers
-  dmg = talentModifiers.modifyDamage(attacker, ability, dmg);
-
-  return Math.floor(dmg);
+  return raw * power;
 }
 
-/************************************************************
- * Apply Damage (with shield absorption)
- ************************************************************/
-function applyDamage(target, amount, source, logs, meta) {
-  let dmg = amount;
+/****************************************************
+ * DAMAGE VARIANCE
+ ****************************************************/
+export function applyVariance(dmg) {
+  const variance = 0.9 + Math.random() * 0.2; // ±10%
+  return dmg * variance;
+}
 
-  // Shield absorption
-  dmg = absorbDamageWithShield(target, dmg, logs);
+/****************************************************
+ * LEVEL SCALING
+ ****************************************************/
+export function applyLevelScaling(dmg, attacker, ability) {
+  if (!ability.scalingPerLevel) return dmg;
+  return dmg + attacker.level * ability.scalingPerLevel;
+}
 
-  target.hpCurrent = Math.max(0, target.hpCurrent - dmg);
+/****************************************************
+ * ELEMENTAL MODIFIERS
+ ****************************************************/
+export function applyElementalModifiers(dmg, attacker, defender) {
+  if (typeof ELEMENTAL_CHART === 'undefined') return dmg;
 
-  logs.push(`${source.name} hits ${target.name} for ${dmg} damage.`);
+  const atkElem = attacker.element || "normal";
+  const defElem = defender.element || "normal";
 
-  if (target.hpCurrent <= 0) {
-    logs.push(`${target.name} is defeated.`);
+  const mult = ELEMENTAL_CHART[atkElem]?.[defElem] || 1.0;
+  return dmg * mult;
+}
+
+/****************************************************
+ * WORLD / REGION / WEATHER MODIFIERS
+ ****************************************************/
+export function applyWorldModifiers(dmg, attacker, defender, ability, context) {
+  if (!context?.modifiers || !context.modifiers.modifyDamage) return dmg;
+  return context.modifiers.modifyDamage(attacker, defender, ability, dmg);
+}
+
+/****************************************************
+ * TALENT MODIFIERS
+ ****************************************************/
+export function applyTalentModifiers(dmg, attacker, ability) {
+  if (!attacker.talents) return dmg;
+  return talentModifiers.modifyDamage(attacker, ability, dmg);
+}
+
+/****************************************************
+ * FINAL DAMAGE PIPELINE
+ ****************************************************/
+export function computeFinalDamage(attacker, defender, ability, hitData, context) {
+  let dmg = calculateBaseDamage(attacker, defender, ability);
+
+  dmg = applyVariance(dmg);
+  dmg = applyLevelScaling(dmg, attacker, ability);
+  dmg = applyElementalModifiers(dmg, attacker, defender);
+  dmg = applyWorldModifiers(dmg, attacker, defender, ability, context);
+  dmg = applyTalentModifiers(dmg, attacker, ability);
+
+  dmg *= hitData.damageMult;
+
+  return Math.max(1, Math.floor(dmg));
+}
+
+/****************************************************
+ * SHIELD + DAMAGE APPLICATION
+ ****************************************************/
+export function applyDamage(attacker, defender, ability, dmg, hitData, logs) {
+  let final = dmg;
+
+  final = absorbDamageWithShield(defender, final, logs);
+
+  defender.hpCurrent = Math.max(0, defender.hpCurrent - final);
+
+  if (hitData.isCrit) {
+    logs.push("Critical hit!");
   }
+
+  logs.push(`${attacker.name} deals ${final} damage to ${defender.name}.`);
+
+  if (defender.hpCurrent <= 0) {
+    logs.push(`${defender.name} is defeated.`);
+  }
+
+  return final;
 }
 
 /************************************************************
