@@ -4,6 +4,7 @@ import { DUNGEON_LOOT_TABLES } from "./dungeon-loot-tables.js";
 
 import { rollLootTable } from "./loot-tables.js";
 import { resolveEnemy } from "./resolveEnemy.js";
+import { PlayerStorage } from "./player-storage.js";   // <-- REQUIRED
 
 export const DungeonEngine = {
   // --- RUN LIFECYCLE --- //
