@@ -151,37 +151,41 @@
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
-    const session = requireSession();
-    if (!session) return;
+    import { PlayerStorage } from "./player-storage.js";
+    import { WorldSim } from "./world-simulation.js";
+    import { renderGlobalMerchantUI, startShopCountdown } from "./shop-ui.js";
   
-    import { loadMerchantFromDOM } from "./js/shop.js";
-    import {
-      initGlobalShopUI,
-      promptForToken,
-      startShopCountdown
-    } from "./shop-ui.js";
+    await requireSession();
+    const { username } = window.syncState;
   
-    await loadMerchantFromDOM();
-    initGlobalShopUI();
-    startShopCountdown("globalShopTimer");
-  
-    const username = session.username;
+    // Load player
+    const player = PlayerStorage.load(username);
     document.getElementById("usernameDisplay").textContent =
-      username ? "Logged in as: " + username : "No user logged in";
+      "Logged in as: " + username;
   
-    document.getElementById("setTokenBtn").onclick = promptForToken;
+    // Load world state (includes merchant)
+    await WorldSim.init();
+    const worldState = WorldSim.getState();
   
+    // Display gold
+    document.getElementById("globalShopGold").textContent = player.gold || 0;
+  
+    // Render merchant
+    renderGlobalMerchantUI(worldState);
+  
+    // Start countdown
+    startShopCountdown("globalShopTimer", worldState.globalMerchant.nextRotation);
+  
+    // Inventory toggle
     document.getElementById("toggleInventoryBtn").onclick = () => {
       document.getElementById("inventoryPanel").classList.toggle("hidden");
     };
   
-    function goToMap() {
-      window.location.href = "world-map.html";
-    }
-    function goToInventory() {
-      window.location.href = "inventory.html";
-    }
+    // Navigation
+    function goToMap() { window.location.href = "world-map.html"; }
+    function goToInventory() { window.location.href = "inventory.html"; }
+    window.goToMap = goToMap;
+    window.goToInventory = goToInventory;
   </script>
-
 </body>
 </html>
