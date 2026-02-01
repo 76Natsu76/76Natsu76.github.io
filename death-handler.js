@@ -132,3 +132,12 @@ export async function handleRiskyRespawn(username) {
 
   window.location.href = "town.html";
 }
+
+export function getSafeRespawnRemaining(player) {
+  if (!player.safeRespawnLockUntil) return 0;
+
+  const now = Date.now();
+  const diff = player.safeRespawnLockUntil - now;
+
+  return diff > 0 ? diff : 0;
+}
