@@ -60,6 +60,24 @@
     const container = document.getElementById("dungeonList");
     container.innerHTML = "";
 
+    if (player.activeDungeonRun) {
+      const run = player.activeDungeonRun;
+      const d = DUNGEONS[run.dungeonKey];
+    
+      const div = document.createElement("div");
+      div.className = "dungeon-card";
+    
+      div.innerHTML = `
+        <h2>Continue Run</h2>
+        <p>Dungeon: ${d.name}</p>
+        <p>Floor: ${run.currentFloor}</p>
+        <button class="btn" onclick="continueRun()">Resume</button>
+        <button class="btn" onclick="abandonRun()">Abandon Run</button>
+      `;
+    
+      container.appendChild(div);
+    }
+
     for (const key in DUNGEONS) {
       const d = DUNGEONS[key];
       const allowed = canEnter(player, d);
@@ -162,6 +180,18 @@
 
       return parts.join(" • ");
     }
+
+    window.continueRun = () => {
+    window.location.href = "dungeon-room.html";
+    };
+    
+    window.abandonRun = () => {
+      if (!confirm("Are you sure you want to abandon your current run?")) return;
+      player.activeDungeonRun = null;
+      PlayerStorage.save(username, player);
+      window.location.reload();
+    };
+
 
     function goBack() {
       window.location.href = "town.html";
