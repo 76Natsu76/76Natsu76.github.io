@@ -312,6 +312,28 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
  ****************************************************/
 
 export function resolveAbilityUse(attacker, defender, ability, context, logs) {
+  const abilityName = ability.name || ability.key;
+
+  // --- COOLDOWN CHECK ---
+  if (!attacker.cooldowns) attacker.cooldowns = {};
+  const cd = attacker.cooldowns[ability.key] || 0;
+
+  if (cd > 0) {
+    logs.push(`${attacker.name} tries to use ${abilityName}, but it is on cooldown (${cd} turns left).`);
+    return;
+  }
+
+  // --- MP CHECK ---
+  const cost = ability.manaCost || ability.mpCost || 0;
+  if ((attacker.mana ?? attacker.manaCurrent ?? 0) < cost) {
+    logs.push(`${attacker.name} does not have enough MP for ${abilityName}.`);
+    return;
+  }
+
+  // Deduct MP
+  if (attacker.mana !== undefined) attacker.mana -= cost;
+  if (attacker.manaCurrent !== undefined) attacker.manaCurrent -= cost;
+
   const hitData = computeHitData(attacker, defender, ability, context);
 
   if (!hitData.isHit) {
