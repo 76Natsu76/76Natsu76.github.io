@@ -1351,41 +1351,38 @@
   async function beginFight() {
     console.log("[fight] beginFight called");
     logBox.innerHTML = "";
-
+  
     // Always load the freshest player state
     const latest = PlayerStorage.load(username) || rawPlayer;
-    const playerState = resolvePlayer(latest);
-    
+  
+    // Hydrate abilities ONCE here, from the latest player
+    const playerState = hydrateAbilities(structuredClone(latest));
     const enemyState = resolveEnemyFromEncounter(encounter.enemy);
-
-    // Build context (region/biome/weather/event + dungeon info if any)
+  
     const context = buildCombatContext(
       encounter.region,
       encounter.biome,
       encounter.weather,
       encounter.event
     );
-
-    // If this encounter came from a dungeon, attach dungeonRun context
+  
     if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
-      // Assume dungeon-room stored the run in player.activeDungeonRun
       const p = PlayerStorage.load(username);
       if (p && p.activeDungeonRun) {
         context.dungeonRun = p.activeDungeonRun;
       }
     }
-
+  
     combat = {
       playerState,
       enemyState,
       context
     };
-
-    // Optional: cinematic intro for bosses
+  
     if (enemyState.isWorldBoss || encounter.isBoss) {
       showCinematicIntro(enemyState);
     }
-
+  
     setTimeout(() => {
       renderPanels();
       showActionPanel();
