@@ -8,6 +8,12 @@ import {
   WEATHER_COMBAT_LOGS,
   WEATHER_COMBAT_FLAVOR
 } from "./weatherTable.js";
+import {
+  computeHitData,
+  computeFinalDamage,
+  applyDamage
+} from "./ability-resolver.js";
+
 
 /****************************************************
  * CORE CONTEXT
@@ -307,33 +313,16 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
  ****************************************************/
 
 export function resolveAbilityUse(attacker, defender, ability, context, logs) {
-  const abilityName = ability?.name || ability?.key || "ability";
+  const hitData = computeHitData(attacker, defender, ability, context);
 
-  const hitChance = computeHitChance(attacker, defender, context);
-  if (!rollChance(hitChance)) {
-    logs.push(`${attacker.name}'s ${abilityName} misses!`);
+  if (!hitData.isHit) {
+    logs.push(`${attacker.name}'s ${ability.name || ability.key} misses!`);
     return;
   }
 
-  const critChance = computeCritChance(attacker, context);
-  const isCrit = rollChance(critChance);
+  const dmg = computeFinalDamage(attacker, defender, ability, hitData, context);
 
-  const power = ability.power || ability.basePower || 0;
-  let baseDamage = power + attacker.atk;
-
-  if (isCrit) {
-    const critMult = attacker.critDamageMult || 1.5;
-    baseDamage = Math.floor(baseDamage * critMult);
-  }
-
-  const dmg = applyDamage(attacker, defender, baseDamage, context, logs, {
-    isAbility: true,
-    abilityKey: ability.key
-  });
-
-  if (isCrit && logs && dmg > 0) {
-    logs.push("Critical hit!");
-  }
+  applyDamage(attacker, defender, ability, dmg, hitData, logs);
 
   if (ability.statusEffects && ability.statusEffects.length) {
     for (const eff of ability.statusEffects) {
