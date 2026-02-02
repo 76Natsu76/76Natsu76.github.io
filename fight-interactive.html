@@ -1540,7 +1540,9 @@
       real = mergeCombatStateIntoPlayer(real, combat.playerState);
       PlayerStorage.save(username, real);
       await api.savePlayer(username, real);
-  
+      real.lastRegenTick = Date.now();
+      PlayerStorage.save(username, real);
+
       renderLogs(result.logs || logs);
       renderPanels();
   
@@ -2234,28 +2236,21 @@
     }
   
     function continueExploring() {
-      const panel = document.querySelector(".reward-panel");
-      if (panel) panel.remove();
-  
+      persistVitalsAfterCombat();
       EncounterEngine.clear();
-  
-      logBox.innerHTML = "";
-      hideActionPanel();
       combat = null;
-  
-      persistVitalsAfterCombat();
-      if (combat && combat.context && combat.context.dungeonRun) {
-        window.location.href = "dungeon-room.html";
-      } else {
-        window.location.href = "world-map.html";
-      }
+      window.location.href = combat?.context?.dungeonRun
+        ? "dungeon-room.html"
+        : "world-map.html";
     }
-  
-    function goToMap() {      
+    
+    function goToMap() {
       persistVitalsAfterCombat();
       EncounterEngine.clear();
+      combat = null;
       window.location.href = "world-map.html";
     }
+
   
     /****************************************************
      * DEATH MODAL + RESPAWN
