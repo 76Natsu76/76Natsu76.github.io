@@ -1529,14 +1529,14 @@
       const logs = [];
       const result = engineRunRound(
         combat.playerState,
-        combat.enemies,
+        combat.enemyState, // by default is multiple but can be singular
         combat.context,
         playerAction,
         logs
       );
   
       combat.playerState = result.player;
-      combat.enemies = result.enemies || combat.enemies;
+      combat.enemyState = result.enemies || (result.enemy ? [result.enemy] : []);
       combat.context = result.context;
   
       let real = PlayerStorage.load(username) || rawPlayer;
@@ -1574,6 +1574,8 @@
       const p = PlayerStorage.load(username);
       const run = combat.context.dungeonRun || null;
       const isEndless = run ? DungeonEngine.isEndless(run) : false;
+
+      persistVitalsAfterCombat();
   
       if (outcome === "defeat") {
         if (run && !isEndless) {
@@ -1683,7 +1685,7 @@
     
       latest.hpCurrent = combat.playerState.hpCurrent;    
       latest.manaCurrent = combat.playerState.manaCurrent;
-      latest.manaMax = combat.playerState.manaMax;    
+      latest.mana = combat.playerState.mana;    
       latest.ultimateCharge = combat.playerState.ultimateCharge;    
       latest.lastRegenTick = Date.now();
     
