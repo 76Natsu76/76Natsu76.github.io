@@ -1681,15 +1681,10 @@
       const latest = PlayerStorage.load(username);
       if (!latest || !combat || !combat.playerState) return;
     
-      latest.hpCurrent = combat.playerState.hpCurrent;
-      latest.hpMax = combat.playerState.hpMax;
-    
+      latest.hpCurrent = combat.playerState.hpCurrent;    
       latest.manaCurrent = combat.playerState.manaCurrent;
-      latest.mana = combat.playerState.manaCurrent;
-      latest.manaMax = combat.playerState.manaMax;
-    
-      latest.ultimateCharge = combat.playerState.ultimateCharge;
-    
+      latest.manaMax = combat.playerState.manaMax;    
+      latest.ultimateCharge = combat.playerState.ultimateCharge;    
       latest.lastRegenTick = Date.now();
     
       PlayerStorage.save(username, latest);
