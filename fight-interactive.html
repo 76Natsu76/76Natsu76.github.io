@@ -1391,6 +1391,7 @@
   
     async function beginFight() {
       combat = null;
+
       console.log("[fight] beginFight called");
       logBox.innerHTML = "";
     
@@ -2135,10 +2136,10 @@
     }
   
     function continueExploring() {
+      combat = null;
       const panel = document.querySelector(".reward-panel");
       if (panel) panel.remove();
-
-      renderPanels();
+      
       EncounterEngine.clear();
   
       if (combat && combat.context && combat.context.dungeonRun) {
