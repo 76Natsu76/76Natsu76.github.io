@@ -1133,6 +1133,7 @@
     let combat = null;
     let autoBattle = false;
     let autoLoopHandle = null;
+    let fightInProgress = false;
   
     // Choose player version from syncState
     let rawPlayer = null;
@@ -1391,20 +1392,21 @@
   
     async function beginFight() {
       // Clear UI before initializing new combat
-      logBox.innerHTML = "";
-      hideActionPanel();
-
+      resetCombatUI();
       combat = null;
-
+    
       console.log("[fight] beginFight called");
-      logBox.innerHTML = "";
     
       // Always load the freshest player state
       const latest = PlayerStorage.load(username) || rawPlayer;
-  
+    
       // Build combat model from full player, then hydrate abilities
       const baseCombatPlayer = resolvePlayer(latest);
       const playerState = hydrateAbilities(structuredClone(baseCombatPlayer));
+    
+      // 🔹 Ultimate should be per‑fight, not persistent
+      playerState.ultimateCharge = 0;
+    
       const enemyState = resolveEnemyFromEncounter(encounter.enemy);
     
       const context = buildCombatContext(
@@ -1421,11 +1423,7 @@
         }
       }
     
-      combat = {
-        playerState,
-        enemyState,
-        context
-      };
+      combat = { playerState, enemyState, context };
     
       if (enemyState.isWorldBoss || encounter.isBoss) {
         showCinematicIntro(enemyState);
@@ -1436,6 +1434,7 @@
         showActionPanel();
       }, 50);
     }
+
   
     /* ============================================================
        MAIN ROUND RESOLUTION
@@ -1965,26 +1964,27 @@
     ============================================================ */
   
     function endCombat(outcome, rewards = null) {
+      fightInProgress = false;
       hideActionPanel();
-  
+    
       const rewardPanel = document.createElement("div");
       rewardPanel.className = "reward-panel";
-  
+    
       let lootHtml = "";
-  
+    
       if (outcome === "victory") {
         let lootList = "No loot";
-  
+    
         if (rewards && Array.isArray(rewards.loot) && rewards.loot.length > 0) {
           lootList = rewards.loot
             .map(item => `<div>${item.name} x${item.qty || item.quantity || 1}</div>`)
             .join("");
         }
-  
+    
         const continueLabel = combat.context.dungeonRun
           ? "Continue Dungeon"
           : "Continue Exploring";
-  
+    
         lootHtml = `
           <h2>Victory!</h2>
           <p>You defeated ${combat.enemyState.name}!</p>
@@ -1992,26 +1992,28 @@
           <button class="btn" onclick="continueExploring()">${continueLabel}</button>
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
-      } 
-      else if (outcome === "defeat") {
+      } else if (outcome === "defeat") {
         lootHtml = `
           <h2>Defeat…</h2>
           <p>You were defeated by ${combat.enemyState.name}.</p>
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
-      } 
-      else {
+      } else {
         lootHtml = `
           <h2>Battle Over</h2>
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
       }
-  
+    
       rewardPanel.innerHTML = lootHtml;
+    
+      // 🔹 Persist vitals (HP/MP) but don't touch stats/regen logic
       persistVitalsAfterCombat();
+    
       document.body.appendChild(rewardPanel);
-      renderPanels();
+      // ❌ no renderPanels() here; we’re done with this combat visually
     }
+
   
     /* ============================================================
        HELPERS
@@ -2140,37 +2142,36 @@
     }
   
     function continueExploring() {
-      combat = null;
+      fightInProgress = false;
+      // Capture dungeon context before nuking combat
+      const hasDungeonRun =
+        combat && combat.context && combat.context.dungeonRun;
+    
+      // Clear reward panel
       const panel = document.querySelector(".reward-panel");
       if (panel) panel.remove();
-      
+    
+      // Clear encounter + UI shell
       EncounterEngine.clear();
-  
-      // Reset UI panels
-      document.getElementById("playerHpBar").style.width = "0%";
-      document.getElementById("playerMpBar").style.width = "0%";
-      document.getElementById("playerUltBar").style.width = "0%";
-      
-      document.getElementById("enemyHpBar").style.width = "0%";
-      document.getElementById("enemyName").textContent = "";
-      document.getElementById("enemyLevel").textContent = "";
-      document.getElementById("enemyElement").textContent = "";
-      
-      logBox.innerHTML = "";
-      hideActionPanel();
-
-      if (combat && combat.context && combat.context.dungeonRun) {
+      resetCombatUI();
+    
+      // Reset combat state
+      combat = null;
+    
+      if (hasDungeonRun) {
         window.location.href = "dungeon-room.html";
       } else {
         window.location.href = "world-map.html";
       }
     }
+
   
     function goToMap() {
+      fightInProgress = false;
       EncounterEngine.clear();
       window.location.href = "world-map.html";
     }
-  
+
     /* ============================================================
        DEATH MODAL + RESPAWN
     ============================================================ */
@@ -2202,12 +2203,34 @@
         safeBtn.textContent = "Safe Respawn (Locked)";
       }
     }
+
+    function resetCombatUI() {
+      // Clear log + hide action panel
+      logBox.innerHTML = "";
+      hideActionPanel();
+    
+      // Clear status icons
+      const playerIcons = document.getElementById("playerStatusIcons");
+      const enemyIcons = document.getElementById("enemyStatusIcons");
+      if (playerIcons) playerIcons.innerHTML = "";
+      if (enemyIcons) enemyIcons.innerHTML = "";
+    
+      // Bars/text will be re‑rendered by renderPanels() once combat is initialized.
+    }
   
     /* ============================================================
        BUTTON BINDINGS
     ============================================================ */
   
-    document.getElementById("startFightBtn").onclick = beginFight;
+    document.getElementById("startFightBtn").onclick = () => {
+      if (fightInProgress) {
+        console.warn("Fight already in progress — ignoring extra click");
+        return;
+      }
+      fightInProgress = true;
+      beginFight();
+    };
+
     document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
     document.getElementById("ultimateBtn").onclick = chooseUltimate;
     document.getElementById("fleeBtn").onclick = chooseFlee;
