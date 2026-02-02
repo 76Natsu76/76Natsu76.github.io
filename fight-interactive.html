@@ -1049,13 +1049,17 @@
     import { handleBossDefeat } from "./world-boss-progression.js";
     import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
     import { SUBRACE_ABILITY_DEFINITIONS } from "./subrace-ability-definitions.js";
-    
+  
+    /* ============================================================
+       ABILITY HYDRATION
+    ============================================================ */
+  
     function hydrateAbilities(player) {
       const prof = player.profession;
       const subrace = player.subrace;
-    
+  
       const baseAbilities = Array.isArray(player.abilities) ? player.abilities : [];
-    
+  
       player.abilities = baseAbilities.map(a => {
         return (
           ABILITY_DEFINITIONS[prof]?.[a.key] ||
@@ -1063,27 +1067,43 @@
           a
         );
       });
-    
+  
+      if (player.ultimate && player.ultimate.key) {
+        const ult =
+          ABILITY_DEFINITIONS[prof]?.[player.ultimate.key] ||
+          SUBRACE_ABILITY_DEFINITIONS[subrace]?.[player.ultimate.key] ||
+          player.ultimate;
+        player.ultimate = ult;
+      }
+  
       return player;
     }
   
-    // 🔹 Only merge combat deltas back into the full player object
+    /* ============================================================
+       MERGE COMBAT STATE BACK INTO PLAYER
+    ============================================================ */
+  
     function mergeCombatStateIntoPlayer(real, combatState) {
       if (!real || !combatState) return real;
   
+      // HP
       real.hpCurrent = combatState.hpCurrent;
       real.hpMax = combatState.hpMax ?? real.hpMax;
   
-      // MP: keep both fields in sync
+      // MP: use manaCurrent as the canonical field
       if (typeof combatState.manaCurrent === "number") {
         real.manaCurrent = combatState.manaCurrent;
+        real.mana = combatState.manaCurrent;
+      }
+      if (typeof combatState.manaMax === "number") {
+        real.manaMax = combatState.manaMax;
       }
   
-      real.manaMax = combatState.manaMax ?? real.manaMax;
-  
+      // Status / cooldowns / ult
       real.cooldowns = combatState.cooldowns || real.cooldowns || {};
       real.statusEffects = combatState.statusEffects || real.statusEffects || [];
-      real.ultimateCharge = combatState.ultimateCharge ?? real.ultimateCharge ?? 0;
+      real.ultimateCharge =
+        combatState.ultimateCharge ?? real.ultimateCharge ?? 0;
   
       return real;
     }
@@ -1097,22 +1117,32 @@
   
     function ensureVitals(p) {
       if (!p) return p;
-    
+  
       if (typeof p.hpMax !== "number") p.hpMax = 20;
-    
       if (p.hpCurrent === undefined || p.hpCurrent === null) {
         p.hpCurrent = p.hpMax;
       } else {
         p.hpCurrent = Math.min(p.hpCurrent, p.hpMax);
       }
-    
-      // keep manaCurrent in sync
+  
+      if (typeof p.manaMax !== "number") p.manaMax = 10;
+  
       if (p.manaCurrent === undefined || p.manaCurrent === null) {
-        p.manaCurrent = p.mana;
+        if (p.mana === undefined || p.mana === null) {
+          p.manaCurrent = p.manaMax;
+        } else {
+          p.manaCurrent = Math.min(p.mana, p.manaMax);
+        }
       } else {
         p.manaCurrent = Math.min(p.manaCurrent, p.manaMax);
       }
-    
+  
+      p.mana = p.manaCurrent;
+  
+      if (typeof p.ultimateCharge !== "number") {
+        p.ultimateCharge = 0;
+      }
+  
       return p;
     }
   
@@ -1122,7 +1152,6 @@
     let combat = null;
     let autoBattle = false;
     let autoLoopHandle = null;
-    let fightInProgress = false;
   
     // Choose player version from syncState
     let rawPlayer = null;
@@ -1155,9 +1184,9 @@
       window.location.href = "world-map.html";
     }
   
-    const p = PlayerStorage.load(username);
+    const pCheck = PlayerStorage.load(username);
     if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
-      if (!p.activeDungeonRun) {
+      if (!pCheck.activeDungeonRun) {
         alert("Dungeon run lost. Returning to dungeon select.");
         window.location.href = "dungeon-select.html";
       }
@@ -1174,8 +1203,9 @@
       const hpMax = raw.hpMax ?? stats.hp ?? 1;
       const manaMax = raw.manaMax ?? stats.manaMax ?? 0;
   
-      const baseMana =
+      const baseManaCurrent =
         raw.manaCurrent ??
+        raw.mana ??
         manaMax;
   
       return {
@@ -1192,8 +1222,8 @@
             : hpMax,
         hpMax,
   
-        // keep both fields present for combat + UI
-        manaCurrent: Math.min(baseMana, manaMax),
+        manaCurrent: Math.min(baseManaCurrent, manaMax),
+        mana: Math.min(baseManaCurrent, manaMax),
         manaMax,
   
         atk: stats.atk ?? 1,
@@ -1210,7 +1240,8 @@
   
         abilities: raw.abilities || [],
         ultimate: raw.ultimate || null,
-        ultimateCharge: raw.ultimateCharge || 0,
+        // Force ult to start at 0% for combat
+        ultimateCharge: 0,
         ultimateChargeRequired:
           raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
   
@@ -1228,6 +1259,8 @@
   
     function resolveEnemyFromEncounter(encounterEnemy) {
       const hpMax = encounterEnemy.hpMax ?? encounterEnemy.hp ?? 1;
+      const manaMax = encounterEnemy.manaMax ?? encounterEnemy.mana ?? 0;
+      const manaCurrent = encounterEnemy.manaCurrent ?? encounterEnemy.mana ?? 0;
   
       return {
         id: encounterEnemy.key,
@@ -1242,8 +1275,8 @@
         def: encounterEnemy.def ?? encounterEnemy.defense ?? 0,
         speed: encounterEnemy.speed || 1,
   
-        manaCurrent: encounterEnemy.mana ?? 0,
-        manaMax: encounterEnemy.manaMax ?? 0,
+        manaCurrent,
+        manaMax,
   
         statusEffects: encounterEnemy.statusEffects || [],
         cooldowns: {},
@@ -1255,7 +1288,7 @@
     }
   
     /* ============================================================
-       COMBAT STATE
+       COMBAT STATE + HELPERS
     ============================================================ */
   
     const logBox = document.getElementById("combatLog");
@@ -1267,11 +1300,15 @@
       return !entity || entity.hpCurrent <= 0;
     }
   
-    function checkOutcome(player, enemy) {
-      if (!player || !enemy) return null;
-      if (player.hpCurrent <= 0 && enemy.hpCurrent <= 0) return "draw";
-      if (player.hpCurrent <= 0) return "defeat";
-      if (enemy.hpCurrent <= 0) return "victory";
+    function checkOutcome(player, enemies) {
+      if (!player || !enemies || !enemies.length) return null;
+  
+      const allEnemiesDead = enemies.every(e => e.hpCurrent <= 0);
+      const playerDead = player.hpCurrent <= 0;
+  
+      if (playerDead && allEnemiesDead) return "draw";
+      if (playerDead) return "defeat";
+      if (allEnemiesDead) return "victory";
       return null;
     }
   
@@ -1295,11 +1332,15 @@
     ============================================================ */
   
     function renderPanels() {
-      if (!combat || !combat.playerState || !combat.enemyState) return;
+      if (!combat || !combat.playerState || !combat.enemies) return;
       renderPlayerPanel(combat.playerState);
-      renderEnemyPanel(combat.enemyState);
+      renderEnemyPanel(combat.enemies[combat.activeEnemyIndex] || combat.enemies[0]);
+      renderEnemyList();
       renderStatusIcons(combat.playerState, "playerStatusIcons");
-      renderStatusIcons(combat.enemyState, "enemyStatusIcons");
+      renderStatusIcons(
+        combat.enemies[combat.activeEnemyIndex] || combat.enemies[0],
+        "enemyStatusIcons"
+      );
     }
   
     function renderPlayerPanel(p) {
@@ -1312,7 +1353,7 @@
       updateManaBar(
         "playerManaFill",
         "playerManaText",
-        p.manaCurrent,
+        p.manaCurrent ?? p.mana ?? 0,
         p.manaMax
       );
       updateUltimateBar(p);
@@ -1333,11 +1374,42 @@
       );
     }
   
+    // Simple enemy list / target selector (uses existing DOM; adds a small list)
+    function renderEnemyList() {
+      let list = document.getElementById("enemyList");
+      if (!list) {
+        list = document.createElement("div");
+        list.id = "enemyList";
+        list.className = "enemy-list";
+        const hud = document.getElementById("combatHud");
+        hud.appendChild(list);
+      }
+  
+      list.innerHTML = "";
+  
+      if (!combat || !combat.enemies) return;
+  
+      combat.enemies.forEach((e, idx) => {
+        const btn = document.createElement("button");
+        btn.className =
+          "btn enemy-target-btn" +
+          (idx === combat.activeEnemyIndex ? " active" : "");
+        btn.textContent = `${e.name} (${e.hpCurrent}/${e.hpMax})`;
+        btn.disabled = e.hpCurrent <= 0;
+        btn.onclick = () => {
+          combat.activeEnemyIndex = idx;
+          combat.enemyState = combat.enemies[idx];
+          renderPanels();
+        };
+        list.appendChild(btn);
+      });
+    }
+  
     function updateHPBar(fillId, textId, current, max) {
       const fill = document.getElementById(fillId);
       const text = document.getElementById(textId);
   
-      current = current || 0;
+      current = current ?? 0;
       max = max || 1;
   
       const pct = Math.max(0, Math.min(100, (current / max) * 100));
@@ -1350,15 +1422,14 @@
       const fill = document.getElementById(fillId);
       const text = document.getElementById(textId);
   
-      current = Number(current) || 0;
-      max = Number(max) || 0;
-        
+      current = current ?? 0;
+      max = max || 0;
+  
       const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
   
       if (fill) fill.style.width = pct + "%";
       if (text) text.textContent = `MP ${current} / ${max}`;
     }
-  
   
     function updateUltimateBar(playerState) {
       const fill = document.getElementById("playerUltFill");
@@ -1378,50 +1449,70 @@
     ============================================================ */
   
     async function beginFight() {
+      // Guard: don't start a new fight if one is active and unresolved
+      if (combat && combat.playerState && combat.enemies) {
+        const outcome = checkOutcome(combat.playerState, combat.enemies);
+        if (!outcome) {
+          addLog("A battle is already in progress.");
+          return;
+        }
+      }
+  
       // Clear UI before initializing new combat
-      resetCombatUI();
+      logBox.innerHTML = "";
+      hideActionPanel();
+  
       combat = null;
-    
+  
       console.log("[fight] beginFight called");
-    
+  
       // Always load the freshest player state
-      const latest = PlayerStorage.load(username);
-    
+      const latestRaw = PlayerStorage.load(username) || rawPlayer;
+      const latest = ensureVitals(latestRaw);
+  
       // Build combat model from full player, then hydrate abilities
       const baseCombatPlayer = resolvePlayer(latest);
       const playerState = hydrateAbilities(structuredClone(baseCombatPlayer));
-    
-      // 🔹 Ultimate should be per‑fight, not persistent
-      playerState.ultimateCharge = 0;
-    
-      const enemyState = resolveEnemyFromEncounter(encounter.enemy);
-    
+  
+      // Multi-enemy support: encounter.enemies[] or single encounter.enemy
+      let enemies = [];
+      if (Array.isArray(encounter.enemies) && encounter.enemies.length > 0) {
+        enemies = encounter.enemies.map(e => resolveEnemyFromEncounter(e));
+      } else if (encounter.enemy) {
+        enemies = [resolveEnemyFromEncounter(encounter.enemy)];
+      }
+  
       const context = buildCombatContext(
         encounter.region,
         encounter.biome,
         encounter.weather,
         encounter.event
       );
-    
+  
       if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
         const p = PlayerStorage.load(username);
         if (p && p.activeDungeonRun) {
           context.dungeonRun = p.activeDungeonRun;
         }
       }
-    
-      combat = { playerState, enemyState, context };
-    
-      if (enemyState.isWorldBoss || encounter.isBoss) {
-        showCinematicIntro(enemyState);
+  
+      combat = {
+        playerState,
+        enemies,
+        activeEnemyIndex: 0,
+        enemyState: enemies[0],
+        context
+      };
+  
+      if (combat.enemyState?.isWorldBoss || encounter.isBoss) {
+        showCinematicIntro(combat.enemyState);
       }
-    
+  
       setTimeout(() => {
         renderPanels();
         showActionPanel();
       }, 50);
     }
-
   
     /* ============================================================
        MAIN ROUND RESOLUTION
@@ -1429,48 +1520,73 @@
   
     async function runRound(playerAction) {
       console.log("[fight] runRound called with", playerAction);
-      if (!combat || !combat.playerState || !combat.enemyState) {
+      if (!combat || !combat.playerState || !combat.enemies) {
         console.warn("runRound called before combat initialized");
         return;
       }
-    
+  
       hideActionPanel();
-    
+  
+      // Ensure we have a valid active enemy
+      if (
+        combat.activeEnemyIndex == null ||
+        !combat.enemies[combat.activeEnemyIndex]
+      ) {
+        combat.activeEnemyIndex = 0;
+      }
+      combat.enemyState = combat.enemies[combat.activeEnemyIndex];
+  
       const logs = [];
+  
+      // Attach targeting info for engine (single target + potential AOE)
+      const action = {
+        ...playerAction,
+        targetId: combat.enemyState.id
+      };
+  
       const result = engineRunRound(
         combat.playerState,
         combat.enemyState,
         combat.context,
-        playerAction,
+        action,
         logs
       );
   
       // Update in-memory combat state from engine result
       combat.playerState = result.player;
+      // Enemy may have changed (e.g., damage, status)
       combat.enemyState = result.enemy;
       combat.context = result.context;
-      
+  
+      // Sync enemyState back into enemies array
+      const idx = combat.enemies.findIndex(e => e.id === combat.enemyState.id);
+      if (idx !== -1) {
+        combat.enemies[idx] = combat.enemyState;
+      }
+  
       // Load the real player
       let real = PlayerStorage.load(username) || rawPlayer;
-      
+  
       // Merge combat changes into the real player
       real = mergeCombatStateIntoPlayer(real, combat.playerState);
-      
+  
       // Save the real player (NOT the combat clone)
       PlayerStorage.save(username, real);
       await api.savePlayer(username, real);
   
       renderLogs(result.logs || logs);
       renderPanels();
-    
-      const outcome = checkOutcome(combat.playerState, combat.enemyState);
+  
+      const outcome = checkOutcome(combat.playerState, combat.enemies);
       if (!outcome) {
         if (combat.context.dungeonRun) {
           const p = PlayerStorage.load(username);
           DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
         }
-    
+  
         if (autoBattle) {
+          // Auto-battle: run one action, then re-show controls and wait 1s
+          showActionPanel();
           if (!autoLoopHandle) {
             autoLoopHandle = setTimeout(autoLoop, 1000);
           }
@@ -1479,28 +1595,30 @@
         }
         return;
       }
-    
+  
       // ============================================================
       // OUTCOME HANDLING
       // ============================================================
       addLog("Combat ended: " + outcome.toUpperCase());
-    
+  
       const p = PlayerStorage.load(username);
       const run = combat.context.dungeonRun || null;
       const isEndless = run ? DungeonEngine.isEndless(run) : false;
-    
+  
       // ============================================================
       // DEFEAT
       // ============================================================
       if (outcome === "defeat") {
-    
         if (run && !isEndless) {
           // Normal dungeon defeat → summary page
           DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          PlayerStorage.save(username, mergeCombatStateIntoPlayer(p, combat.playerState));
+          await api.savePlayer(username, p);
+          combat = null;
           window.location.href = "dungeon-failed.html";
           return;
         }
-    
+  
         if (run && isEndless) {
           // Endless defeat → summary page
           p.lastEndlessRun = {
@@ -1508,78 +1626,98 @@
             score: run.highestFloor || run.currentFloor
           };
           DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          PlayerStorage.save(username, mergeCombatStateIntoPlayer(p, combat.playerState));
+          await api.savePlayer(username, p);
+          combat = null;
           window.location.href = "endless-summary.html";
           return;
         }
-    
+  
         // Non-dungeon defeat → normal death modal
         showDeathModal();
         autoBattle = false;
         if (autoLoopHandle) clearTimeout(autoLoopHandle);
+        combat = null;
         return;
       }
-    
+  
+      // ============================================================
+      // FLEE (if engine returns such an outcome)
+      // ============================================================
+      if (outcome === "flee" || outcome === "fled") {
+        endCombat("flee");
+        autoBattle = false;
+        if (autoLoopHandle) clearTimeout(autoLoopHandle);
+        combat = null;
+        return;
+      }
+  
       // ============================================================
       // WORLD BOSS VICTORY
       // ============================================================
       if (combat.enemyState.isWorldBoss) {
         const bossKey = combat.enemyState.bossKey;
         const worldState = WorldSim.getState();
-    
+  
         p.flags = p.flags || {};
         p.flags[`${bossKey}_defeated`] = true;
         PlayerStorage.save(username, p);
-    
+  
         handleBossDefeat(worldState, bossKey);
         WorldSim.save();
         addLog(`You have defeated the World Boss: ${bossKey}!`);
       }
-    
+  
       // ============================================================
       // DUNGEON VICTORY
       // ============================================================
       if (run) {
-    
         if (!isEndless && run.state === "boss") {
           // Normal dungeon final boss
           DungeonEngine.completeDungeon(run);
-    
+  
           p.dungeonRecords = p.dungeonRecords || {};
           const rec = p.dungeonRecords[run.dungeonKey] || { clears: 0 };
           rec.clears += 1;
           p.dungeonRecords[run.dungeonKey] = rec;
-    
+  
           p.lastCompletedDungeonRun = {
             dungeonKey: run.dungeonKey,
             xp: result.xp,
             gold: result.gold,
             items: result.loot || []
           };
-    
+  
           DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          PlayerStorage.save(username, mergeCombatStateIntoPlayer(p, combat.playerState));
+          await api.savePlayer(username, p);
+          combat = null;
           window.location.href = "dungeon-complete.html";
           return;
         }
-    
+  
         if (isEndless) {
           // Endless victory (any floor)
           DungeonEngine.completeFloor(run);
-    
+  
           p.lastEndlessRun = {
             floor: run.highestFloor || run.currentFloor,
             score: run.highestFloor || run.currentFloor
           };
-    
+  
           DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          PlayerStorage.save(username, mergeCombatStateIntoPlayer(p, combat.playerState));
+          await api.savePlayer(username, p);
+          combat = null;
           window.location.href = "endless-summary.html";
           return;
         }
-    
+  
         // Normal dungeon floor victory
         DungeonEngine.completeFloor(run);
         DungeonEngine.saveRun(p, run, username);
       }
-    
+  
       // ============================================================
       // NORMAL REWARD FLOW (non-dungeon)
       // ============================================================
@@ -1590,18 +1728,17 @@
         outcome
       );
       const finalRewards = await finalizeRewards(rewards);
-    
+  
       endCombat(finalRewards.outcome, finalRewards);
       autoBattle = false;
       if (autoLoopHandle) clearTimeout(autoLoopHandle);
+      combat = null;
     }
   
     /* ============================================================
        FINALIZE REWARDS (LOCAL + KV)
     ============================================================ */
   
-    // This is now redundant with mergeCombatStateIntoPlayer + finalizeRewards,
-    // but kept here in case you still call it elsewhere.
     function persistVitalsAfterCombat() {
       const latest = PlayerStorage.load(username) || rawPlayer;
       if (!latest || !combat || !combat.playerState) return;
@@ -1609,6 +1746,7 @@
       latest.hpCurrent = combat.playerState.hpCurrent;
       latest.hpMax = combat.playerState.hpMax;
       latest.manaCurrent = combat.playerState.manaCurrent;
+      latest.mana = combat.playerState.manaCurrent;
       latest.manaMax = combat.playerState.manaMax;
   
       PlayerStorage.save(username, latest);
@@ -1674,13 +1812,18 @@
   
     async function chooseAbility(key) {
       closeAbilityMenu();
-    
+  
+      if (!combat || !combat.playerState) {
+        addLog("No active combat.");
+        return;
+      }
+  
       const ability = combat.playerState.abilities.find(a => a.key === key);
       if (!ability) {
         addLog("Ability not found!");
         return;
       }
-    
+  
       await runRound({
         type: "ability",
         ability
@@ -1688,6 +1831,7 @@
     }
   
     async function chooseUltimate() {
+      if (!combat || !combat.playerState) return;
       const p = combat.playerState;
       if ((p.ultimateCharge || 0) < (p.ultimateChargeRequired || 100)) {
         addLog("Ultimate not ready!");
@@ -1706,7 +1850,7 @@
     }
   
     /* ============================================================
-       AUTO-BATTLE (Summoners War–style toggle)
+       AUTO-BATTLE (one action, then pause with controls visible)
     ============================================================ */
   
     function toggleAutoBattle() {
@@ -1721,37 +1865,33 @@
       }
   
       if (autoBattle && combat && !autoLoopHandle) {
+        showActionPanel();
         autoLoopHandle = setTimeout(autoLoop, 300);
       }
     }
   
     async function autoLoop() {
-      if (!autoBattle || !combat || !combat.playerState || !combat.enemyState) {
-        autoLoopHandle = null;
+      autoLoopHandle = null;
+  
+      if (!autoBattle || !combat || !combat.playerState || !combat.enemies) {
         return;
       }
   
-      // If combat already ended, stop
-      const outcome = checkOutcome(combat.playerState, combat.enemyState);
-      if (outcome) {
-        autoLoopHandle = null;
-        return;
-      }
+      const outcome = checkOutcome(combat.playerState, combat.enemies);
+      if (outcome) return;
   
       const action = pickAutoAction(combat.playerState);
       await runRound(action);
   
-      if (!autoBattle || !combat || !combat.playerState || !combat.enemyState) {
-        autoLoopHandle = null;
+      if (!autoBattle || !combat || !combat.playerState || !combat.enemies) {
         return;
       }
   
-      const postOutcome = checkOutcome(combat.playerState, combat.enemyState);
-      if (postOutcome) {
-        autoLoopHandle = null;
-        return;
-      }
+      const postOutcome = checkOutcome(combat.playerState, combat.enemies);
+      if (postOutcome) return;
   
+      // Re-show controls and wait 1s before next auto action
+      showActionPanel();
       autoLoopHandle = setTimeout(autoLoop, 1000);
     }
   
@@ -1784,7 +1924,7 @@
     }
   
     /* ============================================================
-       ITEM SYSTEM
+       ITEM SYSTEM (only usable items)
     ============================================================ */
   
     function openItemModal() {
@@ -1794,6 +1934,13 @@
   
     function closeItemModal() {
       itemModal.classList.add("hidden");
+    }
+  
+    function isItemUsableInCombat(item) {
+      const type = (item.type || "").toLowerCase();
+      if (type === "consumable") return true;
+      // You can extend this with tags/flags later
+      return false;
     }
   
     function loadCombatItems() {
@@ -1806,13 +1953,14 @@
       }
   
       const inv = combat.playerState.inventory || [];
+      const usable = inv.filter(isItemUsableInCombat);
   
-      if (!inv.length) {
+      if (!usable.length) {
         list.innerHTML = "<div>No usable items.</div>";
         return;
       }
   
-      inv.forEach(item => {
+      usable.forEach(item => {
         const btn = document.createElement("button");
         btn.className = "btn item-btn";
         btn.textContent = `${item.name} (${item.qty ?? item.quantity ?? 1})`;
@@ -1824,25 +1972,24 @@
     /* ============================================================
        ABILITY MENU
     ============================================================ */
-    
+  
     function openAbilityMenu() {
       if (!combat || !combat.playerState) return;
-    
+  
       const list = document.getElementById("abilityList");
       list.innerHTML = "";
-    
+  
       const p = combat.playerState;
       const abilities = p.abilities || [];
-    
+  
       abilities.forEach(a => {
         const btn = document.createElement("button");
         btn.className = "btn ability-btn";
-    
+  
         const cd = p.cooldowns?.[a.key] || 0;
-        const mp = p.manaCurrent ?? 0;
+        const mp = p.manaCurrent ?? p.mana ?? 0;
         const cost = a.manaCost || a.mpCost || 0;
-    
-        // Button label
+  
         if (cd > 0) {
           btn.textContent = `${a.name} (${cd})`;
         } else if (cost > 0) {
@@ -1850,14 +1997,13 @@
         } else {
           btn.textContent = a.name;
         }
-    
-        // Disable if on cooldown or insufficient MP
+  
         btn.disabled = cd > 0 || mp < cost;
-    
+  
         btn.onclick = () => chooseAbility(a.key);
         list.appendChild(btn);
       });
-    
+  
       abilityPanel.style.display = "block";
     }
   
@@ -1930,12 +2076,12 @@
     ============================================================ */
   
     function inspectEnemy() {
-      if (!combat || !combat.enemyState) {
+      if (!combat || !combat.enemies || !combat.enemies.length) {
         alert("Enemy not initialized yet.");
         return;
       }
   
-      const e = combat.enemyState;
+      const e = combat.enemies[combat.activeEnemyIndex] || combat.enemies[0];
       alert(
         `${e.name}\n` +
         `Level: ${e.level}\n` +
@@ -1951,30 +2097,34 @@
     ============================================================ */
   
     function endCombat(outcome, rewards = null) {
-      fightInProgress = false;
       hideActionPanel();
-    
+  
       const rewardPanel = document.createElement("div");
       rewardPanel.className = "reward-panel";
-    
+  
       let lootHtml = "";
-    
+  
       if (outcome === "victory") {
         let lootList = "No loot";
-    
+  
         if (rewards && Array.isArray(rewards.loot) && rewards.loot.length > 0) {
           lootList = rewards.loot
-            .map(item => `<div>${item.name} x${item.qty || item.quantity || 1}</div>`)
+            .map(
+              item =>
+                `<div class="loot-item loot-${item.rarity || "common"}">${item.name} x${
+                  item.qty || item.quantity || 1
+                } <span class="loot-rarity">[${(item.rarity || "common").toUpperCase()}]</span></div>`
+            )
             .join("");
         }
-    
-        const continueLabel = combat.context.dungeonRun
+  
+        const continueLabel = combat?.context?.dungeonRun
           ? "Continue Dungeon"
           : "Continue Exploring";
-    
+  
         lootHtml = `
           <h2>Victory!</h2>
-          <p>You defeated ${combat.enemyState.name}!</p>
+          <p>You defeated ${combat?.enemyState?.name || "your foes"}!</p>
           <div class="loot-box">${lootList}</div>
           <button class="btn" onclick="continueExploring()">${continueLabel}</button>
           <button class="btn" onclick="goToMap()">Return to Map</button>
@@ -1982,7 +2132,12 @@
       } else if (outcome === "defeat") {
         lootHtml = `
           <h2>Defeat…</h2>
-          <p>You were defeated by ${combat.enemyState.name}.</p>
+          <p>You were defeated.</p>
+          <button class="btn" onclick="goToMap()">Return to Map</button>
+        `;
+      } else if (outcome === "flee" || outcome === "fled") {
+        lootHtml = `
+          <h2>You fled the battle.</h2>
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
       } else {
@@ -1991,23 +2146,12 @@
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
       }
-      
-      // Save final vitals before leaving the fight page
-      const finalPlayer = PlayerStorage.load(username);
-      if (finalPlayer && combat && combat.playerState) {
-        finalPlayer.hpCurrent = combat.playerState.hpCurrent;
-        finalPlayer.manaCurrent = combat.playerState.manaCurrent;
-        finalPlayer.mana = combat.playerState.manaCurrent;
-        finalPlayer.ultimateCharge = combat.playerState.ultimateCharge;
-        PlayerStorage.save(username, finalPlayer);
-        await api.savePlayer(username, finalPlayer);
-      }
-
-      rewardPanel.innerHTML = lootHtml;    
+  
+      rewardPanel.innerHTML = lootHtml;
+      persistVitalsAfterCombat();
       document.body.appendChild(rewardPanel);
-      // ❌ no renderPanels() here; we’re done with this combat visually
+      renderPanels();
     }
-
   
     /* ============================================================
        HELPERS
@@ -2044,11 +2188,11 @@
   
     function renderStatusIcons(entity, containerId) {
       const container = document.getElementById(containerId);
+      if (!container) return;
       container.innerHTML = "";
   
       (entity.statusEffects || []).forEach(eff => {
         const img = document.createElement("img");
-        // Relative path so it works on GitHub Pages
         img.src = `assets/status/${eff.type}.png`;
         img.title = eff.type;
         container.appendChild(img);
@@ -2066,7 +2210,7 @@
       }
     }
   
-  function rollLoot(regionKey, context, player) {
+    function rollLoot(regionKey, context, player) {
       const table = REGION_LOOT_TABLES[regionKey];
       if (!table) return [];
   
@@ -2112,7 +2256,7 @@
         quantity: 1,
         rarity: rarity || "common",
         type: inferItemType(name),
-        icon: "assets/items/default.png"   // ← FIXED PATH
+        icon: "assets/items/default.png"
       };
     }
   
@@ -2136,36 +2280,34 @@
     }
   
     function continueExploring() {
-      fightInProgress = false;
-      // Capture dungeon context before nuking combat
-      const hasDungeonRun =
-        combat && combat.context && combat.context.dungeonRun;
-    
-      // Clear reward panel
       const panel = document.querySelector(".reward-panel");
       if (panel) panel.remove();
-    
-      // Clear encounter + UI shell
+  
       EncounterEngine.clear();
-      resetCombatUI();
-    
-      // Reset combat state
+  
+      // Clear combat state so player can't keep fleeing / acting
       combat = null;
-    
-      if (hasDungeonRun) {
+      autoBattle = false;
+      if (autoLoopHandle) clearTimeout(autoLoopHandle);
+      hideActionPanel();
+      logBox.innerHTML = "";
+  
+      // Let world-map / dungeon-room re-roll encounters
+      if (pCheck && pCheck.activeDungeonRun && encounter.type?.startsWith("dungeon")) {
         window.location.href = "dungeon-room.html";
       } else {
         window.location.href = "world-map.html";
       }
     }
-
   
     function goToMap() {
-      fightInProgress = false;
       EncounterEngine.clear();
+      combat = null;
+      autoBattle = false;
+      if (autoLoopHandle) clearTimeout(autoLoopHandle);
       window.location.href = "world-map.html";
     }
-
+  
     /* ============================================================
        DEATH MODAL + RESPAWN
     ============================================================ */
@@ -2175,16 +2317,15 @@
       const modal = document.getElementById("deathModal");
       modal.classList.remove("hidden");
   
-      // Attach handlers immediately
       const safeBtn = document.getElementById("safeRespawnBtn");
       const riskyBtn = document.getElementById("riskyRespawnBtn");
-      
+  
       safeBtn.onclick = async () => {
         safeBtn.disabled = true;
         riskyBtn.disabled = true;
         await handleSafeRespawn(username);
       };
-      
+  
       riskyBtn.onclick = async () => {
         safeBtn.disabled = true;
         riskyBtn.disabled = true;
@@ -2197,34 +2338,12 @@
         safeBtn.textContent = "Safe Respawn (Locked)";
       }
     }
-
-    function resetCombatUI() {
-      // Clear log + hide action panel
-      logBox.innerHTML = "";
-      hideActionPanel();
-    
-      // Clear status icons
-      const playerIcons = document.getElementById("playerStatusIcons");
-      const enemyIcons = document.getElementById("enemyStatusIcons");
-      if (playerIcons) playerIcons.innerHTML = "";
-      if (enemyIcons) enemyIcons.innerHTML = "";
-    
-      // Bars/text will be re‑rendered by renderPanels() once combat is initialized.
-    }
   
     /* ============================================================
        BUTTON BINDINGS
     ============================================================ */
   
-    document.getElementById("startFightBtn").onclick = () => {
-      if (fightInProgress) {
-        console.warn("Fight already in progress — ignoring extra click");
-        return;
-      }
-      fightInProgress = true;
-      beginFight();
-    };
-
+    document.getElementById("startFightBtn").onclick = beginFight;
     document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
     document.getElementById("ultimateBtn").onclick = chooseUltimate;
     document.getElementById("fleeBtn").onclick = chooseFlee;
@@ -2238,5 +2357,6 @@
     window.continueExploring = continueExploring;
     window.goToMap = goToMap;
   </script>
+
 </body>
 </html>
