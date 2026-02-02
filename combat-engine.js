@@ -13,7 +13,6 @@ import {
   computeFinalDamage
 } from "./ability-resolver.js";
 
-
 /****************************************************
  * CORE CONTEXT
  ****************************************************/
@@ -27,7 +26,16 @@ export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey) {
     weatherKey: weatherKey || (weatherDef ? weatherDef.key : "clear"),
     eventKey,
     turn: 1,
-    lastPlayerActionType: null
+    lastPlayerActionType: null,
+    fled: false,
+    combatEnded: null, // "victory" | "defeat" | "draw" | "fled"
+    // positional scaffolding for future raids/dungeons
+    grid: {
+      // player side: single row for now
+      playerRow: [{ id: "player", row: 0, col: 0 }],
+      // enemy side: will be filled when enemies are resolved
+      enemyRows: [] // e.g. [ [enemy0, enemy1, ...], [backRow...] ]
+    }
   };
 }
 
@@ -59,7 +67,7 @@ export function applyStatusEffect(target, effect) {
 }
 
 function tickCooldowns(entity) {
-  if (!entity.cooldowns) return;
+  if (!entity || !entity.cooldowns) return;
   for (const key in entity.cooldowns) {
     if (entity.cooldowns[key] > 0) {
       entity.cooldowns[key] -= 1;
@@ -68,7 +76,7 @@ function tickCooldowns(entity) {
 }
 
 export function tickStatusEffects(target, context, logs) {
-  if (!target.statusEffects || !target.statusEffects.length) return;
+  if (!target || !target.statusEffects || !target.statusEffects.length) return;
 
   const remaining = [];
 
@@ -88,10 +96,17 @@ export function tickStatusEffects(target, context, logs) {
       const heal = eff.valuePerTurn;
       const before = target.hpCurrent;
       target.hpCurrent = Math.min(target.hpMax, target.hpCurrent + heal);
-      if (logs) {
-        logs.push(`${target.name} regenerates ${target.hpCurrent - before} HP.`);
+      const healed = target.hpCurrent - before;
+      if (logs && healed > 0) {
+        logs.push(`${target.name} regenerates ${healed} HP.`);
       }
-      window.showPopup("playerPanel", `+${heal}`, "heal");
+      if (healed > 0) {
+        if (target.isPlayer) {
+          window.showPopup("playerPanel", `+${healed}`, "heal");
+        } else {
+          window.showPopup("enemyPanel", `+${healed}`, "heal");
+        }
+      }
     }
 
     eff.duration -= 1;
@@ -106,13 +121,14 @@ export function tickStatusEffects(target, context, logs) {
 }
 
 export function cleanseStatusEffects(entity) {
+  if (!entity) return;
   entity.statusEffects = (entity.statusEffects || []).filter(
     e => e.type === "shield" || !e.isDebuff
   );
 }
 
 export function crowdControlCheck(entity, logs) {
-  const effects = entity.statusEffects || [];
+  const effects = entity?.statusEffects || [];
 
   let stunned = false;
   let silenced = false;
@@ -246,16 +262,13 @@ function computeElementMultiplier(attackerElement, defenderElement) {
 
   if (val == null) return 1;
 
-  // Interpret as offset from 1.0
   let mult = 1 + val;
-
-  // Safety clamp so we never invert damage or explode it
   mult = Math.max(0.25, Math.min(2.5, mult));
 
   return mult;
 }
 
-export function applyDamage(attacker, defender, baseDamage, context, logs, opts = {}) { // we can use opts.crit
+export function applyDamage(attacker, defender, baseDamage, context, logs, opts = {}) {
   const weatherKey = context.weatherKey || "clear";
 
   let dmg = baseDamage;
@@ -272,10 +285,8 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
     dmg = Math.floor(dmg * weatherMult);
   }
 
-  // Safety: never let damage go negative at this stage
   if (dmg < 0) dmg = 0;
 
-  const atk = attacker ? attacker.atk : defender.atk;
   const def = defender.def || 0;
   const k = 0.015; // global tuning constant
 
@@ -288,7 +299,7 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
 
   if (attacker?.isPlayer) {
     window.showPopup("enemyPanel", `-${finalDmg}`, "damage");
-  } else {
+  } else if (defender?.isPlayer) {
     window.showPopup("playerPanel", `-${finalDmg}`, "damage");
   }
 
@@ -316,60 +327,197 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
 }
 
 /****************************************************
- * ABILITY RESOLUTION
+ * POSITION / TARGETING HELPERS (MODEL 3 SCAFFOLD)
  ****************************************************/
 
+function normalizeEnemies(enemiesOrSingle) {
+  if (!enemiesOrSingle) return [];
+  if (Array.isArray(enemiesOrSingle)) return enemiesOrSingle;
+  return [enemiesOrSingle];
+}
+
+function getLivingEnemies(enemies) {
+  return enemies.filter(e => e && e.hpCurrent > 0);
+}
+
+function allEnemiesDead(enemies) {
+  return !getLivingEnemies(enemies).length;
+}
+
+function pickPrimaryEnemy(enemies, action) {
+  const living = getLivingEnemies(enemies);
+  if (!living.length) return null;
+
+  // Target by explicit index or id if provided
+  if (action && typeof action.targetIndex === "number") {
+    const e = enemies[action.targetIndex];
+    if (e && e.hpCurrent > 0) return e;
+  }
+  if (action && action.targetId) {
+    const e = enemies.find(x => x.id === action.targetId && x.hpCurrent > 0);
+    if (e) return e;
+  }
+
+  // Fallback: first living enemy
+  return living[0];
+}
+
+function assignEnemyPositions(enemies, context) {
+  // Simple front-row grid for now: row 0, col = index
+  context.grid.enemyRows = [];
+  const frontRow = [];
+  enemies.forEach((e, idx) => {
+    if (!e) return;
+    e.position = e.position || { row: 0, col: idx };
+    frontRow.push(e);
+  });
+  context.grid.enemyRows[0] = frontRow;
+}
+
+function getAdjacentEnemies(enemies, primary) {
+  if (!primary || !primary.position) return [];
+  const { row, col } = primary.position;
+  return enemies.filter(e => {
+    if (!e.position) return false;
+    return e.position.row === row && Math.abs(e.position.col - col) === 1 && e.hpCurrent > 0;
+  });
+}
+
+function getEnemiesInSameColumn(enemies, primary) {
+  if (!primary || !primary.position) return [];
+  const { col } = primary.position;
+  return enemies.filter(e => e.position && e.position.col === col && e.hpCurrent > 0);
+}
+
+/****************************************************
+ * ABILITY RESOLUTION (MULTI-TARGET AWARE)
+ ****************************************************/
+
+function getAbilityShape(ability) {
+  // Future-proof: read from definitions if present
+  const shape =
+    ability.targetShape ||
+    ability.areaShape ||
+    ability.actionShape ||
+    ability.shape ||
+    null;
+
+  const tags = ability.tags || [];
+
+  if (shape) return shape;
+
+  if (tags.includes("aoe")) return "aoe";
+  if (tags.includes("line")) return "line";
+  if (tags.includes("cone")) return "cone";
+  if (tags.includes("cleave")) return "cleave";
+
+  // Default: single-target
+  return "single";
+}
+
+function getAbilityTargets(attacker, enemies, primaryTarget, ability) {
+  const shape = getAbilityShape(ability);
+  const living = getLivingEnemies(enemies);
+
+  if (!primaryTarget || !living.length) return [];
+
+  switch (shape) {
+    case "aoe":
+      // All living enemies
+      return living;
+
+    case "cleave": {
+      // Primary + adjacent
+      const adj = getAdjacentEnemies(enemies, primaryTarget);
+      return [primaryTarget, ...adj];
+    }
+
+    case "line": {
+      // All enemies in same column as primary
+      const colEnemies = getEnemiesInSameColumn(enemies, primaryTarget);
+      return colEnemies.length ? colEnemies : [primaryTarget];
+    }
+
+    case "cone": {
+      // Primary + adjacent (front-row cone for now)
+      const adj = getAdjacentEnemies(enemies, primaryTarget);
+      return [primaryTarget, ...adj];
+    }
+
+    case "single":
+    default:
+      return [primaryTarget];
+  }
+}
+
 export function resolveAbilityUse(attacker, defender, ability, context, logs) {
+  // Backward-compatible single-target version (used by enemy AI)
+  return resolveAbilityUseMulti(attacker, [defender], ability, defender, context, logs);
+}
+
+export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget, context, logs) {
   const abilityName = ability.name || ability.key;
 
-  // --- COOLDOWN CHECK ---
   if (!attacker.cooldowns) attacker.cooldowns = {};
   const cd = attacker.cooldowns[ability.key] || 0;
 
   if (cd > 0) {
-    logs.push(`${attacker.name} tries to use ${abilityName}, but it is on cooldown (${cd} turns left).`);
+    logs.push(
+      `${attacker.name} tries to use ${abilityName}, but it is on cooldown (${cd} turns left).`
+    );
     return;
   }
 
-  // --- MP CHECK ---
   const cost = ability.manaCost || ability.mpCost || 0;
-  const currentMP = attacker.mana ?? attacker.manaCurrent ?? attacker.mp ?? 0;
+  const currentMP =
+    attacker.manaCurrent ??
+    attacker.mana ??
+    attacker.mp ??
+    0;
 
   if (currentMP < cost) {
     logs.push(`${attacker.name} does not have enough MP for ${abilityName}.`);
     return;
   }
 
-  // Deduct MP
-  attacker.mana = Math.max(0, attacker.mana - cost);
-  if (attacker.mp !== undefined) attacker.mp -= cost;
+  // Deduct MP uniformly via manaCurrent
+  const newMP = Math.max(0, currentMP - cost);
+  attacker.manaCurrent = newMP;
+  attacker.mana = newMP;
 
-  // --- HIT / CRIT ---
-  const hitData = computeHitData(attacker, defender, ability, context);
-
-  if (!hitData.isHit) {
-    logs.push(`${attacker.name}'s ${abilityName} misses!`);
+  const targets = getAbilityTargets(attacker, enemies, primaryTarget, ability);
+  if (!targets.length) {
+    logs.push(`${attacker.name}'s ${abilityName} has no valid targets.`);
     return;
   }
 
-  // --- DAMAGE ---
-  const dmg = computeFinalDamage(attacker, defender, ability, hitData, context);
+  for (const target of targets) {
+    if (!target || target.hpCurrent <= 0) continue;
 
-  const finalDmg = applyDamage(attacker, defender, dmg, context, logs, {
-    isAbility: true,
-    abilityKey: ability.key,
-    isCrit: hitData.isCrit
-  });
+    const hitData = computeHitData(attacker, target, ability, context);
 
-  if (hitData.isCrit && logs && finalDmg > 0) {
-    logs.push("Critical hit!");
-  }
+    if (!hitData.isHit) {
+      logs.push(`${attacker.name}'s ${abilityName} misses ${target.name}!`);
+      continue;
+    }
 
-  // --- STATUS EFFECTS ---
-  if (ability.statusEffects) {
-    for (const eff of ability.statusEffects) {
-      applyStatusEffect(defender, eff);
-      logs.push(`${defender.name} is affected by ${eff.type}.`);
+    const dmg = computeFinalDamage(attacker, target, ability, hitData, context);
+
+    const finalDmg = applyDamage(attacker, target, dmg, context, logs, {
+      isAbility: true,
+      abilityKey: ability.key,
+      isCrit: hitData.isCrit
+    });
+
+    if (hitData.isCrit && logs && finalDmg > 0) {
+      logs.push("Critical hit!");
+    }
+
+    if (ability.statusEffects) {
+      for (const eff of ability.statusEffects) {
+        applyStatusEffect(target, eff);
+        logs.push(`${target.name} is affected by ${eff.type}.`);
+      }
     }
   }
 
@@ -380,7 +528,6 @@ export function resolveAbilityUse(attacker, defender, ability, context, logs) {
     }
   }
 
-  // --- APPLY COOLDOWN ---
   attacker.cooldowns[ability.key] = ability.cooldown || 0;
 }
 
@@ -398,7 +545,7 @@ export function resolveBasicAttack(attacker, defender, context, logs) {
   const hitData = computeHitData(attacker, defender, basicAbility, context);
 
   if (!hitData.isHit) {
-    if (logs) logs.push(`${attacker.name}'s attack misses!`);
+    if (logs) logs.push(`${attacker.name}'s attack misses ${defender.name}!`);
     return;
   }
 
@@ -415,7 +562,7 @@ export function resolveBasicAttack(attacker, defender, context, logs) {
 }
 
 /****************************************************
- * TURN RESOLUTION
+ * TURN RESOLUTION (MULTI-ENEMY)
  ****************************************************/
 
 export function runEnemyTurn(enemy, player, context, logs) {
@@ -433,65 +580,103 @@ export function runEnemyTurn(enemy, player, context, logs) {
   if (action.type === "basic") {
     resolveBasicAttack(enemy, player, context, logs);
   } else if (action.type === "ability" && action.ability) {
+    // Enemy AI is still single-target vs player for now
     resolveAbilityUse(enemy, player, action.ability, context, logs);
     enemy.lastBossAction = action.ability.key || action.ability.name;
   }
 }
 
-export function runPlayerAction(player, enemy, action, context, logs) {
+export function runPlayerAction(player, enemies, action, context, logs) {
   const cc = crowdControlCheck(player, logs);
   if (cc.stunned) return;
 
-  if (action.type === "basic") {
-    resolveBasicAttack(player, enemy, context, logs);
-  } else if (action.type === "ability" && action.ability) {
-    resolveAbilityUse(player, enemy, action.ability, context, logs);
-    context.lastPlayerActionType = action.ability.actionType || "ability";
-  }
-
   if (action.type === "flee") {
-    const chance = 0.5; // or scale by speed
+    const chance = 0.5; // can scale by speed later
     if (Math.random() < chance) {
       logs.push(`${player.name} successfully fled!`);
       context.fled = true;
+      context.combatEnded = "fled";
     } else {
       logs.push(`${player.name} failed to flee!`);
     }
     return;
   }
+
+  const primaryTarget = pickPrimaryEnemy(enemies, action);
+  if (!primaryTarget) {
+    logs.push(`${player.name} has no valid target.`);
+    return;
+  }
+
+  if (action.type === "basic") {
+    resolveBasicAttack(player, primaryTarget, context, logs);
+    context.lastPlayerActionType = "basic";
+  } else if (action.type === "ability" && action.ability) {
+    resolveAbilityUseMulti(player, enemies, action.ability, primaryTarget, context, logs);
+    context.lastPlayerActionType = action.ability.actionType || "ability";
+  }
 }
 
 /****************************************************
- * ROUND DRIVER
+ * ROUND DRIVER (MULTI-ENEMY, MODEL 3 READY)
  ****************************************************/
 
-export function runCombatRound(player, enemy, context, playerAction, logs) {
+export function runCombatRound(player, enemyOrEnemies, context, playerAction, logs) {
   logs = logs || [];
 
-  tickStatusEffects(player, context, logs);
-  tickStatusEffects(enemy, context, logs);
+  const enemies = normalizeEnemies(enemyOrEnemies);
+  assignEnemyPositions(enemies, context);
 
-  const actors = [player, enemy].sort(
-    (a, b) => (b.speed || 0) - (a.speed || 0)
-  );
+  // Tick DOT/HOT on all entities
+  tickStatusEffects(player, context, logs);
+  enemies.forEach(e => tickStatusEffects(e, context, logs));
+
+  // Build initiative order: player + all enemies
+  const actors = [player, ...enemies].filter(a => a && a.hpCurrent > 0);
+  actors.sort((a, b) => (b.speed || 0) - (a.speed || 0));
 
   for (const actor of actors) {
-    if (player.hpCurrent <= 0 || enemy.hpCurrent <= 0) break;
+    if (player.hpCurrent <= 0) break;
+    if (allEnemiesDead(enemies)) break;
+    if (context.fled) break;
 
     if (actor === player) {
-      runPlayerAction(player, enemy, playerAction, context, logs);
+      runPlayerAction(player, enemies, playerAction, context, logs);
     } else {
-      runEnemyTurn(enemy, player, context, logs);
+      // Enemy turn
+      if (actor.hpCurrent > 0) {
+        runEnemyTurn(actor, player, context, logs);
+      }
     }
 
     if (context.fled) {
-      return { player, enemy, context, logs };
+      context.combatEnded = "fled";
+      break;
+    }
+    if (player.hpCurrent <= 0) {
+      context.combatEnded = "defeat";
+      break;
+    }
+    if (allEnemiesDead(enemies)) {
+      context.combatEnded = "victory";
+      break;
     }
   }
-  
+
+  // Cooldowns
   tickCooldowns(player);
-  tickCooldowns(enemy);
+  enemies.forEach(e => tickCooldowns(e));
 
   context.turn += 1;
-  return { player, enemy, context, logs };
+
+  // Backward compatibility: expose a primary enemy
+  const primaryEnemy = getLivingEnemies(enemies)[0] || enemies[0] || null;
+
+  return {
+    player,
+    enemy: primaryEnemy,   // for existing single-enemy callers
+    enemies,               // full array for new multi-enemy UI
+    context,
+    logs
+  };
 }
