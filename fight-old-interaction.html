@@ -1,0 +1,2242 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Combat</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+    h1 {
+      color:#7fffd4;
+      margin-bottom:4px;
+    }
+    #usernameDisplay {
+      opacity:0.8;
+      margin-bottom:16px;
+    }
+    .panel {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:16px;
+      margin-bottom:20px;
+    }
+    .panel h2 {
+      margin-top:0;
+      color:#9af7ff;
+    }
+    .hp-bar {
+      height:24px;
+      background:#333;
+      border-radius:6px;
+      overflow: hidden; 
+      background: rgba(0,0,0,0.3);
+      margin-top:6px;
+    }
+    .actions button {
+      display:block;
+      width:100%;
+      margin-top:10px;
+      padding:10px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      font-size:15px;
+    }
+    .actions button:hover {
+      background:#222832;
+    }
+    .primary {
+      background:#2e7d32;
+      border-color:#1b5e20;
+    }
+    .primary:hover {
+      background:#388e3c;
+    }
+
+    #log {
+      background:#000;
+      border:1px solid #333;
+      padding:12px;
+      border-radius:6px;
+      font-family:monospace;
+      font-size:14px;
+      max-height:50vh;
+      overflow-y:auto;
+      white-space:pre-wrap;
+    }
+    /* Reward panel */
+    .reward-box {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:20px;
+      margin-top:20px;
+      animation: rewardFade 0.6s ease-out;
+    }
+
+    @keyframes rewardFade {
+      from {
+        opacity:0; transform:translateY(10px);
+      }
+      to {
+        opacity:1; transform:translateY(0);
+      }
+    }
+
+    /* XP bar */
+    .xp-bar {
+      margin-top:10px;
+      height:24px;
+      background:#333;
+      border-radius:7px;
+      overflow: hidden; 
+      background: rgba(0,0,0,0.3);
+      overflow:hidden;
+    }
+
+    .xp-fill {
+      height:100%;
+      background:#7fcfff;
+      width:0%;
+      transition: width 1s ease-in-out;
+    }
+
+    /* Loot card */
+    .loot-card {
+      margin-top:12px;
+      padding:12px;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      animation: lootPop 0.4s ease-out;
+    }
+
+    @keyframes lootPop {
+      0% {
+        transform:scale(0.8); opacity:0;
+      }
+      100% {
+        transform:scale(1); opacity:1;
+      }
+    }
+
+    /* Rarity glow */
+    .loot-common {
+      border-color:#bfbfbf;
+    }
+    .loot-uncommon {
+      border-color:#7fff7f; box-shadow:0 0 6px #7fff7f55;
+    }
+    .loot-rare {
+      border-color:#7fcfff; box-shadow:0 0 6px #7fcfff55;
+    }
+    .loot-epic {
+      border-color:#c77fff; box-shadow:0 0 6px #c77fff55;
+    }
+    .loot-legendary {
+      border-color:#ffbf5f; box-shadow:0 0 6px #ffbf5f55;
+    }
+
+    /* Level-up highlight */
+    .level-up {
+      margin-top:10px;
+      padding:10px;
+      background:#2e7d32;
+      border-radius:6px;
+      border:1px solid #1b5e20;
+      color:#fff;
+      animation: levelUpGlow 1.2s infinite ease-in-out;
+    }
+
+    @keyframes levelUpGlow {
+      0% {
+        box-shadow:0 0 6px rgba(46,125,50,0.4);
+      }
+      50% {
+        box-shadow:0 0 12px rgba(46,125,50,0.9);
+      }
+      100% {
+        box-shadow:0 0 6px rgba(46,125,50,0.4);
+      }
+    }
+
+    .popup {
+      position: absolute;
+      font-weight: bold;
+      pointer-events: none;
+      transition: all 0.8s ease-out;
+    }
+    
+    .popup.damage { color: #ff4d4d; }
+    .popup.heal { color: #7fff7f; }
+
+    /* Continue buttons */
+    .reward-btn {
+      margin-top:14px;
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      width:100%;
+      text-align:center;
+    }
+
+    .reward-btn:hover {
+      background:#222832;
+    }
+
+    .modal {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.8);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:999;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+
+    .modal-content {
+      background:#11141c;
+      border:1px solid #262a36;
+      padding:20px;
+      border-radius:8px;
+      width:400px;
+    }
+
+    .close-btn {
+      margin-top:12px;
+      padding:8px 12px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+    }
+
+    .close-btn:hover {
+      background:#222832;
+    }
+
+    /* Enemy inspection */
+    .inspect-row {
+      margin:8px 0;
+      font-size:14px;
+      opacity:0.9;
+    }
+
+    .inspect-ability {
+      padding:6px;
+      margin:4px 0;
+      background:#1a1d24;
+      border-radius:4px;
+      border:1px solid #333;
+    }
+
+    /* Equipment swap */
+    .swap-slot,
+    .swap-item {
+      padding:8px;
+      margin:6px 0;
+      background:#1a1d24;
+      border-radius:4px;
+      border:1px solid #333;
+      cursor:pointer;
+    }
+
+    .swap-slot:hover,
+    .swap-item:hover {
+      background:#222832;
+    }
+
+    /* HP bar animations */
+    .hp-fill {
+      height: 100%;
+      transition: width 0.6s ease-in-out;
+    }
+    
+    /* HUD PANEL */
+    .hud-panel {
+      padding: 10px;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(4px);
+      width: 260px;
+    }
+    
+    /* BAR CONTAINER */
+    .hud-bar {
+      position: relative;
+      height: 20px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.4);
+      margin: 6px 0;
+    }
+    
+    /* BAR FILL */
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.35s ease-out;
+    }
+    
+    /* HP BAR COLORS */
+    .hp-bar .bar-fill {
+      background: linear-gradient(90deg, #ff3b3b, #ff7b7b);
+    }
+    
+    /* MANA BAR COLORS */
+    .mana-bar .bar-fill {
+      background: linear-gradient(90deg, #3b7bff, #7bb3ff);
+    }
+    
+    /* ULT BAR COLORS */
+    .ult-bar .bar-fill {
+      background: linear-gradient(90deg, #ffd700, #fff27b);
+    }
+    
+    /* BAR TEXT */
+    .bar-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 0;
+      left: 0;
+      font-size: 13px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 0 0 4px #000;
+    }
+
+    .damage-popup {
+      position: absolute;
+      font-weight: bold;
+      color: #ff4444;
+      font-size: 20px;
+      animation: dmgFloat 0.8s ease-out forwards;
+      pointer-events: none;
+    }
+    
+    .heal-popup {
+      position: absolute;
+      font-weight: bold;
+      color: #44ff44;
+      font-size: 20px;
+      animation: healFloat 0.8s ease-out forwards;
+      pointer-events: none;
+    }
+    
+    @keyframes dmgFloat {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-30px); }
+    }
+    
+    @keyframes healFloat {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-30px); }
+    }
+
+    .damage-flash {
+      animation: damageFlash 0.4s ease-out;
+    }
+
+    @keyframes damageFlash {
+      0% {
+        background-color: rgba(255,0,0,0.6);
+      }
+      100% {
+        background-color: transparent;
+      }
+    }
+
+    .heal-flash {
+      animation: healFlash 0.4s ease-out;
+    }
+
+    @keyframes healFlash {
+      0% {
+        background-color: rgba(0,255,0,0.6);
+      }
+      100% {
+        background-color: transparent;
+      }
+    }
+
+    /* Ability card with icon */
+    .ability-card {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      margin:8px 0;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      position:relative;
+    }
+
+    .ability-icon {
+      width:48px;
+      height:48px;
+      border-radius:4px;
+      background:#000;
+      border:1px solid #444;
+      object-fit:cover;
+    }
+
+    /* Tooltip */
+    .ability-tooltip {
+      display:none;
+      position:absolute;
+      left:60px;
+      top:0;
+      background:#11141c;
+      border:1px solid #262a36;
+      padding:10px;
+      border-radius:6px;
+      width:260px;
+      z-index:1000;
+      font-size:13px;
+    }
+
+    .ability-card:hover .ability-tooltip {
+      display:block;
+    }
+
+    /* Cooldown overlay */
+    .cooldown-overlay {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.6);
+      color:#fff;
+      font-size:20px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      border-radius:6px;
+      pointer-events:none;
+    }
+
+    /* Disabled ability */
+    .ability-disabled {
+      opacity:0.4;
+      pointer-events:none;
+    }
+
+    /* Ultimate charge bar container */
+    .ult-bar {
+      margin-top:8px;
+      height:24px;
+      background:#333;
+      border-radius:6px;
+      overflow: hidden; 
+      background: rgba(0,0,0,0.3);
+      position:relative;
+    }
+
+    /* Fill */
+    .ult-fill {
+      height:100%;
+      background:#ffbf5f;
+      width:0%;
+      transition: width 0.6s ease-in-out;
+    }
+
+    /* Glow when ready */
+    .ult-ready-glow {
+      animation: ultGlow 1.2s infinite ease-in-out;
+    }
+
+    @keyframes ultGlow {
+      0% {
+        box-shadow: 0 0 6px rgba(255,191,95,0.4);
+      }
+      50% {
+        box-shadow: 0 0 12px rgba(255,191,95,0.9);
+      }
+      100% {
+        box-shadow: 0 0 6px rgba(255,191,95,0.4);
+      }
+    }
+
+    /* Pulse when used */
+    .ult-pulse {
+      animation: ultPulse 0.5s ease-out;
+    }
+
+    @keyframes ultPulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.15);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Portrait frame */
+    .portrait-frame {
+      width:140px;
+      height:140px;
+      border-radius:8px;
+      overflow:hidden;
+      border:2px solid #444;
+      background:#000;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      margin:0 auto;
+      position:relative;
+    }
+
+    /* Portrait image */
+    .portrait-img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+
+    /* Rarity glow */
+    .portrait-common {
+      box-shadow:0 0 6px #bfbfbf55;
+    }
+    .portrait-uncommon {
+      box-shadow:0 0 8px #7fff7f88;
+    }
+    .portrait-rare {
+      box-shadow:0 0 8px #7fcfff88;
+    }
+    .portrait-epic {
+      box-shadow:0 0 8px #c77fff88;
+    }
+    .portrait-legendary {
+      box-shadow:0 0 10px #ffbf5faa;
+    }
+
+    /* Cinematic intro panel */
+    .cinematic-intro {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.85);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:2000;
+      animation: introFadeIn 0.6s ease-out;
+    }
+
+    @keyframes introFadeIn {
+      from {
+        opacity:0;
+      }
+      to {
+        opacity:1;
+      }
+    }
+
+    .cinematic-content {
+      text-align:center;
+      animation: introPop 0.5s ease-out;
+    }
+
+    @keyframes introPop {
+      0% {
+        transform:scale(0.8); opacity:0;
+      }
+      100% {
+        transform:scale(1); opacity:1;
+      }
+    }
+
+    .vs-text {
+      font-size:48px;
+      font-weight:700;
+      color:#ffbf5f;
+      margin-top:20px;
+      text-shadow:0 0 12px #ffbf5f;
+    }
+
+    /* Roar shake */
+    .roar-shake {
+      animation: roarShake 0.5s ease-in-out;
+    }
+
+    @keyframes roarShake {
+      0% {
+        transform:translateX(0);
+      }
+      20% {
+        transform:translateX(-8px);
+      }
+      40% {
+        transform:translateX(8px);
+      }
+      60% {
+        transform:translateX(-6px);
+      }
+      80% {
+        transform:translateX(6px);
+      }
+      100% {
+        transform:translateX(0);
+      }
+    }
+
+    /* Screen shake */
+    .screen-shake {
+      animation: screenShake 0.4s ease-in-out;
+    }
+
+    @keyframes screenShake {
+      0% {
+        transform:translate(0,0);
+      }
+      20% {
+        transform:translate(-6px, 4px);
+      }
+      40% {
+        transform:translate(6px, -4px);
+      }
+      60% {
+        transform:translate(-4px, 2px);
+      }
+      80% {
+        transform:translate(4px, -2px);
+      }
+      100% {
+        transform:translate(0,0);
+      }
+    }
+
+    /* CRIT FLASH */
+    .crit-flash {
+      animation: critFlashAnim 0.25s ease-out;
+    }
+    
+    @keyframes critFlashAnim {
+      0% { background-color: rgba(255,255,0,0.4); }
+      100% { background-color: transparent; }
+    }
+    
+    /* ELEMENTAL PULSE */
+    .pulse-fire { animation: pulseFire 0.4s ease-out; }
+    .pulse-ice { animation: pulseIce 0.4s ease-out; }
+    .pulse-nature { animation: pulseNature 0.4s ease-out; }
+    .pulse-dark { animation: pulseDark 0.4s ease-out; }
+    .pulse-light { animation: pulseLight 0.4s ease-out; }
+    
+    @keyframes pulseFire {
+      0% { box-shadow: 0 0 20px #ff4500; }
+      100% { box-shadow: none; }
+    }
+    
+    @keyframes pulseIce {
+      0% { box-shadow: 0 0 20px #00bfff; }
+      100% { box-shadow: none; }
+    }
+    
+    @keyframes pulseNature {
+      0% { box-shadow: 0 0 20px #32cd32; }
+      100% { box-shadow: none; }
+    }
+    
+    @keyframes pulseDark {
+      0% { box-shadow: 0 0 20px #551a8b; }
+      100% { box-shadow: none; }
+    }
+    
+    @keyframes pulseLight {
+      0% { box-shadow: 0 0 20px #ffd700; }
+      100% { box-shadow: none; }
+    }
+
+    .lightning-pulse {
+      animation: lightningPulse 0.5s ease-out;
+    }
+
+    @keyframes lightningPulse {
+      0% {
+        box-shadow:0 0 12px rgba(255,255,120,0.9);
+      }
+      100% {
+        box-shadow:0 0 0 rgba(255,255,120,0);
+      }
+    }
+
+    /* DOT/HOT tick flash */
+    .dot-tick {
+      animation: dotTick 0.4s ease-out;
+    }
+
+    @keyframes dotTick {
+      0% {
+        background-color:rgba(255,80,0,0.4);
+      }
+      100% {
+        background-color:transparent;
+      }
+    }
+
+    .hot-tick {
+      animation: hotTick 0.4s ease-out;
+    }
+    @keyframes hotTick {
+      0% {
+        background-color:rgba(80,255,80,0.4);
+      }
+      100% {
+        background-color:transparent;
+      }
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    
+    .status-icons img {
+      width: 20px;
+      height: 20px;
+      filter: drop-shadow(0 0 3px #000);
+    }
+
+
+    /* Modifier row */
+    .modifier-row {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-top:8px;
+      padding:8px;
+      background:#1a1d24;
+      border-radius:6px;
+      border:1px solid #333;
+      font-size:14px;
+    }
+    /* Modifier icon */
+    .modifier-icon {
+      width:32px;
+      height:32px;
+      object-fit:contain;
+    }
+    /* Modifier label */
+    .modifier-label {
+      opacity:0.9;
+    }
+    /* Modifier container */
+    .modifier-box {
+      margin-top:16px;
+    }
+    /* Modal backdrop */
+    .item-modal {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.65);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+      transition:0.2s;
+    }
+
+    .item-modal.hidden {
+      opacity:0;
+      pointer-events:none;
+    }
+
+    /* Modal window */
+    .item-modal-content {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:10px;
+      padding:20px;
+      width:420px;
+      max-height:80vh;
+      overflow-y:auto;
+      animation:popIn 0.25s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform:scale(0.85); opacity:0; }
+      to   { transform:scale(1); opacity:1; }
+    }
+
+    .item-entry {
+      background:#1a1d24;
+      border:1px solid #333;
+      border-radius:6px;
+      padding:12px;
+      margin:10px 0;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      transition:0.15s;
+    }
+
+    .item-entry:hover {
+      background:#222832;
+    }
+
+    .item-info {
+      max-width:70%;
+    }
+
+    .item-name {
+      font-weight:600;
+      font-size:15px;
+    }
+
+    .item-desc {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .item-qty {
+      opacity:0.8;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .item-actions button {
+      padding:6px 10px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      font-size:12px;
+    }
+
+    .item-actions button:hover {
+      background:#222832;
+    }
+
+    /* Rarity colors */
+    .rarity-common {
+      color:#bfbfbf;
+    }
+    .rarity-uncommon {
+      color:#7fff7f;
+    }
+    .rarity-rare {
+      color:#7fcfff;
+    }
+    .rarity-epic {
+      color:#c77fff;
+    }
+    .rarity-legendary {
+      color:#ffbf5f;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ============================
+        HEADER / USER DISPLAY
+  ============================= -->
+  <div id="usernameDisplay" class="username-display"></div>
+
+  <!-- ============================
+        REGION SELECTOR + START
+  ============================= -->
+  <div class="fight-controls">
+    <label for="regionSelect">Region:</label>
+    <select id="regionSelect">
+      <option value="forest">Forest</option>
+      <option value="mountains">Mountains</option>
+      <option value="swamp">Swamp</option>
+      <option value="desert">Desert</option>
+    </select>
+
+    <button id="startFightBtn" class="btn start-btn">Start Fight</button>
+  </div>
+
+  <!-- ============================
+        PLAYER / ENEMY HUD
+  ============================= -->
+  <div id="combatHud" class="combat-hud">
+    <div id="playerPanel" class="hud-panel player-panel">
+      <div class="hud-header">
+        <span id="playerName" class="hud-name">Player</span>
+        <span id="playerLevel" class="hud-level">Lv 1</span>
+      </div>
+
+      <div class="hud-bar hp-bar">
+        <div id="playerHpFill" class="bar-fill"></div>
+        <span id="playerHpText" class="bar-text">HP 0 / 0</span>
+      </div>
+
+      <div class="hud-bar mana-bar">
+        <div id="playerManaFill" class="bar-fill"></div>
+        <span id="playerManaText" class="bar-text">MP 0 / 0</span>
+      </div>
+
+      <div class="hud-bar ult-bar">
+        <div id="playerUltFill" class="bar-fill"></div>
+        <span id="playerUltText" class="bar-text">ULT 0%</span>
+      </div>
+    </div>
+
+    <div id="enemyPanel" class="hud-panel enemy-panel">
+      <div class="hud-header">
+        <span id="enemyName" class="hud-name">Enemy</span>
+        <span id="enemyLevel" class="hud-level">Lv 1</span>
+      </div>
+
+      <div class="hud-bar hp-bar">
+        <div id="enemyHpFill" class="bar-fill"></div>
+        <span id="enemyHpText" class="bar-text">HP 0 / 0</span>
+      </div>
+
+      <div class="hud-bar mana-bar">
+        <div id="enemyManaFill" class="bar-fill"></div>
+        <span id="enemyManaText" class="bar-text">MP 0 / 0</span>
+      </div>
+
+      <button id="inspectEnemyBtn" class="btn inspect-btn">Inspect</button>
+    </div>
+
+    <div class="status-icons" id="playerStatusIcons"></div>
+    <div class="status-icons" id="enemyStatusIcons"></div>
+  </div>
+
+  <!-- ============================
+        COMBAT LOG
+  ============================= -->
+  <div id="combatLog" class="combat-log"></div>
+
+  <!-- ============================
+        ACTION PANEL (PLAYER TURN)
+  ============================= -->
+  <div id="actionPanel" class="action-panel" style="display:none;">
+    <button id="basicAttackBtn" class="btn action-btn">Basic Attack</button>
+    <button id="openAbilitiesBtn" class="btn action-btn">Abilities</button>
+    <button id="ultimateBtn" class="btn action-btn">Ultimate</button>
+    <button id="openItemBtn" class="btn action-btn">Item</button>
+    <button id="fleeBtn" class="btn action-btn">Flee</button>
+    <button id="autoBtn" class="btn action-btn">Auto</button>
+  </div>
+
+  <!-- ============================
+        ABILITY PANEL
+  ============================= -->
+  <div id="abilityPanel" class="ability-panel" style="display:none;">
+    <h3>Choose Ability</h3>
+    <div id="abilityList"></div>
+    <button class="btn close-btn"
+            onclick="document.getElementById('abilityPanel').style.display='none'">
+      Close
+    </button>
+  </div>
+
+  <!-- ============================
+        ITEM MODAL
+  ============================= -->
+  <div id="itemModal" class="item-modal hidden">
+    <div class="item-modal-content">
+      <h2>Use Item</h2>
+      <div id="itemList">Loading...</div>
+      <button class="btn close-btn"
+              onclick="document.getElementById('itemModal').classList.add('hidden')">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================
+        CINEMATIC INTRO
+  ============================= -->
+  <div id="cinematicIntro" class="cinematic-intro" style="display:none;">
+    <div class="cinematic-content">
+      <div id="cinematicPortrait" class="portrait-frame"></div>
+      <div id="cinematicName" class="cinematic-name"></div>
+      <div class="vs-text">VS</div>
+    </div>
+  </div>
+
+  <!-- ============================
+        RESUME PREVIOUS FIGHT MODAL
+  ============================= -->
+  <div id="resumeModal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Resume Previous Fight?</h2>
+      <p>You have an unfinished battle. Would you like to continue it?</p>
+
+      <button class="btn" onclick="resumeFight()">Resume</button>
+      <button class="btn" onclick="startNewFight()">Start New Fight</button>
+    </div>
+  </div>
+
+  <!-- ============================
+        DEATH MODAL
+  ============================= -->
+  <div id="deathModal" class="modal hidden">
+  <div class="modal-content">
+    <h2>You Have Fallen...</h2>
+    <p>Choose how you will return:</p>
+    <button class="btn" id="safeRespawnBtn">
+      Safe Respawn (Lose items, 0 MP)
+    </button>
+    <button class="btn" id="riskyRespawnBtn">
+      Risky Respawn (Lose 1 level, 0 MP)
+    </button>
+  </div>
+</div>
+  <script>
+    window.showPopup = function(panelId, text, type) {
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+    
+      const div = document.createElement("div");
+      div.className = "popup " + type;
+      div.textContent = text;
+    
+      panel.appendChild(div);
+    
+      setTimeout(() => {
+        div.style.opacity = "0";
+        div.style.transform = "translateY(-20px)";
+      }, 10);
+    
+      setTimeout(() => div.remove(), 1000);
+    };
+  </script>
+  
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { EncounterEngine } from "./encounters.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { api } from "./api.js";
+    import {
+      buildCombatContext,
+      runCombatRound as engineRunRound
+    } from "./combat-engine.js";
+    import { REGION_LOOT_TABLES } from "./region-loot-tables.js";
+    import {
+      handleSafeRespawn,
+      handleRiskyRespawn,
+      getSafeRespawnRemaining
+    } from "./death-handler.js";
+    import { DungeonEngine } from "./dungeon-engine.js";
+    import { WorldSim } from "./world-simulation.js";
+    import { handleBossDefeat } from "./world-boss-progression.js";
+    import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
+    import { SUBRACE_ABILITY_DEFINITIONS } from "./subrace-ability-definitions.js";
+    
+    function hydrateAbilities(player) {
+      const prof = player.profession;
+      const subrace = player.subrace;
+    
+      const baseAbilities = Array.isArray(player.abilities) ? player.abilities : [];
+    
+      player.abilities = baseAbilities.map(a => {
+        return (
+          ABILITY_DEFINITIONS[prof]?.[a.key] ||
+          SUBRACE_ABILITY_DEFINITIONS[subrace]?.[a.key] ||
+          a
+        );
+      });
+    
+      return player;
+    }
+  
+    // 🔹 Only merge combat deltas back into the full player object
+    function mergeCombatStateIntoPlayer(real, combatState) {
+      if (!real || !combatState) return real;
+  
+      real.hpCurrent = combatState.hpCurrent;
+      real.hpMax = combatState.hpMax ?? real.hpMax;
+  
+      // MP: keep both fields in sync
+      if (typeof combatState.manaCurrent === "number") {
+        real.manaCurrent = combatState.manaCurrent;
+      }
+  
+      real.manaMax = combatState.manaMax ?? real.manaMax;
+  
+      real.cooldowns = combatState.cooldowns || real.cooldowns || {};
+      real.statusEffects = combatState.statusEffects || real.statusEffects || [];
+      real.ultimateCharge = combatState.ultimateCharge ?? real.ultimateCharge ?? 0;
+  
+      return real;
+    }
+  
+    /* ============================================================
+       SESSION + PLAYER + ENCOUNTER LOAD
+    ============================================================ */
+  
+    await requireSession();
+    const { local, remote, conflict, username } = window.syncState;
+  
+    function ensureVitals(p) {
+      if (!p) return p;
+    
+      if (typeof p.hpMax !== "number") p.hpMax = 20;
+    
+      if (p.hpCurrent === undefined || p.hpCurrent === null) {
+        p.hpCurrent = p.hpMax;
+      } else {
+        p.hpCurrent = Math.min(p.hpCurrent, p.hpMax);
+      }
+    
+      // keep manaCurrent in sync
+      if (p.manaCurrent === undefined || p.manaCurrent === null) {
+        p.manaCurrent = p.mana;
+      } else {
+        p.manaCurrent = Math.min(p.manaCurrent, p.manaMax);
+      }
+    
+      return p;
+    }
+  
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+  
+    let combat = null;
+    let autoBattle = false;
+    let autoLoopHandle = null;
+    let fightInProgress = false;
+  
+    // Choose player version from syncState
+    let rawPlayer = null;
+    if (conflict === "remote-only") rawPlayer = remote;
+    else if (conflict === "local-only") rawPlayer = local;
+    else if (conflict === "match") rawPlayer = local || remote;
+    else if (conflict === "conflict") rawPlayer = remote || local;
+    else rawPlayer = local || remote;
+  
+    // Fallback: if syncState has nothing, try local PlayerStorage
+    if (!rawPlayer) {
+      const fallback = PlayerStorage.load(username);
+      if (fallback) {
+        rawPlayer = fallback;
+      }
+    }
+  
+    if (!rawPlayer) {
+      alert("No player data found.");
+      window.location.href = "world-map.html";
+    }
+  
+    // Cache locally (only if valid)
+    const player = ensureVitals(rawPlayer);
+    PlayerStorage.save(username, player);
+  
+    const encounter = EncounterEngine.loadFromSession();
+    if (!encounter) {
+      alert("No encounter found. Returning to map.");
+      window.location.href = "world-map.html";
+    }
+  
+    const p = PlayerStorage.load(username);
+    if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
+      if (!p.activeDungeonRun) {
+        alert("Dungeon run lost. Returning to dungeon select.");
+        window.location.href = "dungeon-select.html";
+      }
+    }
+  
+    /* ============================================================
+       RUNTIME ENTITIES
+    ============================================================ */
+  
+    function resolvePlayer(raw) {
+      const stats = raw.stats || {};
+      const derived = raw.derived || {};
+  
+      const hpMax = raw.hpMax ?? stats.hp ?? 1;
+      const manaMax = raw.manaMax ?? stats.manaMax ?? 0;
+  
+      const baseMana =
+        raw.manaCurrent ??
+        manaMax;
+  
+      return {
+        id: raw.username,
+        name: raw.username,
+        level: raw.level || 1,
+        profession: raw.profession,
+        race: raw.race,
+        subrace: raw.subrace,
+  
+        hpCurrent:
+          raw.hpCurrent !== undefined && raw.hpCurrent !== null
+            ? Number(raw.hpCurrent)
+            : hpMax,
+        hpMax,
+  
+        // keep both fields present for combat + UI
+        manaCurrent: Math.min(baseMana, manaMax),
+        manaMax,
+  
+        atk: stats.atk ?? 1,
+        def: stats.def ?? 0,
+        speed: stats.speed ?? 1,
+  
+        critChance: derived.critChance ?? raw.crit ?? 0.05,
+        critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
+  
+        element: raw.element || null,
+        statusEffects: raw.statusEffects || [],
+        cooldowns: raw.cooldowns || {},
+        pendingAction: null,
+  
+        abilities: raw.abilities || [],
+        ultimate: raw.ultimate || null,
+        ultimateCharge: raw.ultimateCharge || 0,
+        ultimateChargeRequired:
+          raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
+  
+        equipment: raw.equipment || {},
+        talentTree: raw.talentTree || {},
+        talentPoints: raw.talentPoints || 0,
+  
+        inventory: raw.inventory || [],
+  
+        isPlayer: true,
+        lastAction: null,
+        lastActionType: null
+      };
+    }
+  
+    function resolveEnemyFromEncounter(encounterEnemy) {
+      const hpMax = encounterEnemy.hpMax ?? encounterEnemy.hp ?? 1;
+  
+      return {
+        id: encounterEnemy.key,
+        name: encounterEnemy.name,
+        level: encounterEnemy.level || 1,
+        element: encounterEnemy.element || "neutral",
+  
+        hpCurrent: hpMax,
+        hpMax,
+  
+        atk: encounterEnemy.atk ?? encounterEnemy.attack ?? 1,
+        def: encounterEnemy.def ?? encounterEnemy.defense ?? 0,
+        speed: encounterEnemy.speed || 1,
+  
+        manaCurrent: encounterEnemy.mana ?? 0,
+        manaMax: encounterEnemy.manaMax ?? 0,
+  
+        statusEffects: encounterEnemy.statusEffects || [],
+        cooldowns: {},
+        isPlayer: false,
+  
+        isWorldBoss: !!encounterEnemy.isWorldBoss,
+        bossKey: encounterEnemy.bossKey || null
+      };
+    }
+  
+    /* ============================================================
+       COMBAT STATE
+    ============================================================ */
+  
+    const logBox = document.getElementById("combatLog");
+    const actionPanel = document.getElementById("actionPanel");
+    const abilityPanel = document.getElementById("abilityPanel");
+    const itemModal = document.getElementById("itemModal");
+  
+    function isDead(entity) {
+      return !entity || entity.hpCurrent <= 0;
+    }
+  
+    function checkOutcome(player, enemy) {
+      if (!player || !enemy) return null;
+      if (player.hpCurrent <= 0 && enemy.hpCurrent <= 0) return "draw";
+      if (player.hpCurrent <= 0) return "defeat";
+      if (enemy.hpCurrent <= 0) return "victory";
+      return null;
+    }
+  
+    /* ============================================================
+       LOGGING
+    ============================================================ */
+  
+    function addLog(line) {
+      const div = document.createElement("div");
+      div.innerHTML = formatLog(line);
+      logBox.appendChild(div);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+  
+    function renderLogs(logs) {
+      for (const line of logs) addLog(line);
+    }
+  
+    /* ============================================================
+       HUD RENDERING
+    ============================================================ */
+  
+    function renderPanels() {
+      if (!combat || !combat.playerState || !combat.enemyState) return;
+      renderPlayerPanel(combat.playerState);
+      renderEnemyPanel(combat.enemyState);
+      renderStatusIcons(combat.playerState, "playerStatusIcons");
+      renderStatusIcons(combat.enemyState, "enemyStatusIcons");
+    }
+  
+    function renderPlayerPanel(p) {
+      if (!p) return;
+  
+      document.getElementById("playerName").textContent = p.name || "Player";
+      document.getElementById("playerLevel").textContent = "Lv " + (p.level || 1);
+  
+      updateHPBar("playerHpFill", "playerHpText", p.hpCurrent, p.hpMax);
+      updateManaBar(
+        "playerManaFill",
+        "playerManaText",
+        p.manaCurrent,
+        p.manaMax
+      );
+      updateUltimateBar(p);
+    }
+  
+    function renderEnemyPanel(e) {
+      if (!e) return;
+  
+      document.getElementById("enemyName").textContent = e.name || "Enemy";
+      document.getElementById("enemyLevel").textContent = "Lv " + (e.level || 1);
+  
+      updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
+      updateManaBar(
+        "enemyManaFill",
+        "enemyManaText",
+        e.manaCurrent || 0,
+        e.manaMax || 0
+      );
+    }
+  
+    function updateHPBar(fillId, textId, current, max) {
+      const fill = document.getElementById(fillId);
+      const text = document.getElementById(textId);
+  
+      current = current || 0;
+      max = max || 1;
+  
+      const pct = Math.max(0, Math.min(100, (current / max) * 100));
+  
+      if (fill) fill.style.width = pct + "%";
+      if (text) text.textContent = `HP ${current} / ${max}`;
+    }
+  
+    function updateManaBar(fillId, textId, current, max) {
+      const fill = document.getElementById(fillId);
+      const text = document.getElementById(textId);
+  
+      current = Number(current) || 0;
+      max = Number(max) || 0;
+        
+      const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
+  
+      if (fill) fill.style.width = pct + "%";
+      if (text) text.textContent = `MP ${current} / ${max}`;
+    }
+  
+  
+    function updateUltimateBar(playerState) {
+      const fill = document.getElementById("playerUltFill");
+      const text = document.getElementById("playerUltText");
+  
+      const charge = playerState.ultimateCharge || 0;
+      const required = playerState.ultimateChargeRequired || 100;
+  
+      const pct = Math.max(0, Math.min(100, (charge / required) * 100));
+  
+      if (fill) fill.style.width = pct + "%";
+      if (text) text.textContent = `ULT ${Math.round(pct)}%`;
+    }
+  
+    /* ============================================================
+       START FIGHT
+    ============================================================ */
+  
+    async function beginFight() {
+      // Clear UI before initializing new combat
+      resetCombatUI();
+      combat = null;
+    
+      console.log("[fight] beginFight called");
+    
+      // Always load the freshest player state
+      const latest = PlayerStorage.load(username);
+    
+      // Build combat model from full player, then hydrate abilities
+      const baseCombatPlayer = resolvePlayer(latest);
+      const playerState = hydrateAbilities(structuredClone(baseCombatPlayer));
+    
+      // 🔹 Ultimate should be per‑fight, not persistent
+      playerState.ultimateCharge = 0;
+    
+      const enemyState = resolveEnemyFromEncounter(encounter.enemy);
+    
+      const context = buildCombatContext(
+        encounter.region,
+        encounter.biome,
+        encounter.weather,
+        encounter.event
+      );
+    
+      if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
+        const p = PlayerStorage.load(username);
+        if (p && p.activeDungeonRun) {
+          context.dungeonRun = p.activeDungeonRun;
+        }
+      }
+    
+      combat = { playerState, enemyState, context };
+    
+      if (enemyState.isWorldBoss || encounter.isBoss) {
+        showCinematicIntro(enemyState);
+      }
+    
+      setTimeout(() => {
+        renderPanels();
+        showActionPanel();
+      }, 50);
+    }
+
+  
+    /* ============================================================
+       MAIN ROUND RESOLUTION
+    ============================================================ */
+  
+    async function runRound(playerAction) {
+      console.log("[fight] runRound called with", playerAction);
+      if (!combat || !combat.playerState || !combat.enemyState) {
+        console.warn("runRound called before combat initialized");
+        return;
+      }
+    
+      hideActionPanel();
+    
+      const logs = [];
+      const result = engineRunRound(
+        combat.playerState,
+        combat.enemyState,
+        combat.context,
+        playerAction,
+        logs
+      );
+  
+      // Update in-memory combat state from engine result
+      combat.playerState = result.player;
+      combat.enemyState = result.enemy;
+      combat.context = result.context;
+      
+      // Load the real player
+      let real = PlayerStorage.load(username) || rawPlayer;
+      
+      // Merge combat changes into the real player
+      real = mergeCombatStateIntoPlayer(real, combat.playerState);
+      
+      // Save the real player (NOT the combat clone)
+      PlayerStorage.save(username, real);
+      await api.savePlayer(username, real);
+  
+      renderLogs(result.logs || logs);
+      renderPanels();
+    
+      const outcome = checkOutcome(combat.playerState, combat.enemyState);
+      if (!outcome) {
+        if (combat.context.dungeonRun) {
+          const p = PlayerStorage.load(username);
+          DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+        }
+    
+        if (autoBattle) {
+          if (!autoLoopHandle) {
+            autoLoopHandle = setTimeout(autoLoop, 1000);
+          }
+        } else {
+          showActionPanel();
+        }
+        return;
+      }
+    
+      // ============================================================
+      // OUTCOME HANDLING
+      // ============================================================
+      addLog("Combat ended: " + outcome.toUpperCase());
+    
+      const p = PlayerStorage.load(username);
+      const run = combat.context.dungeonRun || null;
+      const isEndless = run ? DungeonEngine.isEndless(run) : false;
+    
+      // ============================================================
+      // DEFEAT
+      // ============================================================
+      if (outcome === "defeat") {
+    
+        if (run && !isEndless) {
+          // Normal dungeon defeat → summary page
+          DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          window.location.href = "dungeon-failed.html";
+          return;
+        }
+    
+        if (run && isEndless) {
+          // Endless defeat → summary page
+          p.lastEndlessRun = {
+            floor: run.highestFloor || run.currentFloor,
+            score: run.highestFloor || run.currentFloor
+          };
+          DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          window.location.href = "endless-summary.html";
+          return;
+        }
+    
+        // Non-dungeon defeat → normal death modal
+        showDeathModal();
+        autoBattle = false;
+        if (autoLoopHandle) clearTimeout(autoLoopHandle);
+        return;
+      }
+    
+      // ============================================================
+      // WORLD BOSS VICTORY
+      // ============================================================
+      if (combat.enemyState.isWorldBoss) {
+        const bossKey = combat.enemyState.bossKey;
+        const worldState = WorldSim.getState();
+    
+        p.flags = p.flags || {};
+        p.flags[`${bossKey}_defeated`] = true;
+        PlayerStorage.save(username, p);
+    
+        handleBossDefeat(worldState, bossKey);
+        WorldSim.save();
+        addLog(`You have defeated the World Boss: ${bossKey}!`);
+      }
+    
+      // ============================================================
+      // DUNGEON VICTORY
+      // ============================================================
+      if (run) {
+    
+        if (!isEndless && run.state === "boss") {
+          // Normal dungeon final boss
+          DungeonEngine.completeDungeon(run);
+    
+          p.dungeonRecords = p.dungeonRecords || {};
+          const rec = p.dungeonRecords[run.dungeonKey] || { clears: 0 };
+          rec.clears += 1;
+          p.dungeonRecords[run.dungeonKey] = rec;
+    
+          p.lastCompletedDungeonRun = {
+            dungeonKey: run.dungeonKey,
+            xp: result.xp,
+            gold: result.gold,
+            items: result.loot || []
+          };
+    
+          DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          window.location.href = "dungeon-complete.html";
+          return;
+        }
+    
+        if (isEndless) {
+          // Endless victory (any floor)
+          DungeonEngine.completeFloor(run);
+    
+          p.lastEndlessRun = {
+            floor: run.highestFloor || run.currentFloor,
+            score: run.highestFloor || run.currentFloor
+          };
+    
+          DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          window.location.href = "endless-summary.html";
+          return;
+        }
+    
+        // Normal dungeon floor victory
+        DungeonEngine.completeFloor(run);
+        DungeonEngine.saveRun(p, run, username);
+      }
+    
+      // ============================================================
+      // NORMAL REWARD FLOW (non-dungeon)
+      // ============================================================
+      const rewards = generateRewards(
+        combat.playerState,
+        combat.enemyState,
+        combat.context,
+        outcome
+      );
+      const finalRewards = await finalizeRewards(rewards);
+    
+      endCombat(finalRewards.outcome, finalRewards);
+      autoBattle = false;
+      if (autoLoopHandle) clearTimeout(autoLoopHandle);
+    }
+  
+    /* ============================================================
+       FINALIZE REWARDS (LOCAL + KV)
+    ============================================================ */
+  
+    // This is now redundant with mergeCombatStateIntoPlayer + finalizeRewards,
+    // but kept here in case you still call it elsewhere.
+    function persistVitalsAfterCombat() {
+      const latest = PlayerStorage.load(username) || rawPlayer;
+      if (!latest || !combat || !combat.playerState) return;
+  
+      latest.hpCurrent = combat.playerState.hpCurrent;
+      latest.hpMax = combat.playerState.hpMax;
+      latest.manaCurrent = combat.playerState.manaCurrent;
+      latest.manaMax = combat.playerState.manaMax;
+  
+      PlayerStorage.save(username, latest);
+    }
+  
+    function generateRewards(player, enemy, context, outcome) {
+      if (outcome !== "victory") {
+        return { outcome };
+      }
+  
+      const xp = enemy.level * 2;
+      const gold = enemy.level * 1;
+  
+      const lootRegionKey = mapRegionToLootKey(context.regionKey || encounter.region);
+      const loot = rollLoot(lootRegionKey, context, player);
+  
+      return {
+        outcome,
+        xp,
+        gold,
+        loot
+      };
+    }
+  
+    async function finalizeRewards(result) {
+      if (!result || result.outcome !== "victory") return result;
+  
+      const p = PlayerStorage.load(username);
+      if (!p) return result;
+  
+      p.xp = (p.xp || 0) + (result.xp || 0);
+      p.gold = (p.gold || 0) + (result.gold || 0);
+  
+      if (Array.isArray(result.loot) && result.loot.length > 0) {
+        if (!Array.isArray(p.inventory)) p.inventory = [];
+  
+        for (const item of result.loot) {
+          const existing = p.inventory.find(
+            i => i.name === item.name && i.type === item.type
+          );
+          if (existing) {
+            existing.quantity = (existing.quantity || 1) + (item.quantity || 1);
+          } else {
+            p.inventory.push(item);
+          }
+        }
+      }
+  
+      const player = ensureVitals(p);
+      PlayerStorage.save(username, player);
+      await api.savePlayer(username, player);
+  
+      return result;
+    }
+  
+    /* ============================================================
+       PLAYER ACTIONS
+    ============================================================ */
+  
+    async function chooseBasicAttack() {
+      await runRound({ type: "basic" });
+    }
+  
+    async function chooseAbility(key) {
+      closeAbilityMenu();
+    
+      const ability = combat.playerState.abilities.find(a => a.key === key);
+      if (!ability) {
+        addLog("Ability not found!");
+        return;
+      }
+    
+      await runRound({
+        type: "ability",
+        ability
+      });
+    }
+  
+    async function chooseUltimate() {
+      const p = combat.playerState;
+      if ((p.ultimateCharge || 0) < (p.ultimateChargeRequired || 100)) {
+        addLog("Ultimate not ready!");
+        return;
+      }
+      await runRound({ type: "ability", ability: p.ultimate, isUltimate: true });
+    }
+  
+    async function chooseItem(itemId) {
+      closeItemModal();
+      await runRound({ type: "item", itemId });
+    }
+  
+    async function chooseFlee() {
+      await runRound({ type: "flee" });
+    }
+  
+    /* ============================================================
+       AUTO-BATTLE (Summoners War–style toggle)
+    ============================================================ */
+  
+    function toggleAutoBattle() {
+      autoBattle = !autoBattle;
+      addLog("Auto-battle: " + (autoBattle ? "ON" : "OFF"));
+  
+      if (!autoBattle && autoLoopHandle) {
+        clearTimeout(autoLoopHandle);
+        autoLoopHandle = null;
+        showActionPanel();
+        return;
+      }
+  
+      if (autoBattle && combat && !autoLoopHandle) {
+        autoLoopHandle = setTimeout(autoLoop, 300);
+      }
+    }
+  
+    async function autoLoop() {
+      if (!autoBattle || !combat || !combat.playerState || !combat.enemyState) {
+        autoLoopHandle = null;
+        return;
+      }
+  
+      // If combat already ended, stop
+      const outcome = checkOutcome(combat.playerState, combat.enemyState);
+      if (outcome) {
+        autoLoopHandle = null;
+        return;
+      }
+  
+      const action = pickAutoAction(combat.playerState);
+      await runRound(action);
+  
+      if (!autoBattle || !combat || !combat.playerState || !combat.enemyState) {
+        autoLoopHandle = null;
+        return;
+      }
+  
+      const postOutcome = checkOutcome(combat.playerState, combat.enemyState);
+      if (postOutcome) {
+        autoLoopHandle = null;
+        return;
+      }
+  
+      autoLoopHandle = setTimeout(autoLoop, 1000);
+    }
+  
+    function pickAutoAction(player) {
+      if (
+        player.ultimate &&
+        player.ultimateCharge >= (player.ultimateChargeRequired || 100)
+      ) {
+        return {
+          type: "ability",
+          ability: player.ultimate,
+          isUltimate: true
+        };
+      }
+  
+      const abilities = player.abilities || [];
+      const usable = abilities.filter(a => {
+        const cd = player.cooldowns?.[a.key] || 0;
+        const manaCost = a.manaCost || a.mpCost || 0;
+        const mp = player.manaCurrent ?? player.mana ?? 0;
+        return cd <= 0 && mp >= manaCost;
+      });
+  
+      if (usable.length && Math.random() < 0.40) {
+        const ability = usable[Math.floor(Math.random() * usable.length)];
+        return { type: "ability", ability };
+      }
+  
+      return { type: "basic" };
+    }
+  
+    /* ============================================================
+       ITEM SYSTEM
+    ============================================================ */
+  
+    function openItemModal() {
+      itemModal.classList.remove("hidden");
+      loadCombatItems();
+    }
+  
+    function closeItemModal() {
+      itemModal.classList.add("hidden");
+    }
+  
+    function loadCombatItems() {
+      const list = document.getElementById("itemList");
+      list.innerHTML = "";
+  
+      if (!combat || !combat.playerState) {
+        list.innerHTML = "<div>No usable items.</div>";
+        return;
+      }
+  
+      const inv = combat.playerState.inventory || [];
+  
+      if (!inv.length) {
+        list.innerHTML = "<div>No usable items.</div>";
+        return;
+      }
+  
+      inv.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "btn item-btn";
+        btn.textContent = `${item.name} (${item.qty ?? item.quantity ?? 1})`;
+        btn.onclick = () => chooseItem(item.id);
+        list.appendChild(btn);
+      });
+    }
+  
+    /* ============================================================
+       ABILITY MENU
+    ============================================================ */
+    
+    function openAbilityMenu() {
+      if (!combat || !combat.playerState) return;
+    
+      const list = document.getElementById("abilityList");
+      list.innerHTML = "";
+    
+      const p = combat.playerState;
+      const abilities = p.abilities || [];
+    
+      abilities.forEach(a => {
+        const btn = document.createElement("button");
+        btn.className = "btn ability-btn";
+    
+        const cd = p.cooldowns?.[a.key] || 0;
+        const mp = p.manaCurrent ?? 0;
+        const cost = a.manaCost || a.mpCost || 0;
+    
+        // Button label
+        if (cd > 0) {
+          btn.textContent = `${a.name} (${cd})`;
+        } else if (cost > 0) {
+          btn.textContent = `${a.name} -${cost} MP`;
+        } else {
+          btn.textContent = a.name;
+        }
+    
+        // Disable if on cooldown or insufficient MP
+        btn.disabled = cd > 0 || mp < cost;
+    
+        btn.onclick = () => chooseAbility(a.key);
+        list.appendChild(btn);
+      });
+    
+      abilityPanel.style.display = "block";
+    }
+  
+    function closeAbilityMenu() {
+      abilityPanel.style.display = "none";
+    }
+  
+    /* ============================================================
+       VFX
+    ============================================================ */
+  
+    function screenShake(intensity = 5, duration = 150) {
+      const root = document.body;
+      root.classList.add("screen-shake");
+      setTimeout(() => root.classList.remove("screen-shake"), duration);
+    }
+  
+    function critFlash() {
+      logBox.classList.add("crit-flash");
+      setTimeout(() => logBox.classList.remove("crit-flash"), 200);
+    }
+  
+    function elementalPulse(element) {
+      const hud = document.getElementById("combatHud");
+      hud.classList.add(`pulse-${element}`);
+      setTimeout(() => hud.classList.remove(`pulse-${element}`), 300);
+    }
+  
+    function applyVFX(event) {
+      if (!event || !event.type) return;
+  
+      switch (event.type) {
+        case "crit":
+          critFlash();
+          break;
+        case "big_hit":
+          screenShake();
+          break;
+        case "elemental_hit":
+          if (event.payload?.element) elementalPulse(event.payload.element);
+          break;
+      }
+    }
+  
+    /* ============================================================
+       CINEMATIC INTRO
+    ============================================================ */
+  
+    function showCinematicIntro(enemy) {
+      const intro = document.getElementById("cinematicIntro");
+      const name = document.getElementById("cinematicName");
+  
+      name.textContent = enemy.name || "Unknown Foe";
+  
+      intro.style.display = "flex";
+      intro.style.opacity = 0;
+  
+      setTimeout(() => {
+        intro.style.opacity = 1;
+      }, 50);
+  
+      setTimeout(() => {
+        intro.style.opacity = 0;
+        setTimeout(() => (intro.style.display = "none"), 300);
+      }, 2000);
+    }
+  
+    /* ============================================================
+       INSPECT ENEMY
+    ============================================================ */
+  
+    function inspectEnemy() {
+      if (!combat || !combat.enemyState) {
+        alert("Enemy not initialized yet.");
+        return;
+      }
+  
+      const e = combat.enemyState;
+      alert(
+        `${e.name}\n` +
+        `Level: ${e.level}\n` +
+        `HP: ${e.hpCurrent}/${e.hpMax}\n` +
+        `ATK: ${e.atk}\n` +
+        `DEF: ${e.def}\n` +
+        `Element: ${e.element}`
+      );
+    }
+  
+    /* ============================================================
+       END COMBAT / REWARDS
+    ============================================================ */
+  
+    function endCombat(outcome, rewards = null) {
+      fightInProgress = false;
+      hideActionPanel();
+    
+      const rewardPanel = document.createElement("div");
+      rewardPanel.className = "reward-panel";
+    
+      let lootHtml = "";
+    
+      if (outcome === "victory") {
+        let lootList = "No loot";
+    
+        if (rewards && Array.isArray(rewards.loot) && rewards.loot.length > 0) {
+          lootList = rewards.loot
+            .map(item => `<div>${item.name} x${item.qty || item.quantity || 1}</div>`)
+            .join("");
+        }
+    
+        const continueLabel = combat.context.dungeonRun
+          ? "Continue Dungeon"
+          : "Continue Exploring";
+    
+        lootHtml = `
+          <h2>Victory!</h2>
+          <p>You defeated ${combat.enemyState.name}!</p>
+          <div class="loot-box">${lootList}</div>
+          <button class="btn" onclick="continueExploring()">${continueLabel}</button>
+          <button class="btn" onclick="goToMap()">Return to Map</button>
+        `;
+      } else if (outcome === "defeat") {
+        lootHtml = `
+          <h2>Defeat…</h2>
+          <p>You were defeated by ${combat.enemyState.name}.</p>
+          <button class="btn" onclick="goToMap()">Return to Map</button>
+        `;
+      } else {
+        lootHtml = `
+          <h2>Battle Over</h2>
+          <button class="btn" onclick="goToMap()">Return to Map</button>
+        `;
+      }
+      
+      // Save final vitals before leaving the fight page
+      const finalPlayer = PlayerStorage.load(username);
+      if (finalPlayer && combat && combat.playerState) {
+        finalPlayer.hpCurrent = combat.playerState.hpCurrent;
+        finalPlayer.manaCurrent = combat.playerState.manaCurrent;
+        finalPlayer.mana = combat.playerState.manaCurrent;
+        finalPlayer.ultimateCharge = combat.playerState.ultimateCharge;
+        PlayerStorage.save(username, finalPlayer);
+        await api.savePlayer(username, finalPlayer);
+      }
+
+      rewardPanel.innerHTML = lootHtml;    
+      document.body.appendChild(rewardPanel);
+      // ❌ no renderPanels() here; we’re done with this combat visually
+    }
+
+  
+    /* ============================================================
+       HELPERS
+    ============================================================ */
+  
+    function format(num) {
+      return Number(num).toLocaleString();
+    }
+  
+    function formatLog(text) {
+      return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    }
+  
+    function showActionPanel() {
+      actionPanel.style.display = "block";
+    }
+  
+    function hideActionPanel() {
+      actionPanel.style.display = "none";
+    }
+  
+    function showPopup(targetPanelId, text, type = "damage") {
+      const panel = document.getElementById(targetPanelId);
+      if (!panel) return;
+  
+      const div = document.createElement("div");
+      div.className = type === "heal" ? "heal-popup" : "damage-popup";
+      div.textContent = text;
+  
+      panel.appendChild(div);
+  
+      setTimeout(() => div.remove(), 800);
+    }
+  
+    function renderStatusIcons(entity, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+  
+      (entity.statusEffects || []).forEach(eff => {
+        const img = document.createElement("img");
+        // Relative path so it works on GitHub Pages
+        img.src = `assets/status/${eff.type}.png`;
+        img.title = eff.type;
+        container.appendChild(img);
+      });
+    }
+  
+    function mapRegionToLootKey(regionKey) {
+      switch ((regionKey || "").toLowerCase()) {
+        case "forest":
+          return "forest-edge";
+        case "plains":
+          return "plains-field";
+        default:
+          return "forest-edge";
+      }
+    }
+  
+  function rollLoot(regionKey, context, player) {
+      const table = REGION_LOOT_TABLES[regionKey];
+      if (!table) return [];
+  
+      const results = [];
+  
+      const rarityRoll = Math.random();
+      let rarity = "common";
+      if (rarityRoll > 0.97) rarity = "mythic";
+      else if (rarityRoll > 0.90) rarity = "epic";
+      else if (rarityRoll > 0.75) rarity = "rare";
+      else if (rarityRoll > 0.50) rarity = "uncommon";
+  
+      const basePool = table[rarity] || [];
+      if (basePool.length) {
+        const name = pick(basePool);
+        results.push(makeItem(name, rarity));
+      }
+  
+      const weather = context.weatherKey;
+      if (table.weatherModifiers?.[weather]) {
+        const name = pick(table.weatherModifiers[weather]);
+        results.push(makeItem(name, rarity));
+      }
+  
+      const event = context.eventKey;
+      if (table.eventModifiers?.[event]) {
+        const name = pick(table.eventModifiers[event]);
+        results.push(makeItem(name, rarity));
+      }
+  
+      if (table.professionModifiers?.[player.profession]) {
+        const name = pick(table.professionModifiers[player.profession]);
+        results.push(makeItem(name, rarity));
+      }
+  
+      return results;
+    }
+  
+    function makeItem(name, rarity) {
+      return {
+        id: crypto.randomUUID(),
+        name,
+        quantity: 1,
+        rarity: rarity || "common",
+        type: inferItemType(name),
+        icon: "assets/items/default.png"   // ← FIXED PATH
+      };
+    }
+  
+    function inferItemType(name) {
+      const n = name.toLowerCase();
+  
+      if (n.includes("meat") || n.includes("potion") || n.includes("herb"))
+        return "consumable";
+  
+      if (n.includes("ore") || n.includes("bark") || n.includes("leaf") || n.includes("root"))
+        return "material";
+  
+      if (n.includes("token") || n.includes("trophy") || n.includes("map"))
+        return "quest";
+  
+      return "misc";
+    }
+  
+    function pick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+  
+    function continueExploring() {
+      fightInProgress = false;
+      // Capture dungeon context before nuking combat
+      const hasDungeonRun =
+        combat && combat.context && combat.context.dungeonRun;
+    
+      // Clear reward panel
+      const panel = document.querySelector(".reward-panel");
+      if (panel) panel.remove();
+    
+      // Clear encounter + UI shell
+      EncounterEngine.clear();
+      resetCombatUI();
+    
+      // Reset combat state
+      combat = null;
+    
+      if (hasDungeonRun) {
+        window.location.href = "dungeon-room.html";
+      } else {
+        window.location.href = "world-map.html";
+      }
+    }
+
+  
+    function goToMap() {
+      fightInProgress = false;
+      EncounterEngine.clear();
+      window.location.href = "world-map.html";
+    }
+
+    /* ============================================================
+       DEATH MODAL + RESPAWN
+    ============================================================ */
+  
+    function showDeathModal() {
+      console.log("[fight] showDeathModal called");
+      const modal = document.getElementById("deathModal");
+      modal.classList.remove("hidden");
+  
+      // Attach handlers immediately
+      const safeBtn = document.getElementById("safeRespawnBtn");
+      const riskyBtn = document.getElementById("riskyRespawnBtn");
+      
+      safeBtn.onclick = async () => {
+        safeBtn.disabled = true;
+        riskyBtn.disabled = true;
+        await handleSafeRespawn(username);
+      };
+      
+      riskyBtn.onclick = async () => {
+        safeBtn.disabled = true;
+        riskyBtn.disabled = true;
+        await handleRiskyRespawn(username);
+      };
+  
+      const stored = PlayerStorage.load(username);
+      if (stored.safeRespawnLockUntil && getSafeRespawnRemaining(stored) > 0) {
+        safeBtn.disabled = true;
+        safeBtn.textContent = "Safe Respawn (Locked)";
+      }
+    }
+
+    function resetCombatUI() {
+      // Clear log + hide action panel
+      logBox.innerHTML = "";
+      hideActionPanel();
+    
+      // Clear status icons
+      const playerIcons = document.getElementById("playerStatusIcons");
+      const enemyIcons = document.getElementById("enemyStatusIcons");
+      if (playerIcons) playerIcons.innerHTML = "";
+      if (enemyIcons) enemyIcons.innerHTML = "";
+    
+      // Bars/text will be re‑rendered by renderPanels() once combat is initialized.
+    }
+  
+    /* ============================================================
+       BUTTON BINDINGS
+    ============================================================ */
+  
+    document.getElementById("startFightBtn").onclick = () => {
+      if (fightInProgress) {
+        console.warn("Fight already in progress — ignoring extra click");
+        return;
+      }
+      fightInProgress = true;
+      beginFight();
+    };
+
+    document.getElementById("basicAttackBtn").onclick = chooseBasicAttack;
+    document.getElementById("ultimateBtn").onclick = chooseUltimate;
+    document.getElementById("fleeBtn").onclick = chooseFlee;
+    document.getElementById("autoBtn").onclick = toggleAutoBattle;
+    document.getElementById("openItemBtn").onclick = openItemModal;
+    document.getElementById("openAbilitiesBtn").onclick = openAbilityMenu;
+    document.getElementById("inspectEnemyBtn").onclick = inspectEnemy;
+  
+    window.chooseAbility = chooseAbility;
+    window.chooseItem = chooseItem;
+    window.continueExploring = continueExploring;
+    window.goToMap = goToMap;
+  </script>
+</body>
+</html>
