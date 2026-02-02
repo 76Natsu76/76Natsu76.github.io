@@ -1673,19 +1673,24 @@
      ****************************************************/
   
     function persistVitalsAfterCombat() {
-      let latest = applyRegen(PlayerStorage.load(username));
-      PlayerStorage.save(username, latest);
-
+      const latest = PlayerStorage.load(username);
       if (!latest || !combat || !combat.playerState) return;
-  
+    
       latest.hpCurrent = combat.playerState.hpCurrent;
       latest.hpMax = combat.playerState.hpMax;
+    
       latest.manaCurrent = combat.playerState.manaCurrent;
       latest.mana = combat.playerState.manaCurrent;
       latest.manaMax = combat.playerState.manaMax;
-  
+    
+      latest.ultimateCharge = combat.playerState.ultimateCharge;
+    
+      latest.lastRegenTick = Date.now();
+    
       PlayerStorage.save(username, latest);
+      api.savePlayer(username, latest);
     }
+
   
     function generateRewards(player, enemy, context, outcome) {
       if (outcome !== "victory") {
@@ -1787,6 +1792,7 @@
     }
   
     async function chooseFlee() {
+      persistVitalsAfterCombat();
       await runRound({ type: "flee" });
     }
   
@@ -2237,6 +2243,7 @@
       hideActionPanel();
       combat = null;
   
+      persistVitalsAfterCombat();
       if (combat && combat.context && combat.context.dungeonRun) {
         window.location.href = "dungeon-room.html";
       } else {
@@ -2244,7 +2251,8 @@
       }
     }
   
-    function goToMap() {
+    function goToMap() {      
+      persistVitalsAfterCombat();
       EncounterEngine.clear();
       window.location.href = "world-map.html";
     }
