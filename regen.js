@@ -23,3 +23,27 @@ export function getRegenRates(player) {
     mpPerMinute: baseMp * mpMult
   };
 }
+
+export function applyRegen(player) {
+  if (!player) return player;
+
+  const now = Date.now();
+  const last = player.lastRegenTick || now;
+
+  const minutes = (now - last) / 60000;
+  if (minutes <= 0) return player;
+
+  const hpPerMin = player.hpRegenRate ?? 6;
+  const mpPerMin = player.mpRegenRate ?? 0.5;
+
+  const hpGain = Math.floor(minutes * hpPerMin);
+  const mpGain = Math.floor(minutes * mpPerMin);
+
+  player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpGain);
+  player.manaCurrent = Math.min(player.manaMax, (player.manaCurrent ?? player.mana ?? 0) + mpGain);
+  player.mana = player.manaCurrent;
+
+  player.lastRegenTick = now;
+
+  return player;
+}
