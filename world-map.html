@@ -92,248 +92,209 @@
   <button class="btn" id="bestiaryBtn">Bestiary</button>
   
   <script type="module">
-    import { WORLD_DATA } from "./world-data.js";
-    import { BIOMES } from "./biomes.js";
-    import { REGION_TO_BIOME } from "./region-to-biome.js";
-    import { EncounterEngine, initEncounters } from "./encounters.js";
-    import { EnemyRegistry } from "./enemy-registry.js";
-    import { WorldSim } from "./world-simulation.js";
-    import { requireSession } from "./session-guard.js";
-    import { PlayerStorage } from "./player-storage.js";
-    import { getRegenRates } from "./regen.js";
-    import { applyOfflineRegen } from "./offline-regen.js";
-    import { api } from "./api.js";
+  import { WORLD_DATA } from "./world-data.js";
+  import { BIOMES } from "./biomes.js";
+  import { REGION_TO_BIOME } from "./region-to-biome.js";
+  import { EncounterEngine, initEncounters } from "./encounters.js";
+  import { EnemyRegistry } from "./enemy-registry.js";
+  import { WorldSim } from "./world-simulation.js";
+  import { requireSession } from "./session-guard.js";
+  import { PlayerStorage } from "./player-storage.js";
+  import { api } from "./api.js";
 
-    /*(async () => {
-      const username = "s3ven_six";
-    
-      const p = await api.getPlayer(username);
-      console.log("Before ability fix:", p.abilities);
-    
-      function unwrapAbility(a) {
-        // Case 1: already correct
-        if (a && a.key && typeof a.key === "string") return a;
-    
-        // Case 2: double-wrapped: { key: { key, name, ... }, name: { ... } }
-        if (a && typeof a.key === "object") {
-          return a.key; // the real ability object
-        }
-    
-        // Case 3: legacy string
-        if (typeof a === "string") {
-          return { key: a, name: a };
-        }
-    
-        return a;
-      }
-    
-      p.abilities = (p.abilities || []).map(unwrapAbility);
-    
-      console.log("After ability fix:", p.abilities);
-    
-      await api.savePlayer(username, p);
-      PlayerStorage.save(username, p);
-    
-      console.log("%cAbilities successfully repaired!", "color: lime; font-size: 16px");
-    })(); */
+  // If you want regen rates to be data-driven, keep this:
+  import { getRegenRates } from "./regen.js";
 
-    
-    // --- SESSION + INITIALIZATION --- //
-    await requireSession();
-    await initEncounters();
-    await EnemyRegistry.loadAll();
-    await WorldSim.init();
-    
-    const { username } = window.syncState;
-    
-    document.getElementById("usernameDisplay").textContent =
-      "Logged in as: " + username;
-    
-    // --- LOAD PLAYER --- //
-    let player = PlayerStorage.load(username);
-    
-    if (!player) {
-      alert("No player data found.");
-      window.location.href = "landing.html";
-    }
-    
-    // --- APPLY OFFLINE REGEN (Phase 4) --- //
-    let p = PlayerStorage.load(username);
-    p = applyRegen(p);
-    PlayerStorage.save(username, p);
-    
-    // --- APPLY AMBIENT REGEN (Phase 2) --- //
-    function applyAmbientRegen(player, username) {
-      const { hpPerMinute, mpPerMinute } = getRegenRates(player);
-    
-      player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
-      player.manaCurrent = Math.min(player.manaMax, player.manaCurrent + mpPerMinute);
-    
-      PlayerStorage.save(username, player);
-    }
-    
-    applyAmbientRegen(player, username);
-    
-    const playerLevel = Number(player.level || 1);
-  
-    /* ------------------------------------------------------------
-       WORLD DATA FROM SIM
-    ------------------------------------------------------------ */
-    const REGION_UNLOCKS = WorldSim._getRegionUnlocks();
-    const WORLD_BOSSES = WorldSim._getBossData();
-  
-    let worldState = {};
-    try {
-      worldState = WorldSim.getState() || {};
-    } catch (e) {
-      console.warn("WorldSim state failed", e);
-      worldState = {};
-    }
-  
-    /* ------------------------------------------------------------
-       RENDER WORLD
-    ------------------------------------------------------------ */
-    function renderWorld() {
-      const container = document.getElementById("mapContainer");
-      const out = [];
-  
-      for (const regionKey in WORLD_DATA.regions) {
-        const region = WORLD_DATA.regions[regionKey];
-        const state = worldState[regionKey] || {};
-  
-        const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
-        const biome = BIOMES[biomeKey];
-  
-        const [minLevel, maxLevel] = region.levelRange || [1, 999];
-        const levelLocked = playerLevel < minLevel;
-  
-        const globallyUnlocked = WorldSim._state.regionUnlocks[regionKey] ||
-          REGION_UNLOCKS.unlocks[regionKey] || false;
+  // --- SESSION + INITIALIZATION --- //
+  await requireSession();
+  await initEncounters();
+  await EnemyRegistry.loadAll();
+  await WorldSim.init();
 
-        const bossActive = !!state.worldBoss;
-        const bossLocked = !globallyUnlocked;
-  
-        const regionLocked = levelLocked || bossLocked;
-  
-        const events = region.eventPool?.length
-          ? region.eventPool.map(e => `<div class="event">${format(e)}</div>`).join("")
-          : "<div class='event'>None</div>";
-  
-        let lockMessage = "";
-        if (levelLocked) lockMessage = `Requires Lv ${minLevel}`;
-        else if (bossLocked) lockMessage = `Locked — Defeat the World Boss`;
-  
-        out.push(`
-          <div class="region-card">
-            <h2>${region.name}</h2>
-  
-            <div class="stat-row"><span>Biome</span><span>${format(biomeKey)}</span></div>
-            <div class="stat-row"><span>Weather</span><span>${region.weatherPool?.join(", ") || "Unknown"}</span></div>
-            <div class="stat-row"><span>Hazards</span><span>${biome?.hazards?.map(h => h.key).join(", ") || "None"}</span></div>
-            <div class="stat-row"><span>Danger</span><span>${region.danger || "Moderate"}</span></div>
-  
-            <div class="stat-row">
-              <span>World Boss</span>
-              <span>
-                ${
-                  worldState.bosses?.[regionKey]?.active
-                    ? "Active"
-                    : worldState.regionUnlocks?.[regionKey]
-                    ? "Defeated"
-                    : "Locked"
-                }
-              </span>
-            </div>
+  const { username } = window.syncState;
 
-            <div class="stat-row">
-              <span>Level Range</span>
-              <span>${minLevel} - ${maxLevel}</span>
-            </div>
-  
-            <div class="section">
-              <strong>Events:</strong>
-              ${events}
-            </div>
-  
-            <button class="btn ${regionLocked ? "disabled" : ""}"
-              data-region="${regionKey}"
-              data-locked="${regionLocked ? "1" : "0"}">
-              ${regionLocked ? lockMessage : "Enter Region"}
-            </button>
+  document.getElementById("usernameDisplay").textContent =
+    "Logged in as: " + username;
+
+  // --- LOAD PLAYER --- //
+  let player = PlayerStorage.load(username);
+
+  if (!player) {
+    alert("No player data found.");
+    window.location.href = "landing.html";
+  }
+
+  // --- TIME-BASED REGEN (single source of truth) --- //
+  function applyRegen(player) {
+    if (!player) return player;
+
+    const now = Date.now();
+    const last = player.lastRegenTick || now;
+
+    const minutes = (now - last) / 60000;
+    if (minutes <= 0) return player;
+
+    // Either use static defaults...
+    // const hpPerMin = player.hpRegenRate ?? 6;
+    // const mpPerMin = player.mpRegenRate ?? 0.5;
+
+    // ...or pull from regen.js if you want it canonical:
+    const { hpPerMinute, mpPerMinute } = getRegenRates(player);
+    const hpPerMin = hpPerMinute ?? 6;
+    const mpPerMin = mpPerMinute ?? 0.5;
+
+    const hpGain = Math.floor(minutes * hpPerMin);
+    const mpGain = Math.floor(minutes * mpPerMin);
+
+    player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpGain);
+    player.manaCurrent = Math.min(player.manaMax, (player.manaCurrent ?? player.mana ?? 0) + mpGain);
+    player.mana = player.manaCurrent;
+
+    player.lastRegenTick = now;
+
+    return player;
+  }
+
+  // Apply regen ONCE on world-map load
+  player = applyRegen(player);
+  PlayerStorage.save(username, player);
+
+  const playerLevel = Number(player.level || 1);
+
+  /* ------------------------------------------------------------
+     WORLD DATA FROM SIM
+  ------------------------------------------------------------ */
+  const REGION_UNLOCKS = WorldSim._getRegionUnlocks();
+  const WORLD_BOSSES = WorldSim._getBossData();
+
+  let worldState = {};
+  try {
+    worldState = WorldSim.getState() || {};
+  } catch (e) {
+    console.warn("WorldSim state failed", e);
+    worldState = {};
+  }
+
+  /* ------------------------------------------------------------
+     RENDER WORLD
+  ------------------------------------------------------------ */
+  function renderWorld() {
+    const container = document.getElementById("mapContainer");
+    const out = [];
+
+    for (const regionKey in WORLD_DATA.regions) {
+      const region = WORLD_DATA.regions[regionKey];
+      const state = worldState[regionKey] || {};
+
+      const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
+      const biome = BIOMES[biomeKey];
+
+      const [minLevel, maxLevel] = region.levelRange || [1, 999];
+      const levelLocked = playerLevel < minLevel;
+
+      const globallyUnlocked = WorldSim._state.regionUnlocks[regionKey] ||
+        REGION_UNLOCKS.unlocks[regionKey] || false;
+
+      const bossActive = !!state.worldBoss;
+      const bossLocked = !globallyUnlocked;
+
+      const regionLocked = levelLocked || bossLocked;
+
+      const events = region.eventPool?.length
+        ? region.eventPool.map(e => `<div class="event">${format(e)}</div>`).join("")
+        : "<div class='event'>None</div>";
+
+      let lockMessage = "";
+      if (levelLocked) lockMessage = `Requires Lv ${minLevel}`;
+      else if (bossLocked) lockMessage = `Locked — Defeat the World Boss`;
+
+      out.push(`
+        <div class="region-card">
+          <h2>${region.name}</h2>
+
+          <div class="stat-row"><span>Biome</span><span>${format(biomeKey)}</span></div>
+          <div class="stat-row"><span>Weather</span><span>${region.weatherPool?.join(", ") || "Unknown"}</span></div>
+          <div class="stat-row"><span>Hazards</span><span>${biome?.hazards?.map(h => h.key).join(", ") || "None"}</span></div>
+          <div class="stat-row"><span>Danger</span><span>${region.danger || "Moderate"}</span></div>
+
+          <div class="stat-row">
+            <span>World Boss</span>
+            <span>
+              ${
+                worldState.bosses?.[regionKey]?.active
+                  ? "Active"
+                  : worldState.regionUnlocks?.[regionKey]
+                  ? "Defeated"
+                  : "Locked"
+              }
+            </span>
           </div>
-        `);
-      }
-  
-      container.innerHTML = out.join("");
-    }
-  
-    renderWorld();
-  
-    /* ------------------------------------------------------------
-       REGION CLICK HANDLER
-    ------------------------------------------------------------ */
-    document.getElementById("mapContainer").addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-region]");
-      if (!btn) return;
-  
-      const regionKey = btn.getAttribute("data-region");
-      const locked = btn.getAttribute("data-locked") === "1";
-      if (locked) return;
-  
-      const encounter = EncounterEngine.generate(regionKey, username);
-      localStorage.setItem("current_encounter", JSON.stringify(encounter));
-      window.location.href = "fight-interactive.html";
-    });
-  
-    /* ------------------------------------------------------------
-       NAVIGATION BUTTONS
-    ------------------------------------------------------------ */
-    document.getElementById("characterBtn").addEventListener("click", () => {
-      window.location.href = "character.html";
-    });
-  
-    document.getElementById("inventoryBtn").addEventListener("click", () => {
-      window.location.href = "inventory.html";
-    });
-  
-    document.getElementById("bestiaryBtn").addEventListener("click", () => {
-      window.location.href = "bestiary.html";
-    });
-  
-    /* ------------------------------------------------------------
-       HELPERS
-    ------------------------------------------------------------ */
-    function format(str) {
-      return String(str)
-        .replace(/_/g, " ")
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase());
+
+          <div class="stat-row">
+            <span>Level Range</span>
+            <span>${minLevel} - ${maxLevel}</span>
+          </div>
+
+          <div class="section">
+            <strong>Events:</strong>
+            ${events}
+          </div>
+
+          <button class="btn ${regionLocked ? "disabled" : ""}"
+            data-region="${regionKey}"
+            data-locked="${regionLocked ? "1" : "0"}">
+            ${regionLocked ? lockMessage : "Enter Region"}
+          </button>
+        </div>
+      `);
     }
 
-    function applyRegen(player) {
-      if (!player) return player;
-    
-      const now = Date.now();
-      const last = player.lastRegenTick || now;
-    
-      const minutes = (now - last) / 60000;
-      if (minutes <= 0) return player;
-    
-      const hpPerMin = player.hpRegenRate ?? 6;
-      const mpPerMin = player.mpRegenRate ?? 0.5;
-    
-      const hpGain = Math.floor(minutes * hpPerMin);
-      const mpGain = Math.floor(minutes * mpPerMin);
-    
-      player.hpCurrent = Math.min(player.hpMax, Math.round(player.hpCurrent + hpGain));
-      player.manaCurrent = Math.min(player.manaMax, Math.round(player.manaCurrent + mpGain));
-      player.mana = player.manaCurrent;
-    
-      player.lastRegenTick = now;
-    
-      return player;
-    }
-  </script>
+    container.innerHTML = out.join("");
+  }
+
+  renderWorld();
+
+  /* ------------------------------------------------------------
+     REGION CLICK HANDLER
+  ------------------------------------------------------------ */
+  document.getElementById("mapContainer").addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-region]");
+    if (!btn) return;
+
+    const regionKey = btn.getAttribute("data-region");
+    const locked = btn.getAttribute("data-locked") === "1";
+    if (locked) return;
+
+    const encounter = EncounterEngine.generate(regionKey, username);
+    localStorage.setItem("current_encounter", JSON.stringify(encounter));
+    window.location.href = "fight-interactive.html";
+  });
+
+  /* ------------------------------------------------------------
+     NAVIGATION BUTTONS
+  ------------------------------------------------------------ */
+  document.getElementById("characterBtn").addEventListener("click", () => {
+    window.location.href = "character.html";
+  });
+
+  document.getElementById("inventoryBtn").addEventListener("click", () => {
+    window.location.href = "inventory.html";
+  });
+
+  document.getElementById("bestiaryBtn").addEventListener("click", () => {
+    window.location.href = "bestiary.html";
+  });
+
+  /* ------------------------------------------------------------
+     HELPERS
+  ------------------------------------------------------------ */
+  function format(str) {
+    return String(str)
+      .replace(/_/g, " ")
+      .replace(/-/g, " ")
+      .replace(/\b\w/g, c => c.toUpperCase());
+  }
+</script>
 
 </body>
 </html>
