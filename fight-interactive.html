@@ -1390,6 +1390,10 @@
     ============================================================ */
   
     async function beginFight() {
+      // Clear UI before initializing new combat
+      logBox.innerHTML = "";
+      hideActionPanel();
+
       combat = null;
 
       console.log("[fight] beginFight called");
@@ -2142,6 +2146,19 @@
       
       EncounterEngine.clear();
   
+      // Reset UI panels
+      document.getElementById("playerHpBar").style.width = "0%";
+      document.getElementById("playerMpBar").style.width = "0%";
+      document.getElementById("playerUltBar").style.width = "0%";
+      
+      document.getElementById("enemyHpBar").style.width = "0%";
+      document.getElementById("enemyName").textContent = "";
+      document.getElementById("enemyLevel").textContent = "";
+      document.getElementById("enemyElement").textContent = "";
+      
+      logBox.innerHTML = "";
+      hideActionPanel();
+
       if (combat && combat.context && combat.context.dungeonRun) {
         window.location.href = "dungeon-room.html";
       } else {
