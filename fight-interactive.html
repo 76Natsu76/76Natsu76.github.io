@@ -1059,21 +1059,24 @@
       const minutes = (now - last) / 60000;
       if (minutes <= 0) return player;
     
-      // Your regen rates — tune as needed
-      const hpPerMin = player.hpRegenRate ?? 6;      // 6 HP per minute
-      const mpPerMin = player.mpRegenRate ?? 0.5;    // 0.5 MP per minute
+      const hpPerMin = player.hpRegenRate ?? 6;
+      const mpPerMin = player.mpRegenRate ?? 0.5;
     
-      const hpGain = minutes * hpPerMin;
-      const mpGain = minutes * mpPerMin;
+      const hpGain = Math.floor(minutes * hpPerMin);
+      const mpGain = Math.floor(minutes * mpPerMin);
     
-      player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpGain);
-      player.manaCurrent = Math.min(player.manaMax, player.manaCurrent + mpGain);
+      player.hpCurrent = Math.min(player.hpMax, Math.round(player.hpCurrent + hpGain));
+      player.manaCurrent = Math.min(player.manaMax, Math.round(player.manaCurrent + mpGain));
       player.mana = player.manaCurrent;
     
       player.lastRegenTick = now;
     
       return player;
     }
+
+    let latest = PlayerStorage.load(username);
+    latest = applyRegen(latest);
+    PlayerStorage.save(username, latest);
 
     /****************************************************
      * ABILITY HYDRATION
@@ -1469,7 +1472,7 @@
   
       console.log("[fight] beginFight called");
   
-      let latest = applyRegen(PlayerStorage.load(username));
+      let latest = PlayerStorage.load(username);
       PlayerStorage.save(username, latest);
 
       const baseCombatPlayer = resolvePlayer(ensureVitals(latest));
