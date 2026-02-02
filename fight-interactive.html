@@ -1991,12 +1991,19 @@
           <button class="btn" onclick="goToMap()">Return to Map</button>
         `;
       }
-    
-      rewardPanel.innerHTML = lootHtml;
-    
-      // 🔹 Persist vitals (HP/MP) but don't touch stats/regen logic
-      persistVitalsAfterCombat();
-    
+      
+      // Save final vitals before leaving the fight page
+      const finalPlayer = PlayerStorage.load(username);
+      if (finalPlayer && combat && combat.playerState) {
+        finalPlayer.hpCurrent = combat.playerState.hpCurrent;
+        finalPlayer.manaCurrent = combat.playerState.manaCurrent;
+        finalPlayer.mana = combat.playerState.manaCurrent;
+        finalPlayer.ultimateCharge = combat.playerState.ultimateCharge;
+        PlayerStorage.save(username, finalPlayer);
+        await api.savePlayer(username, finalPlayer);
+      }
+
+      rewardPanel.innerHTML = lootHtml;    
       document.body.appendChild(rewardPanel);
       // ❌ no renderPanels() here; we’re done with this combat visually
     }
