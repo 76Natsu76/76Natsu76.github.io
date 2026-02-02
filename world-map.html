@@ -309,6 +309,30 @@
         .replace(/-/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
+
+    function applyRegen(player) {
+      if (!player) return player;
+    
+      const now = Date.now();
+      const last = player.lastRegenTick || now;
+    
+      const minutes = (now - last) / 60000;
+      if (minutes <= 0) return player;
+    
+      const hpPerMin = player.hpRegenRate ?? 6;
+      const mpPerMin = player.mpRegenRate ?? 0.5;
+    
+      const hpGain = Math.floor(minutes * hpPerMin);
+      const mpGain = Math.floor(minutes * mpPerMin);
+    
+      player.hpCurrent = Math.min(player.hpMax, Math.round(player.hpCurrent + hpGain));
+      player.manaCurrent = Math.min(player.manaMax, Math.round(player.manaCurrent + mpGain));
+      player.mana = player.manaCurrent;
+    
+      player.lastRegenTick = now;
+    
+      return player;
+    }
   </script>
 
 </body>
