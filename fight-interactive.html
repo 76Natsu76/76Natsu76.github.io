@@ -1312,7 +1312,7 @@
       updateManaBar(
         "playerManaFill",
         "playerManaText",
-        p.manaCurrent ?? 0,
+        p.manaCurrent,
         p.manaMax
       );
       updateUltimateBar(p);
@@ -1350,9 +1350,9 @@
       const fill = document.getElementById(fillId);
       const text = document.getElementById(textId);
   
-      current = current || 0;
-      max = max || 0;
-  
+      current = Number(current) || 0;
+      max = Number(max) || 0;
+        
       const pct = max > 0 ? Math.max(0, Math.min(100, (current / max) * 100)) : 0;
   
       if (fill) fill.style.width = pct + "%";
@@ -1385,7 +1385,7 @@
       console.log("[fight] beginFight called");
     
       // Always load the freshest player state
-      const latest = PlayerStorage.load(username) || rawPlayer;
+      const latest = PlayerStorage.load(username);
     
       // Build combat model from full player, then hydrate abilities
       const baseCombatPlayer = resolvePlayer(latest);
