@@ -1390,6 +1390,7 @@
     ============================================================ */
   
     async function beginFight() {
+      combat = null;
       console.log("[fight] beginFight called");
       logBox.innerHTML = "";
     
@@ -2004,6 +2005,7 @@
       rewardPanel.innerHTML = lootHtml;
       persistVitalsAfterCombat();
       document.body.appendChild(rewardPanel);
+      renderPanels();
     }
   
     /* ============================================================
@@ -2135,7 +2137,8 @@
     function continueExploring() {
       const panel = document.querySelector(".reward-panel");
       if (panel) panel.remove();
-  
+
+      renderPanels();
       EncounterEngine.clear();
   
       if (combat && combat.context && combat.context.dungeonRun) {
