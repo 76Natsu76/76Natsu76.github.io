@@ -468,7 +468,9 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
     return;
   }
 
-  const cost = ability.manaCost || ability.mpCost || 0;
+  const isUlt = ability.isUltimate || opts?.isUltimate;
+  const cost = isUlt ? 0 : (ability.manaCost || ability.mpCost || 0);
+
   const currentMP =
     attacker.manaCurrent ??
     attacker.mana ??
