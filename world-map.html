@@ -158,8 +158,9 @@
     }
     
     // --- APPLY OFFLINE REGEN (Phase 4) --- //
-    player = applyOfflineRegen(player);
-    PlayerStorage.save(username, player);
+    let p = PlayerStorage.load(username);
+    p = applyRegen(p);
+    PlayerStorage.save(username, p);
     
     // --- APPLY AMBIENT REGEN (Phase 2) --- //
     function applyAmbientRegen(player, username) {
