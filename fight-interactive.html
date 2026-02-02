@@ -1074,10 +1074,6 @@
       return player;
     }
 
-    let latest = PlayerStorage.load(username);
-    latest = applyRegen(latest);
-    PlayerStorage.save(username, latest);
-
     /****************************************************
      * ABILITY HYDRATION
      ****************************************************/
@@ -1139,6 +1135,10 @@
   
     await requireSession();
     const { local, remote, conflict, username } = window.syncState;
+    
+    let latest = PlayerStorage.load(username);
+    latest = applyRegen(latest);
+    PlayerStorage.save(username, latest);
   
     function ensureVitals(p) {
       if (!p) return p;
