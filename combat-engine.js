@@ -36,6 +36,7 @@ export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey) {
   };
 }
 
+// Intro flavor
 export function applyEnvironmentIntroFlavor(context, logs) {
   const weatherKey = context.weatherKey || "clear";
   const pool = WEATHER_COMBAT_FLAVOR[weatherKey];
