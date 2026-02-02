@@ -29,12 +29,9 @@ export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey) {
     lastPlayerActionType: null,
     fled: false,
     combatEnded: null, // "victory" | "defeat" | "draw" | "fled"
-    // positional scaffolding for future raids/dungeons
     grid: {
-      // player side: single row for now
       playerRow: [{ id: "player", row: 0, col: 0 }],
-      // enemy side: will be filled when enemies are resolved
-      enemyRows: [] // e.g. [ [enemy0, enemy1, ...], [backRow...] ]
+      enemyRows: []
     }
   };
 }
@@ -53,6 +50,7 @@ export function applyEnvironmentIntroFlavor(context, logs) {
  ****************************************************/
 
 export function applyStatusEffect(target, effect) {
+  if (!target) return;
   if (!target.statusEffects) target.statusEffects = [];
 
   const eff = JSON.parse(JSON.stringify(effect));
@@ -228,10 +226,6 @@ function getWeatherAccuracyModifier(weatherKey) {
  * DAMAGE + HIT/CRIT
  ****************************************************/
 
-function rollChance(p) {
-  return Math.random() < p;
-}
-
 function computeHitChance(attacker, defender, context) {
   const base = 0.9;
   const acc = attacker.accuracy || 0;
@@ -259,7 +253,6 @@ function computeElementMultiplier(attackerElement, defenderElement) {
   if (!row) return 1;
 
   const val = row[defenderElement];
-
   if (val == null) return 1;
 
   let mult = 1 + val;
@@ -273,13 +266,11 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
 
   let dmg = baseDamage;
 
-  // Elemental interaction
   if (attacker && attacker.element && defender.element) {
     const elemMult = computeElementMultiplier(attacker.element, defender.element);
     dmg = Math.floor(dmg * elemMult);
   }
 
-  // Weather interaction
   if (attacker) {
     const weatherMult = getWeatherDamageMultiplier(attacker, weatherKey);
     dmg = Math.floor(dmg * weatherMult);
@@ -288,7 +279,7 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
   if (dmg < 0) dmg = 0;
 
   const def = defender.def || 0;
-  const k = 0.015; // global tuning constant
+  const k = 0.015;
 
   const mitigated = Math.max(1, Math.floor(dmg * Math.exp(-k * def)));
 
@@ -303,7 +294,6 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
     window.showPopup("playerPanel", `-${finalDmg}`, "damage");
   }
 
-  // Ultimate charge gain
   if (attacker && attacker.isPlayer) {
     attacker.ultimateCharge = Math.min(
       attacker.ultimateChargeRequired || 100,
@@ -327,7 +317,7 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
 }
 
 /****************************************************
- * POSITION / TARGETING HELPERS (MODEL 3 SCAFFOLD)
+ * POSITION / TARGETING HELPERS (MODEL 3)
  ****************************************************/
 
 function normalizeEnemies(enemiesOrSingle) {
@@ -348,7 +338,6 @@ function pickPrimaryEnemy(enemies, action) {
   const living = getLivingEnemies(enemies);
   if (!living.length) return null;
 
-  // Target by explicit index or id if provided
   if (action && typeof action.targetIndex === "number") {
     const e = enemies[action.targetIndex];
     if (e && e.hpCurrent > 0) return e;
@@ -358,12 +347,10 @@ function pickPrimaryEnemy(enemies, action) {
     if (e) return e;
   }
 
-  // Fallback: first living enemy
   return living[0];
 }
 
 function assignEnemyPositions(enemies, context) {
-  // Simple front-row grid for now: row 0, col = index
   context.grid.enemyRows = [];
   const frontRow = [];
   enemies.forEach((e, idx) => {
@@ -394,7 +381,6 @@ function getEnemiesInSameColumn(enemies, primary) {
  ****************************************************/
 
 function getAbilityShape(ability) {
-  // Future-proof: read from definitions if present
   const shape =
     ability.targetShape ||
     ability.areaShape ||
@@ -411,7 +397,6 @@ function getAbilityShape(ability) {
   if (tags.includes("cone")) return "cone";
   if (tags.includes("cleave")) return "cleave";
 
-  // Default: single-target
   return "single";
 }
 
@@ -423,23 +408,19 @@ function getAbilityTargets(attacker, enemies, primaryTarget, ability) {
 
   switch (shape) {
     case "aoe":
-      // All living enemies
       return living;
 
     case "cleave": {
-      // Primary + adjacent
       const adj = getAdjacentEnemies(enemies, primaryTarget);
       return [primaryTarget, ...adj];
     }
 
     case "line": {
-      // All enemies in same column as primary
       const colEnemies = getEnemiesInSameColumn(enemies, primaryTarget);
       return colEnemies.length ? colEnemies : [primaryTarget];
     }
 
     case "cone": {
-      // Primary + adjacent (front-row cone for now)
       const adj = getAdjacentEnemies(enemies, primaryTarget);
       return [primaryTarget, ...adj];
     }
@@ -450,8 +431,8 @@ function getAbilityTargets(attacker, enemies, primaryTarget, ability) {
   }
 }
 
+// Backward-compatible single-target wrapper
 export function resolveAbilityUse(attacker, defender, ability, context, logs) {
-  // Backward-compatible single-target version (used by enemy AI)
   return resolveAbilityUseMulti(attacker, [defender], ability, defender, context, logs);
 }
 
@@ -471,26 +452,24 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
   const isUlt = ability.isUltimate;
   const cost = isUlt ? 0 : (ability.manaCost || ability.mpCost || 0);
 
-  if (!isUlt) {
-    attacker.manaCurrent = Math.max(0, attacker.manaCurrent - cost);
-    attacker.mana = attacker.manaCurrent;
-  }
-
+  // Uniform MP read
   const currentMP =
     attacker.manaCurrent ??
     attacker.mana ??
     attacker.mp ??
     0;
 
-  if (currentMP < cost) {
+  if (!isUlt && currentMP < cost) {
     logs.push(`${attacker.name} does not have enough MP for ${abilityName}.`);
     return;
   }
 
-  // Deduct MP uniformly via manaCurrent
-  const newMP = Math.max(0, currentMP - cost);
-  attacker.manaCurrent = newMP;
-  attacker.mana = newMP;
+  // Deduct MP ONCE, only if not ultimate
+  if (!isUlt && cost > 0) {
+    const newMP = Math.max(0, currentMP - cost);
+    attacker.manaCurrent = newMP;
+    attacker.mana = newMP;
+  }
 
   const targets = getAbilityTargets(attacker, enemies, primaryTarget, ability);
   if (!targets.length) {
@@ -587,7 +566,6 @@ export function runEnemyTurn(enemy, player, context, logs) {
   if (action.type === "basic") {
     resolveBasicAttack(enemy, player, context, logs);
   } else if (action.type === "ability" && action.ability) {
-    // Enemy AI is still single-target vs player for now
     resolveAbilityUse(enemy, player, action.ability, context, logs);
     enemy.lastBossAction = action.ability.key || action.ability.name;
   }
@@ -598,7 +576,7 @@ export function runPlayerAction(player, enemies, action, context, logs) {
   if (cc.stunned) return;
 
   if (action.type === "flee") {
-    const chance = 0.5; // can scale by speed later
+    const chance = 0.5;
     if (Math.random() < chance) {
       logs.push(`${player.name} successfully fled!`);
       context.fled = true;
@@ -634,11 +612,9 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   const enemies = normalizeEnemies(enemyOrEnemies);
   assignEnemyPositions(enemies, context);
 
-  // Tick DOT/HOT on all entities
   tickStatusEffects(player, context, logs);
   enemies.forEach(e => tickStatusEffects(e, context, logs));
 
-  // Build initiative order: player + all enemies
   const actors = [player, ...enemies].filter(a => a && a.hpCurrent > 0);
   actors.sort((a, b) => (b.speed || 0) - (a.speed || 0));
 
@@ -650,7 +626,6 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
     if (actor === player) {
       runPlayerAction(player, enemies, playerAction, context, logs);
     } else {
-      // Enemy turn
       if (actor.hpCurrent > 0) {
         runEnemyTurn(actor, player, context, logs);
       }
@@ -670,19 +645,17 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
     }
   }
 
-  // Cooldowns
   tickCooldowns(player);
   enemies.forEach(e => tickCooldowns(e));
 
   context.turn += 1;
 
-  // Backward compatibility: expose a primary enemy
   const primaryEnemy = getLivingEnemies(enemies)[0] || enemies[0] || null;
 
   return {
     player,
-    enemy: primaryEnemy,   // for existing single-enemy callers
-    enemies,               // full array for new multi-enemy UI
+    enemy: primaryEnemy,
+    enemies,
     context,
     logs
   };
