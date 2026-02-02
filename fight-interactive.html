@@ -1078,9 +1078,6 @@
       if (typeof combatState.manaCurrent === "number") {
         real.manaCurrent = combatState.manaCurrent;
       }
-      if (typeof combatState.mana === "number") {
-        real.mana = combatState.mana;
-      }
   
       real.manaMax = combatState.manaMax ?? real.manaMax;
   
@@ -1109,15 +1106,7 @@
         p.hpCurrent = Math.min(p.hpCurrent, p.hpMax);
       }
     
-      if (typeof p.manaMax !== "number") p.manaMax = 10;
-    
-      if (p.mana === undefined || p.mana === null) {
-        p.mana = p.manaMax;
-      } else {
-        p.mana = Math.min(p.mana, p.manaMax);
-      }
-  
-      // keep manaCurrent in sync with mana if missing
+      // keep manaCurrent in sync
       if (p.manaCurrent === undefined || p.manaCurrent === null) {
         p.manaCurrent = p.mana;
       } else {
@@ -1187,7 +1176,6 @@
   
       const baseMana =
         raw.manaCurrent ??
-        raw.mana ??
         manaMax;
   
       return {
@@ -1324,7 +1312,7 @@
       updateManaBar(
         "playerManaFill",
         "playerManaText",
-        p.manaCurrent ?? p.mana ?? 0,
+        p.manaCurrent ?? 0,
         p.manaMax
       );
       updateUltimateBar(p);
@@ -1620,7 +1608,7 @@
   
       latest.hpCurrent = combat.playerState.hpCurrent;
       latest.hpMax = combat.playerState.hpMax;
-      latest.mana = combat.playerState.manaCurrent;
+      latest.manaCurrent = combat.playerState.manaCurrent;
       latest.manaMax = combat.playerState.manaMax;
   
       PlayerStorage.save(username, latest);
@@ -1851,7 +1839,7 @@
         btn.className = "btn ability-btn";
     
         const cd = p.cooldowns?.[a.key] || 0;
-        const mp = p.mana ?? p.manaCurrent ?? 0;
+        const mp = p.manaCurrent ?? 0;
         const cost = a.manaCost || a.mpCost || 0;
     
         // Button label
