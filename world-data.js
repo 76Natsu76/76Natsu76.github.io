@@ -15,10 +15,6 @@ export const WORLD_DATA = {
   },
 
   regions: {
-    /* =========================
-       TIER 1 (Lv 1–20)
-    ========================== */
-
     forest: {
       key: "forest",
       name: "Whispering Forest",
