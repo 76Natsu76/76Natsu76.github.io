@@ -1009,26 +1009,6 @@
     </button>
   </div>
 </div>
-  <script>
-    window.showPopup = function(panelId, text, type) {
-      const panel = document.getElementById(panelId);
-      if (!panel) return;
-    
-      const div = document.createElement("div");
-      div.className = "popup " + type;
-      div.textContent = text;
-    
-      panel.appendChild(div);
-    
-      setTimeout(() => {
-        div.style.opacity = "0";
-        div.style.transform = "translateY(-20px)";
-      }, 10);
-    
-      setTimeout(() => div.remove(), 1000);
-    };
-  </script>
-  
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { EncounterEngine } from "./encounters.js";
@@ -1049,31 +1029,35 @@
     import { handleBossDefeat } from "./world-boss-progression.js";
     import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
     import { SUBRACE_ABILITY_DEFINITIONS } from "./subrace-ability-definitions.js";
-
+  
+    /****************************************************
+     * REGEN (TIME-BASED, NO CHEESE)
+     ****************************************************/
+  
     function applyRegen(player) {
       if (!player) return player;
-    
+  
       const now = Date.now();
       const last = player.lastRegenTick || now;
-    
+  
       const minutes = (now - last) / 60000;
       if (minutes <= 0) return player;
-    
+  
       const hpPerMin = player.hpRegenRate ?? 6;
       const mpPerMin = player.mpRegenRate ?? 0.5;
-    
+  
       const hpGain = Math.floor(minutes * hpPerMin);
       const mpGain = Math.floor(minutes * mpPerMin);
-    
+  
       player.hpCurrent = Math.min(player.hpMax, Math.round(player.hpCurrent + hpGain));
       player.manaCurrent = Math.min(player.manaMax, Math.round(player.manaCurrent + mpGain));
       player.mana = player.manaCurrent;
-    
+  
       player.lastRegenTick = now;
-    
+  
       return player;
     }
-
+  
     /****************************************************
      * ABILITY HYDRATION
      ****************************************************/
@@ -1135,7 +1119,7 @@
   
     await requireSession();
     const { local, remote, conflict, username } = window.syncState;
-    
+  
     let latest = PlayerStorage.load(username);
     latest = applyRegen(latest);
     PlayerStorage.save(username, latest);
@@ -1152,7 +1136,6 @@
   
       if (typeof p.manaMax !== "number") p.manaMax = 10;
       if (p.manaCurrent === undefined || p.manaCurrent === null) {
-        // respect existing mana if present
         const base = p.mana ?? p.mp ?? p.manaMax;
         p.manaCurrent = Math.min(base, p.manaMax);
       } else {
@@ -1214,13 +1197,12 @@
     function resolvePlayer(raw) {
       const stats = raw.stats || {};
       const derived = raw.derived || {};
-    
+  
       const hpMax = raw.hpMax ?? stats.hp ?? 1;
       const manaMax = raw.manaMax ?? stats.manaMax ?? 0;
-    
-      // Canonical: only use manaCurrent
+  
       const baseMana = raw.manaCurrent ?? manaMax;
-    
+  
       return {
         id: raw.username,
         name: raw.username,
@@ -1228,46 +1210,45 @@
         profession: raw.profession,
         race: raw.race,
         subrace: raw.subrace,
-    
+  
         hpCurrent: Math.min(raw.hpCurrent ?? hpMax, hpMax),
         hpMax,
-    
+  
         manaCurrent: Math.min(baseMana, manaMax),
         mana: Math.min(baseMana, manaMax),
         manaMax,
-    
+  
         atk: stats.atk ?? 1,
         def: stats.def ?? 0,
         speed: stats.speed ?? 1,
-    
+  
         critChance: derived.critChance ?? raw.crit ?? 0.05,
         critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
-    
+  
         element: raw.element || null,
         statusEffects: raw.statusEffects || [],
         cooldowns: raw.cooldowns || {},
         pendingAction: null,
-    
+  
         abilities: raw.abilities || [],
         ultimate: raw.ultimate || null,
-    
+  
         // Always reset ULT at combat start
         ultimateCharge: 0,
         ultimateChargeRequired:
           raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
-    
+  
         equipment: raw.equipment || {},
         talentTree: raw.talentTree || {},
         talentPoints: raw.talentPoints || 0,
-    
+  
         inventory: raw.inventory || [],
-    
+  
         isPlayer: true,
         lastAction: null,
         lastActionType: null
       };
     }
-
   
     function resolveEnemyFromEncounter(encEnemy) {
       const hpMax = encEnemy.hpMax ?? encEnemy.hp ?? 1;
@@ -1313,7 +1294,6 @@
     const abilityPanel = document.getElementById("abilityPanel");
     const itemModal = document.getElementById("itemModal");
   
-    // dynamic enemy list container
     let enemyListContainer = document.getElementById("enemyList");
     if (!enemyListContainer) {
       enemyListContainer = document.createElement("div");
@@ -1473,12 +1453,12 @@
       console.log("[fight] beginFight called");
   
       let latest = PlayerStorage.load(username);
+      latest = ensureVitals(latest);
       PlayerStorage.save(username, latest);
-
-      const baseCombatPlayer = resolvePlayer(ensureVitals(latest));
+  
+      const baseCombatPlayer = resolvePlayer(latest);
       const playerState = hydrateAbilities(structuredClone(baseCombatPlayer));
   
-      // enemies (for now, encounter.enemy is single; future: array)
       const enemies = normalizeEnemiesFromEncounter(encounter.enemy);
   
       const context = buildCombatContext(
@@ -1529,23 +1509,22 @@
       const logs = [];
       const result = engineRunRound(
         combat.playerState,
-        combat.enemyState, // by default is multiple but can be singular
+        combat.enemies,        // pass full enemy array
         combat.context,
         playerAction,
         logs
       );
   
       combat.playerState = result.player;
-      combat.enemyState = result.enemies || (result.enemy ? [result.enemy] : []);
+      combat.enemies = result.enemies || (result.enemy ? [result.enemy] : []);
       combat.context = result.context;
   
       let real = PlayerStorage.load(username) || rawPlayer;
       real = mergeCombatStateIntoPlayer(real, combat.playerState);
+      real.lastRegenTick = Date.now();          // update tick BEFORE saving
       PlayerStorage.save(username, real);
       await api.savePlayer(username, real);
-      real.lastRegenTick = Date.now();
-      PlayerStorage.save(username, real);
-
+  
       renderLogs(result.logs || logs);
       renderPanels();
   
@@ -1558,7 +1537,6 @@
         }
   
         if (autoBattle) {
-          // show panel so player can toggle auto off between rounds
           showActionPanel();
           if (!autoLoopHandle) {
             autoLoopHandle = setTimeout(autoLoop, 1000);
@@ -1574,7 +1552,7 @@
       const p = PlayerStorage.load(username);
       const run = combat.context.dungeonRun || null;
       const isEndless = run ? DungeonEngine.isEndless(run) : false;
-
+  
       persistVitalsAfterCombat();
   
       if (outcome === "defeat") {
@@ -1661,7 +1639,6 @@
       } else {
         const rewards = generateRewards(
           combat.playerState,
-          // use first enemy as reference for XP/gold
           combat.enemies[0],
           combat.context,
           outcome
@@ -1682,17 +1659,16 @@
     function persistVitalsAfterCombat() {
       const latest = PlayerStorage.load(username);
       if (!latest || !combat || !combat.playerState) return;
-    
-      latest.hpCurrent = combat.playerState.hpCurrent;    
+  
+      latest.hpCurrent = combat.playerState.hpCurrent;
       latest.manaCurrent = combat.playerState.manaCurrent;
-      latest.mana = combat.playerState.mana;    
-      latest.ultimateCharge = combat.playerState.ultimateCharge;    
+      latest.mana = combat.playerState.mana;
+      latest.ultimateCharge = combat.playerState.ultimateCharge;
       latest.lastRegenTick = Date.now();
-    
+  
       PlayerStorage.save(username, latest);
       api.savePlayer(username, latest);
     }
-
   
     function generateRewards(player, enemy, context, outcome) {
       if (outcome !== "victory") {
@@ -1906,6 +1882,7 @@
   
       const inv = combat.playerState.inventory || [];
   
+      // Only items usable in battle (for now: consumables)
       const usable = inv.filter(item => item.type === "consumable");
   
       if (!usable.length) {
@@ -2243,14 +2220,13 @@
         ? "dungeon-room.html"
         : "world-map.html";
     }
-    
+  
     function goToMap() {
       persistVitalsAfterCombat();
       EncounterEngine.clear();
       combat = null;
       window.location.href = "world-map.html";
     }
-
   
     /****************************************************
      * DEATH MODAL + RESPAWN
@@ -2301,5 +2277,6 @@
     window.continueExploring = continueExploring;
     window.goToMap = goToMap;
   </script>
+
 </body>
 </html>
