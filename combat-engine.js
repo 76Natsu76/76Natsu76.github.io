@@ -8,10 +8,7 @@ import {
   WEATHER_COMBAT_LOGS,
   WEATHER_COMBAT_FLAVOR
 } from "./weatherTable.js";
-import {
-  computeHitData,
-  computeFinalDamage
-} from "./ability-resolver.js";
+import { computeHitData, computeFinalDamage } from "./ability-resolver.js";
 
 /****************************************************
  * CORE CONTEXT
