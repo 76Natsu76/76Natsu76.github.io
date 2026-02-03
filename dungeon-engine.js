@@ -1,10 +1,11 @@
+// dungeon-engine.js
 import { DUNGEONS } from "./dungeons.js";
 import { DUNGEON_EVENTS } from "./dungeon-events.js";
 import { DUNGEON_LOOT_TABLES } from "./dungeon-loot-tables.js";
 
 import { rollLootTable } from "./loot-tables.js";
 import { resolveEnemy } from "./resolveEnemy.js";
-import { PlayerStorage } from "./player-storage.js";   // <-- REQUIRED
+import { PlayerStorage } from "./player-storage.js";
 
 export const DungeonEngine = {
   // --- RUN LIFECYCLE --- //
@@ -47,7 +48,7 @@ export const DungeonEngine = {
     return dungeon.floors[run.currentFloor - 1];
   },
 
-  //  --- ROOM GENERATION --- //
+  // --- ROOM GENERATION --- //
   generateRoom(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
 
@@ -59,6 +60,7 @@ export const DungeonEngine = {
     const roll = Math.random();
 
     if (roll < 0.6) {
+      // floor.encounterTable can describe multi-enemy packs
       return { type: "encounter", enemies: floor.encounterTable };
     }
     if (roll < 0.8) {
@@ -81,6 +83,7 @@ export const DungeonEngine = {
 
     const roll = Math.random();
     if (roll < 0.6) {
+      // baseEncounterTable can describe multi-enemy packs
       return { type: "encounter", enemies: dungeon.baseEncounterTable };
     }
     if (roll < 0.8) {
@@ -89,7 +92,58 @@ export const DungeonEngine = {
     return { type: "treasure", lootTable: dungeon.baseLootTable };
   },
 
-  //  --- EVENTS --- //
+  // --- ENCOUNTER ENEMY RESOLUTION (MULTI-ENEMY) --- //
+  /**
+   * Given a dungeon run and an "enemies" descriptor from generateRoom,
+   * build an array of resolved enemy instances.
+   *
+   * Supports:
+   * - array of enemy keys: ["goblin_scout", "goblin_scout", "goblin_shaman"]
+   * - array of objects: [{ key, tier, count }, ...]
+   * - single key or single object
+   */
+  buildEncounterEnemies(run, enemiesDescriptor) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+    const regionKey = dungeon.regionKey || dungeon.region || "forest";
+
+    const result = [];
+
+    const addResolved = (enemyKey, tier = 1, count = 1) => {
+      for (let i = 0; i < count; i++) {
+        const enemy = resolveEnemy(enemyKey, regionKey, tier);
+        if (this.isEndless(run)) {
+          this.applyEndlessScaling(enemy, run);
+        } else if (run.enemyScaling && run.enemyScaling !== 1.0) {
+          this.applyScaling(enemy, run.enemyScaling);
+        }
+        enemy.isDungeonEnemy = true;
+        enemy.dungeonKey = run.dungeonKey;
+        result.push(enemy);
+      }
+    };
+
+    const processEntry = entry => {
+      if (!entry) return;
+      if (typeof entry === "string") {
+        addResolved(entry, 1, 1);
+      } else if (typeof entry === "object") {
+        const key = entry.key;
+        const tier = entry.tier || 1;
+        const count = entry.count || 1;
+        addResolved(key, tier, count);
+      }
+    };
+
+    if (Array.isArray(enemiesDescriptor)) {
+      enemiesDescriptor.forEach(processEntry);
+    } else {
+      processEntry(enemiesDescriptor);
+    }
+
+    return result;
+  },
+
+  // --- EVENTS --- //
   resolveEvent(eventKey, player, run, logs) {
     const event = DUNGEON_EVENTS[eventKey];
     if (!event) return;
@@ -138,7 +192,7 @@ export const DungeonEngine = {
     }
   },
 
-  //  --- TREASURE --- //
+  // --- TREASURE --- //
   resolveTreasure(lootTableKey, run, logs) {
     const table = DUNGEON_LOOT_TABLES[lootTableKey];
     if (!table) return null;
@@ -156,27 +210,40 @@ export const DungeonEngine = {
     return loot;
   },
 
-  //  --- BOSS --- //
-  generateBoss(run) {
+  // --- BOSS --- //
+  generateBoss(run, tierOverride = null) {
     const dungeon = DUNGEONS[run.dungeonKey];
 
     if (dungeon.type === "endless") {
-      const tier = run.nextBossTier || "mini";
+      const tier = tierOverride || run.nextBossTier || "mini";
       const key =
         tier === "mega" ? dungeon.megaBossEnemyKey : dungeon.bossEnemyKey;
-      const enemy = resolveEnemy(key);
+
+      const enemy = resolveEnemy(key, dungeon.regionKey || dungeon.region || "forest", 1);
       enemy.isDungeonBoss = true;
       enemy.dungeonKey = run.dungeonKey;
+
+      if (this.isEndless(run)) {
+        this.applyEndlessScaling(enemy, run);
+      } else if (run.enemyScaling && run.enemyScaling !== 1.0) {
+        this.applyScaling(enemy, run.enemyScaling);
+      }
+
       return enemy;
     }
 
-    const enemy = resolveEnemy(dungeon.boss.enemyKey);
+    const enemy = resolveEnemy(dungeon.boss.enemyKey, dungeon.regionKey || dungeon.region || "forest", dungeon.boss.tier || 1);
     enemy.isDungeonBoss = true;
     enemy.dungeonKey = run.dungeonKey;
+
+    if (run.enemyScaling && run.enemyScaling !== 1.0) {
+      this.applyScaling(enemy, run.enemyScaling);
+    }
+
     return enemy;
   },
 
-  //  --- FLOOR / DUNGEON PROGRESSION --- //
+  // --- FLOOR / DUNGEON PROGRESSION --- //
   completeFloor(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
 
@@ -213,11 +280,29 @@ export const DungeonEngine = {
 
     if (typeof enemy.hp === "number") {
       enemy.hp = Math.floor(enemy.hp * hpMult);
+      enemy.hpMax = Math.floor((enemy.hpMax || enemy.hp) * hpMult);
+    }
+    if (typeof enemy.atk === "number") {
+      enemy.atk = Math.floor(enemy.atk * atkMult);
     }
     if (typeof enemy.attack === "number") {
       enemy.attack = Math.floor(enemy.attack * atkMult);
     }
 
+    return enemy;
+  },
+
+  applyScaling(enemy, mult) {
+    if (typeof enemy.hp === "number") {
+      enemy.hp = Math.floor(enemy.hp * mult);
+      enemy.hpMax = Math.floor((enemy.hpMax || enemy.hp) * mult);
+    }
+    if (typeof enemy.atk === "number") {
+      enemy.atk = Math.floor(enemy.atk * mult);
+    }
+    if (typeof enemy.attack === "number") {
+      enemy.attack = Math.floor(enemy.attack * mult);
+    }
     return enemy;
   },
 
