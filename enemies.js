@@ -548,11 +548,11 @@ export const ENEMIES = {
     },
     "activeEffects": {}
   },
-  "archer rogue": {
-    "key": "archer rogue",
-    "name": "archer rogue",
+  "archer_rogue": {
+    "key": "archer_rogue",
+    "name": "archer_rogue",
     "profession": "archer",
-    "family": "archer",
+    "family": "humanoid",
     "element": "wind",
     "rarity": "common",
     "level": 7,
@@ -743,7 +743,7 @@ export const ENEMIES = {
     "key": "skeleton_archer",
     "name": "skeleton_archer",
     "profession": "archer",
-    "family": "archer",
+    "family": "humanoid",
     "element": "dark",
     "rarity": "common",
     "level": 15,
