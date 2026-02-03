@@ -103,7 +103,7 @@ export const ENEMIES = {
     "key": "stray_hound",
     "name": "stray_hound",
     "profession": "beast",
-    "family": "dog",
+    "family": "beast",
     "element": "normal",
     "rarity": "common",
     "level": 2,
