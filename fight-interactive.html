@@ -1458,7 +1458,7 @@
       const baseCombatPlayer = resolvePlayer(latest);
       const playerState = hydrateAbilities(structuredClone(baseCombatPlayer));
   
-      const enemies = normalizeEnemiesFromEncounter(encounter.enemy);
+      const enemies = normalizeEnemiesFromEncounter(encounter.enemies || encounter.enemy);
   
       const context = buildCombatContext(
         encounter.region,
