@@ -5,7 +5,7 @@ import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
-
+import { ENEMY_GROUP_RULES } from "./enemy-group-rules.js";
 import { ENEMY_REGIONS } from "./enemy-regions.js";
 import { ENEMY_TAGS } from "./enemy-tags.js";
 
@@ -57,28 +57,32 @@ function generate(regionKey, username, enemyOverride = null) {
   // FAMILY
   const family = pickWeightedObject(biome.encounterWeights);
 
-  // PICK ENEMY TEMPLATE
-  const template = enemyOverride
-    ? EnemyRegistry.buildEnemyTemplate(enemyOverride)
-    : pickEnemyTemplate(regionKey, biomeKey, family, rarity);
-
-  if (!template) {
-    throw new Error(
-      `No enemy template found for family=${family}, rarity=${rarity}, region=${regionKey}, biome=${biomeKey}`
+  // GROUP SIZE
+  const groupRule = ENEMY_GROUP_RULES[family] || ENEMY_GROUP_RULES.default;
+  const count = Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) + groupRule.min;
+  
+  // BUILD ENEMY GROUP
+  const enemies = [];
+  for (let i = 0; i < count; i++) {
+    const template = enemyOverride
+      ? EnemyRegistry.buildEnemyTemplate(enemyOverride)
+      : pickEnemyTemplate(regionKey, biomeKey, family, rarity);
+  
+    if (!template) continue;
+  
+    const instance = buildEnemyInstance(
+      template,
+      region,
+      biome,
+      rarity,
+      weather,
+      event,
+      hazard,
+      variant
     );
+  
+    enemies.push(instance);
   }
-
-  // BUILD ENEMY INSTANCE
-  const enemy = buildEnemyInstance(
-    template,
-    region,
-    biome,
-    rarity,
-    weather,
-    event,
-    hazard,
-    variant
-  );
 
   const encounter = {
     region: regionKey,
@@ -89,7 +93,7 @@ function generate(regionKey, username, enemyOverride = null) {
     variant,
     rarity,
     flavor: pickFromArray(biome.flavor) || region.flavor || "",
-    enemy,
+    enemies,
     debug: {
       family,
       rarity,
