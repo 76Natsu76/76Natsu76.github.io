@@ -958,7 +958,7 @@ export const ENEMIES = {
     "key": "monk_disciple",
     "name": "monk_disciple",
     "profession": "monk",
-    "family": "monk",
+    "family": "humanoid",
     "element": "light",
     "rarity": "common",
     "level": 28,
