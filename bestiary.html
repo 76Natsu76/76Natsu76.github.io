@@ -19,6 +19,7 @@
 
     #filters {
       display: flex;
+      flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 20px;
     }
@@ -63,6 +64,99 @@
       margin-right: 4px;
       font-size: 12px;
     }
+
+    .ability-pill {
+      display: inline-block;
+      padding: 2px 6px;
+      background: #151826;
+      border: 1px solid #333;
+      border-radius: 4px;
+      margin-right: 4px;
+      font-size: 12px;
+      color: #c5e1ff;
+    }
+
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .pagination button {
+      padding: 4px 8px;
+      background: #1a1d24;
+      border: 1px solid #333;
+      color: #eee;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .btn {
+      padding: 6px 10px;
+      background: #1a1d24;
+      border: 1px solid #333;
+      color: #eee;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #222633;
+    }
+
+    /* Modal */
+    #statsModalOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    #statsModal {
+      background: #11141c;
+      border: 1px solid #262a36;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 420px;
+      width: 100%;
+      color: #e8e8e8;
+    }
+
+    #statsModal h2 {
+      margin-top: 0;
+      color: #9af7ff;
+    }
+
+    #statsModal .row {
+      margin-bottom: 6px;
+    }
+
+    #statsModalClose {
+      float: right;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    #statsModalClose:hover {
+      color: #fff;
+    }
   </style>
 </head>
 
@@ -95,17 +189,53 @@
       <option>Ancient</option>
     </select>
 
+    <select id="sortFilter">
+      <option value="name_asc">Name (A–Z)</option>
+      <option value="name_desc">Name (Z–A)</option>
+      <option value="level_asc">Level (Low→High)</option>
+      <option value="level_desc">Level (High→Low)</option>
+      <option value="rarity_asc">Rarity (Low→High)</option>
+      <option value="rarity_desc">Rarity (High→Low)</option>
+    </select>
+
     <input id="searchBox" placeholder="Search enemies...">
+  </div>
+
+  <div class="controls-row">
+    <div class="pagination">
+      <button id="prevPageBtn">&lt; Prev</button>
+      <span id="pageInfo"></span>
+      <button id="nextPageBtn">Next &gt;</button>
+    </div>
+    <button class="btn" onclick="goBack()">Back</button>
   </div>
 
   <div id="bestiaryContainer">Loading...</div>
 
-  <button class="btn" onclick="goBack()">Back</button>
+  <!-- Stats Modal -->
+  <div id="statsModalOverlay">
+    <div id="statsModal">
+      <span id="statsModalClose">✕</span>
+      <h2 id="statsName"></h2>
+      <div class="row"><strong>Family:</strong> <span id="statsFamily"></span></div>
+      <div class="row"><strong>Rarity:</strong> <span id="statsRarity"></span></div>
+      <div class="row"><strong>Level:</strong> <span id="statsLevel"></span></div>
+      <div class="row"><strong>Element:</strong> <span id="statsElement"></span></div>
+      <div class="row"><strong>Base HP:</strong> <span id="statsHP"></span></div>
+      <div class="row"><strong>Base ATK:</strong> <span id="statsATK"></span></div>
+      <div class="row"><strong>Base DEF:</strong> <span id="statsDEF"></span></div>
+      <div class="row"><strong>Tags:</strong> <span id="statsTags"></span></div>
+      <div class="row"><strong>Abilities:</strong> <span id="statsAbilities"></span></div>
+      <div class="row"><strong>Ultimate:</strong> <span id="statsUltimate"></span></div>
+      <div class="row" style="margin-top:10px;">
+        <strong>Flavor:</strong>
+        <div id="statsFlavor" style="margin-top:4px;"></div>
+      </div>
+    </div>
+  </div>
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
-    await requireSession();
-
     import { WORLD_DATA } from "./world-data.js";
     import { BIOMES } from "./biomes.js";
     import { REGION_TO_BIOME } from "./region-to-biome.js";
@@ -113,21 +243,31 @@
     import { ENEMY_REGIONS } from "./enemy-regions.js";
     import { ENEMY_TAGS } from "./enemy-tags.js";
 
+    const session = requireSession();
+    if (!session) {
+      window.location.href = "login.html";
+    }
+
     const container = document.getElementById("bestiaryContainer");
 
-    // Convert registry object → array
-    const ALL_ENEMIES = Object.values(EnemyRegistry.enemies);
-
-    // ------------------------------------------------------------
-    // INITIALIZE FILTERS
-    // ------------------------------------------------------------
     const regionFilter = document.getElementById("regionFilter");
     const biomeFilter = document.getElementById("biomeFilter");
     const familyFilter = document.getElementById("familyFilter");
     const rarityFilter = document.getElementById("rarityFilter");
+    const sortFilter = document.getElementById("sortFilter");
     const searchBox = document.getElementById("searchBox");
 
-    // Regions
+    const prevPageBtn = document.getElementById("prevPageBtn");
+    const nextPageBtn = document.getElementById("nextPageBtn");
+    const pageInfo = document.getElementById("pageInfo");
+
+    const PAGE_SIZE = 20;
+    let currentPage = 1;
+    let filteredList = [];
+
+    // ------------------------------------------------------------
+    // INITIALIZE FILTER OPTIONS
+    // ------------------------------------------------------------
     for (const key in WORLD_DATA.regions) {
       const opt = document.createElement("option");
       opt.value = key;
@@ -135,7 +275,6 @@
       regionFilter.appendChild(opt);
     }
 
-    // Biomes
     for (const key in BIOMES) {
       const opt = document.createElement("option");
       opt.value = key;
@@ -143,73 +282,154 @@
       biomeFilter.appendChild(opt);
     }
 
-    // Families
-    const families = new Set(ALL_ENEMIES.map(e => e.family));
-    families.forEach(f => {
+    const familyKeys = Object.keys(EnemyRegistry.families || {});
+    familyKeys.forEach(fKey => {
+      const fam = EnemyRegistry.families[fKey];
       const opt = document.createElement("option");
-      opt.value = f;
-      opt.textContent = format(f);
+      opt.value = fam.key || fKey;
+      opt.textContent = format(fam.name || fam.key || fKey);
       familyFilter.appendChild(opt);
     });
 
     // ------------------------------------------------------------
-    // RENDER BESTIARY
+    // CORE RENDER PIPELINE
     // ------------------------------------------------------------
-    function render() {
+    function computeFilteredList() {
       const regionVal = regionFilter.value;
       const biomeVal = biomeFilter.value;
       const familyVal = familyFilter.value;
-      const rarityVal = rarityFilter.value.toLowerCase();
-      const searchVal = searchBox.value.toLowerCase();
+      const rarityVal = (rarityFilter.value || "").toLowerCase();
+      const searchVal = (searchBox.value || "").toLowerCase();
 
       const out = [];
 
-      for (const e of ALL_ENEMIES) {
-        // Region filter
+      for (const raw of EnemyRegistry.enemies) {
+        // Region restriction
         if (regionVal) {
-          const allowed = ENEMY_REGIONS[e.key];
-          if (!allowed || !allowed.includes(regionVal)) continue;
+          const allowedRegions = ENEMY_REGIONS[raw.key] || [];
+          if (!allowedRegions.includes(regionVal)) continue;
         }
 
-        // Biome filter
+        // Biome restriction via tags
         if (biomeVal) {
-          const tags = ENEMY_TAGS[e.key] || [];
+          const tags = ENEMY_TAGS[raw.key] || [];
           if (!isEnemyAllowedInBiome(tags, biomeVal)) continue;
         }
 
         // Family filter
-        if (familyVal && e.family !== familyVal) continue;
+        if (familyVal) {
+          const famKey = raw.family || EnemyRegistry.subraceMap[raw.key] || EnemyRegistry.raceMap[raw.key];
+          if (!famKey || famKey !== familyVal) continue;
+        }
 
         // Rarity filter
-        if (rarityVal && e.rarity.toLowerCase() !== rarityVal) continue;
+        if (rarityVal) {
+          if (!raw.rarity || raw.rarity.toLowerCase() !== rarityVal) continue;
+        }
 
         // Search filter
-        if (searchVal && !e.name.toLowerCase().includes(searchVal)) continue;
+        if (searchVal && !raw.name.toLowerCase().includes(searchVal)) continue;
 
-        const template = EnemyRegistry.buildEnemyTemplate(e.key);
+        let template;
+        try {
+          template = EnemyRegistry.buildEnemyTemplate(raw.key);
+        } catch (err) {
+          // If a specific enemy is misconfigured (like missing family),
+          // skip it so the whole bestiary doesn't explode.
+          console.warn("Skipping enemy due to template error:", raw.key, err);
+          continue;
+        }
+
+        out.push({ raw, template });
+      }
+
+      // Sorting
+      const sortVal = sortFilter.value;
+      out.sort((a, b) => {
+        const ta = a.template;
+        const tb = b.template;
+
+        switch (sortVal) {
+          case "name_asc":
+            return ta.name.localeCompare(tb.name);
+          case "name_desc":
+            return tb.name.localeCompare(ta.name);
+          case "level_asc":
+            return (ta.level || 0) - (tb.level || 0);
+          case "level_desc":
+            return (tb.level || 0) - (ta.level || 0);
+          case "rarity_asc":
+            return rarityRank(ta.rarity) - rarityRank(tb.rarity);
+          case "rarity_desc":
+            return rarityRank(tb.rarity) - rarityRank(ta.rarity);
+          default:
+            return ta.name.localeCompare(tb.name);
+        }
+      });
+
+      return out;
+    }
+
+    function render() {
+      filteredList = computeFilteredList();
+
+      const total = filteredList.length;
+      const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const pageItems = filteredList.slice(start, end);
+
+      const out = [];
+
+      for (const { raw, template } of pageItems) {
+        const allowedRegions = ENEMY_REGIONS[raw.key] || [];
+        const tags = ENEMY_TAGS[raw.key] || [];
+
+        const abilityPreview = (template.abilities || [])
+          .slice(0, 3)
+          .map(a => `<span class="ability-pill">${escapeHtml(a.name || a.key)}</span>`)
+          .join("");
+
+        const hasAbilities = (template.abilities || []).length > 0;
 
         out.push(`
           <div class="enemy-card">
-            <img src="/assets/enemies/${template.key}.png">
+            <img src="/assets/enemies/${template.key}.png" alt="${escapeHtml(template.name)}">
 
             <div class="enemy-info">
-              <h2>${template.name}</h2>
+              <h2>${escapeHtml(template.name)}</h2>
 
               <div><strong>Family:</strong> ${format(template.family)}</div>
-              <div><strong>Rarity:</strong> ${format(template.rarity)}</div>
+              <div><strong>Rarity:</strong> ${format(template.rarity || "Unknown")}</div>
+              <div><strong>Level:</strong> ${template.level ?? "?"}</div>
+              <div><strong>Element:</strong> ${format(template.element || "neutral")}</div>
 
               <div><strong>Allowed Regions:</strong> ${
-                (ENEMY_REGIONS[e.key] || []).map(format).join(", ") || "Any"
+                allowedRegions.length
+                  ? allowedRegions.map(format).join(", ")
+                  : "Any"
               }</div>
 
               <div><strong>Tags:</strong> ${
-                (ENEMY_TAGS[e.key] || [])
-                  .map(t => `<span class="tag">${format(t)}</span>`)
-                  .join("") || "None"
+                tags.length
+                  ? tags.map(t => `<span class="tag">${format(t)}</span>`).join("")
+                  : "None"
               }</div>
+
+              ${
+                hasAbilities
+                  ? `<div style="margin-top:6px;"><strong>Abilities:</strong> ${abilityPreview}</div>`
+                  : `<div style="margin-top:6px;"><strong>Abilities:</strong> None</div>`
+              }
 
               <div class="event" style="margin-top:10px;">
                 ${template.flavor || "No flavor text."}
+              </div>
+
+              <div style="margin-top:10px;">
+                <button class="btn" onclick="openStatsModal('${template.key}')">View Stats</button>
               </div>
             </div>
           </div>
@@ -217,49 +437,183 @@
       }
 
       container.innerHTML = out.join("") || "<p>No enemies found.</p>";
+
+      pageInfo.textContent = `Page ${currentPage} / ${Math.max(1, Math.ceil(total / PAGE_SIZE))}`;
+      prevPageBtn.disabled = currentPage <= 1;
+      nextPageBtn.disabled = currentPage >= Math.ceil(total / PAGE_SIZE);
     }
 
+    // ------------------------------------------------------------
+    // BIOME TAG LOGIC
+    // ------------------------------------------------------------
     function isEnemyAllowedInBiome(tags, biomeKey) {
-      if (!tags.length) return true;
+      if (!tags || !tags.length) return true;
 
       if (tags.includes("ice")) {
-        return ["tundra", "frozen-expanse", "crystalline-tundra"].includes(biomeKey);
+        return (
+          biomeKey === "tundra" ||
+          biomeKey === "frozen-expanse" ||
+          biomeKey === "crystalline-tundra"
+        );
       }
 
       if (tags.includes("fire")) {
-        return ["volcano", "molten-crest", "magma"].includes(biomeKey);
+        return (
+          biomeKey === "volcano" ||
+          biomeKey === "molten-crest" ||
+          biomeKey === "magma"
+        );
       }
 
       if (tags.includes("void")) {
-        return ["void", "void-wastes", "void-realm"].includes(biomeKey);
+        return (
+          biomeKey === "void" ||
+          biomeKey === "void-wastes" ||
+          biomeKey === "void-realm"
+        );
       }
 
       if (tags.includes("arcane")) {
-        return ["arcane", "arcane-rift"].includes(biomeKey);
+        return biomeKey === "arcane" || biomeKey === "arcane-rift";
       }
 
       if (tags.includes("astral")) {
-        return ["astral-plane", "astral-nexus"].includes(biomeKey);
+        return biomeKey === "astral-plane" || biomeKey === "astral-nexus";
       }
 
       return true;
     }
 
+    // ------------------------------------------------------------
+    // HELPERS
+    // ------------------------------------------------------------
     function format(str) {
-      return String(str)
+      return String(str || "")
         .replace(/_/g, " ")
         .replace(/-/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
 
+    function rarityRank(r) {
+      if (!r) return 0;
+      const key = r.toLowerCase();
+      const order = [
+        "common",
+        "uncommon",
+        "rare",
+        "epic",
+        "elite",
+        "mythical",
+        "legendary",
+        "ancient"
+      ];
+      const idx = order.indexOf(key);
+      return idx === -1 ? 0 : idx;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
     window.goBack = () => (window.location.href = "world-map.html");
 
-    regionFilter.onchange = render;
-    biomeFilter.onchange = render;
-    familyFilter.onchange = render;
-    rarityFilter.onchange = render;
-    searchBox.oninput = render;
+    // ------------------------------------------------------------
+    // STATS MODAL
+    // ------------------------------------------------------------
+    const statsOverlay = document.getElementById("statsModalOverlay");
+    const statsClose = document.getElementById("statsModalClose");
 
+    const statsName = document.getElementById("statsName");
+    const statsFamily = document.getElementById("statsFamily");
+    const statsRarity = document.getElementById("statsRarity");
+    const statsLevel = document.getElementById("statsLevel");
+    const statsElement = document.getElementById("statsElement");
+    const statsHP = document.getElementById("statsHP");
+    const statsATK = document.getElementById("statsATK");
+    const statsDEF = document.getElementById("statsDEF");
+    const statsTags = document.getElementById("statsTags");
+    const statsAbilities = document.getElementById("statsAbilities");
+    const statsUltimate = document.getElementById("statsUltimate");
+    const statsFlavor = document.getElementById("statsFlavor");
+
+    window.openStatsModal = function(key) {
+      let template;
+      try {
+        template = EnemyRegistry.buildEnemyTemplate(key);
+      } catch (err) {
+        console.error("Failed to build template for stats modal:", key, err);
+        return;
+      }
+
+      statsName.textContent = template.name;
+      statsFamily.textContent = format(template.family);
+      statsRarity.textContent = format(template.rarity || "Unknown");
+      statsLevel.textContent = template.level ?? "?";
+      statsElement.textContent = format(template.element || "neutral");
+      statsHP.textContent = Math.round(template.baseHP ?? 0);
+      statsATK.textContent = Math.round(template.baseATK ?? 0);
+      statsDEF.textContent = Math.round(template.baseDEF ?? 0);
+
+      const rawTags = ENEMY_TAGS[template.key] || [];
+      statsTags.innerHTML = rawTags.length
+        ? rawTags.map(t => `<span class="tag">${format(t)}</span>`).join("")
+        : "None";
+
+      const abilities = template.abilities || [];
+      statsAbilities.innerHTML = abilities.length
+        ? abilities.map(a => `<span class="ability-pill">${escapeHtml(a.name || a.key)}</span>`).join("")
+        : "None";
+
+      statsUltimate.textContent = template.ultimate
+        ? (template.ultimate.name || template.ultimate.key)
+        : "None";
+
+      statsFlavor.textContent = template.flavor || "No flavor text.";
+
+      statsOverlay.style.display = "flex";
+    };
+
+    statsClose.onclick = () => {
+      statsOverlay.style.display = "none";
+    };
+
+    statsOverlay.onclick = (e) => {
+      if (e.target === statsOverlay) {
+        statsOverlay.style.display = "none";
+      }
+    };
+
+    // ------------------------------------------------------------
+    // EVENTS
+    // ------------------------------------------------------------
+    regionFilter.onchange = () => { currentPage = 1; render(); };
+    biomeFilter.onchange = () => { currentPage = 1; render(); };
+    familyFilter.onchange = () => { currentPage = 1; render(); };
+    rarityFilter.onchange = () => { currentPage = 1; render(); };
+    sortFilter.onchange = () => { currentPage = 1; render(); };
+    searchBox.oninput = () => { currentPage = 1; render(); };
+
+    prevPageBtn.onclick = () => {
+      if (currentPage > 1) {
+        currentPage--;
+        render();
+      }
+    };
+
+    nextPageBtn.onclick = () => {
+      const totalPages = Math.max(1, Math.ceil(filteredList.length / PAGE_SIZE));
+      if (currentPage < totalPages) {
+        currentPage++;
+        render();
+      }
+    };
+
+    // Initial render
     render();
   </script>
 
