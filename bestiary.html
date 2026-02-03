@@ -224,7 +224,6 @@
     const biomeFilter = document.getElementById("biomeFilter");
     const familyFilter = document.getElementById("familyFilter");
     const rarityFilter = document.getElementById("rarityFilter");
-    const searchBox = document.getElementById("searchBox");
 
     // --- Dynamic controls: sort + pagination ---
     const filtersBar = document.getElementById("filters");
@@ -242,6 +241,8 @@
     `;
     filtersBar.appendChild(sortSelect);
 
+    const searchBox = document.getElementById("searchBox");
+    
     const paginationBar = document.createElement("div");
     paginationBar.style.marginTop = "12px";
     paginationBar.style.display = "flex";
