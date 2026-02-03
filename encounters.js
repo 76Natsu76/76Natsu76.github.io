@@ -57,6 +57,20 @@ function generate(regionKey, username, enemyOverride = null) {
   // FAMILY
   const family = pickWeightedObject(biome.encounterWeights);
 
+  /*
+  if (event === "world_boss") {
+    return {
+      region: regionKey,
+      biome: biomeKey,
+      weather,
+      event,
+      hazard,
+      variant,
+      rarity,
+      enemies: [buildEnemyInstance(template, ...)]
+    };
+  }*/
+
   // GROUP SIZE
   const groupRule = ENEMY_GROUP_RULES[family] || ENEMY_GROUP_RULES.default;
   const count = Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) + groupRule.min;
