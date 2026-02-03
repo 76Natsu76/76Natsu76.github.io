@@ -933,7 +933,7 @@ export const ENEMIES = {
     "key": "ranger_scout",
     "name": "ranger_scout",
     "profession": "ranger",
-    "family": "ranger",
+    "family": "humanoid",
     "element": "wind",
     "rarity": "common",
     "level": 26,
