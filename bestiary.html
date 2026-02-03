@@ -239,7 +239,7 @@
       <option value="rarity_desc">Rarity (High→Low)</option>
       <option value="family_asc">Family (A–Z)</option>
     `;
-    filtersBar.appendChild(sortSelect);
+    filtersBar.insertBefore(sortSelect, searchBox);
 
     const searchBox = document.getElementById("searchBox");
     
