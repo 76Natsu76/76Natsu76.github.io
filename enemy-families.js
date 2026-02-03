@@ -595,6 +595,42 @@ export const ENEMY_FAMILIES = {
     }
   },
 
+  ranger: {
+    key: "ranger",
+    tier: 2,
+    baseHP: 105,
+    baseATK: 14,
+    baseDEF: 9,
+    elementAffinity: { nature: 0.10, wind: 0.05 },
+    behavior: "skirmisher",
+    flavor: "Wilderness experts who blend archery, traps, and swift melee strikes.",
+    familyModifiers: {
+      hpMult: 1.05,
+      atkMult: 1.15,
+      defMult: 1.0,
+      speedBias: 0.10,
+      notes: "Hybrid ranged/melee fighters with mobility and nature synergy."
+    }
+  },
+
+  arcane: {
+    key: "arcane",
+    tier: 2,
+    baseHP: 90,
+    baseATK: 16,
+    baseDEF: 7,
+    elementAffinity: { arcane: 0.25 },
+    behavior: "caster",
+    flavor: "Scholars of raw magical force who wield pure arcane energy with precision.",
+    familyModifiers: {
+      hpMult: 0.9,
+      atkMult: 1.25,
+      defMult: 0.9,
+      speedBias: 0.0,
+      notes: "High burst magic, low defense, pure arcane scaling."
+    }
+  },
+
   trickster: {
     key: "trickster",
     tier: 2,
