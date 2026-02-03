@@ -12,6 +12,7 @@ import { resolveEnemy } from "./resolveEnemy.js";
 import { ENEMY_FAMILIES } from "./enemy-families.js";
 import { loadEnemies } from "./enemy-database.js"; // your canonical enemy list
 import { pickWeighted } from "./weighted.js";      // generic weighted picker
+import { ENEMY_GROUP_RULES } from "./enemy-group-rules.js";
 
 // ------------------------------------------------------------
 // BIOME WEATHER POOLS (canonical, matches world-tick.js)
@@ -148,7 +149,34 @@ export function generateEncounter(regionKey, playerState) {
   const event = rollRegionEvent(regionKey);
 
   const familyId = pickEnemyFamily(biomeKey);
-  const enemyRow = pickEnemyForFamily(familyId, playerState.level);
+  const groupRule = ENEMY_GROUP_RULES[familyId] || ENEMY_GROUP_RULES.default;
+  
+  const count = Math.floor(
+    Math.random() * (groupRule.max - groupRule.min + 1)
+  ) + groupRule.min;
+  
+  const enemies = [];
+  for (let i = 0; i < count; i++) {
+    const base = pickEnemyForFamily(familyId, playerState.level);
+    const resolved = resolveEnemy(
+      {
+        key: base.key,
+        name: base.name,
+        family: base.family,
+        profession: base.profession,
+        element: base.element,
+        level: base.level,
+        baseHP: base.baseHP,
+        baseATK: base.baseATK,
+        baseDEF: base.baseDEF,
+        rarity,
+        tags: variant ? [variant] : []
+      },
+      regionKey,
+      base.tier || 1
+    );
+    enemies.push(resolved);
+  }
 
   const resolvedEnemy = resolveEnemy(
     {
@@ -176,6 +204,6 @@ export function generateEncounter(regionKey, playerState) {
     rarity,
     event,
     variant,
-    enemy: resolvedEnemy
+    enemies   // <-- now an array
   };
 }
