@@ -156,7 +156,6 @@ export function crowdControlCheck(entity, logs) {
     if (rooted) logs.push(`${entity.name} is rooted.`);
     if (feared) logs.push(`${entity.name} is feared and may act unpredictably.`);
   }
-
   return { stunned, silenced, rooted, feared, any };
 }
 
