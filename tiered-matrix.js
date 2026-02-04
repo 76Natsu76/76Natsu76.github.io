@@ -7,6 +7,14 @@ import { ENEMIES } from "./enemies.js";
 
 export const TIERED_MATRIX = {};
 
+export const TIER_NAMES = {
+  1: "Mundane",
+  2: "Elite",
+  3: "Mythic",
+  4: "Titanic",
+  5: "Cosmic"
+};
+
 for (const enemyKey in ENEMIES) {
   const enemy = ENEMIES[enemyKey];
 
@@ -52,11 +60,3 @@ for (const enemyKey in ENEMIES) {
     tierName: TIER_NAMES[familyTier] || "Unknown"
   };
 }
-
-export const TIER_NAMES = {
-  1: "Mundane",
-  2: "Elite",
-  3: "Mythic",
-  4: "Titanic",
-  5: "Cosmic"
-};
