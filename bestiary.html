@@ -190,6 +190,10 @@
     <option value="">All Regions</option>
   </select>
 
+  <select id="subregionFilter">
+    <option value="">All Subregions</option>
+  </select>
+
   <select id="biomeFilter">
     <option value="">All Biomes</option>
   </select>
@@ -338,6 +342,20 @@
     }
   }
 
+  function populateSubregionFilter() {
+    const select = document.getElementById("subregionFilter");
+    select.innerHTML = `<option value="">All Subregions</option>`;
+  
+    for (const [canonical, def] of Object.entries(REGION_HIERARCHY)) {
+      for (const sub of Object.keys(def.subregions || {})) {
+        const opt = document.createElement("option");
+        opt.value = sub;
+        opt.textContent = format(sub);
+        select.appendChild(opt);
+      }
+    }
+  }
+
   function populateBiomeFilter() {
     biomeFilter.innerHTML = `<option value="">All Biomes</option>`;
     for (const key of Object.keys(BIOMES)) {
@@ -427,6 +445,11 @@
         if (!canonicalSet.has(regionVal)) continue;
       }
 
+      const subregionVal = document.getElementById("subregionFilter").value;
+      if (subregionVal) {
+        if (!allowedSubregions.includes(subregionVal)) continue;
+      }
+
       // Biome filter: enemy must appear in at least one subregion with this biome
       if (biomeVal) {
         const hasBiome = allowedSubregions.some(sub => {
@@ -493,7 +516,12 @@
         : "Any";
 
       const subregionText = allowedSubregions.length
-        ? ` (Subregions: ${allowedSubregions.map(format).join(", ")})`
+        ? ` (Subregions: ${allowedSubregions
+            .map(sub => {
+              const biome = SUBREGION_BIOMES[sub] || "unknown";
+              return `<span title="Biome: ${format(biome)}">${format(sub)}</span>`;
+            })
+            .join(", ")})`
         : "";
 
       const abilities = enemy.abilities || [];
@@ -579,8 +607,14 @@
       : "Any";
 
     const subregionText = allowedSubregions.length
-      ? ` (Subregions: ${allowedSubregions.map(format).join(", ")})`
+      ? ` (Subregions: ${allowedSubregions
+          .map(sub => {
+            const biome = SUBREGION_BIOMES[sub] || "unknown";
+            return `<span title="Biome: ${format(biome)}">${format(sub)}</span>`;
+          })
+          .join(", ")})`
       : "";
+
 
     const abilities = enemy.abilities || [];
 
@@ -706,6 +740,7 @@
   };
 
   populateRegionFilter();
+  populateSubregionFilter();
   populateBiomeFilter();
   populateFamilyFilter();
   render();
