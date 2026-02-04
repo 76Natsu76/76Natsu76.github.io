@@ -44,8 +44,7 @@ for (const enemyKey in ENEMIES) {
   const familyTier = FAMILY_TIERS[family] || 1;
 
   // 4. Resolve allowed explicit regions
-  const allowedRegions = [];
-  allowedRegions = ENEMY_REGIONS[enemyKey] || [];
+  const allowedRegions = ENEMY_REGIONS[enemyKey] || [];
 
   // 5. Resolve region tiers
   const allowedRegionTiers = allowedRegions.map(r => REGION_TIERS[r] || 1);
