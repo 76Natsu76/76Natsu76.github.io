@@ -41,3 +41,5 @@ export function expandRegionEnemies() {
 
   return expanded;
 }
+
+export const EXPANDED_ENEMY_REGIONS = expandRegionEnemies();
