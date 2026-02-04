@@ -8,7 +8,7 @@ import { ENEMY_ABILITIES } from "./enemy-abilities.js";
 import { ENEMY_ULTIMATES } from "./enemy-ultimates.js";
 
 import { ENEMIES } from "./enemies.js";
-import { ENEMY_REGIONS } from "./enemy-regions.js";
+import { EXPANDED_ENEMY_REGIONS as ENEMY_REGIONS } from "./expanded-enemy-regions.js";
 import { SUBRACE_FAMILY_INDEX } from "./subrace-family-index.js";
 import { RACE_FAMILY_INDEX } from "./race-family-index.js";
 
