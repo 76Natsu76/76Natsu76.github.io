@@ -105,12 +105,12 @@ export const EnemyRegistry = {
 
     const lootTable = parseMaybeJSON(raw.lootTableJSON) || raw.lootTable || [];
     const activeEffects = parseMaybeJSON(raw.activeEffectsJSON) || raw.activeEffects || [];
-
+    
     return {
       key: raw.key,
       name: raw.name,
-
-      family: raw.family || family.key,
+    
+      family: family.key,   // ← FIXED
       variant: raw.variant || null,
       subrace,
 
