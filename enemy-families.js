@@ -70,6 +70,23 @@ export const ENEMY_FAMILIES = {
     }
   },
 
+  slime: {
+    key: "slime",
+    tier: 1,
+    baseHP: 120,
+    baseATK: 8,
+    baseDEF: 10,
+    elementAffinity: { poison: 0.10, acid: 0.10 },
+    behavior: "unpredictable",
+    flavor: "Basic amorphous creatures with simple instincts and high resilience.",
+    familyModifiers: {
+      hpMult: 1.0,
+      atkMult: 0.9,
+      defMult: 1.1,
+      notes: "Slimes absorb damage well but hit lightly."
+    }
+  },
+
   insectoid: {
     key: "insectoid",
     tier: 1,
