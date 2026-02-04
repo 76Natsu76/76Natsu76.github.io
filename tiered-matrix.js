@@ -48,6 +48,15 @@ for (const enemyKey in ENEMIES) {
     familyTier,
     allowedRegions,
     allowedRegionTiers,
-    maxRegionTier
+    maxRegionTier,
+    tierName: TIER_NAMES[familyTier] || "Unknown"
   };
 }
+
+export const TIER_NAMES = {
+  1: "Mundane",
+  2: "Elite",
+  3: "Mythic",
+  4: "Titanic",
+  5: "Cosmic"
+};
