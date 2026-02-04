@@ -5784,7 +5784,7 @@ export const ENEMIES = {
     "key": "god",
     "name": "God",
     "profession": "null",
-    "family": "cosmic_entity",
+    "family": "god",
     "element": "holy",
     "rarity": "final",
     "level": 9999,
