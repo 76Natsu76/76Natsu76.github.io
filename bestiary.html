@@ -392,7 +392,13 @@
       biomeFilter.appendChild(opt);
     }
     
-    const families = new Set(EnemyRegistry.enemies.map(e => e.family).filter(Boolean));
+    const families = new Set(
+      EnemyRegistry.enemies.map(e => {
+        const t = EnemyRegistry.buildEnemyTemplate(e.key);
+        return t.family;
+      })
+    );
+
     families.forEach(f => {
       const opt = document.createElement("option");
       opt.value = f;
@@ -495,15 +501,15 @@
         if (biomeVal) {
           const biome = BIOMES[biomeVal];
           const allowedFamilies = Object.keys(biome.encounterWeights || {});
-          const famKey =
+          const famKey = template.family;/*const famKey =
             e.family ||
             EnemyRegistry.subraceMap[e.key] ||
-            EnemyRegistry.raceMap[e.key];
+            EnemyRegistry.raceMap[e.key];*/
     
           if (!allowedFamilies.includes(famKey)) continue;
         }
     
-        if (familyVal && e.family !== familyVal) continue;
+        if (familyVal && template.family !== familyVal) continue;
         if (rarityVal && e.rarity.toLowerCase() !== rarityVal) continue;
     
         /* ⭐ NEW: TIER FILTER */
