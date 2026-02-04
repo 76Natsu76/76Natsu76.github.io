@@ -481,6 +481,7 @@
       const out = [];
     
       for (const e of EnemyRegistry.enemies) {
+        const template = EnemyRegistry.buildEnemyTemplate(e.key);
         const entry = TIERED_MATRIX[e.key]; /* ⭐ NEW */
         if (!entry) continue;
     
@@ -514,8 +515,6 @@
         if (tierVal && entry.familyTier !== Number(tierVal)) continue;
     
         if (searchVal && !e.name.toLowerCase().includes(searchVal)) continue;
-    
-        const template = EnemyRegistry.buildEnemyTemplate(e.key);
         out.push({ raw: e, template });
       }
     
