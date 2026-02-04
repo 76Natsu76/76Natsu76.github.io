@@ -3,6 +3,9 @@
 import { ENEMY_GROUP_RULES } from "./enemy-group-rules.js";
 import { ENEMY_REGIONS } from "./enemy-regions.js";
 import { ENEMIES } from "./enemies.js";
+import { FAMILY_TIERS } from "./family-tiers.js";
+import { REGION_TIERS } from "./region-tiers.js";
+
 
 export function expandRegionEnemies() {
   const expanded = {};
@@ -30,7 +33,16 @@ export function expandRegionEnemies() {
       for (const fam of allFamilies) {
         const list = enemiesByFamily[fam];
         if (!list) continue;
+      
         for (const enemyKey of list) {
+          const enemy = ENEMIES[enemyKey];
+          if (!enemy) continue;
+      
+          const famTier = FAMILY_TIERS[enemy.family] || 1;
+          const regionTier = REGION_TIERS[region] || 1;
+      
+          if (famTier > regionTier) continue; // ⭐ TIER GATE
+      
           explicit.add(enemyKey);
         }
       }
