@@ -9,6 +9,7 @@ import {
   WEATHER_COMBAT_FLAVOR
 } from "./weatherTable.js";
 import { computeHitData, computeFinalDamage } from "./ability-resolver.js";
+import { FAMILY_SYNERGIES } from "./family-synergies.js";
 
 /****************************************************
  * CORE CONTEXT
@@ -597,6 +598,38 @@ export function runPlayerAction(player, enemies, action, context, logs) {
     resolveAbilityUseMulti(player, enemies, action.ability, primaryTarget, context, logs);
     context.lastPlayerActionType = action.ability.actionType || "ability";
   }
+}
+
+function applyFamilySynergy(attacker, defender, baseDamage) {
+  const atkFam = attacker.family;
+  const defFam = defender.family;
+
+  const synergy = FAMILY_SYNERGIES[atkFam] || {};
+  const defense = FAMILY_SYNERGIES[defFam] || {};
+
+  let dmg = baseDamage;
+
+  // Attacker bonus
+  if (synergy.bonusAgainst?.includes(defFam)) {
+    dmg *= 1.20;
+  }
+
+  // Defender resistance
+  if (defense.resistantTo?.includes(attacker.element)) {
+    dmg *= 0.80;
+  }
+
+  // Defender weakness
+  if (defense.weakTo?.includes(attacker.element)) {
+    dmg *= 1.25;
+  }
+
+  // Defender immunity
+  if (defense.immuneTo?.includes(attacker.element)) {
+    dmg = 0;
+  }
+
+  return dmg;
 }
 
 /****************************************************
