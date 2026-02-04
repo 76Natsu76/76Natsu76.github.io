@@ -224,30 +224,44 @@
     import { REGION_TO_BIOME } from "./region-to-biome.js";
     import { EnemyRegistry } from "./enemy-registry.js";
     import { EXPANDED_ENEMY_REGIONS as ENEMY_REGIONS } from "./expanded-enemy-regions.js";
-
-    // ⭐ NEW IMPORTS
-    import { TIERED_MATRIX, TIER_NAMES} from "./tiered-matrix.js";
+    
+    /* ⭐ NEW IMPORTS */
+    import { TIERED_MATRIX } from "./tiered-matrix.js";
+    import { TIER_NAMES } from "./tier-names.js";
     import { REGION_TIERS } from "./region-tiers.js";
-
+    
+    /* ⭐ format() MUST be defined before any filters use it */
     function format(str) {
       return String(str || "")
         .replace(/_/g, " ")
         .replace(/-/g, " ")
         .replace(/\b\w/g, c => c.toUpperCase());
     }
-
+    
     const session = requireSession();
-
+    
     const container = document.getElementById("bestiaryContainer");
     const regionFilter = document.getElementById("regionFilter");
     const biomeFilter = document.getElementById("biomeFilter");
     const familyFilter = document.getElementById("familyFilter");
     const rarityFilter = document.getElementById("rarityFilter");
-    const tierFilter = document.getElementById("tierFilter");
-
+    
+    /* ⭐ NEW: Tier Filter (Option A placement) */
+    const tierFilter = document.createElement("select");
+    tierFilter.id = "tierFilter";
+    tierFilter.innerHTML = `
+      <option value="">All Tiers</option>
+      <option value="1">Mundane</option>
+      <option value="2">Elite</option>
+      <option value="3">Mythic</option>
+      <option value="4">Titanic</option>
+      <option value="5">Cosmic</option>
+    `;
+    rarityFilter.insertAdjacentElement("afterend", tierFilter);
+    
     // --- Dynamic controls: sort + pagination ---
     const filtersBar = document.getElementById("filters");
-
+    
     const sortSelect = document.createElement("select");
     sortSelect.id = "sortSelect";
     sortSelect.innerHTML = `
@@ -258,19 +272,21 @@
       <option value="rarity_asc">Rarity (Low→High)</option>
       <option value="rarity_desc">Rarity (High→Low)</option>
       <option value="family_asc">Family (A–Z)</option>
+    
+      <!-- ⭐ NEW: Tier Sorting -->
       <option value="tier_asc">Tier (Low→High)</option>
       <option value="tier_desc">Tier (High→Low)</option>
     `;
-
+    
     const searchBox = document.getElementById("searchBox");
     filtersBar.insertBefore(sortSelect, searchBox);
-
+    
     const paginationBar = document.createElement("div");
     paginationBar.style.marginTop = "12px";
     paginationBar.style.display = "flex";
     paginationBar.style.alignItems = "center";
     paginationBar.style.gap = "8px";
-
+    
     const prevBtn = document.createElement("button");
     prevBtn.textContent = "Prev";
     prevBtn.className = "btn";
@@ -279,12 +295,12 @@
     nextBtn.className = "btn";
     const pageInfo = document.createElement("span");
     pageInfo.style.opacity = "0.8";
-
+    
     paginationBar.appendChild(prevBtn);
     paginationBar.appendChild(pageInfo);
     paginationBar.appendChild(nextBtn);
     container.parentNode.insertBefore(paginationBar, container.nextSibling);
-
+    
     // --- Stats modal (created once) ---
     const modal = document.createElement("div");
     modal.id = "enemyStatsModal";
@@ -297,7 +313,7 @@
       justifyContent: "center",
       zIndex: "9999"
     });
-
+    
     const modalInner = document.createElement("div");
     Object.assign(modalInner.style, {
       background: "#11141c",
@@ -316,14 +332,14 @@
     `;
     modal.appendChild(modalInner);
     document.body.appendChild(modal);
-
+    
     document.getElementById("closeEnemyModal").onclick = () => {
       modal.style.display = "none";
     };
     modal.onclick = e => {
       if (e.target === modal) modal.style.display = "none";
     };
-
+    
     // ------------------------------------------------------------
     // REGION FAMILY FALLBACK (unchanged)
     // ------------------------------------------------------------
@@ -336,28 +352,28 @@
       desert: ["desert", "dune-sea"],
       mountains: ["mountains", "highlands"]
     };
-
+    
     // ------------------------------------------------------------
-    // INITIALIZE FILTER OPTIONS (⭐ REGION TIER DISPLAY ADDED)
+    // INITIALIZE FILTER OPTIONS (⭐ Region Tier Display Added)
     // ------------------------------------------------------------
     for (const key in WORLD_DATA.regions) {
       const opt = document.createElement("option");
       opt.value = key;
-
+    
       const tier = REGION_TIERS[key] || 1;
       const tierName = TIER_NAMES[tier];
-
+    
       opt.textContent = `${WORLD_DATA.regions[key].name} (${tierName})`;
       regionFilter.appendChild(opt);
     }
-
+    
     for (const key in BIOMES) {
       const opt = document.createElement("option");
       opt.value = key;
       opt.textContent = format(key);
       biomeFilter.appendChild(opt);
     }
-
+    
     const families = new Set(EnemyRegistry.enemies.map(e => e.family).filter(Boolean));
     families.forEach(f => {
       const opt = document.createElement("option");
@@ -365,14 +381,14 @@
       opt.textContent = format(f);
       familyFilter.appendChild(opt);
     });
-
+    
     // ------------------------------------------------------------
     // PAGINATION + SORT STATE
     // ------------------------------------------------------------
     let currentPage = 1;
     const pageSize = 10;
     let currentEnemies = [];
-
+    
     function rarityRank(r) {
       if (!r) return 0;
       const order = [
@@ -388,30 +404,26 @@
       const idx = order.indexOf(r.toLowerCase());
       return idx === -1 ? 0 : idx;
     }
-
+    
     function sortEnemies(list) {
       const mode = sortSelect.value;
       const arr = [...list];
-
+    
       arr.sort((a, b) => {
         const ta = a.template;
         const tb = b.template;
-
+    
         switch (mode) {
-          case "name_asc":
-            return ta.name.localeCompare(tb.name);
-          case "name_desc":
-            return tb.name.localeCompare(ta.name);
-          case "level_asc":
-            return (ta.level || 1) - (tb.level || 1);
-          case "level_desc":
-            return (tb.level || 1) - (ta.level || 1);
-          case "rarity_asc":
-            return rarityRank(ta.rarity) - rarityRank(tb.rarity);
-          case "rarity_desc":
-            return rarityRank(tb.rarity) - rarityRank(ta.rarity);
+          case "name_asc": return ta.name.localeCompare(tb.name);
+          case "name_desc": return tb.name.localeCompare(ta.name);
+          case "level_asc": return (ta.level || 1) - (tb.level || 1);
+          case "level_desc": return (tb.level || 1) - (ta.level || 1);
+          case "rarity_asc": return rarityRank(ta.rarity) - rarityRank(tb.rarity);
+          case "rarity_desc": return rarityRank(tb.rarity) - rarityRank(ta.rarity);
           case "family_asc":
             return format(ta.family || "").localeCompare(format(tb.family || ""));
+    
+          /* ⭐ NEW: Tier Sorting */
           case "tier_asc":
             return (
               TIERED_MATRIX[a.template.key].familyTier -
@@ -422,13 +434,258 @@
               TIERED_MATRIX[b.template.key].familyTier -
               TIERED_MATRIX[a.template.key].familyTier
             );
+    
           default:
             return ta.name.localeCompare(tb.name);
         }
       });
-
+    
       return arr;
     }
+    
+    // ------------------------------------------------------------
+    // RENDER BESTIARY
+    // ------------------------------------------------------------
+    function buildFilteredList() {
+      const regionVal = regionFilter.value;
+      const biomeVal = biomeFilter.value;
+      const familyVal = familyFilter.value;
+      const rarityVal = (rarityFilter.value || "").toLowerCase();
+      const tierVal = tierFilter.value; /* ⭐ NEW */
+      const searchVal = (searchBox.value || "").toLowerCase();
+    
+      const out = [];
+    
+      for (const e of EnemyRegistry.enemies) {
+        const entry = TIERED_MATRIX[e.key]; /* ⭐ NEW */
+        if (!entry) continue;
+    
+        // REGION FILTER (unchanged)
+        if (regionVal) {
+          const allowed = ENEMY_REGIONS[e.key] || [];
+          let matches = allowed.some(r => r.startsWith(regionVal));
+    
+          if (!matches && REGION_FAMILY[regionVal]) {
+            const group = REGION_FAMILY[regionVal];
+            matches = allowed.some(r => group.includes(r));
+          }
+    
+          if (!matches) continue;
+        }
+    
+        // BIOME FILTER (unchanged)
+        if (biomeVal) {
+          const biome = BIOMES[biomeVal];
+          const allowedFamilies = Object.keys(biome.encounterWeights || {});
+          const famKey =
+            e.family ||
+            EnemyRegistry.subraceMap[e.key] ||
+            EnemyRegistry.raceMap[e.key];
+    
+          if (!allowedFamilies.includes(famKey)) continue;
+        }
+    
+        if (familyVal && e.family !== familyVal) continue;
+        if (rarityVal && e.rarity.toLowerCase() !== rarityVal) continue;
+    
+        /* ⭐ NEW: TIER FILTER */
+        if (tierVal && entry.familyTier !== Number(tierVal)) continue;
+    
+        if (searchVal && !e.name.toLowerCase().includes(searchVal)) continue;
+    
+        const template = EnemyRegistry.buildEnemyTemplate(e.key);
+        out.push({ raw: e, template });
+      }
+    
+      return sortEnemies(out);
+    }
+    
+    function render() {
+      currentEnemies = buildFilteredList();
+    
+      const totalPages = Math.max(1, Math.ceil(currentEnemies.length / pageSize));
+      if (currentPage > totalPages) currentPage = totalPages;
+    
+      const start = (currentPage - 1) * pageSize;
+      const pageSlice = currentEnemies.slice(start, start + pageSize);
+    
+      const chunks = pageSlice.map(({ raw, template }) => {
+        const allowedRegions = ENEMY_REGIONS[raw.key] || [];
+        const abilities = template.abilities || [];
+        const abilityPreview = abilities.slice(0, 2).map(a => a.name).join(", ");
+    
+        /* ⭐ NEW: Tier Display */
+        const tier = TIERED_MATRIX[template.key].familyTier;
+        const tierName = TIER_NAMES[tier];
+    
+        return `
+          <div class="enemy-card">
+            <img src="/assets/enemies/${template.key}.png" alt="${template.name}">
+            <div class="enemy-info">
+              <h2>${template.name}</h2>
+    
+              <div><strong>Family:</strong> ${format(template.family)}</div>
+              <div><strong>Rarity:</strong> ${format(template.rarity)}</div>
+              <div><strong>Level:</strong> ${template.level ?? "?"}</div>
+              <div><strong>Element:</strong> ${format(template.element || "neutral")}</div>
+    
+              <div><strong>Tier:</strong> ${tierName}</div> <!-- ⭐ NEW -->
+    
+              <div><strong>Allowed Regions:</strong> ${
+                allowedRegions.length ? allowedRegions.map(format).join(", ") : "Any"
+              }</div>
+    
+              ${
+                abilities.length
+                  ? `<div><strong>Abilities:</strong> ${abilityPreview}${
+                      abilities.length > 2 ? "…" : ""
+                    }</div>`
+                  : `<div><strong>Abilities:</strong> None</div>`
+              }
+    
+              <div class="event" style="margin-top:10px;">
+                ${template.flavor || "No flavor text."}
+              </div>
+    
+              <button class="btn" data-enemy-key="${template.key}" data-action="viewStats" style="margin-top:8px;">
+                View Details
+              </button>
+            </div>
+          </div>
+        `;
+      });
+    
+      container.innerHTML = chunks.join("") || "<p>No enemies found.</p>";
+    
+      pageInfo.textContent = `Page ${currentPage} of ${Math.max(
+        1,
+        Math.ceil(currentEnemies.length / pageSize)
+      )}`;
+    
+      container.querySelectorAll("button[data-action='viewStats']").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-enemy-key");
+          openStatsModal(key);
+        });
+      });
+    }
+    
+    function openStatsModal(enemyKey) {
+      const template = EnemyRegistry.buildEnemyTemplate(enemyKey);
+      const allowedRegions = ENEMY_REGIONS[enemyKey] || [];
+      const abilities = template.abilities || [];
+    
+      /* ⭐ NEW: Tier Display */
+      const entry = TIERED_MATRIX[enemyKey];
+      const tierName = TIER_NAMES[entry.familyTier];
+    
+      const loot = template.lootTable || {};
+      let lootSummary = "None";
+      if (loot.gold || loot.items) {
+        const goldPart = loot.gold ? `Gold: ${JSON.stringify(loot.gold)}` : "";
+        const itemPart = loot.items
+          ? `Items: ${loot.items.map(i => i.name || i.key || "Item").join(", ")}`
+          : "";
+        lootSummary = [goldPart, itemPart].filter(Boolean).join(" | ") || "None";
+      }
+    
+      document.getElementById("modalEnemyName").textContent = template.name;
+    
+      document.getElementById("modalEnemyBody").innerHTML = `
+        <div><strong>Key:</strong> ${template.key}</div>
+        <div><strong>Family:</strong> ${format(template.family)}</div>
+        <div><strong>Tier:</strong> ${tierName}</div> <!-- ⭐ NEW -->
+        <div><strong>Rarity:</strong> ${format(template.rarity)}</div>
+        <div><strong>Level:</strong> ${template.level ?? "?"}</div>
+        <div><strong>Element:</strong> ${format(template.element || "neutral")}</div>
+        <div><strong>Base HP:</strong> ${Math.round(template.baseHP)}</div>
+        <div><strong>Base ATK:</strong> ${Math.round(template.baseATK)}</div>
+        <div><strong>Base DEF:</strong> ${Math.round(template.baseDEF)}</div>
+        <div><strong>Behavior:</strong> ${
+          template.behavior ? format(template.behavior.key || template.behavior) : "Unknown"
+        }</div>
+        <div><strong>Allowed Regions:</strong> ${
+          allowedRegions.length ? allowedRegions.map(format).join(", ") : "Any"
+        }</div>
+    
+        <div style="margin-top:8px;"><strong>Abilities:</strong></div>
+        ${
+          abilities.length
+            ? `<ul>${abilities
+                .map(
+                  a => `
+              <li>
+                <strong>${a.name}</strong> — ${a.description || "No description."}
+                ${
+                  a.cooldown != null
+                    ? ` <span style="opacity:0.8;">(CD: ${a.cooldown})</span>`
+                    : ""
+                }
+              </li>
+            `
+                )
+                .join("")}</ul>`
+            : "<div>None</div>"
+        }
+    
+        <div style="margin-top:8px;"><strong>Loot:</strong> ${lootSummary}</div>
+        <div style="margin-top:8px;"><strong>Flavor:</strong> ${
+          template.flavor || "No flavor text."
+        }</div>
+      `;
+    
+      modal.style.display = "flex";
+    }
+    
+    window.goBack = () => {
+      window.location.href = "world-map.html";
+    };
+    
+    regionFilter.onchange = () => {
+      currentPage = 1;
+      render();
+    };
+    biomeFilter.onchange = () => {
+      currentPage = 1;
+      render();
+    };
+    familyFilter.onchange = () => {
+      currentPage = 1;
+      render();
+    };
+    rarityFilter.onchange = () => {
+      currentPage = 1;
+      render();
+    };
+    tierFilter.onchange = () => { /* ⭐ NEW */
+      currentPage = 1;
+      render();
+    };
+    searchBox.oninput = () => {
+      currentPage = 1;
+      render();
+    };
+    sortSelect.onchange = () => {
+      currentPage = 1;
+      render();
+    };
+    
+    prevBtn.onclick = () => {
+      if (currentPage > 1) {
+        currentPage--;
+        render();
+      }
+    };
+    nextBtn.onclick = () => {
+      const totalPages = Math.max(1, Math.ceil(currentEnemies.length / pageSize));
+      if (currentPage < totalPages) {
+        currentPage++;
+        render();
+      }
+    };
+    
+    render();
   </script>
+
 </body>
 </html>
