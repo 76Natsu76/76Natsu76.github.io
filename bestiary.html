@@ -229,6 +229,13 @@
     import { TIERED_MATRIX, TIER_NAMES} from "./tiered-matrix.js";
     import { REGION_TIERS } from "./region-tiers.js";
 
+    function format(str) {
+      return String(str || "")
+        .replace(/_/g, " ")
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
     const session = requireSession();
 
     const container = document.getElementById("bestiaryContainer");
