@@ -56,6 +56,7 @@ export const FAMILY_TIERS = {
   tide_forged_leviathan: 4,
 
   // Tier 5
+  god: 5,
   primordial: 5,
   outer_god: 5,
   void_god: 5,
