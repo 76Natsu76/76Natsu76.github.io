@@ -1381,6 +1381,395 @@ export const BIOMES = {
       "statusEffectChanceMult": 1.6,
       "notes": "The deepest reaches of the abyss, where even gods fear to gaze."
     }
+  },
+
+  /*
+   * New Biomes from the updated REGIONS
+   * This also includes the new biome for oceans
+   */
+
+  "storm-coast": {
+    "name": "Storm Coast",
+    "flavor": [
+      "Waves crash violently against jagged rocks.",
+      "Thunder rolls across the open sea.",
+      "Salt and ozone sting the air."
+    ],
+    "encounterWeights": {
+      "beast": 20,
+      "waterborn": 25,
+      "stormkin": 20,
+      "pirate": 15,
+      "elementalborn": 10,
+      "leviathan_spawn": 10
+    },
+    "hazards": [
+      { "key": "rogue_wave", "chance": 0.10 },
+      { "key": "lightning_strike", "chance": 0.05 }
+    ],
+    "weatherPool": ["storm", "rain", "overcast"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "water": 0.15, "electric": 0.10 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Storm‑charged winds empower electric and water‑aligned foes."
+    }
+  },
+
+  "island": {
+    "name": "Island",
+    "flavor": [
+      "Palm trees sway gently in the sea breeze.",
+      "Hidden coves dot the shoreline.",
+      "The cries of distant seabirds echo overhead."
+    ],
+    "encounterWeights": {
+      "beast": 25,
+      "waterborn": 20,
+      "pirate": 20,
+      "beastkin": 15,
+      "slimeborn": 10,
+      "spirit": 10
+    },
+    "hazards": [
+      { "key": "falling_coconut", "chance": 0.05 }
+    ],
+    "weatherPool": ["clear", "rain", "overcast"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.0,
+      "enemyATKMult": 1.0,
+      "enemyDEFMult": 1.0,
+      "elementBias": { "water": 0.10, "nature": 0.05 },
+      "statusEffectChanceMult": 1.0,
+      "notes": "A balanced environment with a mix of land and sea threats."
+    }
+  },
+
+  "reef": {
+    "name": "Coral Reef",
+    "flavor": [
+      "Brilliant coral formations glow beneath the waves.",
+      "Schools of fish scatter as you approach.",
+      "The water is warm, vibrant, and deceptively dangerous."
+    ],
+    "encounterWeights": {
+      "waterborn": 40,
+      "reefkin": 20,
+      "slimeborn": 10,
+      "elementalborn": 10,
+      "fae": 10,
+      "leviathan_spawn": 10
+    },
+    "hazards": [
+      { "key": "coral_spike", "chance": 0.08 }
+    ],
+    "weatherPool": ["clear", "rain"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.05,
+      "elementBias": { "water": 0.20, "light": 0.05 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Dense coral and magical currents empower aquatic creatures."
+    }
+  },
+
+  "open-ocean": {
+    "name": "Open Ocean",
+    "flavor": [
+      "Endless waves stretch to the horizon.",
+      "The water grows darker and colder.",
+      "Something massive moves beneath the surface."
+    ],
+    "encounterWeights": {
+      "waterborn": 35,
+      "leviathan_spawn": 20,
+      "pirate": 15,
+      "elementalborn": 10,
+      "abyssal": 10,
+      "stormkin": 10
+    },
+    "hazards": [
+      { "key": "maelstrom_pull", "chance": 0.07 }
+    ],
+    "weatherPool": ["clear", "storm", "fog"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "water": 0.25, "dark": 0.05 },
+      "statusEffectChanceMult": 1.15,
+      "notes": "Deep waters favor massive predators and abyssal forces."
+    }
+  },
+
+  "eldritch-abyss": {
+    "name": "Eldritch Abyss",
+    "flavor": [
+      "Reality bends and warps in the crushing depths.",
+      "Whispers echo through the water, though no mouths speak.",
+      "Bioluminescent horrors drift in the void."
+    ],
+    "encounterWeights": {
+      "abyssal": 40,
+      "eldritch": 25,
+      "leviathan_spawn": 20,
+      "voidborn": 10,
+      "elementalborn": 5
+    },
+    "hazards": [
+      { "key": "mindfracture_current", "chance": 0.12 }
+    ],
+    "weatherPool": ["abyssal_darkness"],
+    "combatModifiers": {
+      "playerATKMult": 0.85,
+      "playerDEFMult": 1.1,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.2,
+      "elementBias": { "void": 0.25, "dark": 0.15, "chaos": 0.10 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Eldritch forces twist magic and perception."
+    }
+  },
+
+  "titanic-crater": {
+    "name": "Titanic Crater",
+    "flavor": [
+      "A colossal impact scar radiates molten heat.",
+      "The ground trembles with ancient power.",
+      "Shards of celestial metal jut from the earth."
+    ],
+    "encounterWeights": {
+      "titanborn": 30,
+      "elementalborn": 20,
+      "magma_beast": 20,
+      "chimera": 15,
+      "mythic_beast": 15
+    },
+    "hazards": [
+      { "key": "magma_eruption", "chance": 0.10 }
+    ],
+    "weatherPool": ["ashfall", "heatwave"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.9,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "fire": 0.25, "earth": 0.10, "chaos": 0.05 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Residual cosmic energy empowers titanic and elemental foes."
+    }
+  },
+  
+  "astral-spirit": {
+    "name": "Astral Spiritlands",
+    "flavor": [
+      "Ghostly silhouettes drift through shimmering starlight.",
+      "Gravity feels lighter, as if the world itself exhales.",
+      "Ethereal winds carry distant celestial hymns."
+    ],
+    "encounterWeights": {
+      "spirit": 40,
+      "astralborn": 25,
+      "fae": 15,
+      "elementalborn": 10,
+      "mythic_beast": 10
+    },
+    "hazards": [
+      { "key": "astral_dissonance", "chance": 0.08 }
+    ],
+    "weatherPool": ["astral_glow", "cosmic_wind"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.05,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "cosmic": 0.15, "arcane": 0.10 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "Ethereal energies empower spirits and astral beings."
+    }
+  },
+  
+  "celestial-spire": {
+    "name": "Celestial Spire",
+    "flavor": [
+      "A radiant tower pierces the heavens.",
+      "Light refracts into prismatic halos.",
+      "The air hums with divine resonance."
+    ],
+    "encounterWeights": {
+      "celestialborn": 40,
+      "spirit": 20,
+      "elementalborn": 15,
+      "mythic_beast": 15,
+      "astralborn": 10
+    },
+    "hazards": [
+      { "key": "divine_radiance", "chance": 0.10 }
+    ],
+    "weatherPool": ["holy_light", "sunburst"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 1.1,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "holy": 0.20, "light": 0.10 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Divine energies empower celestial beings."
+    }
+  },
+  
+  "celestial-forge": {
+    "name": "Celestial Forge",
+    "flavor": [
+      "Molten starlight flows like liquid gold.",
+      "Hammers ring with divine resonance.",
+      "The air burns with creation’s heat."
+    ],
+    "encounterWeights": {
+      "celestialborn": 30,
+      "elementalborn": 25,
+      "mythic_beast": 20,
+      "construct": 15,
+      "spirit": 10
+    },
+    "hazards": [
+      { "key": "solar_flare", "chance": 0.12 }
+    ],
+    "weatherPool": ["radiant_heat"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "holy": 0.15, "fire": 0.15 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Forged in divine fire, enemies strike with overwhelming force."
+    }
+  },
+  
+  "celestial-horizon": {
+    "name": "Celestial Horizon",
+    "flavor": [
+      "The sky bends into an endless dawn.",
+      "Light and shadow merge in impossible gradients.",
+      "Time feels stretched, as if the world holds its breath."
+    ],
+    "encounterWeights": {
+      "celestialborn": 35,
+      "astralborn": 20,
+      "spirit": 15,
+      "elementalborn": 15,
+      "mythic_beast": 15
+    },
+    "hazards": [
+      { "key": "temporal_flux", "chance": 0.07 }
+    ],
+    "weatherPool": ["eternal_dawn", "cosmic_glow"],
+    "combatModifiers": {
+      "playerATKMult": 1.0,
+      "playerDEFMult": 1.05,
+      "enemyATKMult": 1.1,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "light": 0.15, "cosmic": 0.10 },
+      "statusEffectChanceMult": 1.1,
+      "notes": "A realm where dawn never ends, empowering celestial forces."
+    }
+  },
+  
+  "celestial-fortress": {
+    "name": "Celestial Fortress",
+    "flavor": [
+      "A radiant citadel stands against the void.",
+      "Angelic sentinels patrol shimmering battlements.",
+      "The air vibrates with divine authority."
+    ],
+    "encounterWeights": {
+      "celestialborn": 45,
+      "construct": 20,
+      "spirit": 15,
+      "elementalborn": 10,
+      "mythic_beast": 10
+    },
+    "hazards": [
+      { "key": "holy_barrier", "chance": 0.10 }
+    ],
+    "weatherPool": ["radiant_storm"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 1.1,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.2,
+      "elementBias": { "holy": 0.25, "light": 0.10 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "A bastion of divine power, guarded by celestial constructs."
+    }
+  },
+
+  "arcane-storm": {
+    "name": "Arcane Stormlands",
+    "flavor": [
+      "Crackling mana storms tear across the landscape.",
+      "The ground pulses with unstable energy.",
+      "Arcane lightning dances between floating stones."
+    ],
+    "encounterWeights": {
+      "elementalborn": 30,
+      "arcane_construct": 20,
+      "stormkin": 20,
+      "fae": 15,
+      "astralborn": 15
+    },
+    "hazards": [
+      { "key": "mana_surge", "chance": 0.12 },
+      { "key": "arcane_lightning", "chance": 0.08 }
+    ],
+    "weatherPool": ["arcane_storm", "mana_fog", "charged_winds"],
+    "combatModifiers": {
+      "playerATKMult": 0.95,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.1,
+      "elementBias": { "arcane": 0.25, "electric": 0.15 },
+      "statusEffectChanceMult": 1.25,
+      "notes": "Unstable mana storms empower arcane and electric-aligned foes."
+    }
+  },
+  
+  "void-labyrinth": {
+    "name": "Void Labyrinth",
+    "flavor": [
+      "Corridors twist in impossible geometries.",
+      "Whispers echo from directions that do not exist.",
+      "Shadows stretch and coil like living things."
+    ],
+    "encounterWeights": {
+      "voidborn": 40,
+      "darkling": 20,
+      "eldritch": 20,
+      "spirit": 10,
+      "construct": 10
+    },
+    "hazards": [
+      { "key": "spatial_warp", "chance": 0.10 },
+      { "key": "void_pulse", "chance": 0.08 }
+    ],
+    "weatherPool": ["void_static", "dark_fog"],
+    "combatModifiers": {
+      "playerATKMult": 0.9,
+      "playerDEFMult": 0.95,
+      "enemyATKMult": 1.15,
+      "enemyDEFMult": 1.15,
+      "elementBias": { "void": 0.25, "dark": 0.15 },
+      "statusEffectChanceMult": 1.2,
+      "notes": "Spatial distortion empowers voidborn entities."
+    }
   }
 };
 
