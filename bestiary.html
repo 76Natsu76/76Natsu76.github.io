@@ -243,6 +243,7 @@
     import { REGION_TO_BIOME } from "./region-to-biome.js";
     import { EnemyRegistry } from "./enemy-registry.js";
     import { EXPANDED_ENEMY_REGIONS as ENEMY_REGIONS } from "./expanded-enemy-regions.js";
+    import { getCanonicalRegionKey, groupEnemyRegions } from "./region-canonical.js";
     
     /* ⭐ NEW IMPORTS */
     import { TIERED_MATRIX, TIER_NAMES } from "./tiered-matrix.js";
@@ -485,17 +486,16 @@
         const entry = TIERED_MATRIX[e.key]; /* ⭐ NEW */
         if (!entry) continue;
     
-        // REGION FILTER (unchanged)
+        // REGION FILTER (canonical-aware)
         if (regionVal) {
           const allowed = ENEMY_REGIONS[e.key] || [];
-          let matches = allowed.some(r => r.startsWith(regionVal));
-    
-          if (!matches && REGION_FAMILY[regionVal]) {
-            const group = REGION_FAMILY[regionVal];
-            matches = allowed.some(r => group.includes(r));
-          }
-    
-          if (!matches) continue;
+        
+          // Map all allowed regions to canonical keys
+          const canonicalAllowed = new Set(
+            allowed.map(r => getCanonicalRegionKey(r)).filter(Boolean)
+          );
+        
+          if (!canonicalAllowed.has(regionVal)) continue;
         }
     
         // BIOME FILTER (unchanged)
@@ -532,6 +532,17 @@
     
       const chunks = pageSlice.map(({ raw, template }) => {
         const allowedRegions = ENEMY_REGIONS[raw.key] || [];
+        const { canonicalRegions, subregions } = groupEnemyRegions(allowedRegions);
+        
+        const allowedRegionsText = canonicalRegions.length
+          ? canonicalRegions.map(format).join(", ")
+          : "Any";
+        
+        const subregionText =
+          subregions.length
+            ? ` (Subregions: ${subregions.map(format).join(", ")})`
+            : "";
+
         const abilities = template.abilities || [];
         const abilityPreview = abilities.slice(0, 2).map(a => a.name).join(", ");
     
@@ -561,10 +572,7 @@
               <div><strong>Level:</strong> ${template.level ?? "?"}</div>
               <div><strong>Element:</strong> ${format(template.element || "neutral")}</div>
               <div><strong>Tier:</strong> ${badge}</div>
-    
-              <div><strong>Allowed Regions:</strong> ${
-                allowedRegions.length ? allowedRegions.map(format).join(", ") : "Any"
-              }</div>
+              <div><strong>Allowed Regions:</strong> ${allowedRegionsText}${subregionText}</div>
     
               ${
                 abilities.length
@@ -603,7 +611,17 @@
     
     function openStatsModal(enemyKey) {
       const template = EnemyRegistry.buildEnemyTemplate(enemyKey);
-      const allowedRegions = ENEMY_REGIONS[enemyKey] || [];
+      
+      const { canonicalRegions, subregions } = groupEnemyRegions(allowedRegions);
+      const allowedRegionsText = canonicalRegions.length
+        ? canonicalRegions.map(format).join(", ")
+        : "Any";
+      
+      const subregionText =
+        subregions.length
+          ? ` (Subregions: ${subregions.map(format).join(", ")})`
+          : "";
+
       const abilities = template.abilities || [];
     
       /* ⭐ NEW: Tier Display */
@@ -636,7 +654,7 @@
           template.behavior ? format(template.behavior.key || template.behavior) : "Unknown"
         }</div>
         <div><strong>Allowed Regions:</strong> ${
-          allowedRegions.length ? allowedRegions.map(format).join(", ") : "Any"
+          allowedRegionsText + subregionText
         }</div>
     
         <div style="margin-top:8px;"><strong>Abilities:</strong></div>
