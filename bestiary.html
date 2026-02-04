@@ -610,7 +610,7 @@
       const abilities = template.abilities || [];
     
       /* ⭐ NEW: Tier Display */
-      const entry = TIERED_MATRIX[enemyKey];
+      const entry = TIERED_MATRIX[template.family];
       const tierName = TIER_NAMES[entry.familyTier];
     
       const loot = template.lootTable || {};
