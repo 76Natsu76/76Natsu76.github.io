@@ -10,96 +10,155 @@ const CANONICAL_REGIONS = new Set(Object.keys(WORLD_DATA.regions));
  * Explicit mapping from extended/subregion keys → canonical region keys.
  * Tune these as you like; the logic below will use this first.
  */
+
 export const REGION_CANONICAL_MAP = {
-  // Core 1:1 (identity) mappings are implicit via WORLD_DATA.regions
+  /* =========================
+   * FOREST
+   * ========================= */
+  forest_edge: "forest",
+  forest_entry: "forest",
+  deep_forest: "forest",
+  verdant_woods: "forest",
+  verdant_wildwood: "forest",
 
-  // Forest family
-  "forest-edge": "forest",
-  "deep-forest": "forest",
-  "verdant-woods": "forest",
-  "verdant-wildwood": "forest",
+  /* =========================
+   * PLAINS
+   * ========================= */
+  plains_field: "plains",
+  open_steppe: "plains",
+  sunspire_highlands: "plains",
 
-  // Primordial / ancient forest
-  "elderwood-heart": "primordial_grove",
-  "primeval-overgrowth": "primordial_grove",
+  /* =========================
+   * CITY
+   * ========================= */
+  trainers_city: "city",
 
-  // Plains / city / coast-ish training hub
-  "plains-field": "plains",
-  "trainers-city": "plains",
-  "outcast-island": "plains",
-  "azure-coast": "plains",
-  "stormbreaker-coast": "plains",
+  /* =========================
+   * SWAMP
+   * ========================= */
+  swamp_marsh: "swamp",
+  drowned_marsh: "swamp",
+  whispering_marsh: "swamp",
 
-  // Swamp / marsh
-  "swamp-marsh": "swamp",
-  "whispering-marsh": "swamp",
+  /* =========================
+   * DESERT
+   * ========================= */
+  desert_dunes: "desert",
+  sunscorched_dunes: "desert",
+  shattered_desert: "desert",
 
-  // Caverns / subterranean
-  "crystal-pass": "cavern",
-  "cave-entrance": "cavern",
-  "crystal-caverns": "cavern",
-  "deep-caverns": "cavern",
+  /* =========================
+   * TUNDRA
+   * ========================= */
+  tundra_wastes: "tundra",
+  frostlands: "tundra",
+  crystalline_tundra: "tundra",
 
-  // Ruins / ancient civ
-  "ruins-outskirts": "ruins",
-  "ruined-kingdom": "ruins",
+  /* =========================
+   * MOUNTAINS
+   * ========================= */
+  highland_cliffs: "mountains",
+  highlands_of_thorne: "mountains",
+  mountain_peak: "mountains",
 
-  // Desert
-  "desert-dunes": "desert",
-  "shattered-desert": "desert",
+  /* =========================
+   * CAVERN
+   * ========================= */
+  cave_entrance: "cavern",
+  crystal_pass: "cavern",
+  crystal_caverns: "cavern",
+  deep_caverns: "cavern",
+  underdeep: "cavern",
+  subterranean: "cavern",
 
-  // Tundra / ice
-  "tundra-wastes": "tundra",
-  "frostlands": "tundra",
-  "crystalline-tundra": "tundra",
+  /* =========================
+   * RUINS
+   * ========================= */
+  ruins_outskirts: "ruins",
+  ruined_kingdom: "ruins",
+  forgotten_ruins: "ruins",
 
-  // Highlands / mountains
-  "highland-cliffs": "mountains",
-  "sunspire-highlands": "mountains",
-  "highlands-of-thorne": "mountains",
+  /* =========================
+   * PRIMORDIAL GROVE
+   * ========================= */
+  elderwood_heart: "primordial_grove",
+  primeval_overgrowth: "primordial_grove",
 
-  // Volcanic / magma / titanfall
-  "volcano-rim": "worldbreaker_horizon",
-  "volcanic-wastes": "worldbreaker_horizon",
-  "emberforge-depths": "worldbreaker_horizon",
-  "emberfang-ridge": "worldbreaker_horizon",
-  "molten-underdeep": "worldbreaker_horizon",
-  "titanfall": "worldbreaker_horizon",
+  /* =========================
+   * VOID
+   * ========================= */
+  void_realm: "void",
+  void_spire: "void",
+  shadow_labyrinth: "void",
+  corrupted: "void",
 
-  // Void / abyss / corrupted
-  "void-realm": "void",
-  "void-spire": "void",
-  "abyss-gate": "abyssal_scar",
-  "abyssal-deep": "abyssal_scar",
-  "abyssal-scar": "abyssal_scar",
-  "shadow-labyrinth": "void",
-  "worlds-end-expanse": "void_frontier",
+  /* =========================
+   * ABYSSAL SCAR
+   * ========================= */
+  abyss_gate: "abyssal_scar",
+  abyssal_deep: "abyssal_scar",
+  abyssal_scar: "abyssal_scar",
 
-  // Astral / celestial
-  "astral-plane": "celestial",
-  "spirit-kingdom": "celestial",
-  "celestial-expanse": "celestial_expanse",
-  "eternal-citadel": "eternal_citadel",
-  "astral-nexus": "astral_nexus",
-  "radiant-ascension-spire": "celestial_expanse",
-  "seraphic-crucible": "celestial_expanse",
-  "celestial-horizon": "celestial_expanse",
+  /* =========================
+   * VOID FRONTIER
+   * ========================= */
+  worlds_end_expanse: "void_frontier",
 
-  // Arcane / rift
-  "arcane-riftlands": "arcane_rift",
-  "arcstone-enclave": "arcane_rift",
-  "stormforge-sanctum": "arcane_rift",
+  /* =========================
+   * CELESTIAL
+   * ========================= */
+  astral_plane: "celestial",
+  spirit_kingdom: "celestial",
 
-  // Misc unique
-  "spirit_kingdom": "celestial",
-  "arcstone_enclave": "arcane_rift",
-  "abyssal_scar": "abyssal_scar",
-  "void_frontier": "void_frontier",
-  "celestial_expanse": "celestial_expanse",
-  "eternal_citadel": "eternal_citadel",
-  "worldbreaker_horizon": "worldbreaker_horizon",
-  "astral_nexus": "astral_nexus"
+  /* =========================
+   * CELESTIAL EXPANSE
+   * ========================= */
+  celestial_expanse: "celestial_expanse",
+  radiant_ascension_spire: "celestial_expanse",
+  seraphic_crucible: "celestial_expanse",
+  celestial_horizon: "celestial_expanse",
+
+  /* =========================
+   * ETERNAL CITADEL
+   * ========================= */
+  eternal_citadel: "eternal_citadel",
+
+  /* =========================
+   * ASTRAL NEXUS
+   * ========================= */
+  astral_nexus: "astral_nexus",
+
+  /* =========================
+   * ARCANE RIFT
+   * ========================= */
+  arcane_riftlands: "arcane_rift",
+  arcstone_enclave: "arcane_rift",
+  stormforge_sanctum: "arcane_rift",
+
+  /* =========================
+   * WORLDBREAKER HORIZON
+   * ========================= */
+  volcano_rim: "worldbreaker_horizon",
+  volcanic_wastes: "worldbreaker_horizon",
+  emberforge_depths: "worldbreaker_horizon",
+  emberfang_ridge: "worldbreaker_horizon",
+  molten_underdeep: "worldbreaker_horizon",
+  titanfall: "worldbreaker_horizon", // updated to Tier 6 in hierarchy
+
+  /* =========================
+   * OCEAN
+   * ========================= */
+  western_coast: "ocean",
+  azure_coast: "ocean",
+  stormbreaker_coast: "ocean",
+  outcast_island: "ocean",
+  elusive_reef: "ocean",
+  point_nemo: "ocean",
+  deep_abyss: "ocean",
+  leviathan_trench: "ocean",
+  abyssal_rift: "ocean"
 };
+
 
 /**
  * Resolve any region key to its canonical WORLD_DATA region key.
