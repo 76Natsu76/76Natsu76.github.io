@@ -501,10 +501,8 @@
         if (biomeVal) {
           const biome = BIOMES[biomeVal];
           const allowedFamilies = Object.keys(biome.encounterWeights || {});
-          const famKey = template.family;/*const famKey =
-            e.family ||
-            EnemyRegistry.subraceMap[e.key] ||
-            EnemyRegistry.raceMap[e.key];*/
+          const famKey = e.family || EnemyRegistry.subraceMap[e.key] ||
+            EnemyRegistry.raceMap[e.key];
     
           if (!allowedFamilies.includes(famKey)) continue;
         }
