@@ -45,7 +45,7 @@ export const FAMILY_TIERS = {
   colossus: 3,
 
   // Tier 4
-  astral_beast,
+  astral_beast: 4,
   titan: 4,
   nature_colossus: 4,
   thunder_colossus: 4,
