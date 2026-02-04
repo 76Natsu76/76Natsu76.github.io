@@ -2,7 +2,6 @@
 import { SUBRACE_FAMILY_INDEX } from "./subrace-family-index.js";
 import { FAMILY_TIERS } from "./family-tiers.js";
 import { REGION_TIERS } from "./region-tiers.js";
-import { EXPANDED_ENEMY_REGIONS as ENEMY_REGIONS } from "./expanded-enemy-regions.js";
 import { ENEMIES } from "./enemies.js";
 
 
@@ -13,6 +12,18 @@ export const TIER_NAMES = {
   4: "Titanic",
   5: "Cosmic"
 };
+
+// Build enemy → regions map from region → enemies
+import { ENEMY_REGIONS as REGION_ENEMIES } from "./enemy-regions.js";
+
+const ENEMY_REGIONS = {};
+
+for (const [region, enemyList] of Object.entries(REGION_ENEMIES)) {
+  for (const enemyKey of enemyList) {
+    if (!ENEMY_REGIONS[enemyKey]) ENEMY_REGIONS[enemyKey] = [];
+    ENEMY_REGIONS[enemyKey].push(region);
+  }
+}
 
 export const TIERED_MATRIX = {};
 
