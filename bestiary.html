@@ -72,6 +72,25 @@
       font-size: 12px;
     }
 
+    .tier-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      color: white;
+      margin-left: 6px;
+    }
+    
+    /* Tier Colors */
+    .tier-1 { background: #6b6b6b; }        /* Mundane – gray */
+    .tier-2 { background: #3a78ff; }        /* Elite – blue */
+    .tier-3 { background: #9b4dff; }        /* Mythic – purple */
+    .tier-4 { background: #d47f00; }        /* Titanic – orange/gold */
+    .tier-5 { background: #00c8ff; }        /* Cosmic – cyan */
+    .tier-6 { background: #ff003c; }        /* Apocalyptic – red */
+    .tier-7 { background: #fff200; color: #000; } /* Divine/Paradox – radiant yellow */
+
     .ability-pill {
       display: inline-block;
       padding: 2px 6px;
@@ -514,9 +533,20 @@
         const abilityPreview = abilities.slice(0, 2).map(a => a.name).join(", ");
     
         /* ⭐ NEW: Tier Display */
-        const tier = TIERED_MATRIX[template.key].familyTier;
-        const tierName = TIER_NAMES[tier];
-    
+        const tier = TIERED_MATRIX[template.key]?.familyTier || 1;
+
+        const tierNames = {
+          1: "Mundane",
+          2: "Elite",
+          3: "Mythic",
+          4: "Titanic",
+          5: "Cosmic",
+          6: "Apocalyptic",
+          7: "Divine"
+        };
+        
+        const badge = `<span class="tier-badge tier-${tier}" title="${tierNames[tier]} Tier">${tierNames[tier]}</span>`;
+
         return `
           <div class="enemy-card">
             <img src="/assets/enemies/${template.key}.png" alt="${template.name}">
@@ -528,7 +558,8 @@
               <div><strong>Level:</strong> ${template.level ?? "?"}</div>
               <div><strong>Element:</strong> ${format(template.element || "neutral")}</div>
     
-              <div><strong>Tier:</strong> ${tierName}</div> <!-- ⭐ NEW -->
+              <!-- <div><strong>Tier:</strong> ${tierName}</div> <!-- ⭐ NEW -->
+              <div><strong>Tier:</strong> ${badge}</div>
     
               <div><strong>Allowed Regions:</strong> ${
                 allowedRegions.length ? allowedRegions.map(format).join(", ") : "Any"
