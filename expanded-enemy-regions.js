@@ -1,6 +1,6 @@
 // expand-region-enemies.js
 
-import { ENEMY_GROUP_RULES } from "./enemy_group_rules.js";
+import { ENEMY_GROUP_RULES } from "./enemy-group-rules.js";
 import { ENEMY_REGIONS } from "./enemy-regions.js";
 import { ENEMIES } from "./enemies.js";
 
