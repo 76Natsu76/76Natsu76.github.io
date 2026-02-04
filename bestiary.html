@@ -625,8 +625,8 @@
       const abilities = template.abilities || [];
     
       /* ⭐ NEW: Tier Display */
-      const entry = TIERED_MATRIX[template.family];
-      const tierName = TIER_NAMES[entry.familyTier];
+      const entry = TIERED_MATRIX[template.key] || { familyTier: 1 };
+      const tierName = TIER_NAMES[entry.familyTier] || "Mundane";
     
       const loot = template.lootTable || {};
       let lootSummary = "None";
