@@ -12,7 +12,7 @@ import { resolveEnemy } from "./resolveEnemy.js";
 import { ENEMY_FAMILIES } from "./enemy-families.js";
 import { loadEnemies } from "./enemy-database.js"; // your canonical enemy list
 import { pickWeighted } from "./weighted.js";      // generic weighted picker
-import { ENEMY_GROUP_RULES } from "./enemy-group-rules.js";
+import { ENEMY_GROUP_SIZES } from "./enemy_group_sizes.js";
 
 // ------------------------------------------------------------
 // BIOME WEATHER POOLS (canonical, matches world-tick.js)
@@ -149,7 +149,7 @@ export function generateEncounter(regionKey, playerState) {
   const event = rollRegionEvent(regionKey);
 
   const familyId = pickEnemyFamily(biomeKey);
-  const groupRule = ENEMY_GROUP_RULES[familyId] || ENEMY_GROUP_RULES.default;
+  const groupRule = ENEMY_GROUP_SIZES[family] || ENEMY_GROUP_SIZES.default;
   
   const count = Math.floor(
     Math.random() * (groupRule.max - groupRule.min + 1)
