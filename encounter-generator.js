@@ -12,7 +12,7 @@ import { resolveEnemy } from "./resolveEnemy.js";
 import { ENEMY_FAMILIES } from "./enemy-families.js";
 import { loadEnemies } from "./enemy-database.js"; // your canonical enemy list
 import { pickWeighted } from "./weighted.js";      // generic weighted picker
-import { ENEMY_GROUP_SIZES } from "./enemy_group_sizes.js";
+import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 
 // ------------------------------------------------------------
 // BIOME WEATHER POOLS (canonical, matches world-tick.js)
