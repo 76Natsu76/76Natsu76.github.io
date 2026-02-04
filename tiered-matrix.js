@@ -2,7 +2,7 @@
 import { SUBRACE_FAMILY_INDEX } from "./subrace-family-index.js";
 import { FAMILY_TIERS } from "./family-tiers.js";
 import { REGION_TIERS } from "./region-tiers.js";
-import { ENEMY_REGIONS } from "./enemy-regions.js";
+import { EXPANDED_ENEMY_REGIONS as ENEMY_REGIONS } from "./expanded-enemy-regions.js";
 import { ENEMIES } from "./enemies.js";
 
 
@@ -33,12 +33,7 @@ for (const enemyKey in ENEMIES) {
   const familyTier = FAMILY_TIERS[family] || 1;
 
   // 4. Resolve allowed explicit regions
-  const allowedRegions = [];
-  for (const region in ENEMY_REGIONS) {
-    if (ENEMY_REGIONS[region].includes(enemyKey)) {
-      allowedRegions.push(region);
-    }
-  }
+  const allowedRegions = ENEMY_REGIONS[enemyKey] || [];
 
   // 5. Resolve region tiers
   const allowedRegionTiers = allowedRegions.map(r => REGION_TIERS[r] || 1);
