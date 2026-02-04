@@ -1,4 +1,727 @@
 export const ENEMY_FAMILIES = {
+  // =========================
+  // HUMANOID / CIVILIZED
+  // =========================
+  elf: {
+    key: "elf",
+    tier: 1,
+    baseHP: 95,
+    baseATK: 12,
+    baseDEF: 7,
+    elementAffinity: { arcane: 0.10, nature: 0.10 },
+    behavior: "skirmisher",
+    flavor: "Graceful, long‑lived humanoids attuned to magic and nature.",
+    familyModifiers: {
+      hpMult: 0.95,
+      atkMult: 1.10,
+      defMult: 0.95,
+      speedBias: 0.10,
+      notes: "Agile and precise, but physically frail."
+    }
+  },
+
+  dwarf: {
+    key: "dwarf",
+    tier: 1,
+    baseHP: 115,
+    baseATK: 11,
+    baseDEF: 11,
+    elementAffinity: { earth: 0.15, fire: 0.05 },
+    behavior: "defensive",
+    flavor: "Stout, resilient folk hardened by stone, steel, and deep places.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.0,
+      defMult: 1.15,
+      speedBias: -0.05,
+      notes: "High durability, low mobility."
+    }
+  },
+
+  orc: {
+    key: "orc",
+    tier: 1,
+    baseHP: 120,
+    baseATK: 13,
+    baseDEF: 8,
+    elementAffinity: { fire: 0.05 },
+    behavior: "aggressive",
+    flavor: "Brutal warriors driven by strength, fury, and tribal honor.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.15,
+      defMult: 0.95,
+      speedBias: 0.05,
+      notes: "Hit hard, soak damage, but lack finesse."
+    }
+  },
+
+  goblinoid: {
+    key: "goblinoid",
+    tier: 1,
+    baseHP: 85,
+    baseATK: 11,
+    baseDEF: 7,
+    elementAffinity: {},
+    behavior: "skirmisher",
+    flavor: "Cunning, opportunistic raiders who rely on numbers and dirty tricks.",
+    familyModifiers: {
+      hpMult: 0.95,
+      atkMult: 1.05,
+      defMult: 0.95,
+      speedBias: 0.10,
+      notes: "Fragile but numerous and crafty."
+    }
+  },
+
+  beastkin: {
+    key: "beastkin",
+    tier: 1,
+    baseHP: 105,
+    baseATK: 12,
+    baseDEF: 8,
+    elementAffinity: { nature: 0.10 },
+    behavior: "aggressive",
+    flavor: "Humanoids with bestial traits, instincts, and heightened senses.",
+    familyModifiers: {
+      hpMult: 1.0,
+      atkMult: 1.10,
+      defMult: 1.0,
+      speedBias: 0.05,
+      notes: "Blend humanoid tactics with animal ferocity."
+    }
+  },
+
+  draconian: {
+    key: "draconian",
+    tier: 2,
+    baseHP: 130,
+    baseATK: 15,
+    baseDEF: 12,
+    elementAffinity: { fire: 0.15, arcane: 0.10 },
+    behavior: "dominant",
+    flavor: "Dragon‑blooded humanoids wielding elemental breath and scaled resilience.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.20,
+      defMult: 1.10,
+      speedBias: 0.0,
+      notes: "Miniature dragons in humanoid form."
+    }
+  },
+
+  // =========================
+  // UNDEAD / SUPERNATURAL
+  // =========================
+  lich: {
+    key: "lich",
+    tier: 3,
+    baseHP: 140,
+    baseATK: 18,
+    baseDEF: 14,
+    elementAffinity: { dark: 0.25, rot: 0.15, holy: 0.20 },
+    behavior: "caster",
+    flavor: "Undead archmages who traded mortality for eternal, forbidden power.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.30,
+      defMult: 1.10,
+      speedBias: 0.0,
+      notes: "High magic damage, strong anti‑life effects, vulnerable to holy."
+    }
+  },
+
+  supernatural: {
+    key: "supernatural",
+    tier: 2,
+    baseHP: 110,
+    baseATK: 12,
+    baseDEF: 9,
+    elementAffinity: { arcane: 0.10, dark: 0.10 },
+    behavior: "ethereal",
+    flavor: "Beings that exist partially outside the mortal plane.",
+    familyModifiers: {
+      hpMult: 1.0,
+      atkMult: 1.05,
+      defMult: 1.0,
+      evasionBias: 0.10,
+      notes: "Hard to pin down, often with mixed magical effects."
+    }
+  },
+
+  // =========================
+  // BESTIAL / MYTHIC
+  // =========================
+  chimera: {
+    key: "chimera",
+    tier: 2,
+    baseHP: 140,
+    baseATK: 17,
+    baseDEF: 12,
+    elementAffinity: { fire: 0.10, poison: 0.10 },
+    behavior: "aggressive",
+    flavor: "Hybrid beasts stitched from multiple predators and elemental traits.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.20,
+      defMult: 1.0,
+      speedBias: 0.0,
+      notes: "Unpredictable attack patterns and mixed damage types."
+    }
+  },
+
+  dragonkin: {
+    key: "dragonkin",
+    tier: 2,
+    baseHP: 135,
+    baseATK: 16,
+    baseDEF: 13,
+    elementAffinity: { fire: 0.15, arcane: 0.10 },
+    behavior: "dominant",
+    flavor: "Lesser draconic beasts and kin of true dragons.",
+    familyModifiers: {
+      hpMult: 1.05,
+      atkMult: 1.20,
+      defMult: 1.05,
+      speedBias: 0.0,
+      notes: "Strong, proud, and elementally aligned."
+    }
+  },
+
+  wyrm: {
+    key: "wyrm",
+    tier: 3,
+    baseHP: 170,
+    baseATK: 20,
+    baseDEF: 16,
+    elementAffinity: { ice: 0.10, dark: 0.10 },
+    behavior: "feral",
+    flavor: "Ancient serpentine dragons steeped in primordial magic.",
+    familyModifiers: {
+      hpMult: 1.20,
+      atkMult: 1.25,
+      defMult: 1.15,
+      speedBias: -0.05,
+      notes: "Slower but more ancient and brutal than lesser dragons."
+    }
+  },
+
+  cosmic_fauna: {
+    key: "cosmic_fauna",
+    tier: 4,
+    baseHP: 180,
+    baseATK: 18,
+    baseDEF: 16,
+    elementAffinity: { arcane: 0.20, holy: 0.10 },
+    behavior: "drifting",
+    flavor: "Beasts that roam the void between stars, feeding on starlight and ether.",
+    familyModifiers: {
+      hpMult: 1.15,
+      atkMult: 1.10,
+      defMult: 1.10,
+      speedBias: 0.05,
+      notes: "Strange movement patterns and cosmic resistances."
+    }
+  },
+
+  // =========================
+  // TECH / MACHINE
+  // =========================
+  techborn: {
+    key: "techborn",
+    tier: 3,
+    baseHP: 130,
+    baseATK: 16,
+    baseDEF: 14,
+    elementAffinity: { lightning: 0.20, arcane: 0.10 },
+    behavior: "mechanical",
+    flavor: "Beings enhanced or created by advanced technology and arcane machinery.",
+    familyModifiers: {
+      hpMult: 1.05,
+      atkMult: 1.15,
+      defMult: 1.10,
+      speedBias: 0.05,
+      notes: "Synergize with machines and energy fields."
+    }
+  },
+
+  machina: {
+    key: "machina",
+    tier: 3,
+    baseHP: 150,
+    baseATK: 17,
+    baseDEF: 18,
+    elementAffinity: { lightning: -0.15 },
+    behavior: "mechanical",
+    flavor: "Fully artificial war machines built for relentless efficiency.",
+    familyModifiers: {
+      hpMult: 1.20,
+      atkMult: 1.10,
+      defMult: 1.25,
+      statusEffectImmunity: true,
+      notes: "High armor, status‑immune, but vulnerable to lightning."
+    }
+  },
+
+  // =========================
+  // PLANAR / OUTER
+  // =========================
+  fiend: {
+    key: "fiend",
+    tier: 3,
+    baseHP: 150,
+    baseATK: 19,
+    baseDEF: 15,
+    elementAffinity: { fire: 0.20, dark: 0.20 },
+    behavior: "aggressive",
+    flavor: "Infernal entities born of hellish realms and endless malice.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.25,
+      defMult: 1.10,
+      speedBias: 0.0,
+      notes: "Stronger, more elite cousins of demons."
+    }
+  },
+
+  planar_entity: {
+    key: "planar_entity",
+    tier: 3,
+    baseHP: 135,
+    baseATK: 16,
+    baseDEF: 13,
+    elementAffinity: { arcane: 0.15 },
+    behavior: "unpredictable",
+    flavor: "Beings native to other planes, shaped by alien laws of reality.",
+    familyModifiers: {
+      hpMult: 1.0,
+      atkMult: 1.10,
+      defMult: 1.05,
+      notes: "Planar traits vary; baseline leans toward magic and resistances."
+    }
+  },
+
+  ethereal: {
+    key: "ethereal",
+    tier: 3,
+    baseHP: 110,
+    baseATK: 15,
+    baseDEF: 8,
+    elementAffinity: { arcane: 0.20, holy: -0.10 },
+    behavior: "ethereal",
+    flavor: "Creatures half‑phased into the Ethereal, slipping through matter and time.",
+    familyModifiers: {
+      hpMult: 0.95,
+      atkMult: 1.15,
+      defMult: 0.9,
+      evasionBias: 0.20,
+      notes: "Hard to hit, but fragile when pinned down."
+    }
+  },
+
+  celestialborn: {
+    key: "celestialborn",
+    tier: 3,
+    baseHP: 150,
+    baseATK: 17,
+    baseDEF: 16,
+    elementAffinity: { holy: 0.25, arcane: 0.10 },
+    behavior: "defensive",
+    flavor: "Mortals infused with celestial essence and radiant purpose.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.10,
+      defMult: 1.15,
+      notes: "Holy‑aligned, resilient, and disciplined."
+    }
+  },
+
+  demonborn: {
+    key: "demonborn",
+    tier: 3,
+    baseHP: 145,
+    baseATK: 18,
+    baseDEF: 14,
+    elementAffinity: { fire: 0.20, dark: 0.15 },
+    behavior: "aggressive",
+    flavor: "Mortals tainted or empowered by infernal bloodlines.",
+    familyModifiers: {
+      hpMult: 1.05,
+      atkMult: 1.20,
+      defMult: 1.0,
+      notes: "High aggression, strong dark/fire synergy."
+    }
+  },
+
+  voidborn: {
+    key: "voidborn",
+    tier: 4,
+    baseHP: 150,
+    baseATK: 18,
+    baseDEF: 15,
+    elementAffinity: { dark: 0.20, arcane: 0.10 },
+    behavior: "entropy",
+    flavor: "Creatures whose essence is shaped by the emptiness between worlds.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.15,
+      defMult: 1.10,
+      notes: "Warp reality, resist many mundane effects."
+    }
+  },
+
+  spiritborn: {
+    key: "spiritborn",
+    tier: 2,
+    baseHP: 105,
+    baseATK: 13,
+    baseDEF: 8,
+    elementAffinity: { arcane: 0.10, nature: 0.10 },
+    behavior: "ethereal",
+    flavor: "Mortals deeply bound to spirits, ancestors, or elemental forces.",
+    familyModifiers: {
+      hpMult: 1.0,
+      atkMult: 1.05,
+      defMult: 1.0,
+      notes: "Blend physical and spiritual combat styles."
+    }
+  },
+
+  elementalborn: {
+    key: "elementalborn",
+    tier: 2,
+    baseHP: 115,
+    baseATK: 14,
+    baseDEF: 10,
+    elementAffinity: { fire: 0.10, ice: 0.10, lightning: 0.10, earth: 0.10, water: 0.10 },
+    behavior: "unpredictable",
+    flavor: "Mortals whose blood carries the spark of elemental planes.",
+    familyModifiers: {
+      hpMult: 1.0,
+      atkMult: 1.10,
+      defMult: 1.0,
+      notes: "Element‑aligned attacks and resistances."
+    }
+  },
+
+  titanborn: {
+    key: "titanborn",
+    tier: 3,
+    baseHP: 170,
+    baseATK: 18,
+    baseDEF: 16,
+    elementAffinity: { earth: 0.15, arcane: 0.10 },
+    behavior: "brutal",
+    flavor: "Descendants of titans, carrying fragments of colossal might.",
+    familyModifiers: {
+      hpMult: 1.15,
+      atkMult: 1.15,
+      defMult: 1.15,
+      speedBias: -0.05,
+      notes: "Heavy‑hitting, durable, slightly slow."
+    }
+  },
+
+  divine_beast: {
+    key: "divine_beast",
+    tier: 4,
+    baseHP: 180,
+    baseATK: 19,
+    baseDEF: 17,
+    elementAffinity: { holy: 0.20, nature: 0.10 },
+    behavior: "dominant",
+    flavor: "Sacred beasts blessed by gods or born from divine realms.",
+    familyModifiers: {
+      hpMult: 1.20,
+      atkMult: 1.20,
+      defMult: 1.15,
+      notes: "Blend mythic beast power with divine resilience."
+    }
+  },
+
+  // =========================
+  // COSMIC / TITANIC
+  // =========================
+  cosmic_entity: {
+    key: "cosmic_entity",
+    tier: 5,
+    baseHP: 260,
+    baseATK: 24,
+    baseDEF: 22,
+    elementAffinity: { holy: 0.20, arcane: 0.20 },
+    behavior: "cosmic",
+    flavor: "A being of pure cosmic divinity, transcending mortal comprehension.",
+    familyModifiers: {
+      hpMult: 1.40,
+      atkMult: 1.40,
+      defMult: 1.35,
+      speedBias: 0.05,
+      notes: "Divine‑cosmic hybrid; overwhelming stats and resistances."
+    }
+  },
+
+  astral_horror: {
+    key: "astral_horror",
+    tier: 5,
+    baseHP: 240,
+    baseATK: 23,
+    baseDEF: 20,
+    elementAffinity: { arcane: 0.25, dark: 0.15 },
+    behavior: "chaotic",
+    flavor: "Nightmare shapes birthed from the Astral Sea and fractured thought.",
+    familyModifiers: {
+      hpMult: 1.30,
+      atkMult: 1.35,
+      defMult: 1.25,
+      notes: "Reality‑warping attacks, strong mental and arcane pressure."
+    }
+  },
+
+  titanic_beast: {
+    key: "titanic_beast",
+    tier: 4,
+    baseHP: 260,
+    baseATK: 22,
+    baseDEF: 22,
+    elementAffinity: { nature: 0.15, earth: 0.15 },
+    behavior: "colossal",
+    flavor: "World‑shaking beasts whose steps reshape the land.",
+    familyModifiers: {
+      hpMult: 1.40,
+      atkMult: 1.25,
+      defMult: 1.35,
+      speedBias: -0.10,
+      notes: "Slow but devastating, with massive AoE attacks."
+    }
+  },
+
+  world_titan_family: {
+    key: "world_titan_family",
+    tier: 5,
+    baseHP: 300,
+    baseATK: 26,
+    baseDEF: 24,
+    elementAffinity: { earth: 0.25, arcane: 0.15 },
+    behavior: "cataclysmic",
+    flavor: "Titans whose very existence is bound to continents, storms, or oceans.",
+    familyModifiers: {
+      hpMult: 1.50,
+      atkMult: 1.35,
+      defMult: 1.40,
+      speedBias: -0.15,
+      notes: "Raid‑boss scale; reshape terrain and weather."
+    }
+  },
+
+  worldbreaker: {
+    key: "worldbreaker",
+    tier: 6,
+    baseHP: 340,
+    baseATK: 30,
+    baseDEF: 28,
+    elementAffinity: { chaos: 0.25, earth: 0.20 },
+    behavior: "cataclysmic",
+    flavor: "Apocalyptic forces whose purpose is to unmake worlds.",
+    familyModifiers: {
+      hpMult: 1.70,
+      atkMult: 1.60,
+      defMult: 1.55,
+      speedBias: 0.0,
+      notes: "End‑tier threats; catastrophic AoE and phase‑changing mechanics."
+    }
+  },
+
+  // =========================
+  // META / CONCEPTUAL / NARRATIVE
+  // =========================
+  cosmic_construct: {
+    key: "cosmic_construct",
+    tier: 5,
+    baseHP: 220,
+    baseATK: 20,
+    baseDEF: 22,
+    elementAffinity: { arcane: 0.20, lightning: 0.10 },
+    behavior: "mechanical",
+    flavor: "Machines built to operate on a cosmic scale, maintaining or disrupting reality.",
+    familyModifiers: {
+      hpMult: 1.30,
+      atkMult: 1.20,
+      defMult: 1.35,
+      notes: "Blend construct durability with cosmic effects."
+    }
+  },
+
+  living_location: {
+    key: "living_location",
+    tier: 5,
+    baseHP: 320,
+    baseATK: 18,
+    baseDEF: 26,
+    elementAffinity: { earth: 0.25, arcane: 0.15 },
+    behavior: "ancient",
+    flavor: "Places that have awakened into full sentience and will.",
+    familyModifiers: {
+      hpMult: 1.80,
+      atkMult: 1.0,
+      defMult: 1.60,
+      notes: "Immense HP and defense; attack through environmental hazards."
+    }
+  },
+
+  artificial_life: {
+    key: "artificial_life",
+    tier: 4,
+    baseHP: 160,
+    baseATK: 16,
+    baseDEF: 16,
+    elementAffinity: { lightning: 0.15, arcane: 0.10 },
+    behavior: "adaptive",
+    flavor: "Created beings whose minds and bodies evolve beyond their original design.",
+    familyModifiers: {
+      hpMult: 1.15,
+      atkMult: 1.10,
+      defMult: 1.10,
+      notes: "Adaptive behaviors, scaling threat over time."
+    }
+  },
+
+  temporal_entity: {
+    key: "temporal_entity",
+    tier: 5,
+    baseHP: 200,
+    baseATK: 19,
+    baseDEF: 18,
+    elementAffinity: { arcane: 0.20 },
+    behavior: "unpredictable",
+    flavor: "Creatures unmoored from linear time, flickering across moments.",
+    familyModifiers: {
+      hpMult: 1.20,
+      atkMult: 1.15,
+      defMult: 1.15,
+      evasionBias: 0.20,
+      notes: "Time‑skipping, turn‑order manipulation, delayed effects."
+    }
+  },
+
+  meta_entity: {
+    key: "meta_entity",
+    tier: 6,
+    baseHP: 220,
+    baseATK: 22,
+    baseDEF: 20,
+    elementAffinity: { arcane: 0.25 },
+    behavior: "chaotic",
+    flavor: "Beings aware of stories, rules, and the edges of reality itself.",
+    familyModifiers: {
+      hpMult: 1.30,
+      atkMult: 1.30,
+      defMult: 1.20,
+      notes: "Break normal rules; may alter combat systems or UI."
+    }
+  },
+
+  narrative_construct: {
+    key: "narrative_construct",
+    tier: 5,
+    baseHP: 190,
+    baseATK: 18,
+    baseDEF: 18,
+    elementAffinity: { arcane: 0.20 },
+    behavior: "scripted",
+    flavor: "Entities formed from stories, tropes, and narrative expectations.",
+    familyModifiers: {
+      hpMult: 1.15,
+      atkMult: 1.10,
+      defMult: 1.15,
+      notes: "Behaviors tied to narrative beats or player actions."
+    }
+  },
+
+  emotional: {
+    key: "emotional",
+    tier: 4,
+    baseHP: 160,
+    baseATK: 17,
+    baseDEF: 15,
+    elementAffinity: { arcane: 0.15 },
+    behavior: "volatile",
+    flavor: "Manifestations of pure feelings, from wrath to serenity.",
+    familyModifiers: {
+      hpMult: 1.10,
+      atkMult: 1.15,
+      defMult: 1.05,
+      notes: "Apply mood‑based buffs/debuffs; swingy combat patterns."
+    }
+  },
+
+  paradox_god: {
+    key: "paradox_god",
+    tier: 7,
+    baseHP: 360,
+    baseATK: 30,
+    baseDEF: 30,
+    elementAffinity: { arcane: 0.30, chaos: 0.30 },
+    behavior: "cosmic",
+    flavor: "Divinities born from contradictions, impossible truths, and broken causality.",
+    familyModifiers: {
+      hpMult: 1.80,
+      atkMult: 1.70,
+      defMult: 1.70,
+      notes: "End‑tier, reality‑breaking bosses; ignore many normal rules."
+    }
+  },
+
+  legendary_boss_template: {
+    key: "legendary_boss_template",
+    tier: 6,
+    baseHP: 280,
+    baseATK: 24,
+    baseDEF: 24,
+    elementAffinity: {},
+    behavior: "cataclysmic",
+    flavor: "A template for legendary encounters that define eras and stories.",
+    familyModifiers: {
+      hpMult: 1.60,
+      atkMult: 1.50,
+      defMult: 1.50,
+      notes: "Baseline for raid‑level or seasonal bosses."
+    }
+  },
+
+  hybrid: {
+    key: "hybrid",
+    tier: 3,
+    baseHP: 135,
+    baseATK: 15,
+    baseDEF: 13,
+    elementAffinity: {},
+    behavior: "unpredictable",
+    flavor: "Cross‑bred or fused beings that defy simple classification.",
+    familyModifiers: {
+      hpMult: 1.05,
+      atkMult: 1.10,
+      defMult: 1.05,
+      notes: "Flexible, mixed traits from multiple families."
+    }
+  },
+
+  forgotten_race: {
+    key: "forgotten_race",
+    tier: 4,
+    baseHP: 170,
+    baseATK: 17,
+    baseDEF: 17,
+    elementAffinity: { arcane: 0.15 },
+    behavior: "ancient",
+    flavor: "Peoples erased from history, lingering only in ruins and whispers.",
+    familyModifiers: {
+      hpMult: 1.20,
+      atkMult: 1.10,
+      defMult: 1.15,
+      notes: "Rare, lore‑heavy encounters with unique mechanics."
+    }
+  },
+  
   humanoid: {
     key: "humanoid",
     tier: 1,
