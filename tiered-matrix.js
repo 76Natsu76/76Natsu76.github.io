@@ -5,7 +5,6 @@ import { REGION_TIERS } from "./region-tiers.js";
 import { ENEMY_REGIONS } from "./enemy-regions.js";
 import { ENEMIES } from "./enemies.js";
 
-export const TIERED_MATRIX = {};
 
 export const TIER_NAMES = {
   1: "Mundane",
@@ -14,6 +13,8 @@ export const TIER_NAMES = {
   4: "Titanic",
   5: "Cosmic"
 };
+
+export const TIERED_MATRIX = {};
 
 for (const enemyKey in ENEMIES) {
   const enemy = ENEMIES[enemyKey];
