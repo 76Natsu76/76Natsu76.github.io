@@ -611,7 +611,7 @@
     
     function openStatsModal(enemyKey) {
       const template = EnemyRegistry.buildEnemyTemplate(enemyKey);
-      const allowedRegions = ENEMY_REGIONS[raw.key] || [];
+      const allowedRegions = ENEMY_REGIONS[enemyKey] || [];
       const { canonicalRegions, subregions } = groupEnemyRegions(allowedRegions);
       const allowedRegionsText = canonicalRegions.length
         ? canonicalRegions.map(format).join(", ")
