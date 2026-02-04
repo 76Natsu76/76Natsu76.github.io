@@ -5,7 +5,7 @@ import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
-import { ENEMY_GROUP_RULES } from "./enemy-group-rules.js";
+import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { ENEMY_REGIONS } from "./enemy-regions.js";
 import { ENEMY_TAGS } from "./enemy-tags.js";
 
@@ -72,7 +72,7 @@ function generate(regionKey, username, enemyOverride = null) {
   }*/
 
   // GROUP SIZE
-  const groupRule = ENEMY_GROUP_RULES[family] || ENEMY_GROUP_RULES.default;
+  const groupRule = ENEMY_GROUP_SIZES[family] || ENEMY_GROUP_SIZES.default;
   const count = Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) + groupRule.min;
   
   // BUILD ENEMY GROUP
