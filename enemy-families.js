@@ -1035,6 +1035,24 @@ export const ENEMY_FAMILIES = {
     }
   },
 
+  cosmic_entity: {
+    key: "cosmic_entity",
+    tier: 5,
+    baseHP: 300,
+    baseATK: 26,
+    baseDEF: 22,
+    elementAffinity: { holy: 0.20, arcane: 0.20 },
+    behavior: "cosmic",
+    flavor: "A being of pure cosmic divinity, transcending mortal comprehension.",
+    familyModifiers: {
+      hpMult: 1.4,
+      atkMult: 1.4,
+      defMult: 1.4,
+      speedBias: 0.05,
+      notes: "Cosmic entities wield divine and astral power beyond mortal limits."
+    }
+  },
+
   multiversal_paragon: {
     key: "multiversal_paragon",
     tier: 7,
