@@ -1,158 +1,245 @@
-<script type="module">
-  import { requireSession } from "./session-guard.js";
-  import { PlayerStorage } from "./player-storage.js";
-  import { getRegenRates } from "./regen.js";
-  import { getSafeRespawnRemaining } from "./death-handler.js";
-  import { applyOfflineRegen } from "./offline-regen.js";
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8" />
+  <title>Town Hub</title>
+  <link rel="stylesheet" href="styles.css" />
 
-  /* ---------------------------------------------------------
-     SESSION + LOAD PLAYER
-  --------------------------------------------------------- */
-  await requireSession();
-  const { username } = window.syncState || {};
+  <style>
+    body {
+    background: #0b0e14;
+    color: #e0e0e0;
+    font-family: Arial, sans-serif;
+    }
+    
+    .container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #11141c;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #000;
+    }
+    
+    h1, h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    }
+    
+    .section {
+    margin-top: 20px;
+    background: #161a22;
+    border-radius: 8px;
+    padding: 15px;
+    }
+    
+    .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #222;
+    }
+    
+    .btn {
+    display: inline-block;
+    padding: 10px 18px;
+    margin: 8px;
+    background: #2a3244;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    }
+    
+    .btn:hover {
+    background: #3b465e;
+    }
+    
+    .portrait-frame {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid #444;
+    }
+    
+    .portrait-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }
+    
+    .center {
+    text-align: center;
+    }
+  </style>
+</head>
 
-  const content = document.getElementById("townContent");
+<body>
+  <div class="container">
+  <h1>🏰 Town Hub</h1>
+  <div id="townContent">Loading...</div>
+  </div>
 
-  if (!username) {
-    content.innerHTML = "<div>No active session.</div>";
-    throw new Error("No username in syncState");
-  }
-
-  let player = PlayerStorage.load(username);
-
-  if (!player) {
-    content.innerHTML = "<div>Failed to load player.</div>";
-    throw new Error("Player not found");
-  }
-
-  /* ---------------------------------------------------------
-     OFFLINE REGEN (Phase 4)
-  --------------------------------------------------------- */
-  player = applyOfflineRegen(player);
-  PlayerStorage.save(username, player);
-
-  /* ---------------------------------------------------------
-     AMBIENT TOWN REGEN
-  --------------------------------------------------------- */
-  const { hpPerMinute, mpPerMinute } = getRegenRates(player);
-
-  player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
-  player.mana = Math.min(player.manaMax, player.mana + mpPerMinute);
-
-  PlayerStorage.save(username, player);
-
-  /* ---------------------------------------------------------
-     RESPWAN FLAVOR + LOCK UI
-  --------------------------------------------------------- */
-  let flavor = "";
-  let lockUI = "";
-
-  if (player.justRespawned) {
-    flavor = `
-      <div class="section">
-        <p>You awaken in town, restored but drained. Your MP is completely depleted.</p>
-      </div>
-    `;
-    delete player.justRespawned;
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { getRegenRates } from "./regen.js";
+    import { getSafeRespawnRemaining } from "./death-handler.js";
+    import { applyOfflineRegen } from "./offline-regen.js";
+  
+    /* ---------------------------------------------------------
+       SESSION + LOAD PLAYER
+    --------------------------------------------------------- */
+    await requireSession();
+    const { username } = window.syncState || {};
+  
+    const content = document.getElementById("townContent");
+  
+    if (!username) {
+      content.innerHTML = "<div>No active session.</div>";
+      throw new Error("No username in syncState");
+    }
+  
+    let player = PlayerStorage.load(username);
+  
+    if (!player) {
+      content.innerHTML = "<div>Failed to load player.</div>";
+      throw new Error("Player not found");
+    }
+  
+    /* ---------------------------------------------------------
+       OFFLINE REGEN (Phase 4)
+    --------------------------------------------------------- */
+    player = applyOfflineRegen(player);
     PlayerStorage.save(username, player);
-  }
-
-  const remaining = getSafeRespawnRemaining(player);
-  if (remaining > 0) {
-    const minutes = Math.ceil(remaining / 60000);
-    lockUI = `
-      <div class="section" id="respawnLockBox">
-        <p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>
-      </div>
-    `;
-  } else if (player.safeRespawnLockUntil) {
-    delete player.safeRespawnLockUntil;
+  
+    /* ---------------------------------------------------------
+       AMBIENT TOWN REGEN
+    --------------------------------------------------------- */
+    const { hpPerMinute, mpPerMinute } = getRegenRates(player);
+  
+    player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
+    player.mana = Math.min(player.manaMax, player.mana + mpPerMinute);
+  
     PlayerStorage.save(username, player);
-  }
-
-  /* ---------------------------------------------------------
-     RENDER TOWN UI
-  --------------------------------------------------------- */
-  renderTown(player);
-
-  if (flavor) content.insertAdjacentHTML("beforeend", flavor);
-  if (lockUI) content.insertAdjacentHTML("beforeend", lockUI);
-
-  if (player.safeRespawnLockUntil) {
-    startRespawnLockCountdown(player);
-  }
-
-  /* ---------------------------------------------------------
-     RENDER FUNCTION
-  --------------------------------------------------------- */
-  function renderTown(p) {
-    content.innerHTML = `
-      <div class="section center">
-        <div class="portrait-frame">
-          <img class="portrait-img"
-               src="${p.portrait || "/assets/portraits/default.png"}"
-               onerror="this.src='/assets/portraits/default.png'">
+  
+    /* ---------------------------------------------------------
+       RESPWAN FLAVOR + LOCK UI
+    --------------------------------------------------------- */
+    let flavor = "";
+    let lockUI = "";
+  
+    if (player.justRespawned) {
+      flavor = `
+        <div class="section">
+          <p>You awaken in town, restored but drained. Your MP is completely depleted.</p>
         </div>
-        <h2>${p.username}</h2>
-        <div>Level ${p.level}</div>
-        <div>${p.profession ? p.profession.toUpperCase() : "Adventurer"}</div>
-      </div>
-
-      <div class="section">
-        <h2>Vitals</h2>
-        <div class="stat-row"><span>HP</span><span>${p.hpCurrent} / ${p.hpMax}</span></div>
-        <div class="stat-row"><span>MP</span><span>${p.mana} / ${p.manaMax}</span></div>
-        <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
-      </div>
-
-      <div class="section center">
-        <button class="btn" id="restBtn">Rest at Inn</button>
-        <button class="btn" id="shopBtn">Visit Shop</button>
-        <button class="btn" id="charBtn">Character Sheet</button>
-        <button class="btn" id="mapBtn">Return to World Map</button>
-      </div>
-    `;
-
-    document.getElementById("restBtn").onclick = restAtInn;
-    document.getElementById("shopBtn").onclick = () => window.location.href = "shop.html";
-    document.getElementById("charBtn").onclick = () => window.location.href = "character.html";
-    document.getElementById("mapBtn").onclick = () => window.location.href = "world-map.html";
-  }
-
-  /* ---------------------------------------------------------
-     REST AT INN
-  --------------------------------------------------------- */
-  function restAtInn() {
-    const p = PlayerStorage.load(username);
-    if (!p) return;
-
-    p.hpCurrent = p.hpMax;
-    p.mana = p.manaMax;
-
-    PlayerStorage.save(username, p);
-    renderTown(p);
-  }
-
-  /* ---------------------------------------------------------
-     RESPAWN LOCK COUNTDOWN
-  --------------------------------------------------------- */
-  function startRespawnLockCountdown(player) {
-    const box = document.getElementById("respawnLockBox");
-    if (!box) return;
-
-    const interval = setInterval(() => {
-      const remaining = getSafeRespawnRemaining(player);
-
-      if (remaining <= 0) {
-        box.innerHTML = "<p><strong>Safe Respawn Lock:</strong> Ready.</p>";
-        delete player.safeRespawnLockUntil;
-        PlayerStorage.save(username, player);
-        clearInterval(interval);
-        return;
-      }
-
+      `;
+      delete player.justRespawned;
+      PlayerStorage.save(username, player);
+    }
+  
+    const remaining = getSafeRespawnRemaining(player);
+    if (remaining > 0) {
       const minutes = Math.ceil(remaining / 60000);
-      box.innerHTML = `<p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>`;
-    }, 10000);
-  }
-</script>
+      lockUI = `
+        <div class="section" id="respawnLockBox">
+          <p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>
+        </div>
+      `;
+    } else if (player.safeRespawnLockUntil) {
+      delete player.safeRespawnLockUntil;
+      PlayerStorage.save(username, player);
+    }
+  
+    /* ---------------------------------------------------------
+       RENDER TOWN UI
+    --------------------------------------------------------- */
+    renderTown(player);
+  
+    if (flavor) content.insertAdjacentHTML("beforeend", flavor);
+    if (lockUI) content.insertAdjacentHTML("beforeend", lockUI);
+  
+    if (player.safeRespawnLockUntil) {
+      startRespawnLockCountdown(player);
+    }
+  
+    /* ---------------------------------------------------------
+       RENDER FUNCTION
+    --------------------------------------------------------- */
+    function renderTown(p) {
+      content.innerHTML = `
+        <div class="section center">
+          <div class="portrait-frame">
+            <img class="portrait-img"
+                 src="${p.portrait || "/assets/portraits/default.png"}"
+                 onerror="this.src='/assets/portraits/default.png'">
+          </div>
+          <h2>${p.username}</h2>
+          <div>Level ${p.level}</div>
+          <div>${p.profession ? p.profession.toUpperCase() : "Adventurer"}</div>
+        </div>
+  
+        <div class="section">
+          <h2>Vitals</h2>
+          <div class="stat-row"><span>HP</span><span>${p.hpCurrent} / ${p.hpMax}</span></div>
+          <div class="stat-row"><span>MP</span><span>${p.mana} / ${p.manaMax}</span></div>
+          <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
+        </div>
+  
+        <div class="section center">
+          <button class="btn" id="restBtn">Rest at Inn</button>
+          <button class="btn" id="shopBtn">Visit Shop</button>
+          <button class="btn" id="charBtn">Character Sheet</button>
+          <button class="btn" id="mapBtn">Return to World Map</button>
+        </div>
+      `;
+  
+      document.getElementById("restBtn").onclick = restAtInn;
+      document.getElementById("shopBtn").onclick = () => window.location.href = "shop.html";
+      document.getElementById("charBtn").onclick = () => window.location.href = "character.html";
+      document.getElementById("mapBtn").onclick = () => window.location.href = "world-map.html";
+    }
+  
+    /* ---------------------------------------------------------
+       REST AT INN
+    --------------------------------------------------------- */
+    function restAtInn() {
+      const p = PlayerStorage.load(username);
+      if (!p) return;
+  
+      p.hpCurrent = p.hpMax;
+      p.mana = p.manaMax;
+  
+      PlayerStorage.save(username, p);
+      renderTown(p);
+    }
+  
+    /* ---------------------------------------------------------
+       RESPAWN LOCK COUNTDOWN
+    --------------------------------------------------------- */
+    function startRespawnLockCountdown(player) {
+      const box = document.getElementById("respawnLockBox");
+      if (!box) return;
+  
+      const interval = setInterval(() => {
+        const remaining = getSafeRespawnRemaining(player);
+  
+        if (remaining <= 0) {
+          box.innerHTML = "<p><strong>Safe Respawn Lock:</strong> Ready.</p>";
+          delete player.safeRespawnLockUntil;
+          PlayerStorage.save(username, player);
+          clearInterval(interval);
+          return;
+        }
+  
+        const minutes = Math.ceil(remaining / 60000);
+        box.innerHTML = `<p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>`;
+      }, 10000);
+    }
+  </script>
+</body>
+</html>
