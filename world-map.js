@@ -1,5 +1,5 @@
 // world-map.js
-// World Map 2.0 — clean, modular, dark-fantasy flavored
+// World Map 2.1 — Region + Subregion selection
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
@@ -11,6 +11,7 @@ import { requireSession } from "./session-guard.js";
 import { PlayerStorage } from "./player-storage.js";
 import { getRegenRates } from "./regen.js";
 import { initWorldState, tickWorld } from "./world-tick.js";
+import { REGION_HIERARCHY } from "./REGION_HIERARCHY.js";
 
 /****************************************************
  * SESSION + INITIALIZATION
@@ -61,11 +62,9 @@ function applyRegen(player) {
   if (minutes <= 0) return player;
 
   const { hpPerMinute, mpPerMinute } = getRegenRates(player);
-  const hpPerMin = hpPerMinute ?? 6;
-  const mpPerMin = mpPerMinute ?? 0.5;
 
-  const hpGain = Math.floor(minutes * hpPerMin);
-  const mpGain = Math.floor(minutes * mpPerMin);
+  const hpGain = Math.floor(minutes * hpPerMinute);
+  const mpGain = Math.floor(minutes * mpPerMinute);
 
   player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpGain);
   player.manaCurrent = Math.min(
@@ -87,9 +86,7 @@ const WORLD_TICK_STORAGE_KEY = "world_tick_state";
 function loadOrInitWorldState() {
   try {
     const raw = localStorage.getItem(WORLD_TICK_STORAGE_KEY);
-    if (raw) {
-      return JSON.parse(raw);
-    }
+    if (raw) return JSON.parse(raw);
   } catch (e) {
     console.warn("Failed to load world tick state", e);
   }
@@ -107,35 +104,25 @@ function saveWorldState(worldState) {
 }
 
 function maybeTickWorld(worldState) {
-  // Simple: always tick once on load based on lastTick
-  // (tickWorld itself handles per-subsystem intervals)
   return tickWorld(worldState);
 }
 
 /****************************************************
- * UI HELPERS — WEATHER, HAZARD, INFLUENCE, EVENTS
+ * UI HELPERS — WEATHER, HAZARD, EVENTS
  ****************************************************/
 
 function weatherKeyToIconAndLabel(key) {
   switch (key) {
-    case "clear":
-      return { icon: "☀️", label: "Clear" };
+    case "clear": return { icon: "☀️", label: "Clear" };
     case "rain":
-    case "soft_rain":
-      return { icon: "🌧️", label: "Rain" };
-    case "storm":
-      return { icon: "🌩️", label: "Storm" };
+    case "soft_rain": return { icon: "🌧️", label: "Rain" };
+    case "storm": return { icon: "🌩️", label: "Storm" };
     case "fog":
-    case "mystic_fog":
-      return { icon: "🌫️", label: "Fog" };
-    case "heatwave":
-      return { icon: "🔥", label: "Heatwave" };
-    case "void_storm":
-      return { icon: "🌀", label: "Void Storm" };
-    case "arcane_winds":
-      return { icon: "✨", label: "Arcane Winds" };
-    default:
-      return { icon: "☁️", label: format(key || "Unknown") };
+    case "mystic_fog": return { icon: "🌫️", label: "Fog" };
+    case "heatwave": return { icon: "🔥", label: "Heatwave" };
+    case "void_storm": return { icon: "🌀", label: "Void Storm" };
+    case "arcane_winds": return { icon: "✨", label: "Arcane Winds" };
+    default: return { icon: "☁️", label: format(key || "Unknown") };
   }
 }
 
@@ -147,16 +134,11 @@ function hazardLevelToClass(level) {
 
 function influenceIcon(key) {
   switch (key) {
-    case "corruption":
-      return "🜂"; // alchemical-ish
-    case "wildlife":
-      return "🐾";
-    case "humanoid":
-      return "⚔️";
-    case "elemental":
-      return "✨";
-    default:
-      return "•";
+    case "corruption": return "🜂";
+    case "wildlife": return "🐾";
+    case "humanoid": return "⚔️";
+    case "elemental": return "✨";
+    default: return "•";
   }
 }
 
@@ -179,16 +161,8 @@ function renderSeasonBanner(worldState) {
   if (!banner) return;
 
   const season = (worldState.season || "Unknown").toString().toLowerCase();
-  const label = "Season: " + format(season);
-
-  banner.textContent = label;
-  banner.className = "";
-  banner.classList.add("season-banner");
-
-  if (season === "winter") banner.classList.add("season-winter");
-  else if (season === "summer") banner.classList.add("season-summer");
-  else if (season === "spring") banner.classList.add("season-spring");
-  else if (season === "autumn" || season === "fall") banner.classList.add("season-autumn");
+  banner.textContent = "Season: " + format(season);
+  banner.className = "season-banner season-" + season;
 }
 
 function renderWorldMap(player, worldState, username) {
@@ -198,9 +172,6 @@ function renderWorldMap(player, worldState, username) {
   const out = [];
   const playerLevel = Number(player.level || 1);
 
-  const regionUnlocks = WorldSim._getRegionUnlocks();
-  const worldBossData = WorldSim._getBossData();
-
   for (const regionKey in WORLD_DATA.regions) {
     const region = WORLD_DATA.regions[regionKey];
     const tickRegion = worldState.regions?.[regionKey] || {};
@@ -209,19 +180,6 @@ function renderWorldMap(player, worldState, username) {
 
     const [minLevel, maxLevel] = region.levelRange || [1, 999];
     const levelLocked = playerLevel < minLevel;
-
-    const globallyUnlocked =
-      worldState.regionUnlocks?.[regionKey] ||
-      regionUnlocks.unlocks?.[regionKey] ||
-      false;
-
-    const bossState = worldState.bosses?.[regionKey] || {};
-    const bossTemplate = worldBossData[regionKey];
-    const bossActive = !!bossState.active;
-    const bossDefeated = globallyUnlocked && !bossActive && bossTemplate;
-    const bossLocked = !!bossTemplate && !globallyUnlocked && !bossActive;
-
-    const regionLocked = levelLocked || bossLocked;
 
     const hazardLevel = tickRegion.hazardLevel ?? 0;
     const hazardClass = hazardLevelToClass(hazardLevel);
@@ -241,24 +199,15 @@ function renderWorldMap(player, worldState, username) {
       ? activeEvents.map(formatEventBadge).join(" ")
       : "<span class='event-badge event-badge-none'>None</span>";
 
-    const biomeFlavor = biome?.flavor?.length
-      ? biome.flavor[Math.floor(Math.random() * biome.flavor.length)]
-      : "";
-
-    let lockMessage = "";
-    if (levelLocked) lockMessage = `Requires Lv ${minLevel}`;
-    else if (bossLocked) lockMessage = `Locked — Defeat the World Boss`;
-
-    const bossStatusLabel = bossActive
-      ? "World Boss: Active"
-      : bossDefeated
-      ? "World Boss: Defeated"
-      : bossTemplate
-      ? "World Boss: Locked"
-      : "World Boss: None";
+    const subregionDefs = REGION_HIERARCHY[regionKey]?.subregions || {};
+    const subregionOptions = Object.entries(subregionDefs)
+      .map(([key, sr]) =>
+        `<option value="${key}">${format(key)} (Tier ${sr.tier})</option>`
+      )
+      .join("");
 
     out.push(`
-      <div class="region-card ${bossActive ? "worldboss-active" : ""}">
+      <div class="region-card">
         <div class="region-header">
           <h2>${region.name}</h2>
           <div class="region-subtitle">${format(biomeKey)}</div>
@@ -269,83 +218,45 @@ function renderWorldMap(player, worldState, username) {
             <span class="weather-icon">${weatherIcon}</span>
             <span class="weather-label">${weatherLabel}</span>
           </div>
+
           <div class="region-hazard">
             <div class="hazard-label">
               <span>Hazard</span>
               <span>${hazardLevel.toFixed(0)}%</span>
             </div>
             <div class="hazard-bar ${hazardClass}">
-              <div class="hazard-fill" style="width: ${Math.max(
-                0,
-                Math.min(100, hazardLevel)
-              )}%;"></div>
+              <div class="hazard-fill" style="width:${Math.min(100, hazardLevel)}%;"></div>
             </div>
-            ${
-              hazardLevel >= 70
-                ? `<div class="hazard-warning">☠️ High Danger</div>`
-                : hazardLevel >= 40
-                ? `<div class="hazard-warning">⚠️ Elevated Risk</div>`
-                : ""
-            }
           </div>
         </div>
 
         <div class="region-influence">
-          <div class="influence-item">
-            <span class="influence-icon">${influenceIcon("corruption")}</span>
-            <span class="influence-label">Corruption</span>
-            <span class="influence-value">${influence.corruption.toFixed(0)}</span>
-          </div>
-          <div class="influence-item">
-            <span class="influence-icon">${influenceIcon("wildlife")}</span>
-            <span class="influence-label">Wildlife</span>
-            <span class="influence-value">${influence.wildlife.toFixed(0)}</span>
-          </div>
-          <div class="influence-item">
-            <span class="influence-icon">${influenceIcon("humanoid")}</span>
-            <span class="influence-label">Humanoid</span>
-            <span class="influence-value">${influence.humanoid.toFixed(0)}</span>
-          </div>
-          <div class="influence-item">
-            <span class="influence-icon">${influenceIcon("elemental")}</span>
-            <span class="influence-label">Elemental</span>
-            <span class="influence-value">${influence.elemental.toFixed(0)}</span>
-          </div>
-        </div>
-
-        <div class="region-stats">
-          <div class="stat-row">
-            <span>Level Range</span>
-            <span>${minLevel} - ${maxLevel}</span>
-          </div>
-          <div class="stat-row">
-            <span>Danger</span>
-            <span>${region.danger || "Moderate"}</span>
-          </div>
-          <div class="stat-row">
-            <span>${bossStatusLabel}</span>
-          </div>
+          ${["corruption","wildlife","humanoid","elemental"].map(k => `
+            <div class="influence-item">
+              <span class="influence-icon">${influenceIcon(k)}</span>
+              <span class="influence-label">${format(k)}</span>
+              <span class="influence-value">${influence[k].toFixed(0)}</span>
+            </div>
+          `).join("")}
         </div>
 
         <div class="region-events">
           <strong>Events:</strong>
-          <div class="event-badges">
-            ${eventBadges}
-          </div>
+          <div class="event-badges">${eventBadges}</div>
         </div>
 
-        ${
-          biomeFlavor
-            ? `<div class="region-flavor">
-                 <em>${biomeFlavor}</em>
-               </div>`
-            : ""
-        }
+        <div class="region-subregions">
+          <label>Area:
+            <select class="subregion-select" data-region="${regionKey}">
+              ${subregionOptions}
+            </select>
+          </label>
+        </div>
 
-        <button class="btn ${regionLocked ? "disabled" : ""}"
+        <button class="btn ${levelLocked ? "disabled" : ""}"
           data-region="${regionKey}"
-          data-locked="${regionLocked ? "1" : "0"}">
-          ${regionLocked ? lockMessage : "Enter Region"}
+          data-locked="${levelLocked ? "1" : "0"}">
+          ${levelLocked ? `Requires Lv ${minLevel}` : "Enter Area"}
         </button>
       </div>
     `);
@@ -370,8 +281,17 @@ function wireRegionClicks(player, worldState, username) {
     const locked = btn.getAttribute("data-locked") === "1";
     if (locked) return;
 
-    const encounter = EncounterEngine.generate(regionKey, username);
-    localStorage.setItem("current_encounter", JSON.stringify(encounter));
+    const select = container.querySelector(
+      `.subregion-select[data-region="${regionKey}"]`
+    );
+    const subregionKey = select?.value;
+    if (!subregionKey) {
+      alert("Choose an area before entering.");
+      return;
+    }
+
+    const encounter = EncounterEngine.generate(regionKey, subregionKey, username);
+    sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
     window.location.href = "fight-interactive.html";
   });
 }
@@ -381,21 +301,9 @@ function wireNavigationButtons() {
   const invBtn = document.getElementById("inventoryBtn");
   const bestiaryBtn = document.getElementById("bestiaryBtn");
 
-  if (charBtn) {
-    charBtn.addEventListener("click", () => {
-      window.location.href = "character.html";
-    });
-  }
-  if (invBtn) {
-    invBtn.addEventListener("click", () => {
-      window.location.href = "inventory.html";
-    });
-  }
-  if (bestiaryBtn) {
-    bestiaryBtn.addEventListener("click", () => {
-      window.location.href = "bestiary.html";
-    });
-  }
+  if (charBtn) charBtn.onclick = () => window.location.href = "character.html";
+  if (invBtn) invBtn.onclick = () => window.location.href = "inventory.html";
+  if (bestiaryBtn) bestiaryBtn.onclick = () => window.location.href = "bestiary.html";
 }
 
 /****************************************************
