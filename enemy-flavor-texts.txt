@@ -5,7 +5,7 @@ Slime-When a tiny slime consumed enough material it will turn into a slime. Some
 
 Giant rat- Giant creature that would spread diseases. Used to inhabit abandoned houses and cellars. 
 Stray hound-Discarded dog that eventually lost itself to disease. Stronger than your average dog but were manageable. 
-Adog234
+
 
 
 Sticky slime-When a tiny slime was fed enough adhesive/sticky material (or a creature that makes such material) it would turn into a sticky slime. The sticky slime could produce a substance that would adhere to any surface and was nigh impossible to unstick. 
@@ -39,7 +39,9 @@ Archer rogue-A stealthy assassin that would kill targets in order to obtain mone
 
 Howling warg-A wolf like beast that was far stronger and faster than normal ones. They tended to be seen being ridden by members of the orc race.
 Grand occultist-A far more experienced zealot towards their demonic master. They would have done anything in order to summon and harness demonic power.
-Adog234
 
- — 12:39
+
+
 Bandit captain-The leader of a group of bandits. They were much stronger and faster than their subordinates.
+
+Skeleton archer-A type of skeleton that primarily used a bow and arrow. They were lethal at a range but manageable up close.
