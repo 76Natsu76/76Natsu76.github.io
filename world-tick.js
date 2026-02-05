@@ -3,13 +3,18 @@
 
 import { BIOMES } from "./biomes.js";
 import { REGION_BIOMES } from "./region-biomes.js";
-import { getWeatherDefinition } from "./world-simulation.js";
+import { weatherTable } from "./weatherTable.js";
 import { rotateMerchants } from "./merchant-rotation.js";
 import { updateWorldBosses } from "./world-boss-progression.js";
 
 /****************************************************
  * CONFIG — edit these to change pacing
  ****************************************************/
+
+function getWeatherDefinition(key) {
+  return weatherTable[key] || weatherTable["clear"];
+}
+
 
 export const WORLD_TICK_CONFIG = {
   WEATHER_TICK_MIN: 30,          // how often weather can change per region
@@ -39,7 +44,7 @@ function chooseWeatherForBiome(biomeKey) {
   const biome = BIOMES[biomeKey];
   const pool = biome?.weatherPool || ["clear"];
   const key = pool[Math.floor(Math.random() * pool.length)];
-  return getWeatherDefinition(key) || getWeatherDefinition("clear");
+  return getWeatherDefinition(key);
 }
 
 function nextSeason(current) {
@@ -60,7 +65,7 @@ export function initWorldState(regionKeys) {
 
   for (const key of regionKeys) {
     const biomeKey = REGION_BIOMES[key] || null;
-    const weatherDef = biomeKey ? chooseWeatherForBiome(biomeKey) : getWeatherDefinition("clear");
+    const weatherDef = biomeKey ? chooseWeatherForBiome(biomeKey) : weatherTable["clear"];
 
     regions[key] = {
       key,
