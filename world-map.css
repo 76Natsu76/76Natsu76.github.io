@@ -1,4 +1,286 @@
+/* ===== GLOBAL ===== */
+
+body {
+  background: #0d0f14;
+  color: #e8e8e8;
+  font-family: system-ui, sans-serif;
+  padding: 24px;
+}
+
+h1 {
+  color: #7fffd4;
+  margin-bottom: 4px;
+}
+
+#usernameDisplay {
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+/* ===== SEASON BANNER ===== */
+
+.season-banner {
+  padding: 10px 16px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  background: #1a1d24;
+  border: 1px solid #2a2f3a;
+  box-shadow: 0 0 8px #000 inset;
+}
+
+.season-winter {
+  color: #b8eaff;
+  box-shadow: 0 0 12px #6bcaff inset;
+}
+
+.season-summer {
+  color: #ffd27f;
+  box-shadow: 0 0 12px #ffb347 inset;
+}
+
+.season-spring {
+  color: #a8ffbf;
+  box-shadow: 0 0 12px #6fff9e inset;
+}
+
+.season-autumn {
+  color: #ffb07f;
+  box-shadow: 0 0 12px #ff8c42 inset;
+}
+
+/* ===== REGION CARD ===== */
+
+.region-card {
+  background: #11141c;
+  border: 1px solid #262a36;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 0 12px #0008;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.region-card:hover {
+  border-color: #3a3f4f;
+  box-shadow: 0 0 16px #1a1f2a;
+}
+
 .worldboss-active {
   border: 2px solid #ff4444;
-  box-shadow: 0 0 10px #ff4444;
+  box-shadow: 0 0 12px #ff4444aa;
+}
+
+/* ===== REGION HEADER ===== */
+
+.region-header h2 {
+  margin: 0;
+  color: #9af7ff;
+}
+
+.region-subtitle {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 10px;
+}
+
+/* ===== WEATHER ===== */
+
+.region-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.region-weather {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weather-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 0 4px #4ac0ff55);
+}
+
+.weather-label {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* ===== HAZARD BAR ===== */
+
+.region-hazard {
+  width: 55%;
+}
+
+.hazard-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.hazard-bar {
+  width: 100%;
+  height: 8px;
+  background: #1c1f28;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.hazard-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4aff4a, #ffd84a, #ff4a4a);
+  transition: width 0.3s ease;
+}
+
+.hazard-low .hazard-fill {
+  filter: drop-shadow(0 0 4px #4aff4a55);
+}
+
+.hazard-medium .hazard-fill {
+  filter: drop-shadow(0 0 4px #ffd84a55);
+}
+
+.hazard-high .hazard-fill {
+  filter: drop-shadow(0 0 6px #ff4a4a99);
+}
+
+.hazard-warning {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #ff6b6b;
+  text-align: right;
+  opacity: 0.9;
+}
+
+/* ===== INFLUENCE ===== */
+
+.region-influence {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-top: 1px solid #1c1f28;
+  border-bottom: 1px solid #1c1f28;
+}
+
+.influence-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 25%;
+}
+
+.influence-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 0 4px #7f7fff55);
+}
+
+.influence-label {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.influence-value {
+  font-size: 14px;
+  margin-top: 2px;
+}
+
+/* ===== REGION STATS ===== */
+
+.region-stats {
+  margin-bottom: 12px;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid #1c1f28;
+  font-size: 14px;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+/* ===== EVENTS ===== */
+
+.region-events {
+  margin-bottom: 12px;
+}
+
+.event-badges {
+  margin-top: 6px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.event-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1px solid #333;
+}
+
+.event-badge-ambient {
+  background: #1a1d24;
+  color: #9ab0ff;
+}
+
+.event-badge-crisis {
+  background: #2a0f0f;
+  color: #ff6b6b;
+  border-color: #ff4444;
+  box-shadow: 0 0 6px #ff444455;
+}
+
+.event-badge-seasonal {
+  background: #1f1430;
+  color: #d8b4ff;
+  border-color: #b47fff;
+  box-shadow: 0 0 6px #b47fff55;
+}
+
+.event-badge-none {
+  opacity: 0.5;
+}
+
+/* ===== BIOME FLAVOR ===== */
+
+.region-flavor {
+  margin: 10px 0;
+  font-size: 13px;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* ===== BUTTONS ===== */
+
+.btn {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #444;
+  background: #1a1d24;
+  color: #eee;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+}
+
+.btn:hover {
+  background: #222832;
+}
+
+.btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
