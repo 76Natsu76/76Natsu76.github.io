@@ -2,7 +2,8 @@
 // Dynamic world heartbeat: weather, hazards, events, influence, seasons, merchants, bosses.
 
 import { BIOMES } from "./biomes.js";
-import { REGION_BIOMES, getWeatherDefinition } from "./world-simulation.js";
+import { REGION_BIOMES } from "./region-biomes.js";
+import { getWeatherDefinition } from "./world-simulation.js";
 import { rotateMerchants } from "./merchant-rotation.js";
 import { updateWorldBosses } from "./world-boss-progression.js";
 
