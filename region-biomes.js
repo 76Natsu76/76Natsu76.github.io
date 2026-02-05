@@ -2,6 +2,7 @@
 // Canonical mapping from region key → biome key.
 
 export const REGION_BIOMES = {
+  
   "forest-edge": "forest",
   "deep-forest": "forest",
   "plains-field": "plains",
@@ -10,6 +11,7 @@ export const REGION_BIOMES = {
   "cave-entrance": "cavern",
   "ruins-outskirts": "ruins",
   "desert-dunes": "desert",
+  
   "highland-cliffs": "mountains",
   "volcano-rim": "volcanic",
   "tundra-wastes": "tundra",
@@ -31,6 +33,7 @@ export const REGION_BIOMES = {
   "crystal-caverns": "cavern",
   "highlands-of-thorne": "mountains",
   "shattered-desert": "desert",
+  
   "abyssal-scar": "abyssal",
   "arcane-riftlands": "arcane",
   "primordial-grove": "primeval",
