@@ -11,11 +11,6 @@ import { updateWorldBosses } from "./world-boss-progression.js";
  * CONFIG — edit these to change pacing
  ****************************************************/
 
-function getWeatherDefinition(key) {
-  return weatherTable[key] || weatherTable["clear"];
-}
-
-
 export const WORLD_TICK_CONFIG = {
   WEATHER_TICK_MIN: 30,          // how often weather can change per region
   HAZARD_TICK_MIN: 10,           // how often hazards escalate/relax
@@ -35,6 +30,14 @@ const REGION_INFLUENCE_TICK_MS = WORLD_TICK_CONFIG.REGION_INFLUENCE_TICK_MIN * M
 const SEASON_TICK_MS           = WORLD_TICK_CONFIG.SEASON_TICK_MIN * MS_PER_MIN;
 const MERCHANT_TICK_MS         = WORLD_TICK_CONFIG.MERCHANT_TICK_MIN * MS_PER_MIN;
 const BOSS_TICK_MS             = WORLD_TICK_CONFIG.BOSS_TICK_MIN * MS_PER_MIN;
+
+/****************************************************
+ * WEATHER LOOKUP (canonical)
+ ****************************************************/
+
+function getWeatherDefinition(key) {
+  return weatherTable[key] || weatherTable["clear"];
+}
 
 /****************************************************
  * HELPERS
@@ -65,12 +68,14 @@ export function initWorldState(regionKeys) {
 
   for (const key of regionKeys) {
     const biomeKey = REGION_BIOMES[key] || null;
-    const weatherDef = biomeKey ? chooseWeatherForBiome(biomeKey) : weatherTable["clear"];
+    const weatherDef = biomeKey
+      ? chooseWeatherForBiome(biomeKey)
+      : weatherTable["clear"];
 
     regions[key] = {
       key,
       biome: biomeKey,
-      currentWeatherKey: weatherDef ? weatherDef.key : "clear",
+      currentWeatherKey: weatherDef.key,
       lastWeatherChange: now,
       crisisState: null,
       hazardLevel: 0, // 0–100 abstract pressure
@@ -100,7 +105,6 @@ export function initWorldState(regionKeys) {
 
     regions,
 
-    // optional fields used by other systems (merchants, bosses, etc.)
     globalMerchant: null,
     bosses: {},
     regionUnlocks: {}
@@ -120,10 +124,8 @@ function weatherTick(worldState, now) {
     if (!region.biome) continue;
 
     const weatherDef = chooseWeatherForBiome(region.biome);
-    if (weatherDef) {
-      region.currentWeatherKey = weatherDef.key;
-      region.lastWeatherChange = now;
-    }
+    region.currentWeatherKey = weatherDef.key;
+    region.lastWeatherChange = now;
   }
 }
 
@@ -136,7 +138,9 @@ function hazardTick(worldState, now) {
     const biome = BIOMES[region.biome];
 
     let delta = (Math.random() - 0.4) * 5; // small drift
-    if (region.currentWeatherKey === "storm" || region.currentWeatherKey === "void_storm") {
+
+    const weather = region.currentWeatherKey;
+    if (weather === "storm" || weather === "void_storm") {
       delta += 3;
     }
     if (biome?.hazards?.length) {
@@ -154,13 +158,9 @@ function eventTick(worldState, now) {
   for (const regionKey in worldState.regions) {
     const region = worldState.regions[regionKey];
 
-    // Simple placeholder logic:
-    // - higher hazardLevel → higher chance of a crisis event
-    // - otherwise, occasional ambient event
     const events = region.activeEvents || [];
     const hazard = region.hazardLevel || 0;
 
-    // Decay old events
     region.activeEvents = events.filter(e => !e.expiresAt || e.expiresAt > now);
 
     const crisisChance = hazard / 200; // 0–0.5
@@ -194,19 +194,16 @@ function regionInfluenceTick(worldState, now) {
 
     const season = worldState.season || "spring";
 
-    // Small random drift
     infl.corruption += (Math.random() - 0.5) * 2;
     infl.wildlife += (Math.random() - 0.5) * 2;
     infl.humanoid += (Math.random() - 0.5) * 2;
     infl.elemental += (Math.random() - 0.5) * 2;
 
-    // Seasonal nudges
     if (season === "spring") infl.wildlife += 1;
     if (season === "summer") infl.elemental += 1;
     if (season === "autumn" || season === "fall") infl.corruption += 1;
     if (season === "winter") infl.corruption += 0.5;
 
-    // Clamp 0–100
     for (const k of ["corruption", "wildlife", "humanoid", "elemental"]) {
       infl[k] = Math.max(0, Math.min(100, infl[k]));
     }
@@ -218,14 +215,13 @@ function seasonTick(worldState, now) {
 
   worldState.lastSeasonChange = now;
   worldState.season = nextSeason(worldState.season);
-  worldState.day += 7; // abstract: each season = 7 in‑game days
+  worldState.day += 7;
 }
 
 function merchantTick(worldState, now) {
   if (now - worldState.lastMerchantTick < MERCHANT_TICK_MS) return;
   worldState.lastMerchantTick = now;
 
-  // rotateMerchants is already your canonical merchant engine
   const updated = rotateMerchants(worldState);
   Object.assign(worldState, updated || {});
 }
