@@ -1478,7 +1478,6 @@ export const ENEMY_FAMILIES = {
       notes: "Raid‑boss tier; catastrophic abilities."
     }
   },
-
   
   giantkin: {
     key: "giantkin",
@@ -1755,24 +1754,6 @@ export const ENEMY_FAMILIES = {
       atkMult: 1.0,
       defMult: 1.0,
       notes: "Paragons transcend normal limits; baseline multipliers remain neutral."
-    }
-  },
-
-  cosmic_entity: {
-    key: "cosmic_entity",
-    tier: 5,
-    baseHP: 300,
-    baseATK: 26,
-    baseDEF: 22,
-    elementAffinity: { holy: 0.20, arcane: 0.20 },
-    behavior: "cosmic",
-    flavor: "A being of pure cosmic divinity, transcending mortal comprehension.",
-    familyModifiers: {
-      hpMult: 1.4,
-      atkMult: 1.4,
-      defMult: 1.4,
-      speedBias: 0.05,
-      notes: "Cosmic entities wield divine and astral power beyond mortal limits."
     }
   },
 
