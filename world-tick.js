@@ -1,77 +1,253 @@
 // world-tick.js
+// Dynamic world heartbeat: weather, hazards, events, influence, seasons, merchants, bosses.
 
-/*
- * IDEA - SEASONS WILL EXIST
- * 1 SEASON LASTS 1 WEEK IRL
- * A YEAR IN GAME IS 1 MONTH IRL
- * week 1 = spring || week 2 = summer || week 3 = fall || week 4 = winter
- */
-
+import { BIOMES } from "./biomes.js";
 import { REGION_BIOMES, getWeatherDefinition } from "./world-simulation.js";
 import { rotateMerchants } from "./merchant-rotation.js";
+import { updateWorldBosses } from "./world-boss-progression.js";
 
-const BIOME_WEATHER_POOLS = {
-  forest: ["clear", "rain", "fog"],
-  plains: ["clear", "rain", "storm"],
-  swamp: ["fog", "rain", "clear"],
-  desert: ["clear", "heatwave", "storm"],
-  tundra: ["clear", "storm", "fog"],
-  mountains: ["clear", "storm", "fog"],
-  cavern: ["clear", "fog"],
-  ruins: ["clear", "fog", "rain"],
-  coastal: ["clear", "rain", "storm"],
-  volcanic: ["clear", "heatwave", "storm"],
-  arcane: ["clear", "arcane_winds", "storm"],
-  celestial: ["clear", "arcane_winds"],
-  void: ["clear", "void_storm", "fog"],
-  primeval: ["clear", "rain", "storm"],
-  storm: ["storm", "rain", "clear"],
-  abyssal: ["void_storm", "storm", "fog"],
-  astral: ["clear", "arcane_winds"]
+/****************************************************
+ * CONFIG — edit these to change pacing
+ ****************************************************/
+
+export const WORLD_TICK_CONFIG = {
+  WEATHER_TICK_MIN: 30,          // how often weather can change per region
+  HAZARD_TICK_MIN: 10,           // how often hazards escalate/relax
+  EVENT_TICK_MIN: 60,            // how often region events can spawn/update
+  REGION_INFLUENCE_TICK_MIN: 120,// how often region influence drifts
+  SEASON_TICK_MIN: 10080,        // 7 days (in minutes) = 1 in‑game season
+  MERCHANT_TICK_MIN: 1440,       // 24 hours
+  BOSS_TICK_MIN: 60              // world boss progression
 };
 
-function chooseWeatherForBiome(biome) {
-  const pool = BIOME_WEATHER_POOLS[biome] || ["clear"];
+const MS_PER_MIN = 60000;
+
+const WEATHER_TICK_MS          = WORLD_TICK_CONFIG.WEATHER_TICK_MIN * MS_PER_MIN;
+const HAZARD_TICK_MS           = WORLD_TICK_CONFIG.HAZARD_TICK_MIN * MS_PER_MIN;
+const EVENT_TICK_MS            = WORLD_TICK_CONFIG.EVENT_TICK_MIN * MS_PER_MIN;
+const REGION_INFLUENCE_TICK_MS = WORLD_TICK_CONFIG.REGION_INFLUENCE_TICK_MIN * MS_PER_MIN;
+const SEASON_TICK_MS           = WORLD_TICK_CONFIG.SEASON_TICK_MIN * MS_PER_MIN;
+const MERCHANT_TICK_MS         = WORLD_TICK_CONFIG.MERCHANT_TICK_MIN * MS_PER_MIN;
+const BOSS_TICK_MS             = WORLD_TICK_CONFIG.BOSS_TICK_MIN * MS_PER_MIN;
+
+/****************************************************
+ * HELPERS
+ ****************************************************/
+
+function chooseWeatherForBiome(biomeKey) {
+  const biome = BIOMES[biomeKey];
+  const pool = biome?.weatherPool || ["clear"];
   const key = pool[Math.floor(Math.random() * pool.length)];
-  return getWeatherDefinition(key);
+  return getWeatherDefinition(key) || getWeatherDefinition("clear");
 }
 
+function nextSeason(current) {
+  const order = ["spring", "summer", "autumn", "fall", "winter"];
+  const idx = order.indexOf(current);
+  if (idx === -1 || idx === order.length - 1) return "spring";
+  if (order[idx] === "autumn") return "winter"; // alias handling
+  return order[idx + 1];
+}
+
+/****************************************************
+ * INIT
+ ****************************************************/
+
 export function initWorldState(regionKeys) {
+  const now = Date.now();
   const regions = {};
+
   for (const key of regionKeys) {
-    const biome = REGION_BIOMES[key] || null;
-    const weather = biome ? chooseWeatherForBiome(biome) : getWeatherDefinition("clear");
+    const biomeKey = REGION_BIOMES[key] || null;
+    const weatherDef = biomeKey ? chooseWeatherForBiome(biomeKey) : getWeatherDefinition("clear");
+
     regions[key] = {
       key,
-      biome,
-      currentWeatherKey: weather ? weather.key : "clear",
-      lastWeatherChange: 0,
-      crisisState: null
+      biome: biomeKey,
+      currentWeatherKey: weatherDef ? weatherDef.key : "clear",
+      lastWeatherChange: now,
+      crisisState: null,
+      hazardLevel: 0, // 0–100 abstract pressure
+      influence: {
+        corruption: 0,
+        wildlife: 0,
+        humanoid: 0,
+        elemental: 0
+      },
+      activeEvents: []
     };
   }
+
   return {
     day: 0,
     tickCount: 0,
-    regions
+    season: "spring",
+    lastSeasonChange: now,
+    lastTick: now,
+
+    lastWeatherTick: now,
+    lastHazardTick: now,
+    lastEventTick: now,
+    lastRegionInfluenceTick: now,
+    lastMerchantTick: now,
+    lastBossTick: now,
+
+    regions,
+
+    // optional fields used by other systems (merchants, bosses, etc.)
+    globalMerchant: null,
+    bosses: {},
+    regionUnlocks: {}
   };
 }
 
-export function tickWorld(worldState, deltaMinutes) {
-  worldState.tickCount += 1;
-  const WEATHER_MINUTES = 30;
+/****************************************************
+ * SUBSYSTEM TICKS
+ ****************************************************/
+
+function weatherTick(worldState, now) {
+  if (now - worldState.lastWeatherTick < WEATHER_TICK_MS) return;
+  worldState.lastWeatherTick = now;
+
   for (const regionKey in worldState.regions) {
     const region = worldState.regions[regionKey];
-    region.lastWeatherChange += deltaMinutes;
-    if (region.lastWeatherChange >= WEATHER_MINUTES) {
-      region.lastWeatherChange = 0;
-      if (region.biome) {
-        const weather = chooseWeatherForBiome(region.biome);
-        if (weather) {
-          region.currentWeatherKey = weather.key;
-        }
-      }
+    if (!region.biome) continue;
+
+    const weatherDef = chooseWeatherForBiome(region.biome);
+    if (weatherDef) {
+      region.currentWeatherKey = weatherDef.key;
+      region.lastWeatherChange = now;
     }
   }
-  worldState = rotateMerchants(worldState);
+}
+
+function hazardTick(worldState, now) {
+  if (now - worldState.lastHazardTick < HAZARD_TICK_MS) return;
+  worldState.lastHazardTick = now;
+
+  for (const regionKey in worldState.regions) {
+    const region = worldState.regions[regionKey];
+    const biome = BIOMES[region.biome];
+
+    let delta = (Math.random() - 0.4) * 5; // small drift
+    if (region.currentWeatherKey === "storm" || region.currentWeatherKey === "void_storm") {
+      delta += 3;
+    }
+    if (biome?.hazards?.length) {
+      delta += 1;
+    }
+
+    region.hazardLevel = Math.max(0, Math.min(100, region.hazardLevel + delta));
+  }
+}
+
+function eventTick(worldState, now) {
+  if (now - worldState.lastEventTick < EVENT_TICK_MS) return;
+  worldState.lastEventTick = now;
+
+  for (const regionKey in worldState.regions) {
+    const region = worldState.regions[regionKey];
+
+    // Simple placeholder logic:
+    // - higher hazardLevel → higher chance of a crisis event
+    // - otherwise, occasional ambient event
+    const events = region.activeEvents || [];
+    const hazard = region.hazardLevel || 0;
+
+    // Decay old events
+    region.activeEvents = events.filter(e => !e.expiresAt || e.expiresAt > now);
+
+    const crisisChance = hazard / 200; // 0–0.5
+    const ambientChance = 0.05;
+
+    if (Math.random() < crisisChance) {
+      region.activeEvents.push({
+        key: "regional_crisis",
+        type: "crisis",
+        createdAt: now,
+        expiresAt: now + EVENT_TICK_MS * 2
+      });
+    } else if (Math.random() < ambientChance) {
+      region.activeEvents.push({
+        key: "ambient_disturbance",
+        type: "ambient",
+        createdAt: now,
+        expiresAt: now + EVENT_TICK_MS
+      });
+    }
+  }
+}
+
+function regionInfluenceTick(worldState, now) {
+  if (now - worldState.lastRegionInfluenceTick < REGION_INFLUENCE_TICK_MS) return;
+  worldState.lastRegionInfluenceTick = now;
+
+  for (const regionKey in worldState.regions) {
+    const region = worldState.regions[regionKey];
+    const infl = region.influence;
+
+    const season = worldState.season || "spring";
+
+    // Small random drift
+    infl.corruption += (Math.random() - 0.5) * 2;
+    infl.wildlife += (Math.random() - 0.5) * 2;
+    infl.humanoid += (Math.random() - 0.5) * 2;
+    infl.elemental += (Math.random() - 0.5) * 2;
+
+    // Seasonal nudges
+    if (season === "spring") infl.wildlife += 1;
+    if (season === "summer") infl.elemental += 1;
+    if (season === "autumn" || season === "fall") infl.corruption += 1;
+    if (season === "winter") infl.corruption += 0.5;
+
+    // Clamp 0–100
+    for (const k of ["corruption", "wildlife", "humanoid", "elemental"]) {
+      infl[k] = Math.max(0, Math.min(100, infl[k]));
+    }
+  }
+}
+
+function seasonTick(worldState, now) {
+  if (now - worldState.lastSeasonChange < SEASON_TICK_MS) return;
+
+  worldState.lastSeasonChange = now;
+  worldState.season = nextSeason(worldState.season);
+  worldState.day += 7; // abstract: each season = 7 in‑game days
+}
+
+function merchantTick(worldState, now) {
+  if (now - worldState.lastMerchantTick < MERCHANT_TICK_MS) return;
+  worldState.lastMerchantTick = now;
+
+  // rotateMerchants is already your canonical merchant engine
+  const updated = rotateMerchants(worldState);
+  Object.assign(worldState, updated || {});
+}
+
+function bossTick(worldState, now) {
+  if (now - worldState.lastBossTick < BOSS_TICK_MS) return;
+  worldState.lastBossTick = now;
+
+  const updated = updateWorldBosses(worldState);
+  Object.assign(worldState, updated || {});
+}
+
+/****************************************************
+ * MASTER TICK
+ ****************************************************/
+
+export function tickWorld(worldState) {
+  const now = Date.now();
+  worldState.tickCount = (worldState.tickCount || 0) + 1;
+
+  weatherTick(worldState, now);
+  hazardTick(worldState, now);
+  eventTick(worldState, now);
+  regionInfluenceTick(worldState, now);
+  seasonTick(worldState, now);
+  merchantTick(worldState, now);
+  bossTick(worldState, now);
+
+  worldState.lastTick = now;
   return worldState;
 }
