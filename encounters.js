@@ -1,20 +1,18 @@
 // encounters.js
-// GitHub‑native Encounter Engine
+// Subregion-aware, tier-drift encounter engine
 
 import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
-import { ENEMY_REGIONS } from "./enemy-regions.js";
-import { ENEMY_TAGS } from "./enemy-tags.js";
+import { REGION_ENEMIES } from "./region-enemies.js";
+import { SUBREGIONS } from "./subregions.js";
 
-// No async initialization needed anymore
 export function initEncounters() {
   return true;
 }
 
-// Public API
 export const EncounterEngine = {
   generate,
   loadFromSession,
@@ -24,66 +22,51 @@ export const EncounterEngine = {
 // ------------------------------------------------------------
 // MAIN ENTRY POINT
 // ------------------------------------------------------------
-function generate(regionKey, username, enemyOverride = null) {
+function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const region = WORLD_DATA.regions[regionKey];
   if (!region) throw new Error(`Unknown region: ${regionKey}`);
 
-  // Resolve biome
+  const subregionList = SUBREGIONS[regionKey] || [];
+  const subregion = subregionList.find(sr => sr.key === subregionKey);
+  if (!subregion) throw new Error(`Unknown subregion: ${subregionKey} in ${regionKey}`);
+
   const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
   const biome = BIOMES[biomeKey];
   if (!biome) throw new Error(`Biome not found: ${biomeKey}`);
 
-  // WEATHER
+  const tier = subregion.tier ?? region.tier ?? 1;
+
+  // WEATHER / EVENT / HAZARD / VARIANT (still simple for now)
   const weatherPool = region.weatherPool?.length
     ? region.weatherPool
     : biome.weatherPool || [];
   const weather = pickFromArray(weatherPool);
 
-  // EVENTS
   const eventPool = region.eventPool || [];
   const event = pickFromArray(eventPool);
 
-  // HAZARDS
   const hazardPool = biome.hazards || [];
   const hazard = pickHazard(hazardPool);
 
-  // VARIANTS
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
 
-  // RARITY
   const rarity = pickWeighted(region.rarityWeights);
-
-  // FAMILY
   const family = pickWeightedObject(biome.encounterWeights);
 
-  /*
-  if (event === "world_boss") {
-    return {
-      region: regionKey,
-      biome: biomeKey,
-      weather,
-      event,
-      hazard,
-      variant,
-      rarity,
-      enemies: [buildEnemyInstance(template, ...)]
-    };
-  }*/
-
-  // GROUP SIZE
   const groupRule = ENEMY_GROUP_SIZES[family] || ENEMY_GROUP_SIZES.default;
-  const count = Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) + groupRule.min;
-  
-  // BUILD ENEMY GROUP
+  const count =
+    Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) +
+    groupRule.min;
+
   const enemies = [];
   for (let i = 0; i < count; i++) {
     const template = enemyOverride
       ? EnemyRegistry.buildEnemyTemplate(enemyOverride)
-      : pickEnemyTemplate(regionKey, biomeKey, family, rarity);
-  
+      : pickEnemyTemplate(regionKey, subregionKey, biomeKey, family, rarity, tier);
+
     if (!template) continue;
-  
+
     const instance = buildEnemyInstance(
       template,
       region,
@@ -92,20 +75,23 @@ function generate(regionKey, username, enemyOverride = null) {
       weather,
       event,
       hazard,
-      variant
+      variant,
+      tier
     );
-  
+
     enemies.push(instance);
   }
 
   const encounter = {
     region: regionKey,
+    subregion: subregionKey,
     biome: biomeKey,
     weather,
     event,
     hazard,
     variant,
     rarity,
+    tier,
     flavor: pickFromArray(biome.flavor) || region.flavor || "",
     enemies,
     debug: {
@@ -115,7 +101,10 @@ function generate(regionKey, username, enemyOverride = null) {
       event,
       hazard,
       variant,
-      biome: biomeKey
+      biome: biomeKey,
+      tier,
+      regionKey,
+      subregionKey
     }
   };
 
@@ -136,83 +125,57 @@ function clear() {
 }
 
 // ------------------------------------------------------------
-// ENEMY TEMPLATE PICKER
+// ENEMY TEMPLATE PICKER (Tier Drift Model C)
 // ------------------------------------------------------------
-function pickEnemyTemplate(regionKey, biomeKey, family, rarity) {
-  
-  regionKey = regionKey.toLowerCase().trim();
-  const allEnemies = Object.values(EnemyRegistry.enemies);
-  const allowedKeys = EnemyRegistry.regionMap[regionKey] || [];
-  
-  console.log("regionKey =", regionKey);
-  console.log("allowedKeys =", allowedKeys);
-  console.log("pool(allEnemies) sample =", allEnemies[0]);
-  console.log("ENEMY_REGIONS keys =", Object.keys(ENEMY_REGIONS));
-
-  function pick(pool) {
-    const chosen = pool[Math.floor(Math.random() * pool.length)];
-    console.log("chosen =", chosen);
-    return EnemyRegistry.buildEnemyTemplate(chosen.key);
-  }
-
-  // 1. STRICT MATCH: region + family + rarity
-  let pool = allEnemies.filter(e =>
-    allowedKeys.includes(e.key) &&
-    e.family === family &&
-    e.rarity === rarity
+function pickEnemyTemplate(regionKey, subregionKey, biomeKey, family, rarity, tier) {
+  const allowedKeys = REGION_ENEMIES[subregionKey] || [];
+  const allEnemies = Object.values(EnemyRegistry.enemies).filter(e =>
+    allowedKeys.includes(e.key)
   );
-  if (pool.length) return pick(pool);
 
-  // 2. FALLBACK: region + family
-  pool = allEnemies.filter(e =>
-    allowedKeys.includes(e.key) &&
-    e.family === family
-  );
-  if (pool.length) return pick(pool);
-
-  // 3. FALLBACK: region only
-  pool = allEnemies.filter(e => allowedKeys.includes(e.key));
-  if (pool.length) return pick(pool);
-
-  // 4. FALLBACK: biome family (global)
-  pool = allEnemies.filter(e => e.family === family);
-  if (pool.length) return pick(pool);
-
-  // 5. FINAL FALLBACK: ANY ENEMY (global)
-  console.warn("No valid enemies for region", regionKey, "— using global fallback.");
-  return pick(allEnemies);
-}
-
-// ------------------------------------------------------------
-// REGION + BIOME RESTRICTION HELPERS
-// ------------------------------------------------------------
-function isEnemyAllowedInRegion(enemyKey, regionKey) {
-  const allowed = ENEMY_REGIONS[enemyKey];
-  if (!allowed) return true;
-  return allowed.includes(regionKey);
-}
-
-function isEnemyAllowedInBiome(enemyKey, biomeKey) {
-  const tags = ENEMY_TAGS[enemyKey];
-  if (!tags) return true;
-
-  if (tags.includes("ice")) {
-    return ["tundra", "frozen-expanse", "crystalline-tundra"].includes(biomeKey);
-  }
-  if (tags.includes("fire")) {
-    return ["volcano", "molten-crest", "magma"].includes(biomeKey);
-  }
-  if (tags.includes("void")) {
-    return ["void", "void-wastes", "void-realm"].includes(biomeKey);
-  }
-  if (tags.includes("arcane")) {
-    return ["arcane", "arcane-rift"].includes(biomeKey);
-  }
-  if (tags.includes("astral")) {
-    return ["astral-plane", "astral-nexus"].includes(biomeKey);
+  if (!allEnemies.length) {
+    console.warn("No enemies for subregion", subregionKey, "— using region fallback.");
+    return null;
   }
 
-  return true;
+  // Build tier bands
+  const exactTier = allEnemies.filter(e => (e.tier ?? 1) === tier);
+  const nearTier = allEnemies.filter(e => {
+    const t = e.tier ?? 1;
+    return t !== tier && Math.abs(t - tier) === 1;
+  });
+  const farTier = allEnemies.filter(e => {
+    const t = e.tier ?? 1;
+    return Math.abs(t - tier) === 2;
+  });
+
+  // Decide which band to pull from (C: weighted drift)
+  const bandRoll = Math.random();
+  let pool;
+  if (bandRoll < 0.7 && exactTier.length) {
+    pool = exactTier;
+  } else if (bandRoll < 0.95 && nearTier.length) {
+    pool = nearTier;
+  } else if (farTier.length) {
+    pool = farTier;
+  } else if (exactTier.length) {
+    pool = exactTier;
+  } else if (nearTier.length) {
+    pool = nearTier;
+  } else {
+    pool = allEnemies;
+  }
+
+  // Filter by family if possible
+  const familyPool = pool.filter(e => e.family === family);
+  if (familyPool.length) pool = familyPool;
+
+  // Filter by rarity if possible
+  const rarityPool = pool.filter(e => (e.rarity || "common") === rarity);
+  if (rarityPool.length) pool = rarityPool;
+
+  const chosen = pool[Math.floor(Math.random() * pool.length)];
+  return EnemyRegistry.buildEnemyTemplate(chosen.key);
 }
 
 // ------------------------------------------------------------
@@ -226,19 +189,21 @@ function buildEnemyInstance(
   weather,
   event,
   hazard,
-  variant
+  variant,
+  tier
 ) {
-  const level = rollLevel(region.levelRange);
+  const levelRange = region.levelRange || [1, 1];
+  const level = rollLevel(levelRange);
   const rarityMult = rarityScaling(rarity);
+  const levelMult = 1 + (level - 1) * 0.15;
 
-  // Base stats
-  const baseHP = Math.round((template.baseHP ?? template.hp ?? 1) * rarityMult * region.lootModifier);
-  const baseATK = Math.round((template.baseATK ?? template.atk ?? template.attack ?? 1) * rarityMult);
-  const baseDEF = Math.round((template.baseDEF ?? template.def ?? template.defense ?? 0) * rarityMult);
+  const baseHPStat = template.baseHP ?? template.hp ?? 1;
+  const baseATKStat = template.baseATK ?? template.atk ?? template.attack ?? 1;
+  const baseDEFStat = template.baseDEF ?? template.def ?? template.defense ?? 0;
 
-  // Region/biome modifiers
-  let finalATK = baseATK;
-  let finalDEF = baseDEF;
+  const baseHP = Math.round(baseHPStat * rarityMult * levelMult);
+  let finalATK = Math.round(baseATKStat * rarityMult * levelMult);
+  let finalDEF = Math.round(baseDEFStat * rarityMult * levelMult);
 
   if (region.combatModifiers) {
     const cm = region.combatModifiers;
@@ -252,7 +217,6 @@ function buildEnemyInstance(
     if (bm.enemyDEFMult) finalDEF = Math.round(finalDEF * bm.enemyDEFMult);
   }
 
-  // Modifier icons/text
   const modifiers = [];
 
   if (weather && WEATHER_MODIFIERS[weather]) modifiers.push(WEATHER_MODIFIERS[weather]);
@@ -266,6 +230,7 @@ function buildEnemyInstance(
     family: template.family,
     element: template.element || "neutral",
     rarity,
+    tier: template.tier ?? tier,
     level,
 
     hp: baseHP,
@@ -283,7 +248,7 @@ function buildEnemyInstance(
 // HELPERS
 // ------------------------------------------------------------
 function pickFromArray(arr) {
-  if (!arr || arr.length === 0) return null;
+  if (!arr || !arr.length) return null;
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
@@ -302,7 +267,7 @@ function pickHazard(hazards) {
 }
 
 function pickWeighted(pool) {
-  if (!pool || !pool.length) return null;
+  if (!pool || !pool.length) return "common";
 
   const total = pool.reduce((sum, p) => sum + p.weight, 0);
   let roll = Math.random() * total;
@@ -333,7 +298,7 @@ function rollLevel([min, max]) {
 }
 
 function rarityScaling(rarity) {
-  switch (rarity.toLowerCase()) {
+  switch ((rarity || "common").toLowerCase()) {
     case "common": return 1.0;
     case "uncommon": return 1.1;
     case "rare": return 1.25;
@@ -347,7 +312,7 @@ function rarityScaling(rarity) {
 }
 
 // ------------------------------------------------------------
-// MODIFIER TABLES
+// MODIFIER TABLES (placeholder icons/text)
 // ------------------------------------------------------------
 const WEATHER_MODIFIERS = {
   rain: { icon: "rain.png", text: "Rain: +10% lightning damage" },
