@@ -15,7 +15,7 @@ import { FAMILY_SYNERGIES } from "./family-synergies.js";
  * CORE CONTEXT
  ****************************************************/
 
-export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey) {
+export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, mode = "solo") {
   const weatherDef = weatherTable[weatherKey] || null;
 
   return {
@@ -23,15 +23,31 @@ export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey) {
     biomeKey,
     weatherKey: weatherKey || (weatherDef ? weatherDef.key : "clear"),
     eventKey,
+    mode, // "solo" | "multiplayer" | "raid"
     turn: 1,
     lastPlayerActionType: null,
     fled: false,
     combatEnded: null, // "victory" | "defeat" | "draw" | "fled"
     grid: {
-      playerRow: [{ id: "player", row: 0, col: 0 }],
+      playerRow: [],
       enemyRows: []
     }
   };
+}
+
+function assignPlayerPosition(player, context) {
+  if (context.mode === "solo") {
+    // Player is always frontline, column 0
+    player.position = { row: 0, col: 0 };
+    context.grid.playerRow = [player];
+    return;
+  }
+
+  // Multiplayer / raid mode (to be expanded with raid system)
+  if (!player.position) {
+    player.position = { row: 0, col: 0 };
+  }
+  context.grid.playerRow = [player];
 }
 
 // Intro flavor
@@ -158,6 +174,24 @@ export function crowdControlCheck(entity, logs) {
     if (feared) logs.push(`${entity.name} is feared and may act unpredictably.`);
   }
   return { stunned, silenced, rooted, feared, any };
+}
+
+/****************************************************
+ * TACTICAL CLASSIFICATION
+ ****************************************************/
+
+function isTacticalEnemy(enemy) {
+  if (enemy.tacticalProfile === "tactical") return true;
+  if (enemy.tacticalProfile === "simple") return false;
+
+  // AUTO rules
+  if (enemy.rarity === "mythical" || enemy.rarity === "boss" || enemy.rarity === "final") return true;
+  if ((enemy.tier || 1) >= 4) return true;
+  if (["dragon", "void", "demon", "celestial", "aberration"].includes(enemy.family)) return true;
+  if (enemy.tags?.includes("alpha") || enemy.tags?.includes("elder") || enemy.tags?.includes("champion")) return true;
+  if (enemy.role === "caster" || enemy.role === "support" || enemy.role === "leader") return true;
+
+  return false;
 }
 
 export function applyShieldReduction(defender, incomingDamage, logs) {
@@ -348,15 +382,84 @@ function pickPrimaryEnemy(enemies, action) {
   return living[0];
 }
 
-function assignEnemyPositions(enemies, context) {
-  context.grid.enemyRows = [];
+/**
+ * Simple 2-row assignment for non-tactical solo encounters.
+ * Front row: melee/brute/tank (or default)
+ * Back row: ranged/caster/support
+ */
+function assignSimpleEnemyRows(enemies, context) {
   const frontRow = [];
+  const backRow = [];
+
   enemies.forEach((e, idx) => {
     if (!e) return;
-    e.position = e.position || { row: 0, col: idx };
+    const role = e.role || "melee";
+
+    if (["ranged", "caster", "support"].includes(role)) {
+      e.position = { row: 1, col: backRow.length };
+      backRow.push(e);
+    } else {
+      e.position = { row: 0, col: frontRow.length };
+      frontRow.push(e);
+    }
+  });
+
+  context.grid.enemyRows = [];
+  context.grid.enemyRows[0] = frontRow;
+  context.grid.enemyRows[1] = backRow;
+}
+
+/**
+ * Tactical formation assignment for stronger enemies / multiplayer.
+ * For now: similar to simple, but prioritizes leaders/casters in back center.
+ */
+function assignTacticalEnemyFormation(enemies, context) {
+  const frontRow = [];
+  const backRow = [];
+
+  // First pass: leaders/casters/support to back
+  const leaders = [];
+  const casters = [];
+  const supports = [];
+  const others = [];
+
+  enemies.forEach(e => {
+    if (!e) return;
+    const role = e.role || "melee";
+    if (role === "leader") leaders.push(e);
+    else if (role === "caster") casters.push(e);
+    else if (role === "support") supports.push(e);
+    else others.push(e);
+  });
+
+  // Back row: leaders center, casters, supports
+  const backOrdered = [...leaders, ...casters, ...supports];
+  backOrdered.forEach((e, idx) => {
+    e.position = { row: 1, col: idx };
+    backRow.push(e);
+  });
+
+  // Front row: everyone else
+  others.forEach((e, idx) => {
+    e.position = { row: 0, col: idx };
     frontRow.push(e);
   });
+
+  context.grid.enemyRows = [];
   context.grid.enemyRows[0] = frontRow;
+  context.grid.enemyRows[1] = backRow;
+}
+
+function assignEnemyPositions(enemies, context) {
+  const tactical = enemies.some(e => isTacticalEnemy(e));
+
+  if (context.mode === "solo" && !tactical) {
+    // Simple 2-row logic
+    return assignSimpleEnemyRows(enemies, context);
+  }
+
+  // Tactical formation logic
+  return assignTacticalEnemyFormation(enemies, context);
 }
 
 function getAdjacentEnemies(enemies, primary) {
@@ -398,11 +501,16 @@ function getAbilityShape(ability) {
   return "single";
 }
 
-function getAbilityTargets(attacker, enemies, primaryTarget, ability) {
+function getAbilityTargets(attacker, enemies, primaryTarget, ability, context) {
   const shape = getAbilityShape(ability);
   const living = getLivingEnemies(enemies);
 
   if (!primaryTarget || !living.length) return [];
+
+  // For now, mode does not change shapes, but hook is here for future:
+  // - solo: simpler rules
+  // - multiplayer/raid: full tactical rules
+  // You can expand this later if you want melee vs backline restrictions, etc.
 
   switch (shape) {
     case "aoe":
@@ -469,7 +577,7 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
     attacker.mana = newMP;
   }
 
-  const targets = getAbilityTargets(attacker, enemies, primaryTarget, ability);
+  const targets = getAbilityTargets(attacker, enemies, primaryTarget, ability, context);
   if (!targets.length) {
     logs.push(`${attacker.name}'s ${abilityName} has no valid targets.`);
     return;
@@ -546,10 +654,10 @@ export function resolveBasicAttack(attacker, defender, context, logs) {
 }
 
 /****************************************************
- * TURN RESOLUTION (MULTI-ENEMY)
+ * AI HELPERS (SIMPLE VS TACTICAL)
  ****************************************************/
 
-export function runEnemyTurn(enemy, player, context, logs) {
+function runSimpleAI(enemy, player, context, logs) {
   const cc = crowdControlCheck(enemy, logs);
   if (cc.stunned) return;
 
@@ -567,6 +675,43 @@ export function runEnemyTurn(enemy, player, context, logs) {
     resolveAbilityUse(enemy, player, action.ability, context, logs);
     enemy.lastBossAction = action.ability.key || action.ability.name;
   }
+}
+
+function runTacticalAI(enemy, player, context, logs) {
+  // For now, tactical AI uses the same core logic as simple AI,
+  // but this is the hook where you can later add:
+  // - focus fire
+  // - protect casters
+  // - formation abilities
+  // - synergy abilities
+  const cc = crowdControlCheck(enemy, logs);
+  if (cc.stunned) return;
+
+  const aiContext = {
+    lastPlayerActionType: context.lastPlayerActionType || null
+  };
+
+  const action = enemy.isBoss
+    ? chooseBossActionV3(enemy, player, aiContext, logs)
+    : chooseEnemyActionV3(enemy, player, aiContext, logs);
+
+  if (action.type === "basic") {
+    resolveBasicAttack(enemy, player, context, logs);
+  } else if (action.type === "ability" && action.ability) {
+    resolveAbilityUse(enemy, player, action.ability, context, logs);
+    enemy.lastBossAction = action.ability.key || action.ability.name;
+  }
+}
+
+/****************************************************
+ * TURN RESOLUTION (MULTI-ENEMY)
+ ****************************************************/
+
+export function runEnemyTurn(enemy, player, context, logs) {
+  if (context.mode === "solo" && !isTacticalEnemy(enemy)) {
+    return runSimpleAI(enemy, player, context, logs);
+  }
+  return runTacticalAI(enemy, player, context, logs);
 }
 
 export function runPlayerAction(player, enemies, action, context, logs) {
@@ -640,6 +785,9 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   logs = logs || [];
 
   const enemies = normalizeEnemies(enemyOrEnemies);
+
+  // Ensure positions are assigned
+  assignPlayerPosition(player, context);
   assignEnemyPositions(enemies, context);
 
   tickStatusEffects(player, context, logs);
