@@ -864,21 +864,6 @@
   <div id="usernameDisplay" class="username-display"></div>
 
   <!-- ============================
-        REGION SELECTOR + START
-  ============================= -->
-  <div class="fight-controls">
-    <label for="regionSelect">Region:</label>
-    <select id="regionSelect">
-      <option value="forest">Forest</option>
-      <option value="mountains">Mountains</option>
-      <option value="swamp">Swamp</option>
-      <option value="desert">Desert</option>
-    </select>
-
-    <button id="startFightBtn" class="btn start-btn">Start Fight</button>
-  </div>
-
-  <!-- ============================
         PLAYER / ENEMY HUD
   ============================= -->
   <div id="combatHud" class="combat-hud">
@@ -1444,48 +1429,56 @@
         addLog("You are already in combat.");
         return;
       }
-  
+    
       logBox.innerHTML = "";
       hideActionPanel();
       combat = null;
-  
+    
       console.log("[fight] beginFight called");
-  
+    
       let latest = PlayerStorage.load(username);
       latest = ensureVitals(latest);
       PlayerStorage.save(username, latest);
-  
+    
       const baseCombatPlayer = resolvePlayer(latest);
       const playerState = hydrateAbilities(structuredClone(baseCombatPlayer));
-  
-      const enemies = normalizeEnemiesFromEncounter(encounter.enemies || encounter.enemy);
-  
+    
+      const enemies = normalizeEnemiesFromEncounter(
+        encounter.enemies || encounter.enemy
+      );
+    
+      // NEW: carry subregion, tier, hazard into context
       const context = buildCombatContext(
         encounter.region,
         encounter.biome,
         encounter.weather,
-        encounter.event
+        encounter.event,
+        encounter.hazard
       );
-  
+    
+      // Attach extra metadata so other systems can see it
+      context.subregionKey = encounter.subregion || null;
+      context.tier = encounter.tier ?? null;
+    
       if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
         const p = PlayerStorage.load(username);
         if (p && p.activeDungeonRun) {
           context.dungeonRun = p.activeDungeonRun;
         }
       }
-  
+    
       combat = {
         playerState,
         enemies,
         activeEnemyIndex: 0,
         context
       };
-  
+    
       const anyBoss = enemies.find(e => e.isWorldBoss || encounter.isBoss);
       if (anyBoss) {
         showCinematicIntro(anyBoss);
       }
-  
+    
       setTimeout(() => {
         renderPanels();
         showActionPanel();
@@ -1677,7 +1670,7 @@
       const xp = enemy.level * 2;
       const gold = enemy.level * 1;
   
-      const lootRegionKey = mapRegionToLootKey(context.regionKey || encounter.region);
+      const lootKey = mapRegionToLootKey( encounter.region, combat.context.subregionKey );
       const loot = rollLoot(lootRegionKey, context, player);
   
       return {
@@ -2131,7 +2124,8 @@
       });
     }
   
-    function mapRegionToLootKey(regionKey) {
+    function mapRegionToLootKey(regionKey, subregionKey) {
+      if (subregionKey) return subregionKey;
       switch ((regionKey || "").toLowerCase()) {
         case "forest":
           return "forest-edge";
