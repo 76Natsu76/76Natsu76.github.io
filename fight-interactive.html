@@ -864,7 +864,7 @@
   <div id="usernameDisplay" class="username-display"></div>
 
   <!-- ============================
-        PLAYER / ENEMY HUD
+        PLAYER HUD
   ============================= -->
   <div id="combatHud" class="combat-hud">
     <div id="playerPanel" class="hud-panel player-panel">
@@ -889,6 +889,22 @@
       </div>
     </div>
 
+  <!-- ============================
+        ENVIRONMENT HUD
+  ============================= -->
+    
+    <div id="environmentInfo" class="env-box">
+      <div><strong>Region:</strong> <span id="envRegion"></span></div>
+      <div><strong>Biome:</strong> <span id="envBiome"></span></div>
+      <div><strong>Weather:</strong> <span id="envWeather"></span></div>
+      <div><strong>Event:</strong> <span id="envEvent"></span></div>
+      <div><strong>Traits:</strong> <span id="envTraits"></span></div>
+    </div>
+
+  <!-- ============================
+        ENEMY HUD
+  ============================= -->
+    
     <div id="enemyPanel" class="hud-panel enemy-panel">
       <div class="hud-header">
         <span id="enemyName" class="hud-name">Enemy</span>
@@ -1357,6 +1373,13 @@
   
       document.getElementById("playerName").textContent = p.name || "Player";
       document.getElementById("playerLevel").textContent = "Lv " + (p.level || 1);
+
+      // i don't know where to put this
+      document.getElementById("envRegion").textContent = enemy.region || "—";
+      document.getElementById("envBiome").textContent = enemy.biome || "—";
+      document.getElementById("envWeather").textContent = context.weatherKey || "—";
+      document.getElementById("envEvent").textContent = context.eventKey || "—";
+      document.getElementById("envTraits").textContent = enemy.flavorTags?.join(", ") || "—";
   
       updateHPBar("playerHpFill", "playerHpText", p.hpCurrent, p.hpMax);
       updateManaBar(
