@@ -1,9 +1,9 @@
 /************************************************************
- * resolveEnemy.js — GitHub-native, with BIOME modifiers
- * FINAL FIXED VERSION — applies profession bonuses correctly
+ * resolveEnemy.js — GitHub-native, with UNIFIED ENV MODIFIERS
+ * Uses getAllModifiersForContext from region-modifiers.js
  ************************************************************/
 
-import { REGION_MODIFIERS } from "./region-modifiers.js";
+import { getAllModifiersForContext } from "./region-modifiers.js";
 import { PROFESSION_DEFINITIONS } from "./profession-definitions.js";
 import { ENEMY_TAGS as TAG_MODIFIERS, applyTagModifiers } from "./enemy-tags.js";
 import { RARITY_WEIGHTS as RARITY_MULTIPLIERS } from "./rarity-weights.js";
@@ -14,7 +14,6 @@ import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
 import { ENEMY_ULTIMATES } from "./enemy-ultimates.js";
 
 import { REGION_TO_BIOME } from "./region-to-biome.js";
-import { BIOME_MODIFIERS } from "./biomes.js";
 
 /************************************************************
  * MAIN RESOLVER
@@ -51,15 +50,24 @@ export function resolveEnemy(raw, regionKey, tier) {
   const bonuses = prof?.bonuses || {};
 
   /************************************************************
-   * REGION MODIFIERS
+   * ENVIRONMENTAL CONTEXT + MODIFIERS
    ************************************************************/
-  const regionMods = REGION_MODIFIERS[regionKey] || {
-    hpMult: 1,
-    atkMult: 1,
-    defMult: 1,
-    speedMult: 1,
-    elementAffinity: {}
+  const biomeKey     = REGION_TO_BIOME[regionKey] || null;
+  const subregionKey = raw.subregion || null;
+  const weatherKey   = raw.weather   || null;
+  const crisisKey    = raw.crisis    || null;
+  const eventKey     = raw.event     || null;
+
+  const envContext = {
+    region: regionKey,
+    subregion: subregionKey,
+    biome: biomeKey,
+    weather: weatherKey,
+    crisis: crisisKey,
+    event: eventKey
   };
+
+  const envMods = getAllModifiersForContext(envContext);
 
   /************************************************************
    * BASE STATS (from enemy template)
@@ -88,13 +96,13 @@ export function resolveEnemy(raw, regionKey, tier) {
   /************************************************************
    * VARIANT MULTIPLIERS
    ************************************************************/
-  if (variant?.hpMult)   hpMax = Math.floor(hpMax * variant.hpMult);
-  if (variant?.atkMult)  atk   = Math.floor(atk   * variant.atkMult);
-  if (variant?.defMult)  def   = Math.floor(def   * variant.defMult);
+  if (variant?.hpMult)    hpMax = Math.floor(hpMax * variant.hpMult);
+  if (variant?.atkMult)   atk   = Math.floor(atk   * variant.atkMult);
+  if (variant?.defMult)   def   = Math.floor(def   * variant.defMult);
   if (variant?.speedMult) speed = Math.floor(speed * variant.speedMult);
 
   /************************************************************
-   * PROFESSION BONUSES (THE CRITICAL FIX)
+   * PROFESSION BONUSES
    ************************************************************/
   if (bonuses.hpMult)    hpMax = Math.floor(hpMax * bonuses.hpMult);
   if (bonuses.atkMult)   atk   = Math.floor(atk   * bonuses.atkMult);
@@ -102,25 +110,12 @@ export function resolveEnemy(raw, regionKey, tier) {
   if (bonuses.speedMult) speed = Math.floor(speed * bonuses.speedMult);
 
   /************************************************************
-   * REGION MODIFIERS
+   * UNIFIED ENVIRONMENTAL MODIFIERS
    ************************************************************/
-  if (regionMods.hpMult)    hpMax = Math.floor(hpMax * regionMods.hpMult);
-  if (regionMods.atkMult)   atk   = Math.floor(atk   * regionMods.atkMult);
-  if (regionMods.defMult)   def   = Math.floor(def   * regionMods.defMult);
-  if (regionMods.speedMult) speed = Math.floor(speed * regionMods.speedMult);
-
-  /************************************************************
-   * BIOME MODIFIERS
-   ************************************************************/
-  const biomeKey = REGION_TO_BIOME[regionKey] || null;
-  const biomeMods = biomeKey ? BIOME_MODIFIERS[biomeKey] : null;
-
-  if (biomeMods) {
-    if (biomeMods.hpMult)    hpMax = Math.floor(hpMax * biomeMods.hpMult);
-    if (biomeMods.atkMult)   atk   = Math.floor(atk   * biomeMods.atkMult);
-    if (biomeMods.defMult)   def   = Math.floor(def   * biomeMods.defMult);
-    if (biomeMods.speedMult) speed = Math.floor(speed * biomeMods.speedMult);
-  }
+  hpMax = Math.floor(hpMax * envMods.hpMult);
+  atk   = Math.floor(atk   * envMods.atkMult);
+  def   = Math.floor(def   * envMods.defMult);
+  speed = Math.floor(speed * envMods.spdMult);
 
   /************************************************************
    * TAG MODIFIERS
@@ -140,22 +135,23 @@ export function resolveEnemy(raw, regionKey, tier) {
   speed = Math.floor(speed * (1 + level * 0.02));
 
   /************************************************************
-   * ELEMENT AFFINITY
+   * ELEMENT AFFINITY (INCLUDING ENVIRONMENTAL BIAS)
    ************************************************************/
   const elementAffinity = {};
 
   if (family.elementAffinity)
     Object.assign(elementAffinity, family.elementAffinity);
 
-  if (regionMods.elementAffinity)
-    Object.assign(elementAffinity, regionMods.elementAffinity);
-
   if (bonuses.elementAffinity)
     Object.assign(elementAffinity, bonuses.elementAffinity);
 
   if (raw.element)
     elementAffinity[raw.element] =
-      (elementAffinity[raw.element] || 0) + 0.1;
+      (elementAffinity[raw.element] || 1.0) + 0.1;
+
+  for (const [elem, weight] of Object.entries(envMods.elementalBias || {})) {
+    elementAffinity[elem] = (elementAffinity[elem] || 1.0) * weight;
+  }
 
   /************************************************************
    * ABILITIES + ULTIMATE
@@ -176,6 +172,8 @@ export function resolveEnemy(raw, regionKey, tier) {
     name: raw.name || raw.key,
     family: familyId,
     region: regionKey,
+    subregion: subregionKey,
+    biome: biomeKey,
     tier,
     rarity,
     profession: profKey,
@@ -213,6 +211,8 @@ export function resolveEnemy(raw, regionKey, tier) {
 
     lootContext: {
       region: regionKey,
+      subregion: subregionKey,
+      biome: biomeKey,
       rarity,
       family: familyId,
       profession: profKey,
@@ -225,6 +225,9 @@ export function resolveEnemy(raw, regionKey, tier) {
       burst: family.burst || 1,
       sustain: family.sustain || 1
     },
+
+    environmentalModifiers: envMods,
+    flavorTags: envMods.flavorTags || [],
 
     isPlayer: false
   };
