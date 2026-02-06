@@ -1,5 +1,5 @@
 export const REGION_LOOT_TABLES = {
-  "forest-edge": {
+  "forest_edge": {
     "common": ["Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Forest Berry"],
     "uncommon": ["Mossleaf","Shadecap","Twig Bundle","Copper Ore","Leather Strip","Edgewood Charm"],
     "rare": ["Edgebloom Petal","Whisperbark Chip","Hunter’s Lucky Token","Forest Warden Band"],
@@ -22,7 +22,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "deep-forest": {
+  "deep_forest": {
     "common": ["Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Shadecap","Mossleaf"],
     "uncommon": ["Shadowcap Mushroom","Ancient Bark Sliver","Thornvine Segment","Copper Ore","Leather Strip"],
     "rare": ["Gloompetal Blossom","Elderroot Core","Whispering Spore Cluster","Hunter of Shadows Token"],
@@ -46,7 +46,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "plains-field": {
+  "plains_field": {
     "common": ["Wild Grain","Game Meat","Torn Cloth","Iron Scrap","Traveler’s Rope","Field Herb"],
     "uncommon": ["Polished Arrowhead","Reinforced Leather Strap","Hunter’s Satchel","Sturdy Field Boots"],
     "rare": ["Banner of the Open Steppe","Sharpshooter’s Bowstring","Wind‑Carved Stone","Rider’s Lucky Spur"],
@@ -69,7 +69,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "swamp-marsh": {
+  "swamp_marsh": {
     "common": ["Bog Reed","Murkweed","Rotten Bark","Swamp Gas Vial","Leech Cluster","Stagnant Water Flask"],
     "uncommon": ["Thick Reed Rope","Marsh‑Hardened Leather","Reed‑Woven Charm","Toxin‑Resistant Cloth"],
     "rare": ["Witchlight Lantern Core","Murk‑Infused Resin","Leech‑Bound Vial","Swampwalker’s Anklet"],
@@ -93,7 +93,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "crystal-pass": {
+  "crystal_pass": {
     "common": ["Stone Fragment","Crystal Chip","Cave Moss","Glowshroom","Iron Ore","Rope Coil"],
     "uncommon": ["Refined Crystal Shard","Polished Gem Fragment","Miner’s Reinforced Gloves","Crystal‑Etched Pickaxe"],
     "rare": ["Prismatic Lens Core","Resonant Crystal Node","Gemcutter’s Precision Tool","Echoing Cavestone"],
@@ -117,7 +117,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "cave-entrance": {
+  "cave_entrance": {
     "common": ["Cave Moss","Glowshroom","Stone Chip","Bat Guano","Rusty Nail","Old Rope"],
     "uncommon": ["Sturdy Torch Bundle","Reinforced Helmet","Cave Explorer’s Gloves","Rope and Piton Kit"],
     "rare": ["Echo‑Marked Stone","Bat‑Wing Cloak Fragment","Subterranean Map Scrap","Miner’s Lucky Charm"],
@@ -140,7 +140,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "ruins-outskirts": {
+  "ruins_outskirts": {
     "common": ["Broken Brick","Ancient Coin Fragment","Tarnished Ring","Cracked Idol","Dusty Tome Page","Rusty Key"],
     "uncommon": ["Reinforced Explorer’s Boots","Relic‑Seeker’s Satchel","Sturdy Crowbar","Map of the Outer Walls"],
     "rare": ["Runed Relic Shard","Guardian’s Broken Seal","Forgotten House Crest","Echoing Hallway Charm"],
@@ -164,7 +164,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "desert-dunes": {
+  "desert_dunes": {
     "common": ["Dry Cactus Flesh","Sandstone Chunk","Sun‑Bleached Bone","Scorpion Carapace","Desert Herb","Dusty Cloth"],
     "uncommon": ["Sand‑Proof Goggles","Desert Walker’s Boots","Water‑Skin Harness","Heat‑Reflective Cloak"],
     "rare": ["Glassified Sand Vial","Scorpion King’s Stinger","Sun‑Etched Amulet","Oasis Map Fragment"],
@@ -188,7 +188,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "highland-cliffs": {
+  "highland_cliffs": {
     "common": ["Goat Meat","Hardy Root","Stone Fragment","Iron Ore","Thick Pelt","Climbing Piton"],
     "uncommon": ["Reinforced Climber’s Harness","Wind‑Cut Cloak","Highland Scout’s Boots","Thunder Herb Bundle"],
     "rare": ["Storm‑Carved Rock","Eagle Feather Charm","Cliffside Guardian’s Token","Echoing Horn"],
@@ -212,7 +212,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "volcano-rim": {
+  "volcano_rim": {
     "common": ["Charred Bone","Obsidian Fragment","Cooled Slag","Sulfur Chunk","Ash‑Dusted Cloth","Ember Coal"],
     "uncommon": ["Heat‑Shielded Boots","Ash‑Filter Mask","Fire‑Resistant Cloak","Lava‑Tread Greaves"],
     "rare": ["Molten Core Shard","Volcanic Glass Blade Fragment","Ashen Titan Scale","Smoldering Heartstone"],
@@ -236,7 +236,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "tundra-wastes": {
+  "tundra_wastes": {
     "common": [
       "Frozen Meat","Frost Herb","Ice Shard","Thick Fur","Cracked Antler","Snowmoss"
     ],
@@ -270,7 +270,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "mountain-peak": {
+  "mountain_peak": {
     "common": [
       "Goat Meat","Hardy Root","Stone Fragment","Iron Ore","Thick Pelt","Climbing Piton"
     ],
@@ -304,7 +304,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "void-realm": {
+  "void_realm": {
     "common": [
       "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
     ],
@@ -338,7 +338,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "astral-plane": {
+  "astral_plane": {
     "common": [
       "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
     ],
@@ -372,7 +372,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "abyss-gate": {
+  "abyss_gate": {
     "common": [
       "Abyssal Ichor","Burnt Bone","Hellstone Chip","Soot‑Stained Cloth","Demon Claw Fragment"
     ],
@@ -406,7 +406,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "spirit-kingdom": {
+  "spirit_kingdom": {
     "common": [
       "Wildroot","Spirit Dust","Luminous Bark","Soft Petal","Spirit Thread"
     ],
@@ -440,7 +440,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "outcast-island": {
+  "outcast_island": {
     "common": [
       "Driftwood","Salted Fish","Seaweed Strand","Wet Rope","Barnacled Rock"
     ],
@@ -474,7 +474,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "trainers-city": {
+  "trainers_city": {
     "common": [
       "Torn Cloth","Iron Scrap","Training Dummy Straw","Practice Blade Shard","Simple Ration"
     ],
@@ -542,7 +542,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "verdant-woods": {
+  "verdant_woods": {
     "common": [
       "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Forest Berry","Bark Fragment"
     ],
@@ -610,7 +610,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "volcanic-wastes": {
+  "volcanic_wastes": {
     "common": [
       "Charred Bone","Obsidian Fragment","Cooled Slag","Sulfur Chunk","Ash‑Dusted Cloth","Ember Coal"
     ],
@@ -644,7 +644,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "azure-coast": {
+  "azure_coast": {
     "common": [
       "Driftwood","Seashell","Salted Fish","Seaweed Strand","Wet Rope","Crab Shell"
     ],
@@ -678,7 +678,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "sunspire-highlands": {
+  "sunspire_highlands": {
     "common": [
       "Goat Meat","Hardy Root","Stone Fragment","Iron Ore","Thick Pelt","Climbing Piton"
     ],
@@ -712,7 +712,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "void-spire": {
+  "void_spire": {
     "common": [
       "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
     ],
@@ -746,7 +746,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "crystal-caverns": {
+  "crystal_caverns": {
     "common": [
       "Stone Fragment","Crystal Chip","Cave Moss","Glowshroom","Iron Ore","Rope Coil"
     ],
@@ -780,7 +780,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "highlands-of-thorne": {
+  "highlands_of_thorne": {
     "common": [
       "Goat Meat","Hardy Root","Stone Fragment","Iron Ore","Thick Pelt","Climbing Piton"
     ],
@@ -814,7 +814,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "shattered-desert": {
+  "shattered_desert": {
     "common": [
       "Dry Cactus Flesh","Sandstone Chunk","Sun‑Bleached Bone","Scorpion Carapace","Desert Herb","Dusty Cloth"
     ],
@@ -848,7 +848,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "abyssal-scar": {
+  "abyssal_scar": {
     "common": [
       "Abyssal Ichor","Burnt Bone","Hellstone Chip","Soot‑Stained Cloth","Demon Claw Fragment"
     ],
@@ -881,41 +881,8 @@ export const REGION_LOOT_TABLES = {
       "paladin": ["Light‑Against‑Darkness Sigil"]
     }
   },
-    "primordial-grove": {
-    "common": [
-      "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Ancient Bark Fragment"
-    ],
-    "uncommon": [
-      "Thornvine Segment","Primordial Sap","Copper Ore","Leather Strip","Grovekeeper’s Charm"
-    ],
-    "rare": [
-      "Elderroot Core","Primordial Resin","Mythic Beast Claw","Ancient Grove Totem"
-    ],
-    "epic": [
-      "Mantle of the First Wilds","Grove Titan’s Aegis","Primordial Heartwood Staff"
-    ],
-    "mythic": [
-      "Seed of the World‑Root","Crown of the First Grove"
-    ],
-    "weatherModifiers": {
-      "storm": ["Storm‑Charged Vine","Thunder‑Sap Vial"],
-      "rain": ["Grove‑Steeped Herb Bundle","Drenched Bark Poultice"]
-    },
-    "crisisModifiers": {
-      "beastUprising": ["Alpha Beast Fang","Wildheart Totem"],
-      "ancientAwakening": ["Awakened Root Core","Elder Spirit Fragment"]
-    },
-    "eventModifiers": {
-      "worldBloom": ["Worldbloom Petal","Ancient Seed Cluster"],
-      "druidicRite": ["Ritual Bark Mask","Circle Stone Fragment"]
-    },
-    "professionModifiers": {
-      "druid": ["Grovewarden’s Focus"],
-      "ranger": ["Wildpath Tracker’s Band"]
-    }
-  },
 
-  "celestial-expanse": {
+  "celestial_expanse": {
     "common": [
       "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
     ],
@@ -950,41 +917,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "eternal-citadel": {
-    "common": [
-      "Broken Brick","Ancient Coin Fragment","Tarnished Ring","Cracked Idol","Dusty Tome Page"
-    ],
-    "uncommon": [
-      "Reinforced Citadel Plate","Guardian’s Leather Strap","Ancient Gear Fragment","Citadel Key Blank"
-    ],
-    "rare": [
-      "Runed Relic Shard","Guardian’s Broken Seal","Eternal Crest Fragment","Citadel Wardstone"
-    ],
-    "epic": [
-      "Mantle of the Eternal Watch","Citadel Aegis","Runebound Guardian’s Staff"
-    ],
-    "mythic": [
-      "Heart of the Eternal King","Crown of the First Sentinel"
-    ],
-    "weatherModifiers": {
-      "overcast": ["Dust‑Filter Mask","Weathered Cloak"],
-      "storm": ["Lightning Rod Spike","Storm‑Ward Talisman"]
-    },
-    "crisisModifiers": {
-      "undeadStirring": ["Grave‑Cold Coin","Bone‑Etched Relic"],
-      "siege": ["Siege Engineer’s Toolkit","Citadel Defense Banner"]
-    },
-    "eventModifiers": {
-      "relicAuction": ["Appraised Relic Tag","Auctioneer’s Ledger Page"],
-      "guardianVigil": ["Vigil Candle","Guardian’s Blessing Token"]
-    },
-    "professionModifiers": {
-      "paladin": ["Citadel‑Blessed Emblem"],
-      "historian": ["Archivist’s Lens"]
-    }
-  },
-
-  "worldbreaker-horizon": {
+  "worldbreaker_horizon": {
     "common": [
       "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
     ],
@@ -1018,7 +951,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
   
-  "arcane-riftlands": {
+  "arcane_riftlands": {
     "common": [
       "Mana Residue","Arcane Dust","Runed Shard","Spell‑Scorched Parchment","Crystal Ink Vial"
     ],
@@ -1052,7 +985,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
   
-  "primordial-grove": {
+  "primordial_grove": {
     "common": [
       "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Ancient Bark Fragment"
     ],
@@ -1086,7 +1019,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "celestial-expanse": {
+  "celestial_expanse": {
     "common": [
       "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
     ],
@@ -1121,7 +1054,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "eternal-citadel": {
+  "eternal_citadel": {
     "common": [
       "Broken Brick","Ancient Coin Fragment","Tarnished Ring","Cracked Idol","Dusty Tome Page"
     ],
@@ -1154,42 +1087,8 @@ export const REGION_LOOT_TABLES = {
       "historian": ["Archivist’s Lens"]
     }
   },
-
-  "worldbreaker-horizon": {
-    "common": [
-      "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
-    ],
-    "uncommon": [
-      "Cracked Sigil","Distorted Eye","Flickering Essence","Torn Reality Thread"
-    ],
-    "rare": [
-      "Fragment of the Worldbreaker","Abyss‑Forged Plate","Reality‑Warped Core","Titanbone Splinter"
-    ],
-    "epic": [
-      "Mantle of the Horizon’s End","Worldbreaker Aegis","Paradox‑Charged Staff"
-    ],
-    "mythic": [
-      "Heart of the Worldbreaker","Crown of the Final Titan"
-    ],
-    "weatherModifiers": {
-      "voidStorm": ["Void‑Charged Dust","Reality‑Tether Charm"],
-      "darkOvercast": ["Shadow‑Veined Cloth","Gloom‑Steeped Resin"]
-    },
-    "crisisModifiers": {
-      "voidRift": ["Rift‑Stabilizer","Void Anchor Fragment"],
-      "titanAwakening": ["Titanbone Core","Awakened Colossus Fragment"]
-    },
-    "eventModifiers": {
-      "endtimesEclipse": ["Eclipse‑Forged Shard","Shadow‑Crowned Token"],
-      "cosmicAlignment": ["Aligned Star Fragment","Planar Harmony Dust"]
-    },
-    "professionModifiers": {
-      "warlock": ["Void‑Tuned Focus"],
-      "paladin": ["Light‑Against‑Darkness Sigil"]
-    }
-  },
-
-  "astral-nexus": {
+  
+  "astral_nexus": {
     "common": [
       "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
     ],
@@ -1223,7 +1122,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "deep-caverns": {
+  "deep_caverns": {
     "common": [
       "Cave Moss","Glowshroom","Stone Chip","Bat Guano","Rusty Nail","Old Rope"
     ],
@@ -1257,7 +1156,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "ruined-kingdom": {
+  "ruined_kingdom": {
     "common": [
       "Broken Brick","Ancient Coin Fragment","Tarnished Ring","Cracked Idol","Dusty Tome Page"
     ],
@@ -1291,7 +1190,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "whispering-marsh": {
+  "whispering_marsh": {
     "common": [
       "Bog Reed","Murkweed","Rotten Bark","Swamp Gas Vial","Leech Cluster","Stagnant Water Flask"
     ],
@@ -1325,7 +1224,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "stormbreaker-coast": {
+  "stormbreaker_coast": {
     "common": [
       "Driftwood","Seashell","Salted Fish","Seaweed Strand","Wet Rope","Crab Shell"
     ],
@@ -1359,7 +1258,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "emberforge-depths": {
+  "emberforge_depths": {
     "common": [
       "Charred Bone","Obsidian Fragment","Cooled Slag","Sulfur Chunk","Ash‑Dusted Cloth","Ember Coal"
     ],
@@ -1393,7 +1292,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "crystalline-tundra": {
+  "crystalline_tundra": {
     "common": [
       "Frozen Meat","Frost Herb","Ice Shard","Thick Fur","Snowmoss","Crystal Chip"
     ],
@@ -1427,7 +1326,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "abyssal-deep": {
+  "abyssal_deep": {
     "common": [
       "Abyssal Ichor","Burnt Bone","Hellstone Chip","Soot‑Stained Cloth","Demon Claw Fragment"
     ],
@@ -1733,7 +1632,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "verdant-wildwood": {
+  "verdant_wildwood": {
     "common": [
       "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Forest Berry"
     ],
@@ -1767,7 +1666,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "arcstone-enclave": {
+  "arcstone_enclave": {
     "common": [
       "Mana Residue","Arcane Dust","Runed Shard","Spell‑Scorched Parchment","Crystal Ink Vial"
     ],
@@ -1801,7 +1700,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "emberfang-ridge": {
+  "emberfang_ridge": {
     "common": [
       "Charred Bone","Obsidian Fragment","Cooled Slag","Sulfur Chunk","Ash‑Dusted Cloth","Ember Coal"
     ],
@@ -1903,7 +1802,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "arcane-rift": {
+  "arcane_rift": {
     "common": [
       "Mana Residue","Arcane Dust","Runed Shard","Spell‑Scorched Parchment","Crystal Ink Vial"
     ],
@@ -1937,7 +1836,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "stormforge-sanctum": {
+  "stormforge_sanctum": {
     "common": [
       "Charred Bone","Obsidian Fragment","Cooled Slag","Sulfur Chunk","Thunder Herb","Ember Coal"
     ],
@@ -1971,7 +1870,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "molten-underdeep": {
+  "molten_underdeep": {
     "common": [
       "Cave Moss","Glowshroom","Stone Chip","Charred Bone","Obsidian Fragment","Ember Coal"
     ],
@@ -2005,7 +1904,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "shadow-labyrinth": {
+  "shadow_labyrinth": {
     "common": [
       "Shadow‑Dusted Cloth","Whispering Fragment","Blackened Shard","Tarnished Ring","Dusty Tome Page"
     ],
@@ -2039,7 +1938,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "void-frontier": {
+  "void_frontier": {
     "common": [
       "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
     ],
@@ -2073,7 +1972,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "radiant-ascension-spire": {
+  "radiant_ascension_spire": {
     "common": [
       "Starlight Dust","Astral Thread","Shimmering Scale","Radiant Cloth Strip","Luminous Feather"
     ],
@@ -2107,7 +2006,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "seraphic-crucible": {
+  "seraphic_crucible": {
     "common": [
       "Starlight Dust","Radiant Cloth Strip","Luminous Feather","Comet Shard","Celestial Thread"
     ],
@@ -2141,7 +2040,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "elderwood-heart": {
+  "elderwood_heart": {
     "common": [
       "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Ancient Bark Fragment"
     ],
@@ -2175,7 +2074,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "primeval-overgrowth": {
+  "primeval_overgrowth": {
     "common": [
       "Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Ancient Bark Fragment"
     ],
@@ -2209,7 +2108,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "celestial-horizon": {
+  "celestial_horizon": {
     "common": [
       "Starlight Dust","Astral Thread","Shimmering Scale","Comet Shard","Luminous Feather"
     ],
@@ -2243,7 +2142,7 @@ export const REGION_LOOT_TABLES = {
     }
   },
 
-  "worlds-end-expanse": {
+  "worlds_end_expanse": {
     "common": [
       "Void‑Tainted Dust","Warped Bone","Blackened Shard","Whispering Fragment","Oozing Ichor"
     ],
