@@ -11,7 +11,7 @@ import { requireSession } from "./session-guard.js";
 import { PlayerStorage } from "./player-storage.js";
 import { getRegenRates } from "./regen.js";
 import { initWorldState, tickWorld } from "./world-tick.js";
-import { REGION_HIERARCHY } from "./REGION_HIERARCHY.js";
+import { REGION_HIERARCHY } from "./region-hierarchy.js";
 
 /****************************************************
  * SESSION + INITIALIZATION
