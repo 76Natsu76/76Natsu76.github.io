@@ -26,11 +26,11 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const region = WORLD_DATA.regions[regionKey];
   if (!region) throw new Error(`Unknown region: ${regionKey}`);
 
-  const subregionList = REGION_HIERARCHY[regionKey].subregions || [];
-  const subregion = subregionList.find(sr => sr.key === subregionKey);
+  const subregionDefs = REGION_HIERARCHY[regionKey]?.subregions || {};
+  const subregion = subregionDefs[subregionKey];
   if (!subregion) throw new Error(`Unknown subregion: ${subregionKey} in ${regionKey}`);
 
-  const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
+  const biomeKey = subregion.biome || REGION_TO_BIOME[regionKey] || region.biome;
   const biome = BIOMES[biomeKey];
   if (!biome) throw new Error(`Biome not found: ${biomeKey}`);
 
