@@ -11,6 +11,30 @@ import {
 import { computeHitData, computeFinalDamage } from "./ability-resolver.js";
 import { FAMILY_SYNERGIES } from "./family-synergies.js";
 
+
+const DEBUG_ENVIRONMENT = false; // set to true when debugging
+if (DEBUG_ENVIRONMENT && context.enemy?.environmentalModifiers) {
+  const mods = context.enemy.environmentalModifiers;
+
+  logs.push("Environmental Multipliers:");
+  logs.push(`• HP: x${mods.hpMult.toFixed(2)}`);
+  logs.push(`• ATK: x${mods.atkMult.toFixed(2)}`);
+  logs.push(`• DEF: x${mods.defMult.toFixed(2)}`);
+  logs.push(`• SPD: x${mods.spdMult.toFixed(2)}`);
+  logs.push(`• Crit: x${mods.critMult.toFixed(2)}`);
+  logs.push(`• Dodge: x${mods.dodgeMult.toFixed(2)}`);
+  logs.push(`• Accuracy: x${mods.accuracyMult.toFixed(2)}`);
+
+  const elems = Object.entries(mods.elementalBias || {});
+  if (elems.length) {
+    logs.push("Elemental Bias:");
+    for (const [elem, mult] of elems) {
+      logs.push(`• ${elem}: x${mult.toFixed(2)}`);
+    }
+  }
+}
+
+
 /****************************************************
  * CORE CONTEXT
  ****************************************************/
@@ -1051,6 +1075,23 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   // STEP 2: Environmental status effects
   applyEnvironmentalStatusEffects(player, context, logs);
   enemies.forEach(e => applyEnvironmentalStatusEffects(e, context, logs));
+
+  applyEnvironmentIntroFlavor(context, logs);
+  // STEP 6: Environmental context intro
+  if (context.enemy) {
+    const e = context.enemy;
+  
+    logs.push(`Environment:`);
+    if (e.region) logs.push(`• Region: ${e.region}`);
+    if (e.subregion) logs.push(`• Subregion: ${e.subregion}`);
+    if (e.biome) logs.push(`• Biome: ${e.biome}`);
+    if (context.weatherKey) logs.push(`• Weather: ${context.weatherKey}`);
+    if (context.eventKey) logs.push(`• Event: ${context.eventKey}`);
+  
+    if (e.flavorTags?.length) {
+      logs.push(`• Environmental Traits: ${e.flavorTags.join(", ")}`);
+    }
+  }
 
   const weather = context.weatherKey;
   if (weather === "blizzard" && Math.random() < 0.05) {
