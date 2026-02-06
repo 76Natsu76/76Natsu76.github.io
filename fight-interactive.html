@@ -2125,14 +2125,17 @@
     }
   
     function mapRegionToLootKey(regionKey, subregionKey) {
+      // If we have a subregion, use it directly
       if (subregionKey) return subregionKey;
+    
+      // Fallback for legacy regions
       switch ((regionKey || "").toLowerCase()) {
         case "forest":
-          return "forest-edge";
+          return "forest_edge";
         case "plains":
-          return "plains-field";
+          return "plains_field";
         default:
-          return "forest-edge";
+          return regionKey;
       }
     }
   
