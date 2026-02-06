@@ -7,7 +7,7 @@ import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { REGION_ENEMIES } from "./region-enemies.js";
-import { REGION_HIERARCHY } from "./REGION_HIERARCHY.js";
+import { REGION_HIERARCHY } from "./region-hierarchy.js";
 
 export function initEncounters() {
   return true;
