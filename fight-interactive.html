@@ -1014,6 +1014,7 @@
     import { handleBossDefeat } from "./world-boss-progression.js";
     import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
     import { SUBRACE_ABILITY_DEFINITIONS } from "./subrace-ability-definitions.js";
+    import { PROFESSION_ENVIRONMENT_SYNERGIES } from "./profession-environment-synergies.js";;
   
     /****************************************************
      * REGEN (TIME-BASED, NO CHEESE)
@@ -1177,61 +1178,81 @@
     /****************************************************
      * RUNTIME ENTITIES
      ****************************************************/
-  
     function resolvePlayer(raw) {
       const stats = raw.stats || {};
       const derived = raw.derived || {};
-  
+    
       const hpMax = raw.hpMax ?? stats.hp ?? 1;
       const manaMax = raw.manaMax ?? stats.manaMax ?? 0;
-  
+    
       const baseMana = raw.manaCurrent ?? manaMax;
-  
-      return {
+    
+      // 1. Build the player object
+      const player = {
         id: raw.username,
         name: raw.username,
         level: raw.level || 1,
         profession: raw.profession,
         race: raw.race,
         subrace: raw.subrace,
-  
+    
         hpCurrent: Math.min(raw.hpCurrent ?? hpMax, hpMax),
         hpMax,
-  
+    
         manaCurrent: Math.min(baseMana, manaMax),
         mana: Math.min(baseMana, manaMax),
         manaMax,
-  
+    
         atk: stats.atk ?? 1,
         def: stats.def ?? 0,
         speed: stats.speed ?? 1,
-  
+    
         critChance: derived.critChance ?? raw.crit ?? 0.05,
         critDamageMult: derived.critDamage ?? raw.critDmg ?? 1.5,
-  
+    
         element: raw.element || null,
         statusEffects: raw.statusEffects || [],
         cooldowns: raw.cooldowns || {},
         pendingAction: null,
-  
+    
         abilities: raw.abilities || [],
         ultimate: raw.ultimate || null,
-  
-        // Always reset ULT at combat start
+    
         ultimateCharge: 0,
         ultimateChargeRequired:
           raw.ultimate?.chargeRequired || raw.ultimateChargeRequired || 100,
-  
+    
         equipment: raw.equipment || {},
         talentTree: raw.talentTree || {},
         talentPoints: raw.talentPoints || 0,
-  
+    
         inventory: raw.inventory || [],
-  
+    
         isPlayer: true,
         lastAction: null,
-        lastActionType: null
+        lastActionType: null,
+    
+        // IMPORTANT: flavorTags must exist for Step 5
+        flavorTags: raw.flavorTags || []
       };
+    
+      // 2. Apply profession ↔ environment synergies (Step 5)
+      const profEnv = PROFESSION_ENVIRONMENT_SYNERGIES[player.profession];
+      if (profEnv && player.flavorTags) {
+        const matches = profEnv.tags.some(t => player.flavorTags.includes(t));
+        if (matches) {
+          if (profEnv.hpMult)  player.hpMax = Math.floor(player.hpMax * profEnv.hpMult);
+          if (profEnv.atkMult) player.atk   = Math.floor(player.atk   * profEnv.atkMult);
+          if (profEnv.defMult) player.def   = Math.floor(player.def   * profEnv.defMult);
+          if (profEnv.spdMult) player.speed = Math.floor(player.speed * profEnv.spdMult);
+          if (profEnv.critMult) player.critChance = (player.critChance || 0.05) * profEnv.critMult;
+          if (profEnv.accuracyMult) player.accuracy = (player.accuracy || 0) + (profEnv.accuracyMult - 1);
+          if (profEnv.dodgeMult) player.evasion = (player.evasion || 0) + (profEnv.dodgeMult - 1);
+        }
+      }
+    
+      // 3. Return the final player object
+      return player;
     }
   
     function resolveEnemyFromEncounter(encEnemy) {
@@ -1258,7 +1279,7 @@
         isPlayer: false,
   
         isWorldBoss: !!encEnemy.isWorldBoss,
-        bossKey: encEnemy.bossKey || null
+        bossKey: encEnemy.bossKey || null,
       };
     }
   
