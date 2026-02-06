@@ -14,6 +14,7 @@ import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
 import { ENEMY_ULTIMATES } from "./enemy-ultimates.js";
 
 import { REGION_TO_BIOME } from "./region-to-biome.js";
+import { FAMILY_ENVIRONMENT_SYNERGIES } from "./family-environment-synergies.js";
 
 /************************************************************
  * MAIN RESOLVER
@@ -116,6 +117,26 @@ export function resolveEnemy(raw, regionKey, tier) {
   atk   = Math.floor(atk   * envMods.atkMult);
   def   = Math.floor(def   * envMods.defMult);
   speed = Math.floor(speed * envMods.spdMult);
+
+  /************************************************************
+   * FAMILY ↔ ENVIRONMENT SYNERGIES (Step 4)
+   ************************************************************/
+  const famEnv = FAMILY_ENVIRONMENT_SYNERGIES[familyId];
+  if (famEnv && enemy.flavorTags) {
+    const matches = famEnv.tags.some(t => enemy.flavorTags.includes(t));
+    if (matches) {
+      if (famEnv.hpMult)  hpMax = Math.floor(hpMax * famEnv.hpMult);
+      if (famEnv.atkMult) atk   = Math.floor(atk   * famEnv.atkMult);
+      if (famEnv.defMult) def   = Math.floor(def   * famEnv.defMult);
+      if (famEnv.spdMult) speed = Math.floor(speed * famEnv.spdMult);
+      if (famEnv.accuracyMult) {
+        enemy.accuracy = (enemy.accuracy || 0) + (famEnv.accuracyMult - 1);
+      }
+    }
+    if (matches && logs) {
+      logs.push(`${enemy.name} draws strength from the surrounding environment.`);
+    }
+  }
 
   /************************************************************
    * TAG MODIFIERS
