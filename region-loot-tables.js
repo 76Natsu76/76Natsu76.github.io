@@ -2275,5 +2275,289 @@ export const REGION_LOOT_TABLES = {
       "warlock": ["Void‑Aligned Focus"],
       "paladin": ["Light‑Against‑Darkness Sigil"]
     }
+  },
+
+  /* ============================
+     FOREST (missing)
+  ============================ */
+  
+  "forest_entry": {
+    common: ["Forest Berry","Wildroot","Twig Bundle","Wood Plank","Slime Gel"],
+    uncommon: ["Mossleaf","Shadecap","Copper Ore","Leather Strip"],
+    rare: ["Whisperbark Chip","Edgebloom Petal","Hunter’s Lucky Token"],
+    epic: ["Sylvan Ranger’s Cloak","Song of the Treeline"],
+    mythic: ["Seed of the First Grove"],
+    weatherModifiers: {
+      rain: ["Damp Bark Salve","Rain‑Soaked Herb Bundle"],
+      storm: ["Storm‑Split Branch"]
+    },
+    eventModifiers: {
+      springThaw: ["Blooming Edgeflower"],
+      harvestMoon: ["Moonlit Acorn"]
+    },
+    professionModifiers: {
+      druid: ["Edgegrove Focus Charm"],
+      ranger: ["Trailmarker’s Whistle"]
+    }
+  },
+  
+  /* ============================
+     PLAINS (missing)
+  ============================ */
+  
+  "open_steppe": {
+    common: ["Dry Grass Bundle","Steppe Reed","Raw Meat","Wolf Pelt"],
+    uncommon: ["Iron Shard","Hardened Leather","Steppe Resin"],
+    rare: ["Wind‑Carved Totem","Nomad’s Trinket"],
+    epic: ["Stormrunner’s Mantle"],
+    mythic: ["Heart of the Endless Steppe"],
+    weatherModifiers: {
+      clear: ["Sun‑Baked Herb"],
+      storm: ["Storm‑Charged Feather"]
+    },
+    eventModifiers: {
+      harvestMoon: ["Gleaming Seed Pouch"]
+    },
+    professionModifiers: {
+      warrior: ["Steppe Warband Token"],
+      ranger: ["Wind‑Tuned Charm"]
+    }
+  },
+  
+  /* ============================
+     SWAMP (missing)
+  ============================ */
+  
+  "drowned_marsh": {
+    common: ["Bogwater Reed","Swamp Moss","Rotcap","Sticky Slime"],
+    uncommon: ["Marsh Amber","Damp Leather","Fetid Bark"],
+    rare: ["Witchlight Fungus","Marrowroot"],
+    epic: ["Swampwalker’s Cloak"],
+    mythic: ["Heart of the Drowned"],
+    weatherModifiers: {
+      rain: ["Sodden Moss Bundle"],
+      fog: ["Mist‑Shrouded Herb"]
+    },
+    eventModifiers: {
+      beastMigration: ["Bogfang Trophy"]
+    },
+    professionModifiers: {
+      necromancer: ["Rot‑Infused Charm"],
+      druid: ["Marshcaller’s Focus"]
+    }
+  },
+  
+  /* ============================
+     DESERT (missing)
+  ============================ */
+  
+  "sunscorched_dunes": {
+    common: ["Sun‑Baked Clay","Dry Cactus Spine","Sand‑Worn Cloth"],
+    uncommon: ["Desert Glass","Scorched Leather","Copper Ore"],
+    rare: ["Sunshard Fragment","Mirage Bloom"],
+    epic: ["Sandstorm Veil"],
+    mythic: ["Heart of the Sunspire"],
+    weatherModifiers: {
+      heatwave: ["Blistered Herb","Sun‑Cracked Resin"]
+    },
+    eventModifiers: {
+      scorchedEarth: ["Charred Emberstone"]
+    },
+    professionModifiers: {
+      fire_mage: ["Sunflare Focus"],
+      rogue: ["Sand‑Silk Wraps"]
+    }
+  },
+  
+  /* ============================
+     CAVERN (missing)
+  ============================ */
+  
+  "underdeep": {
+    common: ["Glowshroom","Cave Moss","Stone Fragment","Bat Wing"],
+    uncommon: ["Crystal Dust","Underdeep Resin","Iron Chunk"],
+    rare: ["Deepstone Core","Echoing Shard"],
+    epic: ["Underdeep Warden Cloak"],
+    mythic: ["Heart of the Underdeep"],
+    weatherModifiers: {},
+    eventModifiers: {
+      timelineEcho: ["Temporal Shard"]
+    },
+    professionModifiers: {
+      miner: ["Deepstone Pick‑Charm"],
+      mage: ["Resonant Crystal Focus"]
+    }
+  },
+  
+  "subterranean": {
+    common: ["Dusty Ore","Cave Moss","Stone Beetle Shell"],
+    uncommon: ["Subterranean Resin","Iron Vein Chip"],
+    rare: ["Hollowstone Fragment","Ancient Chisel"],
+    epic: ["Stonewarden’s Mantle"],
+    mythic: ["Core of the Deep Earth"],
+    weatherModifiers: {},
+    eventModifiers: {
+      beastMigration: ["Burrower Fang"]
+    },
+    professionModifiers: {
+      warrior: ["Stonebreaker Token"],
+      geomancer: ["Earth‑Tuned Focus"]
+    }
+  },
+  
+  /* ============================
+     RUINS (missing)
+  ============================ */
+  
+  "forgotten_ruins": {
+    common: ["Broken Tile","Ancient Dust","Rusty Nail","Cracked Pottery"],
+    uncommon: ["Ruined Sigil","Old Coin","Tarnished Amulet"],
+    rare: ["Forgotten Relic","Ancient Rune Fragment"],
+    epic: ["Warden of the Lost Cloak"],
+    mythic: ["Heart of the Forgotten"],
+    weatherModifiers: {
+      storm: ["Lightning‑Scored Tablet"]
+    },
+    eventModifiers: {
+      cosmicFlux: ["Astral‑Etched Shard"]
+    },
+    professionModifiers: {
+      mage: ["Runebound Focus"],
+      rogue: ["Silent Step Token"]
+    }
+  },
+  
+  /* ============================
+     VOID (missing)
+  ============================ */
+  
+  "corrupted": {
+    common: ["Void‑Tainted Dust","Corrupted Husk","Shadow Residue"],
+    uncommon: ["Warped Bone","Corrupted Resin"],
+    rare: ["Abyss‑Etched Fragment","Hollowed Core"],
+    epic: ["Corruption‑Wreathed Cloak"],
+    mythic: ["Heart of the Corrupted Realm"],
+    weatherModifiers: {
+      void_storm: ["Void‑Charged Shard"]
+    },
+    eventModifiers: {
+      cosmicFlux: ["Rift‑Bloom Petal"]
+    },
+    professionModifiers: {
+      warlock: ["Corrupted Focus"],
+      shadow_mage: ["Umbral Charm"]
+    }
+  },
+  
+  /* ============================
+     OCEAN (missing)
+  ============================ */
+  
+  "western_coast": {
+    common: ["Driftwood","Seaweed Bundle","Shell Fragment"],
+    uncommon: ["Salt‑Crusted Pearl","Tide‑Worn Leather"],
+    rare: ["Storm‑Tossed Coral","Siren’s Tear"],
+    epic: ["Coastwalker’s Cloak"],
+    mythic: ["Heart of the Western Tide"],
+    weatherModifiers: {
+      storm: ["Storm‑Charged Coral"]
+    },
+    eventModifiers: {
+      beastMigration: ["Shorefang Trophy"]
+    },
+    professionModifiers: {
+      sailor: ["Tidecaller’s Token"],
+      ranger: ["Sea‑Tuned Charm"]
+    }
+  },
+  
+  "elusive_reef": {
+    common: ["Reef Coral","Sea Sponge","Salted Kelp"],
+    uncommon: ["Pearl Dust","Reef Resin"],
+    rare: ["Gleaming Coral Shard","Siren’s Whisper"],
+    epic: ["Reefwarden’s Mantle"],
+    mythic: ["Heart of the Hidden Reef"],
+    weatherModifiers: {
+      storm: ["Storm‑Infused Coral"]
+    },
+    eventModifiers: {
+      cosmicFlux: ["Abyssal Bloom"]
+    },
+    professionModifiers: {
+      druid: ["Tidecaller’s Focus"],
+      mage: ["Reef‑Tuned Focus"]
+    }
+  },
+  
+  "point_nemo": {
+    common: ["Salt Crust","Barnacle Cluster","Drifted Kelp"],
+    uncommon: ["Deepwater Resin","Abyssal Shell"],
+    rare: ["Nemo’s Lost Token","Abyss‑Etched Coral"],
+    epic: ["Oceanwalker’s Cloak"],
+    mythic: ["Heart of the Endless Sea"],
+    weatherModifiers: {
+      storm: ["Storm‑Forged Coral"]
+    },
+    eventModifiers: {
+      timelineEcho: ["Temporal Tide Fragment"]
+    },
+    professionModifiers: {
+      sailor: ["Compass of the Lost"],
+      mage: ["Abyss‑Tuned Focus"]
+    }
+  },
+  
+  "deep_abyss": {
+    common: ["Abyssal Dust","Dark Coral","Deepwater Scale"],
+    uncommon: ["Abyss Resin","Cracked Abyss Pearl"],
+    rare: ["Leviathan Scale Fragment","Abyssal Heartstone"],
+    epic: ["Abysswalker’s Mantle"],
+    mythic: ["Heart of the Deep Abyss"],
+    weatherModifiers: {
+      storm: ["Storm‑Warped Scale"]
+    },
+    eventModifiers: {
+      cosmicFlux: ["Void‑Bloom Petal"]
+    },
+    professionModifiers: {
+      warlock: ["Abyss‑Tuned Charm"],
+      druid: ["Deepwater Focus"]
+    }
+  },
+  
+  "leviathan_trench": {
+    common: ["Trench Coral","Abyssal Shell","Darkwater Kelp"],
+    uncommon: ["Leviathan Scale Chip","Abyssal Resin"],
+    rare: ["Leviathan Tooth","Abyss‑Etched Core"],
+    epic: ["Leviathan‑Warden Cloak"],
+    mythic: ["Heart of the Leviathan"],
+    weatherModifiers: {
+      storm: ["Storm‑Charged Scale"]
+    },
+    eventModifiers: {
+      beastMigration: ["Leviathan Fang Trophy"]
+    },
+    professionModifiers: {
+      warrior: ["Trenchbreaker Token"],
+      mage: ["Abyss‑Charged Focus"]
+    }
+  },
+  
+  "abyssal_rift": {
+    common: ["Rift‑Tainted Dust","Abyssal Fragment","Warped Coral"],
+    uncommon: ["Rift Resin","Abyss‑Charged Bone"],
+    rare: ["Rift‑Etched Core","Abyssal Bloom"],
+    epic: ["Riftwalker’s Mantle"],
+    mythic: ["Heart of the Abyssal Rift"],
+    weatherModifiers: {
+      void_storm: ["Void‑Charged Coral"]
+    },
+    eventModifiers: {
+      cosmicFlux: ["Rift‑Bloom Petal"]
+    },
+    professionModifiers: {
+      warlock: ["Rift‑Tuned Focus"],
+      mage: ["Abyss‑Infused Charm"]
+    }
   }
 };
