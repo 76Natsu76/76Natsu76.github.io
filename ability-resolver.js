@@ -11,6 +11,7 @@ import { applyShield, absorbDamageWithShield } from './shield-engine.js';
 import { cleanseEffects } from './cleanse-engine.js';
 import { worldModifiers } from './world-modifiers.js';
 import { talentModifiers } from './talent-modifiers.js';
+import { ABILITY_ENVIRONMENT_INTERACTIONS } from "./ability-environment-interactions.js";
 
 /************************************************************
  * MAIN ENTRY: castAbility()
@@ -195,10 +196,43 @@ export function computeFinalDamage(attacker, defender, ability, hitData, context
   dmg = applyElementalModifiers(dmg, attacker, defender);
   dmg = applyWorldModifiers(dmg, attacker, defender, ability, context);
   dmg = applyTalentModifiers(dmg, attacker, ability);
+  
+  // STEP 3F-4: Ability ↔ Environment Interactions
+  let interactionResult = { extraStatus: null, chain: false };
+  let finalDamage = dmg;
+  
+  const abilityElement = ability.element || attacker.element || null;
+  const envTags = attacker.flavorTags || [];
+  
+  if (abilityElement && ABILITY_ENVIRONMENT_INTERACTIONS[abilityElement]) {
+    const rule = ABILITY_ENVIRONMENT_INTERACTIONS[abilityElement];
+  
+    const matches = rule.tags.some(t => envTags.includes(t));
+    if (matches) {
+      // Damage multiplier
+      if (rule.damageMult) {
+        finalDamage = Math.floor(finalDamage * rule.damageMult);
+      }
+  
+      // Healing boost (if ability heals)
+      if (rule.healingBoostMult && ability.type === "heal") {
+        finalDamage = Math.floor(finalDamage * rule.healingBoostMult);
+      }
+  
+      // Extra status effect
+      if (rule.extraStatus) {
+        interactionResult.extraStatus = rule.extraStatus;
+      }
+  
+      // Chain effect (lightning)
+      if (rule.chainChance && Math.random() < rule.chainChance) {
+        interactionResult.chain = true;
+      }
+    }
+  }
+  finalDamge *= hitData.damageMult;
 
-  dmg *= hitData.damageMult;
-
-  return Math.max(1, Math.floor(dmg));
+  return Math.max(1, Math.floor(finalDamage));
 }
 
 /****************************************************
@@ -221,7 +255,7 @@ export function applyDamage(attacker, defender, ability, dmg, hitData, logs) {
     logs.push(`${defender.name} is defeated.`);
   }
 
-  return final;
+  return { finalDamage, interactionResult };
 }
 
 /************************************************************
