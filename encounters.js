@@ -7,7 +7,7 @@ import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EnemyRegistry } from "./enemy-registry.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { REGION_ENEMIES } from "./region-enemies.js";
-import { SUBREGIONS } from "./subregions.js";
+import { REGION_HIERARCHY } from "./REGION_HIERARCHY.js";
 
 export function initEncounters() {
   return true;
@@ -26,7 +26,7 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const region = WORLD_DATA.regions[regionKey];
   if (!region) throw new Error(`Unknown region: ${regionKey}`);
 
-  const subregionList = SUBREGIONS[regionKey] || [];
+  const subregionList = REGION_HIERARCHY[regionKey].subregions || [];
   const subregion = subregionList.find(sr => sr.key === subregionKey);
   if (!subregion) throw new Error(`Unknown subregion: ${subregionKey} in ${regionKey}`);
 
