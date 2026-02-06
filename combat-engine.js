@@ -15,6 +15,65 @@ import { FAMILY_SYNERGIES } from "./family-synergies.js";
  * CORE CONTEXT
  ****************************************************/
 
+function generateEnvironmentalFlavor(enemy) {
+  const tags = enemy.flavorTags || [];
+  if (!tags.length) return [];
+
+  const lines = [];
+
+  for (const tag of tags) {
+    switch (tag) {
+      case "storm-kissed":
+      case "stormbreaker":
+      case "tempest-forged":
+        lines.push("The air crackles with storm energy.");
+        break;
+
+      case "void-touched":
+      case "unmaking":
+      case "paradox-charged":
+        lines.push("Reality warps subtly around your foe.");
+        break;
+
+      case "deepwild":
+      case "overgrown":
+      case "primeval":
+        lines.push("The dense wilderness shifts with unseen life.");
+        break;
+
+      case "frostbitten":
+      case "winterborn":
+      case "crystal-frost":
+        lines.push("A biting chill hangs over the battlefield.");
+        break;
+
+      case "infernal":
+      case "burning":
+      case "magma-scorched":
+        lines.push("Heat radiates from the creature like a furnace.");
+        break;
+
+      case "ancestral":
+      case "spirit-awakening":
+        lines.push("A spiritual presence stirs in the air.");
+        break;
+
+      case "arcane-surge":
+      case "astral":
+      case "starlit":
+        lines.push("Arcane currents shimmer faintly around you.");
+        break;
+
+      default:
+        // Generic fallback
+        lines.push(`The environment shifts with a ${tag.replace(/-/g, " ")} influence.`);
+        break;
+    }
+  }
+
+  return lines;
+}
+
 export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, mode = "solo") {
   const weatherDef = weatherTable[weatherKey] || null;
 
@@ -57,6 +116,11 @@ export function applyEnvironmentIntroFlavor(context, logs) {
   if (pool && pool.length && logs) {
     const line = pool[Math.floor(Math.random() * pool.length)];
     logs.push(line);
+  }
+  // NEW: merge weather + region flavor
+  if (context.enemy && context.enemy.flavorTags) {
+    const envLines = generateEnvironmentalFlavor(context.enemy);
+    for (const l of envLines) logs.push(l);
   }
 }
 
@@ -103,6 +167,11 @@ export function tickStatusEffects(target, context, logs) {
         statusType: eff.type,
         source: eff.source || "status"
       });
+      // NEW: environmental DOT flavor
+      if (target.flavorTags && Math.random() < 0.05) {
+        const envLines = generateEnvironmentalFlavor(target);
+        if (envLines.length) logs.push(envLines[Math.floor(Math.random() * envLines.length)]);
+      }
     }
 
     if (eff.valuePerTurn && eff.type === "hot") {
@@ -605,6 +674,14 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
       logs.push("Critical hit!");
     }
 
+    // NEW: environmental flavor on ability hit
+    if (attacker.flavorTags && attacker.flavorTags.length) {
+      const envLines = generateEnvironmentalFlavor(attacker);
+      if (envLines.length && Math.random() < 0.15) {
+        logs.push(envLines[Math.floor(Math.random() * envLines.length)]);
+      }
+    }
+
     if (ability.statusEffects) {
       for (const eff of ability.statusEffects) {
         applyStatusEffect(target, eff);
@@ -650,6 +727,14 @@ export function resolveBasicAttack(attacker, defender, context, logs) {
 
   if (hitData.isCrit && logs && finalDmg > 0) {
     logs.push("Critical hit!");
+  }
+
+  // NEW: environmental flavor on basic attack
+  if (attacker.flavorTags && attacker.flavorTags.length) {
+    const envLines = generateEnvironmentalFlavor(attacker);
+    if (envLines.length && Math.random() < 0.10) {
+      logs.push(envLines[Math.floor(Math.random() * envLines.length)]);
+    }
   }
 }
 
@@ -827,8 +912,17 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   enemies.forEach(e => tickCooldowns(e));
 
   context.turn += 1;
+  // NEW: occasional environmental reminder
+  if (context.enemy && Math.random() < 0.03) {
+    const envLines = generateEnvironmentalFlavor(context.enemy);
+    if (envLines.length) {
+      const line = envLines[Math.floor(Math.random() * envLines.length)];
+      logs.push(line);
+    }
+  }
 
   const primaryEnemy = getLivingEnemies(enemies)[0] || enemies[0] || null;
+  context.enemy = primaryEnemy;
 
   return {
     player,
