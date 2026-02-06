@@ -1671,7 +1671,7 @@
       const gold = enemy.level * 1;
   
       const lootKey = mapRegionToLootKey( encounter.region, combat.context.subregionKey );
-      const loot = rollLoot(lootRegionKey, context, player);
+      const loot = rollLoot(lootKey, context, player);
   
       return {
         outcome,
