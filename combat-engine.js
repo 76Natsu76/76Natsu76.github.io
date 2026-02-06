@@ -1077,7 +1077,9 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   enemies.forEach(e => applyEnvironmentalStatusEffects(e, context, logs));
 
   applyEnvironmentIntroFlavor(context, logs);
+  
   // STEP 6: Environmental context intro
+  const enemy = context.enemy || null;
   if (context.enemy) {
     const e = context.enemy;
   
