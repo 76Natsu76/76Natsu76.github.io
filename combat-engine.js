@@ -245,6 +245,163 @@ export function crowdControlCheck(entity, logs) {
   return { stunned, silenced, rooted, feared, any };
 }
 
+function applyEnvironmentalStatusEffects(entity, context, logs) {
+  if (!entity || !entity.environmentalModifiers) return;
+
+  const tags = entity.flavorTags || [];
+  if (!tags.length) return;
+
+  // Low-frequency trigger
+  if (Math.random() > 0.05) return;
+
+  for (const tag of tags) {
+    switch (tag) {
+      case "frostbitten":
+      case "winterborn":
+      case "crystal-frost":
+        applyStatusEffect(entity, {
+          type: "slow",
+          isDebuff: true,
+          duration: 2,
+          valuePerTurn: null
+        });
+        logs.push(`${entity.name} is chilled by the freezing air.`);
+        break;
+
+      case "mire-born":
+      case "bog-dweller":
+      case "marsh-haunted":
+        applyStatusEffect(entity, {
+          type: "dodge-down",
+          isDebuff: true,
+          duration: 2
+        });
+        logs.push(`${entity.name struggles in the thick swamp mire.`);
+        break;
+
+      case "sunscorched":
+      case "blistering":
+      case "infernal":
+        applyStatusEffect(entity, {
+          type: "dot",
+          isDebuff: true,
+          duration: 2,
+          valuePerTurn: Math.floor(entity.hpMax * 0.02)
+        });
+        logs.push(`${entity.name suffers from the oppressive heat.`);
+        break;
+
+      case "storm-kissed":
+      case "tempest-forged":
+        applyStatusEffect(entity, {
+          type: "charged",
+          isDebuff: false,
+          duration: 1
+        });
+        logs.push(`Static energy crackles around ${entity.name}.`);
+        break;
+
+      case "void-touched":
+      case "unmaking":
+      case "paradox-charged":
+        applyStatusEffect(entity, {
+          type: "corruption",
+          isDebuff: true,
+          duration: 2
+        });
+        logs.push(`Warped void energy distorts ${entity.name}'s form.`);
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+function triggerEnvironmentalHazard(entity, context, logs) {
+  if (!entity || !entity.environmentalModifiers) return;
+  const tags = entity.flavorTags || [];
+  if (!tags.length) return;
+
+  // Very low chance per round
+  if (Math.random() > 0.03) return;
+
+  for (const tag of tags) {
+    switch (tag) {
+      case "storm-kissed":
+      case "tempest-forged":
+      case "stormbreaker": {
+        const dmg = Math.floor(entity.hpMax * 0.05);
+        applyDamage(null, entity, dmg, context, logs, { isHazard: true });
+        logs.push(`A sudden lightning strike hits ${entity.name}!`);
+        break;
+      }
+
+      case "sunscorched":
+      case "blistering":
+      case "infernal": {
+        const dmg = Math.floor(entity.hpMax * 0.04);
+        applyDamage(null, entity, dmg, context, logs, { isHazard: true });
+        logs.push(`A burst of scorching heat sears ${entity.name}.`);
+        break;
+      }
+
+      case "void-touched":
+      case "unmaking":
+      case "paradox-charged": {
+        applyStatusEffect(entity, {
+          type: "corruption",
+          isDebuff: true,
+          duration: 2
+        });
+        logs.push(`A pulse of void energy distorts ${entity.name}.`);
+        break;
+      }
+
+      case "mire-born":
+      case "bog-dweller":
+      case "marsh-haunted": {
+        applyStatusEffect(entity, {
+          type: "poison",
+          isDebuff: true,
+          duration: 2,
+          valuePerTurn: Math.floor(entity.hpMax * 0.02)
+        });
+        logs.push(`Toxic swamp gases engulf ${entity.name}.`);
+        break;
+      }
+
+      case "frostbitten":
+      case "winterborn":
+      case "crystal-frost": {
+        applyStatusEffect(entity, {
+          type: "slow",
+          isDebuff: true,
+          duration: 1
+        });
+        logs.push(`A freezing wind chills ${entity.name} to the bone.`);
+        break;
+      }
+
+      case "arcane-surge":
+      case "astral":
+      case "starlit": {
+        applyStatusEffect(entity, {
+          type: "arcane-charge",
+          isDebuff: false,
+          duration: 1
+        });
+        logs.push(`Arcane energy surges unpredictably around ${entity.name}.`);
+        break;
+      }
+
+      default:
+        break;
+    }
+  }
+}
+
+
 /****************************************************
  * TACTICAL CLASSIFICATION
  ****************************************************/
@@ -377,8 +534,21 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
     dmg = Math.floor(dmg * weatherMult);
   }
 
-  if (dmg < 0) dmg = 0;
+  // ENVIRONMENTAL ELEMENTAL BIAS (Step 1)
+  if (attacker) {
+    const envMods = attacker.environmentalModifiers || null;
+    const bias = envMods?.elementalBias || null;
 
+    // Prefer ability element if present, otherwise attacker.element
+    const abilityElement = opts.abilityElement || null;
+    const elem = abilityElement || attacker.element || null;
+
+    if (elem && bias && bias[elem]) {
+      dmg = Math.floor(dmg * bias[elem]);
+    }
+  }
+  
+  if (dmg < 0) dmg = 0;
   const def = defender.def || 0;
   const k = 0.015;
 
@@ -667,7 +837,8 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
     const finalDmg = applyDamage(attacker, target, dmg, context, logs, {
       isAbility: true,
       abilityKey: ability.key,
-      isCrit: hitData.isCrit
+      isCrit: hitData.isCrit,
+      abilityElement: ability.element || null
     });
 
     if (hitData.isCrit && logs && finalDmg > 0) {
@@ -877,6 +1048,20 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
 
   tickStatusEffects(player, context, logs);
   enemies.forEach(e => tickStatusEffects(e, context, logs));
+  // STEP 2: Environmental status effects
+  applyEnvironmentalStatusEffects(player, context, logs);
+  enemies.forEach(e => applyEnvironmentalStatusEffects(e, context, logs));
+
+  const weather = context.weatherKey;
+  if (weather === "blizzard" && Math.random() < 0.05) {
+    applyStatusEffect(entity, { type: "slow", duration: 1, isDebuff: true });
+    logs.push(`${entity.name} is slowed by the blizzard winds.`);
+  }
+  
+  if (weather === "storm" && Math.random() < 0.05) {
+    applyStatusEffect(entity, { type: "charged", duration: 1 });
+    logs.push(`Lightning dances around ${entity.name}.`);
+  }
 
   const actors = [player, ...enemies].filter(a => a && a.hpCurrent > 0);
   actors.sort((a, b) => (b.speed || 0) - (a.speed || 0));
@@ -912,6 +1097,10 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   enemies.forEach(e => tickCooldowns(e));
 
   context.turn += 1;
+  // STEP 3: Environmental Hazards
+  triggerEnvironmentalHazard(player, context, logs);
+  enemies.forEach(e => triggerEnvironmentalHazard(e, context, logs));
+
   // NEW: occasional environmental reminder
   if (context.enemy && Math.random() < 0.03) {
     const envLines = generateEnvironmentalFlavor(context.enemy);
