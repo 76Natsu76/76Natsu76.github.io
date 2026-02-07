@@ -16,6 +16,8 @@ import { applyDynamicScaling } from "./dynamic-scaling.js";
 import { DungeonEngine } from "./dungeon-encounters.js";
 import { getRegionState } from "./world-state.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
+import { getCurrentSeason } from "./world-state.js";
+import { SEASON_DEFINITIONS } from "./season-definitions.js";
 
 
 export function initEncounters() {
@@ -48,10 +50,20 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   // WORLD STATE INTEGRATION
   const regionState = getRegionState(regionKey);
   
-  // Weather: world-state overrides random weather
-  const weather = regionState.weather || pickFromArray(
+  // Weather: world-state overrides OR seasonal bias applies
+  let weather = regionState.weather || pickFromArray(
     region.weatherPool?.length ? region.weatherPool : biome.weatherPool || []
   );
+  
+  // Seasonal weather bias
+  if (!regionState.weather && seasonData?.weatherBias) {
+    const biased = Object.entries(seasonData.weatherBias)
+      .flatMap(([key, mult]) => Array(Math.floor(mult * 10)).fill(key));
+  
+    if (biased.length && Math.random() < 0.25) {
+      weather = pickFromArray(biased);
+    }
+  }
   
   // Crisis: world-state crisis stage
   let crisis = null;
@@ -75,12 +87,17 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
   
+  const season = getCurrentSeason();
+  const seasonData = SEASON_DEFINITIONS[season] || null;
+  
   // Build unified encounter context
   const encounterContext = {
     region: regionKey,
     subregion: subregionKey,
     biome: biomeKey,
     weather: weather,
+    season,
+    seasonData,
     crisis: crisis,
     event: event,
     flavorTags: biome.flavor || [],
@@ -91,6 +108,15 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   
   // Get rarity + family weights
   const { rarityWeights, familyWeights } = resolveEncounterWeights(encounterContext);
+
+  // Seasonal family multipliers
+  if (seasonData?.encounterMult) {
+    for (const [fam, mult] of Object.entries(seasonData.encounterMult)) {
+      if (familyWeights[fam]) {
+        familyWeights[fam] = Math.floor(familyWeights[fam] * mult);
+      }
+    }
+  }
 
   // Crisis family multipliers
   if (crisisData?.familyMult) {
