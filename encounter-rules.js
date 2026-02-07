@@ -26,14 +26,12 @@ export const ENCOUNTER_RULES = {
       "rare":     { "tiers": [3] },
       "boss":     { "tiers": [4] }
     },
-  
     "desert-dunes": {
       "common":   { "tiers": [2] },
       "uncommon": { "tiers": [2, 3] },
       "rare":     { "tiers": [3] },
       "boss":     { "tiers": [4] }
     },
-  
     "verdant-woods": {
       "common":   { "tiers": [1, 2] },
       "uncommon": { "tiers": [2] },
