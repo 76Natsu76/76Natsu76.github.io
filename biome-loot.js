@@ -1,6 +1,5 @@
 // biome-loot.js
 // Biome-specific rare drops and natural materials.
-// Expandable, but complete enough for stable gameplay.
 
 export const biomeLoot = {
   forest: {
