@@ -1,7 +1,7 @@
 // loot-resolver.js
 
 import { LOOT_RULES } from "./loot-rules.js";
-import { LOOT_TABLES } from "./loot-table.js"; // global item registry
+import { LOOT_TABLES } from "./loot-table.js";
 
 export function resolveLoot(enemy, context, player) {
   const { regionKey, weatherKey, crisisKey, eventKey } = context;
