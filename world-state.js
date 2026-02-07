@@ -1,27 +1,17 @@
 // world-state.js
-// 3F-7: Environmental World States (Scaffold)
-// Region-wide states, crises, seasons, persistent modifiers, overlays, difficulty, factions.
+// 3F-7: Environmental World States + Crisis Escalation
 
 import { WORLD_DATA } from "./world-data.js";
+import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
 
 // ------------------------------------------------------------
 // INTERNAL STATE
 // ------------------------------------------------------------
 const _worldState = {
-  // Global season / cycle
-  season: "neutral",          // e.g. "spring", "summer", "autumn", "winter", "eclipse", etc.
-  day: 1,                     // optional: world day counter
-
-  // Region-specific state
+  season: "neutral",
+  day: 1,
   regions: {
-    // [regionKey]: {
-    //   crisis: null | "beastUprising" | "voidRift" | ...
-    //   crisisLevel: 0-3 (escalation)
-    //   difficultyOffset: 0 (global tuning per region)
-    //   factionControl: { [factionId]: influenceScore }
-    //   overlays: { [overlayKey]: true }  // e.g. "blight", "blizzard", "siege"
-    //   persistentModifiers: [ { id, type, data } ]
-    // }
+    // [regionKey]: { ...see ensureRegion }
   }
 };
 
@@ -29,18 +19,8 @@ const _worldState = {
 // INIT
 // ------------------------------------------------------------
 export function initWorldState() {
-  // Seed region entries from WORLD_DATA if not present
   for (const regionKey of Object.keys(WORLD_DATA.regions || {})) {
-    if (!_worldState.regions[regionKey]) {
-      _worldState.regions[regionKey] = {
-        crisis: null,
-        crisisLevel: 0,
-        difficultyOffset: 0,
-        factionControl: {},
-        overlays: {},
-        persistentModifiers: []
-      };
-    }
+    ensureRegion(regionKey);
   }
   return _worldState;
 }
@@ -75,25 +55,42 @@ export function advanceDay() {
 // ------------------------------------------------------------
 // REGION CRISIS + ESCALATION
 // ------------------------------------------------------------
-export function setRegionCrisis(regionKey, crisisKey, level = 1) {
+export function setRegionCrisis(regionKey, crisisId, stageIndex = 0) {
   ensureRegion(regionKey);
   const r = _worldState.regions[regionKey];
-  r.crisis = crisisKey;
-  r.crisisLevel = level;
+
+  r.crisis = crisisId;
+  r.crisisStageIndex = stageIndex;
+  r.crisisStartedAt = Date.now();
+  r.lastUpdated = Date.now();
+
+  applyCrisisStageEffects(regionKey);
 }
 
 export function clearRegionCrisis(regionKey) {
   ensureRegion(regionKey);
   const r = _worldState.regions[regionKey];
   r.crisis = null;
-  r.crisisLevel = 0;
+  r.crisisStageIndex = 0;
+  r.crisisStartedAt = null;
+  r.dangerLevel = 1.0;
 }
 
 export function escalateRegionCrisis(regionKey, delta = 1) {
   ensureRegion(regionKey);
   const r = _worldState.regions[regionKey];
-  r.crisisLevel = Math.max(0, (r.crisisLevel || 0) + delta);
-  return r.crisisLevel;
+  if (!r.crisis) return null;
+
+  const def = CRISIS_DEFINITIONS[r.crisis];
+  if (!def) return null;
+
+  const maxIndex = def.stages.length - 1;
+  r.crisisStageIndex = Math.max(0, Math.min(maxIndex, (r.crisisStageIndex || 0) + delta));
+  r.crisisStartedAt = Date.now();
+  r.lastUpdated = Date.now();
+
+  applyCrisisStageEffects(regionKey);
+  return r.crisisStageIndex;
 }
 
 // ------------------------------------------------------------
@@ -129,7 +126,7 @@ export function adjustFactionInfluence(regionKey, factionId, delta) {
 }
 
 // ------------------------------------------------------------
-// OVERLAYS (WORLD-MAP FLAGS)
+// OVERLAYS
 // ------------------------------------------------------------
 export function addRegionOverlay(regionKey, overlayKey) {
   ensureRegion(regionKey);
@@ -150,10 +147,8 @@ export function hasRegionOverlay(regionKey, overlayKey) {
 // PERSISTENT MODIFIERS
 // ------------------------------------------------------------
 export function addRegionModifier(regionKey, modifier) {
-  // modifier: { id, type, data }
   ensureRegion(regionKey);
   const r = _worldState.regions[regionKey];
-  // prevent duplicates by id
   if (!r.persistentModifiers.find(m => m.id === modifier.id)) {
     r.persistentModifiers.push(modifier);
   }
@@ -171,13 +166,47 @@ export function getRegionModifiers(regionKey) {
 }
 
 // ------------------------------------------------------------
-// TICK / WORLD UPDATE HOOK
+// WORLD TICK (Crisis progression hook)
 // ------------------------------------------------------------
 export function worldTick() {
-  // Placeholder for future: decay crises, rotate seasons, move faction lines, etc.
-  // For now, just advance the day.
-  advanceDay();
+  const now = Date.now();
+
+  for (const [regionKey, r] of Object.entries(_worldState.regions)) {
+    if (!r.crisis) continue;
+
+    const def = CRISIS_DEFINITIONS[r.crisis];
+    if (!def) continue;
+
+    const stageIdx = r.crisisStageIndex || 0;
+    const stageDuration = def.stageDurationMs || 0;
+    const elapsed = now - (r.crisisStartedAt || now);
+
+    if (stageDuration > 0 && elapsed >= stageDuration && stageIdx < def.stages.length - 1) {
+      r.crisisStageIndex = stageIdx + 1;
+      r.crisisStartedAt = now;
+      applyCrisisStageEffects(regionKey);
+    }
+  }
+
+  _worldState.day += 1; // simple global tick
   return _worldState;
+}
+
+// ------------------------------------------------------------
+// INTERNAL: APPLY CRISIS STAGE EFFECTS
+// ------------------------------------------------------------
+function applyCrisisStageEffects(regionKey) {
+  const r = _worldState.regions[regionKey];
+  if (!r || !r.crisis) return;
+
+  const def = CRISIS_DEFINITIONS[r.crisis];
+  if (!def) return;
+
+  const stage = def.stages[r.crisisStageIndex || 0];
+  if (!stage) return;
+
+  r.dangerLevel = stage.dangerMult || 1.0;
+  r.lastUpdated = Date.now();
 }
 
 // ------------------------------------------------------------
@@ -187,15 +216,16 @@ function ensureRegion(regionKey) {
   if (!_worldState.regions[regionKey]) {
     _worldState.regions[regionKey] = {
       crisis: null,
-      crisisLevel: 0,
+      crisisStageIndex: 0,
+      crisisStartedAt: null,
+
       difficultyOffset: 0,
       factionControl: {},
       overlays: {},
       persistentModifiers: [],
-    
-      // NEW 3F‑7 fields:
+
       weather: "clear",
-      season: null, // will be inherited from global season unless overridden
+      season: null,
       dangerLevel: 1.0,
       stability: 1.0,
       elementalCharge: { fire: 0, frost: 0, void: 0 },
@@ -203,29 +233,3 @@ function ensureRegion(regionKey) {
     };
   }
 }
-
-/*
-regionState = {
-  weather: "storm",
-  season: "spring",
-  crisis: null,
-  dangerLevel: 1.0,
-  stability: 1.0,
-  elementalCharge: { fire: 0, frost: 0, void: 0 },
-  lastUpdated: timestamp
-}
-
-CRISIS_DEFINITIONS = {
-  undead: {
-    stages: [
-      { id: "undeadRising", danger: 1.1, familyMult: { undead: 1.3 } },
-      { id: "undeadSurge", danger: 1.3, familyMult: { undead: 1.6 } },
-      { id: "necropolisBloom", danger: 1.6, familyMult: { undead: 2.0 } },
-      { id: "collapse", danger: 1.2 },
-      { id: "recovery", danger: 0.9 }
-    ],
-    duration: 3 * 60 * 60 * 1000 // 3 hours per stage
-  }
-}
-
-SEASONS = ["spring", "summer", "autumn", "winter"];*/
