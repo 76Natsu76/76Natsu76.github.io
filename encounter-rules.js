@@ -5,7 +5,7 @@ import { REGION_ENCOUNTER_TABLES } from "./region-encounter-tables.js";
 export const ENCOUNTER_RULES = {
   region: buildRegionRules(REGION_ENCOUNTER_TABLES),
 
-  // Optional future expansion
+  // future expansion
   subregion: {
     // "deep_forest_north": { familyMult: { beast: 1.2, fae: 1.1 } }
   },
