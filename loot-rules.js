@@ -9,6 +9,7 @@ export const LOOT_RULES = {
       epic:     ["Edgewood Heartwood","Sylvan Ranger’s Cloak","Song of the Treeline"],
       mythic:   ["Seed of the First Grove","Edge of the Verdant Hunt"]
     },
+    
     deep_forest: {
       common:   ["Wildroot","Meadow Bloom","Wood Plank","Raw Meat","Slime Gel","Shadecap","Mossleaf"],
       uncommon: ["Shadowcap Mushroom","Ancient Bark Sliver","Thornvine Segment","Copper Ore","Leather Strip"],
