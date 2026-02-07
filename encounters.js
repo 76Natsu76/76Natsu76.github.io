@@ -13,6 +13,7 @@ import { maybeInjectRareSpawn } from "./rare-spawns.js";
 import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
 import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
 import { applyDynamicScaling } from "./dynamic-scaling.js";
+import { DungeonEngine } from "./dungeon-encounters.js";
 
 
 export function initEncounters() {
