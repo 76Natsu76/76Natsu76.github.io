@@ -2,6 +2,7 @@
 // Dungeon-style chained encounters (multi-wave runs)
 
 import { EncounterEngine } from "./encounters.js";
+import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
 
 const DUNGEON_SESSION_KEY = "currentDungeonRun";
 
@@ -101,6 +102,12 @@ function clearRun() {
  */
 function applyWaveScaling(encounter, waveIndex, cfg) {
   const { statStep, rewardStep, dungeonId, totalWaves } = cfg;
+
+  // Roll 0–2 affixes per wave, increasing chance each wave
+  const affixCount = Math.random() < waveIndex * 0.2 ? 1 : 0;
+  const affixes = rollEncounterAffixes(affixCount);
+  
+  applyAffixesToEncounter(encounter, affixes);
 
   const waveNumber = waveIndex + 1;
   const statMult = 1 + statStep * waveIndex;
