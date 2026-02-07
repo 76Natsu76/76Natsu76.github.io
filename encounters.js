@@ -12,6 +12,7 @@ import { resolveEncounterWeights } from "./encounter-resolver.js";
 import { maybeInjectRareSpawn } from "./rare-spawns.js";
 import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
 import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
+import { applyDynamicScaling } from "./dynamic-scaling.js";
 
 
 export function initEncounters() {
@@ -142,6 +143,12 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   // Roll 0–2 affixes
   const affixKeys = rollEncounterAffixes(Math.random() < 0.25 ? 1 : 0);
   applyAffixesToEncounter(encounter, affixKeys);
+  
+  const playerLevel = WORLD_DATA.players[username]?.level || 1;
+  applyDynamicScaling(encounter, playerLevel, {
+    regionDanger: region.dangerMult || 1.0,
+    crisisIntensity: event === "crisis" ? 1.25 : 1.0
+  });
   
   maybeInjectRareSpawn(encounter, ENEMY_TEMPLATES_BY_KEY);
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
