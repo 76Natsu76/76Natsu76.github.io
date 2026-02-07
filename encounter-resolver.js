@@ -11,8 +11,8 @@ export function resolveEncounterWeights(context) {
   const crisis     = crisisKey ? ENCOUNTER_RULES.crisis[crisisKey] || {} : {};
   const event      = eventKey ? ENCOUNTER_RULES.event[eventKey] || {} : {};
 
-  // rarity weights
   const rarityWeights = { ...baseRegion };
+
   if (weather.rarityMult) {
     for (const r in weather.rarityMult) {
       if (rarityWeights[r]) {
@@ -23,6 +23,7 @@ export function resolveEncounterWeights(context) {
       }
     }
   }
+
   if (event.rarityMult) {
     for (const r in event.rarityMult) {
       if (rarityWeights[r]) {
@@ -34,7 +35,6 @@ export function resolveEncounterWeights(context) {
     }
   }
 
-  // family weights
   const familyWeights = { ...biomeFam };
   const famMults = {
     ...(weather.familyMult || {}),
