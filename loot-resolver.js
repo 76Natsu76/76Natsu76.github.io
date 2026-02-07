@@ -33,6 +33,14 @@ export function resolveLoot(enemy, context, player) {
     const famPool = famRules[rarity] || famRules.common || [];
     familyLoot.push(...famPool);
   }
+  else if (family && FAMILY_LOOT_RULES[family]?.ultraRare) {
+    for (const entry of FAMILY_LOOT_RULES[family].ultraRare) {
+      if (Math.random() < entry.chance) {
+        const def = LOOT_TABLES.find(x => x.id === entry.item) || { id: entry.item, name: entry.item };
+        familyLoot.push(def);
+      }
+    }
+  }
 
   const merged = [
     ...basePool,
