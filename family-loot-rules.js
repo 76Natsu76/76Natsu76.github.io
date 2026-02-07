@@ -4,7 +4,11 @@ export const FAMILY_LOOT_RULES = {
   beast: {
     common:   ["Raw Meat", "Beast Fur", "Beast Bone"],
     uncommon: ["Beast Fang", "Thick Hide"],
-    rare:     ["Alpha Fang", "Wildheart Totem"]
+    rare:     ["Alpha Fang", "Wildheart Totem"],
+    ultraRare: [
+      { item: "Alpha Beast Heart", chance: 0.01 },
+      { item: "Primal Beast Essence", chance: 0.005 }
+    ]
   },
 
   undead: {
@@ -55,3 +59,4 @@ export const FAMILY_LOOT_RULES = {
     rare:     ["Ancient Bark Core"]
   }
 };
+
