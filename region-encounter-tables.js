@@ -1,3 +1,5 @@
+// encounter table JSON equivalent
+
 export const REGION_ENCOUNTER_TABLES = {
   "forest-edge": {
     "common":   { "tiers": [1, 2] },
