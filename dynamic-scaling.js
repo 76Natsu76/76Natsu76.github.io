@@ -1,5 +1,4 @@
 // dynamic-scaling.js
-
 export function applyDynamicScaling(encounter, playerLevel, options = {}) {
   const {
     regionDanger = 1.0,
