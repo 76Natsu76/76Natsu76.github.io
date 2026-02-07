@@ -2,6 +2,7 @@
 
 import { LOOT_RULES } from "./loot-rules.js";
 import { LOOT_TABLES } from "./loot-table.js"; // global item registry
+import { FAMILY_LOOT_RULES } from "./family-loot-rules.js";
 
 export function resolveLoot(enemy, context, player) {
   const { regionKey, weatherKey, crisisKey, eventKey } = context;
@@ -23,9 +24,19 @@ export function resolveLoot(enemy, context, player) {
 
   const rarity = enemy.rarity || "common";
   const basePool = regionLoot[rarity] || [];
+  
+  const family = enemy.family || null;
+  const familyLoot = [];
+  
+  if (family && FAMILY_LOOT_RULES[family]) {
+    const famRules = FAMILY_LOOT_RULES[family];
+    const famPool = famRules[rarity] || famRules.common || [];
+    familyLoot.push(...famPool);
+  }
 
   const merged = [
     ...basePool,
+    ...familyLoot,
     ...weatherLoot,
     ...crisisLoot,
     ...eventLoot,
