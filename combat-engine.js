@@ -856,9 +856,8 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
       continue;
     }
 
-    const dmg = computeFinalDamage(attacker, target, ability, hitData, context);
-
-    const finalDmg = applyDamage(attacker, target, dmg, context, logs, {
+    const { finalDamage, interactionResult } = computeFinalDamage(attacker, target, ability, hitData, context);
+    const finalDmg = applyDamage(attacker, target, finalDamage, context, logs, {
       isAbility: true,
       abilityKey: ability.key,
       isCrit: hitData.isCrit,
@@ -881,6 +880,35 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
       for (const eff of ability.statusEffects) {
         applyStatusEffect(target, eff);
         logs.push(`${target.name} is affected by ${eff.type}.`);
+      }
+    }
+
+    // Apply extra status from environment interaction
+    if (interactionResult.extraStatus) {
+      applyStatusEffect(target, interactionResult.extraStatus);
+      logs.push(`${target.name} is affected by ${interactionResult.extraStatus.type}.`);
+    }
+    
+    // CHAIN LIGHTNING LOGIC (3F-4)
+    if (interactionResult.chain) {
+      logs.push(`Lightning arcs from ${target.name} to another enemy!`);
+    
+      // Find a secondary target
+      const living = enemies.filter(e => e && e.hpCurrent > 0 && e !== target);
+      if (living.length > 0) {
+        const secondary = living[Math.floor(Math.random() * living.length)];
+    
+        // 50% damage falloff (tweakable)
+        const chainDmg = Math.floor(finalDmg * 0.5);
+    
+        applyDamage(attacker, secondary, chainDmg, context, logs, {
+          isAbility: true,
+          abilityKey: ability.key,
+          isChain: true,
+          abilityElement: ability.element
+        });
+    
+        logs.push(`The lightning strike hits ${secondary.name} for ${chainDmg} damage!`);
       }
     }
   }
