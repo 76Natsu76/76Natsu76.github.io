@@ -3,12 +3,14 @@
 
 import { WORLD_DATA } from "./world-data.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
+import { SEASONS, SEASON_DEFINITIONS } from "./season-definitions.js";
 
 // ------------------------------------------------------------
 // INTERNAL STATE
 // ------------------------------------------------------------
 const _worldState = {
-  season: "neutral",
+  season: "spring",
+  seasonStartedAt: Date.now(),
   day: 1,
   regions: {
     // [regionKey]: { ...see ensureRegion }
@@ -43,13 +45,35 @@ export function getSeason() {
 // ------------------------------------------------------------
 // SEASON / GLOBAL CYCLE
 // ------------------------------------------------------------
-export function setSeason(seasonKey) {
-  _worldState.season = seasonKey;
-}
 
 export function advanceDay() {
   _worldState.day += 1;
   return _worldState.day;
+}
+
+export function getCurrentSeason() {
+  return _worldState.season;
+}
+
+export function setSeason(seasonKey) {
+  if (!SEASONS.includes(seasonKey)) return;
+  _worldState.season = seasonKey;
+  _worldState.seasonStartedAt = Date.now();
+}
+
+export function advanceSeasonIfNeeded() {
+  const current = _worldState.season;
+  const def = SEASON_DEFINITIONS[current];
+  if (!def) return current;
+
+  const elapsed = Date.now() - _worldState.seasonStartedAt;
+  if (elapsed >= def.durationMs) {
+    const idx = SEASONS.indexOf(current);
+    const next = SEASONS[(idx + 1) % SEASONS.length];
+    setSeason(next);
+  }
+
+  return _worldState.season;
 }
 
 // ------------------------------------------------------------
@@ -188,7 +212,8 @@ export function worldTick() {
     }
   }
 
-  _worldState.day += 1; // simple global tick
+  advanceSeasonIfNeeded();
+  _worldState.day += 1;
   return _worldState;
 }
 
