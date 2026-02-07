@@ -3,6 +3,7 @@
 import { LOOT_RULES } from "./loot-rules.js";
 import { LOOT_TABLES } from "./loot-table.js"; // global item registry
 import { FAMILY_LOOT_RULES } from "./family-loot-rules.js";
+import { FLAVOR_LOOT_RULES } from "./flavor-loot-rules.js";
 
 export function resolveLoot(enemy, context, player) {
   const { regionKey, weatherKey, crisisKey, eventKey } = context;
@@ -41,10 +42,18 @@ export function resolveLoot(enemy, context, player) {
       }
     }
   }
+  
+  const flavorLoot = [];
+  for (const tag of enemy.flavorTags || []) {
+    if (FLAVOR_LOOT_RULES[tag]) {
+      flavorLoot.push(...FLAVOR_LOOT_RULES[tag]);
+    }
+  }
 
   const merged = [
     ...basePool,
     ...familyLoot,
+    ...flavorLoot, // maybe?
     ...weatherLoot,
     ...crisisLoot,
     ...eventLoot,
