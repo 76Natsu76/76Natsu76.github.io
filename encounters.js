@@ -8,6 +8,10 @@ import { EnemyRegistry } from "./enemy-registry.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { REGION_ENEMIES } from "./region-enemies.js";
 import { REGION_HIERARCHY } from "./region-hierarchy.js";
+import { resolveEncounterWeights } from "./encounter-resolver.js";
+import { maybeInjectRareSpawn } from "./rare-spawns.js";
+import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
+
 
 export function initEncounters() {
   return true;
@@ -50,11 +54,39 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
 
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
+  
+  // Build unified encounter context
+  const encounterContext = {
+    region: regionKey,
+    subregion: subregionKey,
+    biome: biomeKey,
+    weather: weather,
+    crisis: event,   // or hazard, depending on your design
+    event: event,
+    flavorTags: biome.flavor || []
+  };
+  
+  // Get rarity + family weights
+  const { rarityWeights, familyWeights } = resolveEncounterWeights(encounterContext);
+  
+  // Roll rarity
+  const rarity = pickWeightedObject(
+    Object.fromEntries(
+      Object.entries(rarityWeights).map(([k, v]) => [k, v.weight])
+    )
+  );
+  
+  // Roll family
+  const family = pickWeightedObject(familyWeights);
+  
+  // Roll tier from rarity tiers
+  const tiers = rarityWeights[rarity]?.tiers || [tier];
+  const rolledTier = pickFromArray(tiers) || tier;
 
-  const rarity = pickWeighted(region.rarityWeights);
-  const family = pickWeightedObject(biome.encounterWeights);
 
   const groupRule = ENEMY_GROUP_SIZES[family] || ENEMY_GROUP_SIZES.default;
+  const tier = rolledTier;
+  
   const count =
     Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) +
     groupRule.min;
@@ -107,7 +139,8 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       subregionKey
     }
   };
-
+  
+  maybeInjectRareSpawn(encounter, ENEMY_TEMPLATES_BY_KEY);
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
   return encounter;
 }
