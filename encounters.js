@@ -268,6 +268,21 @@ function buildEnemyInstance(
   if (hazard && HAZARD_MODIFIERS[hazard]) modifiers.push(HAZARD_MODIFIERS[hazard]);
   if (variant && VARIANT_MODIFIERS[variant]) modifiers.push(VARIANT_MODIFIERS[variant]);
 
+  // Elite promotion chance increases per wave
+  if (encounter?.dungeon) {
+    const wave = encounter.dungeon.waveIndex;
+    const eliteChance = 0.05 + wave * 0.05; // 5% + 5% per wave
+  
+    if (Math.random() < eliteChance) {
+      enemy.isElite = true;
+      enemy.hpMax = Math.floor(enemy.hpMax * 1.5);
+      enemy.hp = enemy.hpMax;
+      enemy.atk = Math.floor(enemy.atk * 1.3);
+      enemy.def = Math.floor(enemy.def * 1.3);
+      enemy.tags = [...(enemy.tags || []), "elite"];
+    }
+  }
+
   return {
     key: template.key,
     name: template.name,
