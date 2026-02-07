@@ -14,6 +14,8 @@ import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
 import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
 import { applyDynamicScaling } from "./dynamic-scaling.js";
 import { DungeonEngine } from "./dungeon-encounters.js";
+import { getRegionState } from "./world-state.js";
+import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
 
 
 export function initEncounters() {
@@ -43,12 +45,27 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
 
   const tier = subregion.tier ?? region.tier ?? 1;
 
-  // WEATHER / EVENT / HAZARD / VARIANT (still simple for now)
-  const weatherPool = region.weatherPool?.length
-    ? region.weatherPool
-    : biome.weatherPool || [];
-  const weather = pickFromArray(weatherPool);
-
+  // WORLD STATE INTEGRATION
+  const regionState = getRegionState(regionKey);
+  
+  // Weather: world-state overrides random weather
+  const weather = regionState.weather || pickFromArray(
+    region.weatherPool?.length ? region.weatherPool : biome.weatherPool || []
+  );
+  
+  // Crisis: world-state crisis stage
+  let crisis = null;
+  let crisisStage = null;
+  let crisisData = null;
+  
+  if (regionState.crisis) {
+    crisis = regionState.crisis;
+    const def = CRISIS_DEFINITIONS[crisis];
+    crisisStage = regionState.crisisStageIndex || 0;
+    crisisData = def?.stages?.[crisisStage] || null;
+  }
+  
+  // Event stays random for now (can be overridden later)
   const eventPool = region.eventPool || [];
   const event = pickFromArray(eventPool);
 
@@ -64,13 +81,25 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     subregion: subregionKey,
     biome: biomeKey,
     weather: weather,
-    crisis: event,   // or hazard, depending on your design
+    crisis: crisis,
     event: event,
-    flavorTags: biome.flavor || []
+    flavorTags: biome.flavor || [],
+    dangerLevel: regionState.dangerLevel || 1.0,
+    crisisStage: crisisStage,
+    crisisData: crisisData
   };
   
   // Get rarity + family weights
   const { rarityWeights, familyWeights } = resolveEncounterWeights(encounterContext);
+
+  // Crisis family multipliers
+  if (crisisData?.familyMult) {
+    for (const [fam, mult] of Object.entries(crisisData.familyMult)) {
+      if (familyWeights[fam]) {
+        familyWeights[fam] = Math.floor(familyWeights[fam] * mult);
+      }
+    }
+  }
   
   // Roll rarity
   const rarity = pickWeightedObject(
@@ -138,7 +167,12 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       biome: biomeKey,
       tier,
       regionKey,
-      subregionKey
+      subregionKey,
+    
+      // NEW
+      crisis,
+      crisisStage,
+      dangerLevel: regionState.dangerLevel
     }
   };
   // Roll 0–2 affixes
@@ -147,8 +181,8 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   
   const playerLevel = WORLD_DATA.players[username]?.level || 1;
   applyDynamicScaling(encounter, playerLevel, {
-    regionDanger: region.dangerMult || 1.0,
-    crisisIntensity: event === "crisis" ? 1.25 : 1.0
+    regionDanger: regionState.dangerLevel || 1.0,
+    crisisIntensity: crisisData?.dangerMult || 1.0
   });
   
   maybeInjectRareSpawn(encounter, ENEMY_TEMPLATES_BY_KEY);
@@ -272,6 +306,9 @@ function buildEnemyInstance(
   if (encounter?.dungeon) {
     const wave = encounter.dungeon.waveIndex;
     const eliteChance = 0.05 + wave * 0.05; // 5% + 5% per wave
+    if (crisisData?.dangerMult > 1.2) {
+      eliteChance += 0.05; // +5% elite chance during major crises
+    }
   
     if (Math.random() < eliteChance) {
       enemy.isElite = true;
