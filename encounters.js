@@ -83,7 +83,6 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const tiers = rarityWeights[rarity]?.tiers || [tier];
   const rolledTier = pickFromArray(tiers) || tier;
 
-
   const groupRule = ENEMY_GROUP_SIZES[family] || ENEMY_GROUP_SIZES.default;
   const tier = rolledTier;
   
