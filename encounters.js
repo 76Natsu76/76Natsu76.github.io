@@ -11,6 +11,7 @@ import { REGION_HIERARCHY } from "./region-hierarchy.js";
 import { resolveEncounterWeights } from "./encounter-resolver.js";
 import { maybeInjectRareSpawn } from "./rare-spawns.js";
 import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
+import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
 
 
 export function initEncounters() {
@@ -138,6 +139,9 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       subregionKey
     }
   };
+  // Roll 0–2 affixes
+  const affixKeys = rollEncounterAffixes(Math.random() < 0.25 ? 1 : 0);
+  applyAffixesToEncounter(encounter, affixKeys);
   
   maybeInjectRareSpawn(encounter, ENEMY_TEMPLATES_BY_KEY);
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
