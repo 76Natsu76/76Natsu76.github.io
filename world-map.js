@@ -283,6 +283,16 @@ function renderWorldMap(player, worldState, username) {
           <span>${crisisStageToLabel(regionState.crisis, regionState.crisisStageIndex)}</span>
         </div>
 
+        <div class="region-boss">
+          ${
+            regionState.worldBossActive
+              ? "⚔️ WORLD BOSS ACTIVE"
+              : regionState.worldBossAwakening
+                ? "⏳ Boss Awakening Soon"
+                : ""
+          }
+        </div>
+
         <div class="region-recovery">
           <strong>Stability:</strong>
           <span>${Number(regionState.stability ?? 1.0).toFixed(2)}</span>
