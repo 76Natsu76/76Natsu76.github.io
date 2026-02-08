@@ -92,9 +92,6 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
   
-  const season = getCurrentSeason();
-  const seasonData = SEASON_DEFINITIONS[season] || null;
-  
   // Build unified encounter context
   const encounterContext = {
     region: regionKey,
