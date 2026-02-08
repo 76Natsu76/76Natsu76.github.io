@@ -194,6 +194,12 @@ export function applyRegionDrift(regionKey) {
   const r = _worldState.regions[regionKey];
   if (!r) return;
 
+  // Natural recovery if no crisis
+  if (!r.crisis) {
+    r.dangerLevel -= 0.01;     // slow recovery
+    r.stability += 0.02;       // slow stabilization
+  }
+
   const season = _worldState.season;
   const seasonBias = REGION_DRIFT.seasonBias[season] || {};
 
@@ -267,8 +273,17 @@ export function worldTick() {
       r.crisisStartedAt = now;
       applyCrisisStageEffects(regionKey);
     }
+    
+    // If stability is high enough, crisis may resolve
+    if (r.crisis && r.stability > 1.5) {
+      r.crisisStageIndex -= 1;
+      if (r.crisisStageIndex <= 0) {
+        r.crisis = null;
+        r.crisisStartedAt = null;
+      }
+    }
   }
-  
+
   // Apply region drift to all regions
   for (const regionKey of Object.keys(_worldState.regions)) {
     applyRegionDrift(regionKey);
