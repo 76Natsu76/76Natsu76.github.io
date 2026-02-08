@@ -1,11 +1,11 @@
 /************************************************************
- * world-boss.css — Styling for world-boss.html
+ * world-boss.css — Updated styling for the new boss UI
  ************************************************************/
 
 body {
   background: #0d0d0d;
   color: #e0e0e0;
-  font-family: Arial, sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   margin: 0;
   padding: 0;
 }
@@ -15,43 +15,66 @@ body {
   margin: 40px auto;
   padding: 20px;
   background: #1a1a1a;
-  border-radius: 8px;
-  box-shadow: 0 0 14px rgba(0,0,0,0.6);
+  border-radius: 10px;
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.7);
 }
 
-h1, h2, h3 {
+h1 {
   color: #ffcc66;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h2, h3 {
+  color: #ffdd88;
   margin-bottom: 10px;
 }
 
 #worldboss-content {
   margin-top: 20px;
-  padding: 15px;
+  padding: 20px;
   background: #222;
-  border-radius: 6px;
+  border-radius: 8px;
+  min-height: 200px;
 }
 
+/* ------------------------------------------------------------
+   Buttons
+------------------------------------------------------------ */
+
 button {
-  padding: 10px 16px;
+  padding: 10px 18px;
   background: #333;
   border: 1px solid #555;
   border-radius: 6px;
   color: #ffcc66;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.2s ease;
+  margin-right: 10px;
+  margin-top: 10px;
 }
 
 button:hover {
   background: #444;
+  border-color: #777;
 }
+
+button:active {
+  background: #555;
+}
+
+/* ------------------------------------------------------------
+   Boss HP Bar
+------------------------------------------------------------ */
 
 .boss-hp-bar {
   width: 100%;
-  height: 20px;
+  height: 22px;
   background: #333;
   border-radius: 4px;
   overflow: hidden;
-  margin: 10px 0;
+  margin: 12px 0;
+  border: 1px solid #555;
 }
 
 .boss-hp-fill {
@@ -60,16 +83,88 @@ button:hover {
   transition: width 0.3s ease;
 }
 
-.contribution-list {
-  list-style: none;
-  padding: 0;
+/* ------------------------------------------------------------
+   Boss Log
+------------------------------------------------------------ */
+
+.boss-log {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 12px;
+  height: 180px;
+  overflow-y: auto;
+  margin-top: 15px;
+  font-size: 14px;
 }
 
-.contribution-list li {
-  padding: 6px;
-  border-bottom: 1px solid #444;
+.boss-log p {
+  margin: 6px 0;
+  padding: 4px 6px;
+  background: #1b1b1b;
+  border-left: 3px solid #ffcc66;
+  border-radius: 4px;
 }
 
-.contribution-list li:hover {
-  background: #2a2a2a;
+/* ------------------------------------------------------------
+   Boss Popup (shared with world map)
+------------------------------------------------------------ */
+
+#worldboss-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  display: none;
+  z-index: 9999;
+  width: 320px;
+}
+
+#worldboss-popup h2 {
+  margin-top: 0;
+  color: #ffcc66;
+}
+
+#worldboss-popup button {
+  width: 100%;
+  margin-top: 15px;
+}
+
+/* ------------------------------------------------------------
+   Map Marker Styles (active + awakening)
+------------------------------------------------------------ */
+
+.worldboss-active {
+  filter: drop-shadow(0 0 6px #ff4444);
+  animation: pulseActive 1.5s infinite;
+}
+
+.worldboss-awakening {
+  filter: drop-shadow(0 0 6px #ffcc66);
+  animation: pulseAwakening 2s infinite;
+}
+
+@keyframes pulseActive {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pulseAwakening {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* ------------------------------------------------------------
+   Utility
+------------------------------------------------------------ */
+
+.hidden {
+  display: none;
 }
