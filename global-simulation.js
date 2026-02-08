@@ -21,6 +21,7 @@ function tick() {
   updateMigrations(world);
   updateAnomalies(world);
   updateGlobalModifiers(world);
+  updateWorldBossAwakenings(world);
 }
 
 // ------------------------------------------------------------
@@ -171,6 +172,44 @@ function spawnGlobalModifier({ dangerMult = 1, stabilityMult = 1, durationMs = 3
 }
 
 // ------------------------------------------------------------
+// BOSS SYSTEM: TIME SPAWNS, ETC
+// ------------------------------------------------------------
+
+function updateWorldBossAwakenings(world) {
+  for (const [regionKey, region] of Object.entries(world.regions)) {
+    if (!region.worldBossAwakening) continue;
+
+    if (Date.now() >= region.worldBossAwakening) {
+      region.worldBossActive = true;
+      region.worldBossAwakening = null;
+
+      addRegionHistory(
+        regionKey,
+        "world_boss_awakened",
+        "A World Boss has awakened in this region!"
+      );
+    }
+  }
+}
+
+function spawnWorldBoss(regionKey, delayMs = 30 * 60 * 1000) {
+  const world = getWorldState();
+  ensureGlobalState(world);
+
+  const region = world.regions[regionKey];
+  if (!region) return;
+
+  region.worldBossAwakening = Date.now() + delayMs;
+  region.worldBossActive = false;
+
+  addRegionHistory(
+    regionKey,
+    "world_boss_stirs",
+    "A powerful presence stirs beneath the earth..."
+  );
+}
+
+// ------------------------------------------------------------
 // INTERNAL: ENSURE GLOBAL STATE EXISTS
 // ------------------------------------------------------------
 function ensureGlobalState(world) {
@@ -193,5 +232,6 @@ export const GlobalSim = {
   spawnWeatherFront,
   spawnMigration,
   spawnAnomaly,
-  spawnGlobalModifier
+  spawnGlobalModifier,
+  spawnWorldBoss
 };
