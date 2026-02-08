@@ -3,7 +3,7 @@
 
 import { WORLD_DATA } from "./world-data.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
-import { REGION_DRIFT } from "./region-drift-definitions.js"
+import { REGION_DRIFT } from "./region-drift-definitions.js";
 import { SEASONS, SEASON_DEFINITIONS } from "./season-definitions.js";
 
 // ------------------------------------------------------------
@@ -46,7 +46,6 @@ export function getSeason() {
 // ------------------------------------------------------------
 // SEASON / GLOBAL CYCLE
 // ------------------------------------------------------------
-
 export function advanceDay() {
   _worldState.day += 1;
   return _worldState.day;
@@ -88,7 +87,7 @@ export function setRegionCrisis(regionKey, crisisId, stageIndex = 0) {
   r.crisisStageIndex = stageIndex;
   r.crisisStartedAt = Date.now();
   r.lastUpdated = Date.now();
-  
+
   addRegionHistory(regionKey, "crisis_start", `Crisis '${crisisId}' has begun.`, {
     crisisId,
     stage: stageIndex
@@ -119,7 +118,11 @@ export function escalateRegionCrisis(regionKey, delta = 1) {
   r.crisisStartedAt = Date.now();
   r.lastUpdated = Date.now();
 
-  addRegionHistory(regionKey, "crisis_escalate", `Crisis '${r.crisis}' escalated to stage ${r.crisisStageIndex + 1}.`);
+  addRegionHistory(
+    regionKey,
+    "crisis_escalate",
+    `Crisis '${r.crisis}' escalated to stage ${r.crisisStageIndex + 1}.`
+  );
 
   applyCrisisStageEffects(regionKey);
   return r.crisisStageIndex;
@@ -197,6 +200,9 @@ export function getRegionModifiers(regionKey) {
   return r ? r.persistentModifiers || [] : [];
 }
 
+// ------------------------------------------------------------
+// REGION DRIFT
+// ------------------------------------------------------------
 export function applyRegionDrift(regionKey) {
   const r = _worldState.regions[regionKey];
   if (!r) return;
@@ -205,10 +211,6 @@ export function applyRegionDrift(regionKey) {
   if (!r.crisis) {
     r.dangerLevel -= 0.01;     // slow recovery
     r.stability += 0.02;       // slow stabilization
-    if (r.dangerLevel > 3.5 && !r._dangerHighLogged) {
-      addRegionHistory(regionKey, "danger_high", "Danger level has become extreme.");
-      r._dangerHighLogged = true;
-    }
   }
 
   const season = _worldState.season;
@@ -230,11 +232,6 @@ export function applyRegionDrift(regionKey) {
 
     r.dangerLevel += REGION_DRIFT.crisisPressure.danger * crisisMult;
     r.stability += REGION_DRIFT.crisisPressure.stability * crisisMult;
-
-    if (r.stability > 1.5 && !r._stabilityHighLogged) {
-      addRegionHistory(regionKey, "stability_high", "Region stability is improving.");
-      r._stabilityHighLogged = true;
-    }
   }
 
   // --- SEASONAL BIAS ---
@@ -256,6 +253,16 @@ export function applyRegionDrift(regionKey) {
     r.stability += fp.stability * influence;
   }
 
+  // --- THRESHOLD LOGGING ---
+  if (r.dangerLevel > 3.5 && !r._dangerHighLogged) {
+    addRegionHistory(regionKey, "danger_high", "Danger level has become extreme.");
+    r._dangerHighLogged = true;
+  }
+  if (r.stability > 1.5 && !r._stabilityHighLogged) {
+    addRegionHistory(regionKey, "stability_high", "Region stability is improving.");
+    r._stabilityHighLogged = true;
+  }
+
   // --- CLAMP VALUES ---
   r.dangerLevel = Math.max(0.5, Math.min(5.0, r.dangerLevel));
   r.stability = Math.max(0.0, Math.min(2.0, r.stability));
@@ -266,7 +273,6 @@ export function applyRegionDrift(regionKey) {
 
   r.lastUpdated = Date.now();
 }
-
 
 // ------------------------------------------------------------
 // WORLD TICK (Crisis progression hook)
@@ -289,15 +295,15 @@ export function worldTick() {
       r.crisisStartedAt = now;
       applyCrisisStageEffects(regionKey);
     }
-    
+
     // If stability is high enough, crisis may resolve
     if (r.crisis && r.stability > 1.5) {
       r.crisisStageIndex -= 1;
       if (r.crisisStageIndex <= 0) {
-        r.crisis = null;
-        r.crisisStartedAt = null;
+        const resolvedId = r.crisis;
+        clearRegionCrisis(regionKey);
+        addRegionHistory(regionKey, "crisis_resolved", `Crisis '${resolvedId}' has been resolved.`);
       }
-      addRegionHistory(regionKey, "crisis_resolved", `Crisis '${r.crisis}' has been resolved.`);
     }
   }
 
@@ -349,9 +355,11 @@ function ensureRegion(regionKey) {
       stability: 1.0,
       elementalCharge: { fire: 0, frost: 0, void: 0 },
       lastUpdated: Date.now(),
-      history: [
-          // { timestamp, type, message, data }
-      ]
+
+      _dangerHighLogged: false,
+      _stabilityHighLogged: false,
+
+      history: []
     };
   }
 }
@@ -367,9 +375,7 @@ export function addRegionHistory(regionKey, type, message, data = {}) {
     data
   });
 
-  // Optional: cap history length
   if (r.history.length > 200) {
     r.history.shift();
   }
 }
-
