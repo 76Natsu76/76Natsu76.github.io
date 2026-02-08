@@ -1,3 +1,5 @@
+import { BIOME_PRESETS } from "./biome-presets.js";
+
 const DEFAULT_MODIFIERS = {
   hpMult: 1.0,
   atkMult: 1.0,
