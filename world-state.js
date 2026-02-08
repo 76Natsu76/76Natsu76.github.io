@@ -88,6 +88,11 @@ export function setRegionCrisis(regionKey, crisisId, stageIndex = 0) {
   r.crisisStageIndex = stageIndex;
   r.crisisStartedAt = Date.now();
   r.lastUpdated = Date.now();
+  
+  addRegionHistory(regionKey, "crisis_start", `Crisis '${crisisId}' has begun.`, {
+    crisisId,
+    stage: stageIndex
+  });
 
   applyCrisisStageEffects(regionKey);
 }
@@ -113,6 +118,8 @@ export function escalateRegionCrisis(regionKey, delta = 1) {
   r.crisisStageIndex = Math.max(0, Math.min(maxIndex, (r.crisisStageIndex || 0) + delta));
   r.crisisStartedAt = Date.now();
   r.lastUpdated = Date.now();
+
+  addRegionHistory(regionKey, "crisis_escalate", `Crisis '${r.crisis}' escalated to stage ${r.crisisStageIndex + 1}.`);
 
   applyCrisisStageEffects(regionKey);
   return r.crisisStageIndex;
@@ -281,6 +288,7 @@ export function worldTick() {
         r.crisis = null;
         r.crisisStartedAt = null;
       }
+      addRegionHistory(regionKey, "crisis_resolved", `Crisis '${r.crisis}' has been resolved.`);
     }
   }
 
@@ -331,7 +339,28 @@ function ensureRegion(regionKey) {
       dangerLevel: 1.0,
       stability: 1.0,
       elementalCharge: { fire: 0, frost: 0, void: 0 },
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
+      history: [
+          // { timestamp, type, message, data }
+      ]
     };
   }
 }
+
+export function addRegionHistory(regionKey, type, message, data = {}) {
+  const r = _worldState.regions[regionKey];
+  if (!r) return;
+
+  r.history.push({
+    timestamp: Date.now(),
+    type,
+    message,
+    data
+  });
+
+  // Optional: cap history length
+  if (r.history.length > 200) {
+    r.history.shift();
+  }
+}
+
