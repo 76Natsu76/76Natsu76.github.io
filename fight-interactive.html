@@ -1030,7 +1030,8 @@
     import { handleBossDefeat } from "./world-boss-progression.js";
     import { ABILITY_DEFINITIONS } from "./ability-definitions.js";
     import { SUBRACE_ABILITY_DEFINITIONS } from "./subrace-ability-definitions.js";
-    import { PROFESSION_ENVIRONMENT_SYNERGIES } from "./profession-environment-synergies.js";;
+    import { PROFESSION_ENVIRONMENT_SYNERGIES } from "./profession-environment-synergies.js";
+    import { PlayerInfluence } from "./player-influence.js";
   
     /****************************************************
      * REGEN (TIME-BASED, NO CHEESE)
@@ -1648,6 +1649,12 @@
           };
   
           DungeonEngine.saveRun(p, combat.context.dungeonRun, username);
+          // 🌍 Player influence: full dungeon clear
+          PlayerInfluence.applyDungeonClear(
+            combat.context.region,
+            run.totalWaves || 3
+          );
+
           window.location.href = "dungeon-complete.html";
           return;
         }
@@ -1667,12 +1674,34 @@
   
         DungeonEngine.completeFloor(run);
         DungeonEngine.saveRun(p, run, username);
+        // 🌍 Player influence: dungeon floor cleared
+        PlayerInfluence.applyCombatVictory(
+          combat.context.region,
+          run.currentFloor || 1
+        );
       }
   
       // NORMAL REWARD FLOW (non-dungeon) + FLEE
       if (outcome === "fled") {
         endCombat("fled", { outcome: "fled", loot: [] });
       } else {
+  
+        // 🌍 Player influence: normal encounter victory
+        if (!run) {
+          PlayerInfluence.applyCombatVictory(
+            combat.context.region,
+            combat.context.tier || 1
+          );
+        }
+      
+        // 🌍 Player influence: crisis intervention (if this fight was crisis-tagged)
+        if (combat.context.crisis) {
+          PlayerInfluence.applyCrisisIntervention(
+            combat.context.region,
+            1
+          );
+        }
+      
         const rewards = generateRewards(
           combat.playerState,
           combat.enemies[0],
@@ -1682,7 +1711,7 @@
         const finalRewards = await finalizeRewards(rewards);
         endCombat(finalRewards.outcome, finalRewards);
       }
-  
+
       autoBattle = false;
       if (autoLoopHandle) clearTimeout(autoLoopHandle);
       combat = null;
