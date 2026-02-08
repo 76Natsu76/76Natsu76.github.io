@@ -3,6 +3,7 @@
 
 import { WORLD_BOSSES } from "./boss-definitions.js";
 import { getWorldState, addRegionHistory } from "./world-state.js";
+import { addGlobalAnnouncement } from "./world-state.js";
 
 export const BossRespawnSystem = {
   tick,
@@ -36,6 +37,7 @@ function tick() {
           `${boss.name} has awakened in this region!`
         );
       }
+      addGlobalAnnouncement("boss_awakened", `${boss.name} has awakened in ${regionKey}!`);
       continue;
     }
 
