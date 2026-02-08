@@ -1,7 +1,29 @@
 // global-simulation.js
 // 3G: Global Simulation Layer
 
+import { WORLD_DATA } from "./world-data.js";
 import { getWorldState, addRegionHistory } from "./world-state.js";
+
+// ------------------------------------------------------------
+// HELPERS
+// ------------------------------------------------------------
+function pickNeighborRegion(world, regionKey) {
+  const region = WORLD_DATA.regions[regionKey];
+  if (!region?.neighbors?.length) return null;
+  return region.neighbors[Math.floor(Math.random() * region.neighbors.length)];
+}
+
+function ensureGlobalState(world) {
+  if (!world.global) {
+    world.global = {
+      weatherFronts: [],
+      migrations: [],
+      anomalies: [],
+      globalModifiers: [],
+      lastGlobalUpdate: Date.now()
+    };
+  }
+}
 
 // ------------------------------------------------------------
 // GLOBAL TICK ENTRY POINT
@@ -10,7 +32,6 @@ function tick() {
   const world = getWorldState();
   const now = Date.now();
 
-  // Ensure global container exists
   ensureGlobalState(world);
 
   // Only update every X minutes (10 min default)
@@ -18,6 +39,8 @@ function tick() {
   world.global.lastGlobalUpdate = now;
 
   updateWeatherFronts(world);
+  mergeWeatherFronts(world);
+
   updateMigrations(world);
   updateAnomalies(world);
   updateGlobalModifiers(world);
@@ -42,11 +65,53 @@ function updateWeatherFronts(world) {
 
     region.weather = front.weatherKey;
 
+    // Chance to intensify
+    if (Math.random() < 0.1) {
+      front.intensity = Math.min(3, (front.intensity || 1) + 1);
+    }
+
+    // Chance to weaken
+    if (Math.random() < 0.1) {
+      front.intensity = Math.max(1, (front.intensity || 1) - 1);
+    }
+
+    // Apply intensity to region
+    region.weatherIntensity = front.intensity;
+
+    // Chance to dissipate
+    if (front.intensity <= 1 && Math.random() < 0.05) {
+      front.finished = true;
+    }
+
     addRegionHistory(
       regionKey,
       "weather_front",
       `A ${front.weatherKey.replace("_", " ")} front has moved into the region.`
     );
+  }
+
+  world.global.weatherFronts = world.global.weatherFronts.filter(f => !f.finished);
+}
+
+function mergeWeatherFronts(world) {
+  const fronts = world.global.weatherFronts;
+
+  for (let i = 0; i < fronts.length; i++) {
+    for (let j = i + 1; j < fronts.length; j++) {
+      const A = fronts[i];
+      const B = fronts[j];
+
+      if (A.path[A.position] === B.path[B.position]) {
+        A.intensity = Math.min(3, (A.intensity || 1) + (B.intensity || 1));
+        B.finished = true;
+
+        addRegionHistory(
+          A.path[A.position],
+          "weather_merge",
+          "Two weather fronts collided, intensifying the storm."
+        );
+      }
+    }
   }
 
   world.global.weatherFronts = world.global.weatherFronts.filter(f => !f.finished);
@@ -61,6 +126,7 @@ function spawnWeatherFront(path, weatherKey, speed = 1) {
     weatherKey,
     speed,
     position: 0,
+    intensity: 1,
     finished: false
   });
 }
@@ -124,7 +190,39 @@ function updateAnomalies(world) {
       "anomaly",
       `A ${anomaly.element} anomaly intensifies in the region.`
     );
+
+    // Chance to grow
+    if (Math.random() < 0.15) {
+      anomaly.intensity += 1;
+      addRegionHistory(regionKey, "anomaly_growth",
+        `The ${anomaly.element} anomaly grows stronger.`);
+    }
+
+    // Chance to spread
+    if (Math.random() < 0.1) {
+      const neighbor = pickNeighborRegion(world, regionKey);
+      if (neighbor) {
+        world.global.anomalies.push({
+          region: neighbor,
+          element: anomaly.element,
+          intensity: Math.max(1, anomaly.intensity - 1)
+        });
+
+        addRegionHistory(neighbor, "anomaly_spread",
+          `A ${anomaly.element} anomaly spreads into the region.`);
+      }
+    }
+
+    // Chance to collapse
+    if (Math.random() < 0.05) {
+      anomaly.collapsed = true;
+      addRegionHistory(regionKey, "anomaly_collapse",
+        `The ${anomaly.element} anomaly collapses and fades.`);
+    }
   }
+
+  // Cleanup collapsed anomalies
+  world.global.anomalies = world.global.anomalies.filter(a => !a.collapsed);
 }
 
 function spawnAnomaly(regionKey, element, intensity = 1) {
@@ -172,9 +270,8 @@ function spawnGlobalModifier({ dangerMult = 1, stabilityMult = 1, durationMs = 3
 }
 
 // ------------------------------------------------------------
-// BOSS SYSTEM: TIME SPAWNS, ETC
+// WORLD BOSS AWAKENINGS
 // ------------------------------------------------------------
-
 function updateWorldBossAwakenings(world) {
   for (const [regionKey, region] of Object.entries(world.regions)) {
     if (!region.worldBossAwakening) continue;
@@ -207,21 +304,6 @@ function spawnWorldBoss(regionKey, delayMs = 30 * 60 * 1000) {
     "world_boss_stirs",
     "A powerful presence stirs beneath the earth..."
   );
-}
-
-// ------------------------------------------------------------
-// INTERNAL: ENSURE GLOBAL STATE EXISTS
-// ------------------------------------------------------------
-function ensureGlobalState(world) {
-  if (!world.global) {
-    world.global = {
-      weatherFronts: [],
-      migrations: [],
-      anomalies: [],
-      globalModifiers: [],
-      lastGlobalUpdate: Date.now()
-    };
-  }
 }
 
 // ------------------------------------------------------------
