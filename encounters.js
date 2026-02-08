@@ -7,7 +7,7 @@ import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { EnemyRegistry } from "./enemy-registry.js";
 import { getRegionState, getCurrentSeason } from "./world-state.js";
-import { maybeInjectRareSpawn } from "./rare-spawns.js";
+import { maybeInjectRareSpawn } from "./rare-spawn.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { REGION_ENEMIES } from "./region-enemies.js";
 import { REGION_HIERARCHY } from "./region-hierarchy.js";
