@@ -27,6 +27,9 @@ function applyCombatVictory(regionKey, difficultyScore = 1) {
   for (const elem of Object.keys(r.elementalCharge)) {
     r.elementalCharge[elem] *= 0.98;
   }
+  addRegionHistory(regionKey, "player_victory", "Player reduced danger through combat.", {
+    difficultyScore
+  });
 
   clampRegion(r);
 }
@@ -46,6 +49,9 @@ function applyDungeonClear(regionKey, wavesCleared = 3) {
   if (r.crisis) {
     r.crisisStageIndex = Math.max(0, r.crisisStageIndex - 1);
   }
+  addRegionHistory(regionKey, "dungeon_clear", "Player cleared a dungeon, stabilizing the region.", {
+    wavesCleared
+  });
 
   clampRegion(r);
 }
@@ -68,6 +74,9 @@ function applyCrisisIntervention(regionKey, strength = 1) {
 
   r.dangerLevel -= 0.1 * strength;
   r.stability += 0.15 * strength;
+  addRegionHistory(regionKey, "crisis_intervention", "Player weakened the crisis.", {
+    strength
+  });
 
   clampRegion(r);
 }
@@ -89,6 +98,7 @@ function applyFactionShift(regionKey, factionId, delta) {
     r.dangerLevel += 0.02 * Math.abs(delta);
   }
 
+  addRegionHistory(regionKey, "faction_shift", `Player shifted faction influence: ${factionId} += ${delta}.`);
   clampRegion(r);
 }
 
