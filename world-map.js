@@ -275,7 +275,12 @@ function renderWorldMap(player, worldState, username) {
           <strong>Crisis:</strong>
           <span>${crisisStageToLabel(regionState.crisis, regionState.crisisStageIndex)}</span>
         </div>
-    
+
+        <div class="region-recovery">
+          <strong>Stability:</strong>
+          <span>${regionState.stability.toFixed(2)}</span>
+        </div>
+
         <div class="region-elemental">
           <strong>Elemental Charge:</strong>
           <div>${elementalChargeIcons(regionState.elementalCharge)}</div>
@@ -285,7 +290,11 @@ function renderWorldMap(player, worldState, username) {
           <strong>Overlays:</strong>
           <div>${overlayIcons(regionState.overlays)}</div>
         </div>
-    
+
+        <div class="region-player-impact">
+          <strong>Player Influence Active</strong>
+        </div>
+
         <div class="region-influence">
           ${Object.keys(regionState.factionControl || {}).map(k => `
             <div class="influence-item">
