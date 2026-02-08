@@ -4,6 +4,8 @@
 import { WORLD_BOSSES } from "./boss-definitions.js";
 import { chooseBossActionV3 } from "./enemy-ai.js";
 import { addRegionHistory, getWorldState } from "./world-state.js";
+import { addGlobalAnnouncement, getWorldState } from "./world-state.js";
+import { WORLD_DATA } from "./world-data.js";
 
 // ------------------------------------------------------------
 // MAIN ENTRY: Called each boss turn
@@ -90,25 +92,36 @@ function updateBossEnrage(encounter, boss, logs) {
 // ------------------------------------------------------------
 // BOSS DEFEAT HANDLER
 // ------------------------------------------------------------
+
 export function handleBossDeath(encounter, regionKey, logs) {
   const world = getWorldState();
-  const regionState = world.regions[regionKey];
+  const region = world.regions[regionKey];
 
-  if (!regionState) return;
-
-  regionState.worldBossActive = false;
-  regionState.worldBossAwakening = null;
+  if (!region) return;
+  
+  region.worldBossActive = false;
+  region.worldBossAwakening = null;
+  region.worldBossDefeated = true;
 
   logs.push({
     type: "boss_defeated",
     text: `${encounter.bossName} has been defeated!`
   });
 
+  addGlobalAnnouncement("boss_defeated", `${encounter.bossName} has fallen in ${regionKey}!`);
+  
   addRegionHistory(
     regionKey,
     "boss_defeated",
     `${encounter.bossName} has fallen!`
   );
+
+  // REGION UNLOCK LOGIC
+  const unlockRules = WORLD_DATA.regions[regionKey]?.unlock;
+  if (unlockRules?.requiresBossClear) {
+    region.unlocked = true;
+    addGlobalAnnouncement("region_unlocked", `${regionKey} is now unlocked!`);
+  }
 }
 
 // ------------------------------------------------------------
