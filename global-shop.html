@@ -153,7 +153,7 @@
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
     import { WorldSim } from "./world-simulation.js";
-    import { renderGlobalMerchantUI, startShopCountdown } from "./shop-ui.js";
+    import { renderGlobalMerchant, startShopCountdown } from "./shop-ui.js";
   
     await requireSession();
     const { username } = window.syncState;
