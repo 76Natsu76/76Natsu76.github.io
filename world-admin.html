@@ -109,6 +109,21 @@
       font-size:13px;
       opacity:0.85;
     }
+
+    .boss-row {
+      padding:6px 0;
+      border-bottom:1px solid #1c1f28;
+      font-size:14px;
+    }
+
+    .boss-row:last-child {
+      border-bottom:none;
+    }
+
+    .boss-controls button {
+      margin-top:4px;
+      margin-right:6px;
+    }
   </style>
 </head>
 
@@ -117,26 +132,20 @@
   <h1>World State</h1>
   <div id="adminDisplay"></div>
 
+  <!-- WORLD OVERVIEW -->
   <div class="section">
     <h2>Overview</h2>
     <div id="worldOverview">Loading world...</div>
     <div id="statusMessage"></div>
   </div>
 
+  <!-- WORLD BOSS MANAGEMENT -->
   <div class="section">
-    <h2>Controls</h2>
-    <button onclick="reloadWorld()">Reload World</button>
-    <button onclick="advanceDay()">Advance Day</button>
-    <button onclick="tickWorld()">Force Tick</button>
-    <button onclick="forceWeather()">Force Weather Roll</button>
-    <button onclick="forceEvent()">Force Event Roll</button>
-    <button onclick="resetPressure()">Reset Encounter Pressure</button>
-    <button onclick="clearEvents()">Clear Events</button>
-    <button onclick="clearModifiers()">Clear Modifiers</button>
-    <button onclick="resetCrisis()">Reset Crisis</button>
-    <button onclick="setSeasonPrompt()">Set Season</button>
+    <h2>World Boss Management</h2>
+    <div id="bossOverview">Loading boss data...</div>
   </div>
 
+  <!-- RAW JSON -->
   <div class="section">
     <h2>Raw World JSON</h2>
     <div id="worldJson">Waiting...</div>
@@ -145,200 +154,162 @@
   <button class="btn-nav" onclick="goAdmin()">Back to Admin Dashboard</button>
 
   <script type="module">
-  import { requireSession } from "./session-guard.js";
-  const session = requireSession();
-  if (!session) return;
+    import { requireSession } from "./session-guard.js";
+    import { WORLD_BOSSES } from "./boss-definitions.js";
 
-  const admin = session.username;
-  document.getElementById("adminDisplay").textContent =
-    admin ? "Admin: " + admin : "Not logged in";
+    const session = await requireSession();
+    const admin = session.username;
 
-  async function loadWorld() {
-    const overview = document.getElementById("worldOverview");
-    const jsonBox = document.getElementById("worldJson");
-    overview.textContent = "Loading world...";
-    jsonBox.textContent = "Loading...";
+    document.getElementById("adminDisplay").textContent =
+      admin ? "Admin: " + admin : "Not logged in";
 
-    try {
-      const res = await fetch("/api/admin/world", { cache: "no-store" });
-      if (!res.ok) {
-        overview.textContent = "Failed to load world state.";
-        jsonBox.textContent = "Failed to load.";
+    async function loadWorld() {
+      const overview = document.getElementById("worldOverview");
+      const jsonBox = document.getElementById("worldJson");
+      const bossBox = document.getElementById("bossOverview");
+
+      overview.textContent = "Loading world...";
+      jsonBox.textContent = "Loading...";
+      bossBox.textContent = "Loading...";
+
+      try {
+        const res = await fetch("/api/admin/world", { cache: "no-store" });
+        if (!res.ok) {
+          overview.textContent = "Failed to load world state.";
+          jsonBox.textContent = "Failed to load.";
+          bossBox.textContent = "Failed to load.";
+          return;
+        }
+
+        const world = await res.json();
+        renderWorld(world);
+        renderBosses(world);
+      } catch (err) {
+        overview.textContent = "Network error: " + err.message;
+        jsonBox.textContent = "Network error.";
+        bossBox.textContent = "Network error.";
+      }
+    }
+
+    function renderWorld(world) {
+      const overview = document.getElementById("worldOverview");
+      const jsonBox = document.getElementById("worldJson");
+
+      if (!world) {
+        overview.textContent = "No world data.";
+        jsonBox.textContent = "No data.";
         return;
       }
 
-      const data = await res.json();
-      renderWorld(data);
-    } catch (err) {
-      overview.textContent = "Network error: " + err.message;
-      jsonBox.textContent = "Network error.";
-    }
-  }
+      const rows = [];
+      rows.push(row("Day", world.day ?? "?"));
+      rows.push(row("Time", world.time ?? "Unknown"));
+      rows.push(row("Season", format(world.season ?? "Unknown")));
+      rows.push(row("Weather", format(world.weather ?? "Unknown")));
+      rows.push(row("Tick Count", world.tickCount ?? 0));
+      rows.push(row("Regions Active", Object.keys(world.regions || {}).length));
 
-  function renderWorld(world) {
-    const overview = document.getElementById("worldOverview");
-    const jsonBox = document.getElementById("worldJson");
-
-    if (!world) {
-      overview.textContent = "No world data.";
-      jsonBox.textContent = "No data.";
-      return;
+      overview.innerHTML = rows.join("");
+      jsonBox.textContent = JSON.stringify(world, null, 2);
     }
 
-    const rows = [];
-    rows.push(row("Day", world.day ?? "?"));
-    rows.push(row("Time", world.time ?? "Unknown"));
-    rows.push(row("Season", format(world.season ?? "Unknown")));
-    rows.push(row("Weather", format(world.weather ?? "Unknown")));
-    rows.push(row("Tick Count", world.tickCount ?? 0));
-    rows.push(row("Regions Active", (world.regions || []).length));
-    rows.push(row("Encounter Pressure", world.encounterPressure ?? 0));
-    rows.push(row("Crisis Active", world.crisisActive ? "Yes" : "No"));
-    if (world.crisisKey) rows.push(row("Crisis Key", format(world.crisisKey)));
+    function renderBosses(world) {
+      const box = document.getElementById("bossOverview");
+      const now = Date.now();
 
-    overview.innerHTML = `
-      ${rows.join("")}
+      const rows = [];
 
-      <div style="margin-top:10px;">
-        <strong>Active Events:</strong><br>
-        ${
-          world.activeEvents?.length
-            ? world.activeEvents
-                .map(e => `<span class="tag">${format(e)}</span>`)
-                .join("")
-            : "<span style='opacity:0.7;'>None</span>"
+      for (const regionKey in world.regions) {
+        const region = world.regions[regionKey];
+        const boss = findBossForRegion(regionKey);
+
+        if (!boss) continue;
+
+        let status = "";
+        if (region.worldBossActive) {
+          status = `<span class="tag" style="border-color:#ff4444;">ACTIVE</span>`;
+        } else if (region.worldBossAwakening) {
+          const minutes = Math.ceil((region.worldBossAwakening - now) / 60000);
+          status = `<span class="tag" style="border-color:#ffcc66;">Awakening in ${minutes}m</span>`;
+        } else {
+          status = `<span class="tag" style="border-color:#888;">Dormant</span>`;
         }
-      </div>
 
-      <div style="margin-top:10px;">
-        <strong>Global Modifiers:</strong><br>
-        ${
-          world.globalModifiers?.length
-            ? world.globalModifiers
-                .map(m => `<span class="tag">${format(m)}</span>`)
-                .join("")
-            : "<span style='opacity:0.7;'>None</span>"
-        }
-      </div>
-    `;
+        rows.push(`
+          <div class="boss-row">
+            <strong>${boss.name}</strong> — Region: ${regionKey}<br>
+            Status: ${status}
+            <div class="boss-controls">
+              <button onclick="forceSpawn('${regionKey}')">Force Spawn</button>
+              <button onclick="forceDespawn('${regionKey}')">Force Despawn</button>
+              <button onclick="resetTimer('${regionKey}')">Reset Timer</button>
+            </div>
+          </div>
+        `);
+      }
 
-    jsonBox.textContent = JSON.stringify(world, null, 2);
-  }
-
-  function row(label, value) {
-    return `
-      <div class="stat-row">
-        <span>${label}</span>
-        <span>${value}</span>
-      </div>
-    `;
-  }
-
-  async function postWorldAction(url, payload, fallbackMessage) {
-    const status = document.getElementById("statusMessage");
-    status.textContent = "Working...";
-
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json();
-      status.textContent = data.message || fallbackMessage;
-      await loadWorld();
-    } catch (err) {
-      status.textContent = "Error: " + err.message;
+      box.innerHTML = rows.join("");
     }
-  }
 
-  function reloadWorld() {
-    postWorldAction(
-      "/api/admin/world/reload",
-      { admin },
-      "World reloaded."
-    );
-  }
-  function advanceDay() {
-    postWorldAction(
-      "/api/admin/world/advance-day",
-      { admin },
-      "Day advanced."
-    );
-  }
-  function tickWorld() {
-    postWorldAction("/api/admin/world/tick", { admin }, "Tick executed.");
-  }
-  function forceWeather() {
-    postWorldAction(
-      "/api/admin/world/force-weather",
-      { admin },
-      "Weather rolled."
-    );
-  }
-  function forceEvent() {
-    postWorldAction(
-      "/api/admin/world/force-event",
-      { admin },
-      "Event rolled."
-    );
-  }
-  function resetPressure() {
-    postWorldAction(
-      "/api/admin/world/reset-pressure",
-      { admin },
-      "Pressure reset."
-    );
-  }
-  function clearEvents() {
-    postWorldAction(
-      "/api/admin/world/clear-events",
-      { admin },
-      "Events cleared."
-    );
-  }
-  function clearModifiers() {
-    postWorldAction(
-      "/api/admin/world/clear-modifiers",
-      { admin },
-      "Modifiers cleared."
-    );
-  }
-  function resetCrisis() {
-    postWorldAction(
-      "/api/admin/world/reset-crisis",
-      { admin },
-      "Crisis reset."
-    );
-  }
+    function row(label, value) {
+      return `
+        <div class="stat-row">
+          <span>${label}</span>
+          <span>${value}</span>
+        </div>
+      `;
+    }
 
-  function setSeasonPrompt() {
-    const season = prompt(
-      "Enter season key (SPRING, SUMMER, AUTUMN, WINTER):"
-    );
-    if (!season) return;
-    postWorldAction(
-      "/api/admin/world/set-season",
-      { admin, season },
-      "Season updated."
-    );
-  }
+    function format(str) {
+      return String(str)
+        .toLowerCase()
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
 
-  function format(str) {
-    return String(str)
-      .toLowerCase()
-      .replace(/_/g, " ")
-      .replace(/\b\w/g, c => c.toUpperCase());
-  }
+    function findBossForRegion(regionKey) {
+      for (const key in WORLD_BOSSES) {
+        const boss = WORLD_BOSSES[key];
+        if (boss.region === regionKey) return boss;
+      }
+      return null;
+    }
 
-  function goAdmin() {
-    window.location.href = "admin-dashboard.html";
-  }
+    async function postBossAction(url, payload, message) {
+      const status = document.getElementById("statusMessage");
+      status.textContent = "Working...";
 
-  loadWorld();
-</script>
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
 
+        const data = await res.json();
+        status.textContent = data.message || message;
+        await loadWorld();
+      } catch (err) {
+        status.textContent = "Error: " + err.message;
+      }
+    }
+
+    // Boss control endpoints
+    window.forceSpawn = (regionKey) =>
+      postBossAction("/api/admin/boss/force-spawn", { admin, regionKey }, "Boss spawned.");
+
+    window.forceDespawn = (regionKey) =>
+      postBossAction("/api/admin/boss/force-despawn", { admin, regionKey }, "Boss despawned.");
+
+    window.resetTimer = (regionKey) =>
+      postBossAction("/api/admin/boss/reset-timer", { admin, regionKey }, "Boss timer reset.");
+
+    function goAdmin() {
+      window.location.href = "admin-dashboard.html";
+    }
+
+    loadWorld();
+  </script>
 
 </body>
 </html>
