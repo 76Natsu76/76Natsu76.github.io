@@ -7,7 +7,6 @@ import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
 import { DungeonEngine } from "./dungeon-encounters.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { EnemyRegistry } from "./enemy-registry.js";
-import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
 import { getRegionState, getCurrentSeason } from "./world-state.js";
 import { maybeInjectRareSpawn } from "./rare-spawns.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
@@ -222,7 +221,7 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   });
 
   // Rare spawns
-  maybeInjectRareSpawn(encounter, ENEMY_TEMPLATES_BY_KEY);
+  maybeInjectRareSpawn(encounter, EnemyRegistry.templatesByKey);
 
   // Save
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
