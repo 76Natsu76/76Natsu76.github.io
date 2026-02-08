@@ -328,6 +328,20 @@ function renderWorldMap(player, worldState, username) {
  * EVENT WIRING
  ****************************************************/
 
+function renderRegionHistory(regionState) {
+  return regionState.history
+    .slice(-20)
+    .reverse()
+    .map(entry => {
+      const time = new Date(entry.timestamp).toLocaleString();
+      return `<div class="history-entry">
+        <span class="history-time">${time}</span>
+        <span class="history-msg">${entry.message}</span>
+      </div>`;
+    })
+    .join("");
+}
+
 function wireRegionClicks(player, worldState, username) {
   const container = document.getElementById("mapContainer");
   if (!container) return;
