@@ -284,3 +284,13 @@ h1 {
   opacity: 0.4;
   pointer-events: none;
 }
+
+.danger-low { background: #4caf50; }
+.danger-medium { background: #ff9800; }
+.danger-high { background: #f44336; }
+.danger-extreme { background: #b71c1c; }
+
+.elem-charge { margin-right: 6px; font-size: 1.2em; }
+
+.overlay-icon { margin-right: 4px; font-size: 1.4em; }
+
