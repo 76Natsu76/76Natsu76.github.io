@@ -6,6 +6,8 @@ import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
 import { REGION_DRIFT } from "./region-drift-definitions.js";
 import { SEASONS, SEASON_DEFINITIONS } from "./season-definitions.js";
 import { SETTLEMENTS } from "./settlement-definitions.js";
+import { generateNPC } from "./npc-generator.js";
+import { SETTLEMENTS } from "./settlement-definitions.js";
 
 // ------------------------------------------------------------
 // INTERNAL STATE
@@ -51,6 +53,21 @@ export function initWorldState() {
   for (const key of Object.keys(SETTLEMENTS)) {
     ensureSettlement(key);
   }
+
+  for (const key of Object.keys(SETTLEMENTS)) {
+    const def = SETTLEMENTS[key];
+    const state = _worldState.settlements[key];
+  
+    if (state.npcs.length === 0) {
+      for (const template of def.npcTemplates) {
+        // Generate 3 NPCs per template for now
+        for (let i = 0; i < 3; i++) {
+          state.npcs.push(generateNPC(template));
+        }
+      }
+    }
+  }
+
   return _worldState;
 }
 
