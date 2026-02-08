@@ -361,3 +361,28 @@ h1 {
   filter: grayscale(100%) brightness(0.5);
   cursor: not-allowed;
 }
+
+.global-announcements {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  max-height: 140px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+
+.global-announcement-entry {
+  padding: 4px 0;
+  border-bottom: 1px solid #333;
+}
+
+.global-announcement-entry:last-child {
+  border-bottom: none;
+}
+
+.global-announcement-time {
+  opacity: 0.6;
+  margin-right: 6px;
+}
