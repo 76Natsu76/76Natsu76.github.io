@@ -21,6 +21,10 @@ export const WORLD_DATA = {
       biome: "forest",
       regionTier: 1,
       levelRange: [1, 20],
+      unlock: {
+        level: 1,
+        requiresBossClear: false
+      },
       weatherPool: ["clear", "rain", "fog"],
       eventPool: ["beast_activity", "forest_whispers"],
       lootModifier: 1.0,
@@ -65,6 +69,10 @@ export const WORLD_DATA = {
       biome: "plains",
       regionTier: 1,
       levelRange: [5, 30],
+      unlock: {
+        level: 5,
+        requiresBossClear: true
+      },
       weatherPool: ["clear", "windy"],
       eventPool: ["bandit_raids", "migrating_beasts"],
       lootModifier: 1.0,
@@ -109,6 +117,10 @@ export const WORLD_DATA = {
       biome: "cavern",
       regionTier: 1,
       levelRange: [20, 40],
+      unlock: {
+        level: 20,
+        requiresBossClear: true
+      },
       weatherPool: ["none"],
       eventPool: ["cave_insight", "tremors"],
       lootModifier: 1.05,
@@ -153,6 +165,10 @@ export const WORLD_DATA = {
       biome: "ruins",
       regionTier: 1,
       levelRange: [35, 60],
+      unlock: {
+        level: 35,
+        requiresBossClear: true
+      },
       weatherPool: ["fog", "clear"],
       eventPool: ["restless_spirits", "unstable_architecture"],
       lootModifier: 1.10,
@@ -198,6 +214,10 @@ export const WORLD_DATA = {
       biome: "swamp",
       regionTier: 1,
       levelRange: [30, 80],
+      unlock: {
+        level: 30,
+        requiresBossClear: true
+      },
       weatherPool: ["rain", "fog"],
       eventPool: ["toxic_mist", "bog_stirrings"],
       lootModifier: 1.10,
@@ -246,6 +266,10 @@ export const WORLD_DATA = {
       biome: "desert",
       regionTier: 2,
       levelRange: [25, 100],
+      unlock: {
+        level: 25,
+        requiresBossClear: true
+      },
       weatherPool: ["heatwave", "clear"],
       eventPool: ["sandstorm", "mirage"],
       lootModifier: 1.15,
@@ -291,6 +315,10 @@ export const WORLD_DATA = {
       biome: "tundra",
       regionTier: 2,
       levelRange: [42, 110],
+      unlock: {
+        level: 40,
+        requiresBossClear: true
+      },
       weatherPool: ["snow", "clear", "blizzard"],
       eventPool: ["frostbite_warning", "aurora_surge"],
       lootModifier: 1.20,
@@ -336,6 +364,10 @@ export const WORLD_DATA = {
       biome: "mountains",
       regionTier: 2,
       levelRange: [30, 100],
+      unlock: {
+        level: 30,
+        requiresBossClear: true
+      },
       weatherPool: ["storm", "clear", "windy"],
       eventPool: ["rockslide", "thin_air"],
       lootModifier: 1.20,
@@ -380,6 +412,10 @@ export const WORLD_DATA = {
       biome: "ancient_forest",
       regionTier: 2,
       levelRange: [66, 120],
+      unlock: {
+        level: 66,
+        requiresBossClear: true
+      },
       weatherPool: ["fog", "rain"],
       eventPool: ["ancient_awakening", "spore_bloom"],
       lootModifier: 1.15,
@@ -430,6 +466,10 @@ export const WORLD_DATA = {
       biome: "void_realm",
       regionTier: 3,
       levelRange: [100, 250],
+      unlock: {
+        level: 100,
+        requiresBossClear: true
+      },
       weatherPool: ["void_storm"],
       eventPool: ["void_echo", "rift_flicker"],
       lootModifier: 1.30,
@@ -476,6 +516,10 @@ export const WORLD_DATA = {
       biome: "celestial",
       regionTier: 3,
       levelRange: [120, 300],
+      unlock: {
+        level: 120,
+        requiresBossClear: true
+      },
       weatherPool: ["clear", "arcane_winds"],
       eventPool: ["radiant_surge", "starfall"],
       lootModifier: 1.25,
@@ -521,6 +565,10 @@ export const WORLD_DATA = {
       biome: "arcane",
       regionTier: 3,
       levelRange: [150, 300],
+      unlock: {
+        level: 150,
+        requiresBossClear: true
+      },
       weatherPool: ["arcane_winds", "clear"],
       eventPool: ["mana_overflow", "rift_instability"],
       lootModifier: 1.20,
@@ -568,6 +616,10 @@ export const WORLD_DATA = {
       biome: "abyss",
       regionTier: 3,
       levelRange: [222, 450],
+      unlock: {
+        level: 220,
+        requiresBossClear: true
+      },
       weatherPool: ["void_storm", "fog"],
       eventPool: ["void_surge", "shadow_unrest"],
       lootModifier: 1.25,
@@ -619,6 +671,10 @@ export const WORLD_DATA = {
       biome: "celestial",
       regionTier: 4,
       levelRange: [250, 600],
+      unlock: {
+        level: 250,
+        requiresBossClear: true
+      },
       weatherPool: ["clear", "arcane_winds"],
       eventPool: ["stellar_alignment", "radiant_burst"],
       lootModifier: 1.30,
@@ -664,6 +720,10 @@ export const WORLD_DATA = {
       biome: "void",
       regionTier: 4,
       levelRange: [350, 700],
+      unlock: {
+        level: 350,
+        requiresBossClear: true
+      },
       weatherPool: ["void_storm"],
       eventPool: ["void_rift_expansion", "gravity_distortion"],
       lootModifier: 1.35,
@@ -714,6 +774,10 @@ export const WORLD_DATA = {
       biome: "celestial",
       regionTier: 5,
       levelRange: [500, 2000],
+      unlock: {
+        level: 500,
+        requiresBossClear: true
+      },
       weatherPool: ["clear", "arcane_winds"],
       eventPool: ["divine_resonance", "angelic_hymn"],
       lootModifier: 1.40,
@@ -758,6 +822,10 @@ export const WORLD_DATA = {
       biome: "magma",
       regionTier: 5,
       levelRange: [600, 2250],
+      unlock: {
+        level: 600,
+        requiresBossClear: true
+      },
       weatherPool: ["heatwave", "storm"],
       eventPool: ["titanic_footfall", "scorched_earth"],
       lootModifier: 1.45,
@@ -807,6 +875,10 @@ export const WORLD_DATA = {
       biome: "astral_plane",
       regionTier: 6,
       levelRange: [1800, 9999],
+      unlock: {
+        level: 1750,
+        requiresBossClear: true
+      },
       weatherPool: ["arcane_winds", "clear"],
       eventPool: ["cosmic_flux", "timeline_echo"],
       lootModifier: 1.50,
