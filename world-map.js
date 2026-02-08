@@ -1,20 +1,28 @@
-// world-map.js
-// World Map 2.2 — World-state overlays, crisis, drift, history
+/************************************************************
+ * world-map.js — Region cards + map markers + boss unlocks
+ ************************************************************/
 
-import { BIOMES } from "./biomes.js";
-import { EncounterEngine, initEncounters } from "./encounters.js";
-import { EnemyRegistry } from "./enemy-registry.js";
-import { getRegenRates } from "./regen.js";
-import { getWorldState } from "./world-state.js";
-import { initWorldState, tickWorld } from "./world-tick.js";
-import { PlayerStorage } from "./player-storage.js";
-import { REGION_HIERARCHY } from "./region-hierarchy.js";
-import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { requireSession } from "./session-guard.js";
-import { WORLD_DATA } from "./world-data.js";
+import { PlayerStorage } from "./player-storage.js";
+import { EnemyRegistry } from "./enemy-registry.js";
+import { initEncounters, EncounterEngine } from "./encounters.js";
 import { WorldSim } from "./world-simulation.js";
+import { WORLD_DATA } from "./world-data.js";
+import { initWorldState, getWorldState, worldTick as tickWorld } from "./world-state.js";
+import { REGION_HIERARCHY } from "./region-hierarchy.js";
+import { BIOMES } from "./biomes.js";
+import { REGION_TO_BIOME } from "./region-to-biome.js";
 
-// --- SESSION + INITIALIZATION --- //
+/************************************************************
+ * GLOBALS FOR POPUP CONTEXT
+ ************************************************************/
+let currentPlayer = null;
+let currentWorldState = null;
+let currentUsername = null;
+
+/************************************************************
+ * INIT
+ ************************************************************/
 async function init() {
   await requireSession();
   await initEncounters();
@@ -22,6 +30,8 @@ async function init() {
   await WorldSim.init();
 
   const { username } = window.syncState;
+  currentUsername = username;
+
   const usernameDisplay = document.getElementById("usernameDisplay");
   if (usernameDisplay) {
     usernameDisplay.textContent = "Logged in as: " + username;
@@ -36,18 +46,27 @@ async function init() {
 
   player = applyRegen(player);
   PlayerStorage.save(username, player);
+  currentPlayer = player;
 
   let worldState = loadOrInitWorldState();
   worldState = maybeTickWorld(worldState);
   saveWorldState(worldState);
+  currentWorldState = worldState;
 
   renderSeasonBanner(worldState);
   renderWorldMap(player, worldState, username);
   wireNavigationButtons();
   wireRegionClicks(player, worldState, username);
+  renderRegionMarkers(player);
 }
 
-// --- PLAYER REGEN --- //
+init().catch(err => {
+  console.error("Failed to init world map:", err);
+});
+
+/************************************************************
+ * PLAYER REGEN
+ ************************************************************/
 function applyRegen(player) {
   if (!player) return player;
 
@@ -72,7 +91,9 @@ function applyRegen(player) {
   return player;
 }
 
-// --- WORLD STATE LOAD / SAVE / TICK --- //
+/************************************************************
+ * WORLD STATE LOAD / SAVE / TICK
+ ************************************************************/
 const WORLD_TICK_STORAGE_KEY = "world_tick_state";
 
 function loadOrInitWorldState() {
@@ -99,7 +120,21 @@ function maybeTickWorld(worldState) {
   return tickWorld(worldState);
 }
 
-// --- UI HELPERS — WEATHER, HAZARD, EVENTS --- //
+/************************************************************
+ * REGION UNLOCK LOGIC
+ ************************************************************/
+function isRegionUnlocked(player, regionKey, regionState) {
+  const rules = WORLD_DATA.regions[regionKey].unlock;
+
+  if (player.level < rules.level) return false;
+  if (rules.requiresBossClear && !regionState.worldBossDefeated) return false;
+
+  return true;
+}
+
+/************************************************************
+ * UI HELPERS — WEATHER, HAZARD, EVENTS
+ ************************************************************/
 function weatherKeyToIconAndLabel(key) {
   switch (key) {
     case "clear": return { icon: "☀️", label: "Clear" };
@@ -182,35 +217,9 @@ function overlayIcons(overlays = {}) {
     .join(" ");
 }
 
-// --- RENDER — SEASON + WORLD MAP --- //
-function renderSeasonBanner(worldState) {
-  const banner = document.getElementById("seasonBanner");
-  if (!banner) return;
-
-  const season = (worldState.season || "Unknown").toString().toLowerCase();
-  banner.textContent = "Season: " + format(season);
-  banner.className = "season-banner season-" + season;
-}
-
-function renderRegionHistory(regionState) {
-  const history = regionState.history || [];
-  if (!history.length) {
-    return `<div class="history-entry history-empty">No recent events.</div>`;
-  }
-
-  return history
-    .slice(-20)
-    .reverse()
-    .map(entry => {
-      const time = new Date(entry.timestamp).toLocaleString();
-      return `<div class="history-entry">
-        <span class="history-time">${time}</span>
-        <span class="history-msg">${entry.message}</span>
-      </div>`;
-    })
-    .join("");
-}
-
+/************************************************************
+ * GLOBAL OVERLAYS PER REGION
+ ************************************************************/
 function buildGlobalOverlaysForRegion(globalState, regionKey) {
   if (!globalState) return "";
 
@@ -255,7 +264,7 @@ function buildGlobalOverlaysForRegion(globalState, regionKey) {
     }
   }
 
-  // Global modifiers (shown everywhere, but we still render per region)
+  // Global modifiers
   for (const mod of globalState.globalModifiers || []) {
     if (mod.expired) continue;
     parts.push(`<span class="global-overlay-tag global-overlay-global">
@@ -263,22 +272,68 @@ function buildGlobalOverlaysForRegion(globalState, regionKey) {
     </span>`);
   }
 
-  // World boss state (per region)
-  const world = getWorldState?.() || null; // optional, if you want live state
-  // But you already have regionState in renderWorldMap, so better:
-  // handled via regionState.worldBossActive / worldBossAwakening in the card itself
-
   return parts.join(" ");
 }
 
+/************************************************************
+ * BOSS STATUS RENDERING
+ ************************************************************/
+function renderBossStatus(regionState) {
+  if (regionState.worldBossActive) {
+    return "⚔️ WORLD BOSS ACTIVE";
+  }
 
+  if (regionState.worldBossAwakening) {
+    const minutes = Math.ceil((regionState.worldBossAwakening - Date.now()) / 60000);
+    return `⏳ Boss Awakening in ${minutes}m`;
+  }
+
+  return "Dormant";
+}
+
+/************************************************************
+ * REGION HISTORY RENDERING
+ ************************************************************/
+function renderRegionHistory(regionState) {
+  const history = regionState.history || [];
+  if (!history.length) {
+    return `<div class="history-entry history-empty">No recent events.</div>`;
+  }
+
+  return history
+    .slice(-20)
+    .reverse()
+    .map(entry => {
+      const time = new Date(entry.timestamp).toLocaleString();
+      return `<div class="history-entry">
+        <span class="history-time">${time}</span>
+        <span class="history-msg">${entry.message}</span>
+      </div>`;
+    })
+    .join("");
+}
+
+/************************************************************
+ * SEASON BANNER
+ ************************************************************/
+function renderSeasonBanner(worldState) {
+  const banner = document.getElementById("seasonBanner");
+  if (!banner) return;
+
+  const season = (worldState.season || "Unknown").toString().toLowerCase();
+  banner.textContent = "Season: " + format(season);
+  banner.className = "season-banner season-" + season;
+}
+
+/************************************************************
+ * WORLD MAP — REGION CARDS
+ ************************************************************/
 function renderWorldMap(player, worldState, username) {
   const container = document.getElementById("mapContainer");
   if (!container) return;
 
   const out = [];
   const playerLevel = Number(player.level || 1);
-
   const global = worldState.global || {};
 
   for (const regionKey in WORLD_DATA.regions) {
@@ -294,7 +349,7 @@ function renderWorldMap(player, worldState, username) {
 
     const dangerLevel = Number(regionState.dangerLevel ?? 1.0);
     const hazardLevel = dangerLevel * 20;
-    const hazardClass = hazardLevelToClass(hazardLevel);
+    const hazardClass = dangerLevelToClass(dangerLevel);
 
     const influence = regionState.factionControl || {
       corruption: 0,
@@ -321,7 +376,7 @@ function renderWorldMap(player, worldState, username) {
       .join("");
 
     out.push(`
-      <div class="region-card">
+      <div class="region-card" id="region-card-${regionKey}">
         <div class="region-header">
           <h2>${region.name}</h2>
           <div class="region-subtitle">${format(biomeKey)}</div>
@@ -338,7 +393,7 @@ function renderWorldMap(player, worldState, username) {
               <span>Danger</span>
               <span>${dangerLevel.toFixed(2)}</span>
             </div>
-            <div class="danger-bar ${dangerLevelToClass(dangerLevel)}">
+            <div class="danger-bar ${hazardClass}">
               <div class="danger-fill" style="width:${Math.min(100, hazardLevel)}%;"></div>
             </div>
           </div>
@@ -350,13 +405,7 @@ function renderWorldMap(player, worldState, username) {
         </div>
 
         <div class="region-boss">
-          ${
-            regionState.worldBossActive
-              ? "⚔️ WORLD BOSS ACTIVE"
-              : regionState.worldBossAwakening
-                ? "⏳ Boss Awakening Soon"
-                : ""
-          }
+          ${renderBossStatus(regionState)}
         </div>
 
         <div class="region-recovery">
@@ -421,7 +470,103 @@ function renderWorldMap(player, worldState, username) {
   container.innerHTML = out.join("");
 }
 
-// --- EVENT WIRING --- //
+/************************************************************
+ * MAP MARKERS — WITH POPUP (Option C)
+ ************************************************************/
+function renderRegionMarkers(player) {
+  const world = getWorldState();
+
+  for (const regionKey in world.regions) {
+    const regionState = world.regions[regionKey];
+    const marker = document.getElementById(`region-${regionKey}-marker`);
+    if (!marker) continue;
+
+    const unlocked = isRegionUnlocked(player, regionKey, regionState);
+
+    if (!unlocked) {
+      marker.classList.add("locked-region");
+      marker.onclick = () => {
+        alert("Region locked. Defeat the world boss or reach the required level.");
+      };
+    } else {
+      marker.classList.remove("locked-region");
+      marker.onclick = () => {
+        openRegionPopup(regionKey);
+      };
+    }
+  }
+}
+
+function ensureRegionPopup() {
+  let popup = document.getElementById("region-popup");
+  if (!popup) {
+    popup = document.createElement("div");
+    popup.id = "region-popup";
+    popup.className = "region-popup";
+    document.body.appendChild(popup);
+  }
+  return popup;
+}
+
+function openRegionPopup(regionKey) {
+  const popup = ensureRegionPopup();
+  const region = WORLD_DATA.regions[regionKey];
+  const world = getWorldState();
+  const regionState = world.regions[regionKey] || {};
+
+  const bossStatus = renderBossStatus(regionState);
+  const crisisLabel = crisisStageToLabel(regionState.crisis, regionState.crisisStageIndex);
+
+  popup.innerHTML = `
+    <div class="region-popup-inner">
+      <h2>${region.name}</h2>
+      <p><strong>Boss:</strong> ${bossStatus}</p>
+      <p><strong>Crisis:</strong> ${crisisLabel}</p>
+
+      <div class="region-popup-buttons">
+        <button id="popupRegionOverviewBtn">Region Overview</button>
+        <button id="popupOpenCardBtn">Open Region Card</button>
+        <button id="popupEnterAreaBtn">Enter Area</button>
+        <button id="popupCloseBtn">Close</button>
+      </div>
+    </div>
+  `;
+
+  popup.style.display = "block";
+
+  document.getElementById("popupRegionOverviewBtn").onclick = () => {
+    window.location.href = `region.html?region=${regionKey}`;
+  };
+
+  document.getElementById("popupOpenCardBtn").onclick = () => {
+    const card = document.getElementById(`region-card-${regionKey}`);
+    if (card) {
+      card.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  document.getElementById("popupEnterAreaBtn").onclick = () => {
+    const container = document.getElementById("mapContainer");
+    const select = container?.querySelector(`.subregion-select[data-region="${regionKey}"]`);
+    const subregionKey = select?.value;
+    if (!subregionKey) {
+      alert("Choose an area in the region card before entering.");
+      return;
+    }
+
+    const encounter = EncounterEngine.generate(regionKey, subregionKey, currentUsername);
+    sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
+    window.location.href = "fight-interactive.html";
+  };
+
+  document.getElementById("popupCloseBtn").onclick = () => {
+    popup.style.display = "none";
+  };
+}
+
+/************************************************************
+ * EVENT WIRING — REGION CARD BUTTONS
+ ************************************************************/
 function wireRegionClicks(player, worldState, username) {
   const container = document.getElementById("mapContainer");
   if (!container) return;
@@ -449,6 +594,9 @@ function wireRegionClicks(player, worldState, username) {
   });
 }
 
+/************************************************************
+ * NAVIGATION BUTTONS
+ ************************************************************/
 function wireNavigationButtons() {
   const charBtn = document.getElementById("characterBtn");
   const invBtn = document.getElementById("inventoryBtn");
@@ -459,15 +607,12 @@ function wireNavigationButtons() {
   if (bestiaryBtn) bestiaryBtn.onclick = () => window.location.href = "bestiary.html";
 }
 
-// --- UTIL --- //
+/************************************************************
+ * UTIL
+ ************************************************************/
 function format(str) {
   return String(str)
     .replace(/_/g, " ")
     .replace(/-/g, " ")
     .replace(/\b\w/g, c => c.toUpperCase());
 }
-
-// --- BOOTSTRAP --- //
-init().catch(err => {
-  console.error("Failed to init world map:", err);
-});
