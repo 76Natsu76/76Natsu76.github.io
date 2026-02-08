@@ -25,7 +25,6 @@ export const worldModifiers = {
     // if (context.world?.biomeId === 'volcanic' && ability.combatTags?.includes('fire')) {
     //   dmg *= 1.1;
     // }
-
     return dmg;
   }
 };
