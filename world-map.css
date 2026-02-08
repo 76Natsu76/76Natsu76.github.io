@@ -315,3 +315,44 @@ h1 {
   color: #ff6b6b;
   text-shadow: 0 0 6px #ff4444aa;
 }
+
+.region-global-overlays {
+  margin: 8px 0 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.global-overlay-tag {
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid #333;
+  background: #151822;
+  opacity: 0.9;
+}
+
+.global-overlay-weather {
+  border-color: #4ac0ff;
+  box-shadow: 0 0 6px #4ac0ff55;
+}
+
+.global-overlay-migration {
+  border-color: #7fff7f;
+  box-shadow: 0 0 6px #7fff7f55;
+}
+
+.global-overlay-anomaly {
+  border-color: #b47fff;
+  box-shadow: 0 0 6px #b47fff55;
+}
+
+.global-overlay-global {
+  border-color: #ffb347;
+  box-shadow: 0 0 6px #ffb34755;
+}
+
+.global-overlay-none {
+  font-size: 12px;
+  opacity: 0.5;
+}
