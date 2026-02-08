@@ -54,6 +54,7 @@ async function init() {
   currentWorldState = worldState;
 
   renderGlobalAnnouncements(worldState);
+  renderWorldEvents(worldState);
   renderSeasonBanner(worldState);
   renderWorldMap(player, worldState, username);
   wireNavigationButtons();
@@ -216,6 +217,61 @@ function overlayIcons(overlays = {}) {
       return `<span class="overlay-icon">${icon}</span>`;
     })
     .join(" ");
+}
+
+function renderWorldEvents(worldState) {
+  const box = document.getElementById("worldEventsContent");
+  if (!box) return;
+
+  const global = worldState.global || {};
+  const out = [];
+
+  // Global Modifiers
+  if (global.globalModifiers?.length) {
+    out.push(`<div class="world-event-entry">
+      <span class="world-event-tag">Global Modifiers</span>
+      ${global.globalModifiers.map(m => format(m.key || "modifier")).join(", ")}
+    </div>`);
+  }
+
+  // Weather Fronts
+  if (global.weatherFronts?.length) {
+    out.push(`<div class="world-event-entry">
+      <span class="world-event-tag">Weather Fronts</span>
+      ${global.weatherFronts.map(f => format(f.weatherKey)).join(", ")}
+    </div>`);
+  }
+
+  // Migrations
+  if (global.migrations?.length) {
+    out.push(`<div class="world-event-entry">
+      <span class="world-event-tag">Migrations</span>
+      ${global.migrations.map(m => format(m.faction)).join(", ")}
+    </div>`);
+  }
+
+  // Anomalies
+  if (global.anomalies?.length) {
+    out.push(`<div class="world-event-entry">
+      <span class="world-event-tag">Anomalies</span>
+      ${global.anomalies.map(a => format(a.element)).join(", ")}
+    </div>`);
+  }
+
+  // Global Announcements (last 5)
+  const announcements = global.announcements || [];
+  if (announcements.length) {
+    out.push(`<div class="world-event-entry">
+      <span class="world-event-tag">Announcements</span>
+      ${announcements.slice(-5).map(a => a.message).join("<br>")}
+    </div>`);
+  }
+
+  if (!out.length) {
+    box.innerHTML = `<div class="world-event-entry">No active world events.</div>`;
+  } else {
+    box.innerHTML = out.join("");
+  }
 }
 
 /************************************************************
