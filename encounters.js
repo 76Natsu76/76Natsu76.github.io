@@ -3,6 +3,7 @@
 
 import { applyDynamicScaling } from "./dynamic-scaling.js";
 import { BIOMES } from "./biomes.js";
+import { BIOME_PRESETS } from "./biome-presets.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { EnemyRegistry } from "./enemy-registry.js";
