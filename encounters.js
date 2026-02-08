@@ -1,23 +1,22 @@
 // encounters.js
 // Subregion-aware, tier-drift encounter engine
 
-import { WORLD_DATA } from "./world-data.js";
+import { applyDynamicScaling } from "./dynamic-scaling.js";
 import { BIOMES } from "./biomes.js";
-import { REGION_TO_BIOME } from "./region-to-biome.js";
-import { EnemyRegistry } from "./enemy-registry.js";
+import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
+import { DungeonEngine } from "./dungeon-encounters.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
+import { EnemyRegistry } from "./enemy-registry.js";
+import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
+import { getRegionState, getCurrentSeason } from "./world-state.js";
+import { maybeInjectRareSpawn } from "./rare-spawns.js";
+import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { REGION_ENEMIES } from "./region-enemies.js";
 import { REGION_HIERARCHY } from "./region-hierarchy.js";
 import { resolveEncounterWeights } from "./encounter-resolver.js";
-import { maybeInjectRareSpawn } from "./rare-spawns.js";
-import { ENEMY_TEMPLATES_BY_KEY } from "./enemy-templates.js";
 import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
-import { applyDynamicScaling } from "./dynamic-scaling.js";
-import { DungeonEngine } from "./dungeon-encounters.js";
-import { getRegionState } from "./world-state.js";
-import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
-import { getRegionState, getCurrentSeason } from "./world-state.js";
 import { SEASON_DEFINITIONS } from "./season-definitions.js";
+import { WORLD_DATA } from "./world-data.js";
 
 
 export function initEncounters() {
