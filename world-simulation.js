@@ -1,11 +1,9 @@
 // world-simulation.js
 // Unified, persistent, merchant-aware, boss-aware world simulation engine.
 
-import { WORLD_BOSSES } from "./world-boss-templates.js";
-import { REGION_UNLOCKS } from "./region-unlock.js";
-
+import { BossRespawnSystem } from "./boss-respawn-system.js";
 import { rotateMerchants } from "./merchant-rotation.js";
-import { updateWorldBosses } from "./world-boss-progression.js";
+import { REGION_UNLOCKS } from "./region-unlock.js";
 
 export const WorldSim = {
   _state: null,
@@ -24,17 +22,51 @@ export const WorldSim = {
         globalMerchant: null,
         lastTick: Date.now(),
 
-        // World boss progression
-        bosses: {},        // bossKey → { active, hp, maxHP, region, respawnAt }
+        // Region-based boss system
+        regions: {},       // regionKey → { worldBossActive, worldBossAwakening, ... }
         regionUnlocks: {}  // regionKey → boolean
       };
 
-      // Initialize boss states immediately
-      this._state = updateWorldBosses(this._state);
+      // Initialize region states
+      this.initializeRegions();
     }
 
     // Process offline time immediately
     this.tick();
+  },
+
+  /* ============================================================
+     Initialize region states if missing
+  ============================================================ */
+  initializeRegions() {
+    // You can expand this list based on your actual region keys
+    const regionKeys = [
+      "forest",
+      "plains",
+      "cavern",
+      "ruins",
+      "desert",
+      "firelands",
+      "frostlands",
+      "storm_peaks",
+      "voidlands",
+      "celestial",
+      "primordial_grove",
+      "astral_realm",
+      "cataclysm"
+    ];
+
+    for (const key of regionKeys) {
+      if (!this._state.regions[key]) {
+        this._state.regions[key] = {
+          worldBossActive: false,
+          worldBossAwakening: null,
+          dangerLevel: 1.0,
+          stability: 1.0,
+          elementalCharge: {}
+        };
+      }
+    }
   },
 
   /* ============================================================
@@ -48,12 +80,13 @@ export const WorldSim = {
 
     // Advance world time
     this._state.lastTick = now;
+    this._state.tickCount++;
 
     // Merchant rotation
     this._state = rotateMerchants(this._state);
 
-    // World boss progression
-    this._state = updateWorldBosses(this._state);
+    // Boss respawn system
+    BossRespawnSystem.tick();
 
     // Future Phase 7: dungeon resets
     // Future Phase 8: weather/events/hazards reintegration
@@ -79,13 +112,8 @@ export const WorldSim = {
 /* ============================================================
    ACCESSORS — used by world-map, fight-interactive, etc.
 ============================================================ */
-function _getBossData() {
-  return WORLD_BOSSES;
-}
-
 function _getRegionUnlocks() {
   return REGION_UNLOCKS;
 }
 
-WorldSim._getBossData = _getBossData;
 WorldSim._getRegionUnlocks = _getRegionUnlocks;
