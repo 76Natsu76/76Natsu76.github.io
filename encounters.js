@@ -4,7 +4,6 @@
 import { applyDynamicScaling } from "./dynamic-scaling.js";
 import { BIOMES } from "./biomes.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
-import { DungeonEngine } from "./dungeon-encounters.js";
 import { ENEMY_GROUP_SIZES } from "./enemy-group-sizes.js";
 import { EnemyRegistry } from "./enemy-registry.js";
 import { getRegionState, getCurrentSeason } from "./world-state.js";
@@ -16,7 +15,6 @@ import { resolveEncounterWeights } from "./encounter-resolver.js";
 import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
 import { SEASON_DEFINITIONS } from "./season-definitions.js";
 import { WORLD_DATA } from "./world-data.js";
-
 
 export function initEncounters() {
   return true;
@@ -340,24 +338,6 @@ function buildEnemyInstance(
   if (hazard && HAZARD_MODIFIERS[hazard]) modifiers.push(HAZARD_MODIFIERS[hazard]);
   if (variant && VARIANT_MODIFIERS[variant]) modifiers.push(VARIANT_MODIFIERS[variant]);
 
-  // Elite promotion chance increases per wave
-  if (encounter?.dungeon) {
-    const wave = encounter.dungeon.waveIndex;
-    const eliteChance = 0.05 + wave * 0.05; // 5% + 5% per wave
-    if (crisisData?.dangerMult > 1.2) {
-      eliteChance += 0.05; // +5% elite chance during major crises
-    }
-  
-    if (Math.random() < eliteChance) {
-      enemy.isElite = true;
-      enemy.hpMax = Math.floor(enemy.hpMax * 1.5);
-      enemy.hp = enemy.hpMax;
-      enemy.atk = Math.floor(enemy.atk * 1.3);
-      enemy.def = Math.floor(enemy.def * 1.3);
-      enemy.tags = [...(enemy.tags || []), "elite"];
-    }
-  }
-
   return {
     key: template.key,
     name: template.name,
@@ -400,20 +380,6 @@ function pickHazard(hazards) {
   return null;
 }
 
-function pickWeighted(pool) {
-  if (!pool || !pool.length) return "common";
-
-  const total = pool.reduce((sum, p) => sum + p.weight, 0);
-  let roll = Math.random() * total;
-
-  for (const entry of pool) {
-    if (roll < entry.weight) return entry.id;
-    roll -= entry.weight;
-  }
-
-  return pool[pool.length - 1].id;
-}
-
 function pickWeightedObject(obj) {
   const entries = Object.entries(obj);
   const total = entries.reduce((sum, [, w]) => sum + w, 0);
@@ -446,7 +412,7 @@ function rarityScaling(rarity) {
 }
 
 // ------------------------------------------------------------
-// MODIFIER TABLES (placeholder icons/text)
+// MODIFIER TABLES
 // ------------------------------------------------------------
 const WEATHER_MODIFIERS = {
   rain: { icon: "rain.png", text: "Rain: +10% lightning damage" },
