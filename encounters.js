@@ -44,76 +44,74 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const biome = BIOMES[biomeKey];
   if (!biome) throw new Error(`Biome not found: ${biomeKey}`);
 
-  const tier = subregion.tier ?? region.tier ?? 1;
+  const baseTier = subregion.tier ?? region.tier ?? 1;
 
   // WORLD STATE INTEGRATION
   const regionState = getRegionState(regionKey);
   const season = getCurrentSeason();
   const seasonData = SEASON_DEFINITIONS[season] || null;
-  
-  // Drift-influenced difficulty
-  const driftStability = regionState.stability || 1.0;
-  const elementalCharge = regionState.elementalCharge || {};
-  
+
   // Weather: world-state overrides random weather
   let weather = regionState.weather || pickFromArray(
     region.weatherPool?.length ? region.weatherPool : biome.weatherPool || []
   );
-  
+
   // Seasonal weather bias (only if region doesn't override)
   if (!regionState.weather && seasonData?.weatherBias) {
     const biased = Object.entries(seasonData.weatherBias)
       .flatMap(([key, mult]) => Array(Math.floor(mult * 10)).fill(key));
-  
+
     if (biased.length && Math.random() < 0.25) {
       weather = pickFromArray(biased);
     }
   }
-  
-  // Crisis: world-state crisis stage
+
+  // Crisis
   let crisis = null;
   let crisisStage = null;
   let crisisData = null;
-  
+
   if (regionState.crisis) {
     crisis = regionState.crisis;
     const def = CRISIS_DEFINITIONS[crisis];
     crisisStage = regionState.crisisStageIndex || 0;
     crisisData = def?.stages?.[crisisStage] || null;
   }
-  
-  // Event stays random for now
+
+  // Event
   const eventPool = region.eventPool || [];
   const event = pickFromArray(eventPool);
 
+  // Hazard
   const hazardPool = biome.hazards || [];
   const hazard = pickHazard(hazardPool);
 
+  // Variant
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
-  
+
   // Build unified encounter context
   const encounterContext = {
     region: regionKey,
     subregion: subregionKey,
     biome: biomeKey,
-    
-    weather: weather,
-    event: event,
-    crisis: crisis,
-    crisisStage: crisisStage,
-    crisisData: crisisData,
-    
+
+    weather,
+    event,
+    crisis,
+    crisisStage,
+    crisisData,
+
     season,
     seasonData,
-    
+
     flavorTags: biome.flavor || [],
-    
+
     dangerLevel: regionState.dangerLevel || 1.0,
-    stability: regionState.stability || 1.0, 
+    stability: regionState.stability || 1.0,
     elementalCharge: regionState.elementalCharge || {}
   };
-  
+
   // Get rarity + family weights
   const { rarityWeights, familyWeights } = resolveEncounterWeights(encounterContext);
 
@@ -125,7 +123,7 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       }
     }
   }
-  
+
   // Seasonal family multipliers
   if (seasonData?.encounterMult) {
     for (const [fam, mult] of Object.entries(seasonData.encounterMult)) {
@@ -134,33 +132,33 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       }
     }
   }
-  
+
   // Roll rarity
   const rarity = pickWeightedObject(
     Object.fromEntries(
       Object.entries(rarityWeights).map(([k, v]) => [k, v.weight])
     )
   );
-  
+
   // Roll family
   const family = pickWeightedObject(familyWeights);
-  
-  // Roll tier from rarity tiers
-  const tiers = rarityWeights[rarity]?.tiers || [tier];
-  const rolledTier = pickFromArray(tiers) || tier;
 
+  // Roll tier from rarity tiers
+  const tiers = rarityWeights[rarity]?.tiers || [baseTier];
+  const finalTier = pickFromArray(tiers) || baseTier;
+
+  // Group size
   const groupRule = ENEMY_GROUP_SIZES[family] || ENEMY_GROUP_SIZES.default;
-  const tier = rolledTier;
-  
   const count =
     Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) +
     groupRule.min;
 
+  // Build enemies
   const enemies = [];
   for (let i = 0; i < count; i++) {
     const template = enemyOverride
       ? EnemyRegistry.buildEnemyTemplate(enemyOverride)
-      : pickEnemyTemplate(regionKey, subregionKey, biomeKey, family, rarity, tier);
+      : pickEnemyTemplate(regionKey, subregionKey, biomeKey, family, rarity, finalTier);
 
     if (!template) continue;
 
@@ -173,7 +171,7 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       event,
       hazard,
       variant,
-      tier
+      finalTier
     );
 
     enemies.push(instance);
@@ -188,7 +186,7 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     hazard,
     variant,
     rarity,
-    tier,
+    tier: finalTier,
     flavor: pickFromArray(biome.flavor) || region.flavor || "",
     enemies,
     debug: {
@@ -199,11 +197,9 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       hazard,
       variant,
       biome: biomeKey,
-      tier,
+      tier: finalTier,
       regionKey,
       subregionKey,
-    
-      // WORLD STATE
       crisis,
       crisisStage,
       crisisData,
@@ -213,17 +209,22 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       elementalCharge: regionState.elementalCharge
     }
   };
-  // Roll 0–2 affixes
+
+  // Affixes
   const affixKeys = rollEncounterAffixes(Math.random() < 0.25 ? 1 : 0);
   applyAffixesToEncounter(encounter, affixKeys);
-  
+
+  // Dynamic scaling
   const playerLevel = WORLD_DATA.players[username]?.level || 1;
   applyDynamicScaling(encounter, playerLevel, {
     regionDanger: regionState.dangerLevel || 1.0,
     crisisIntensity: crisisData?.dangerMult || 1.0
   });
-  
+
+  // Rare spawns
   maybeInjectRareSpawn(encounter, ENEMY_TEMPLATES_BY_KEY);
+
+  // Save
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
   return encounter;
 }
