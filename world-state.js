@@ -368,7 +368,11 @@ function ensureRegion(regionKey) {
       _dangerHighLogged: false,
       _stabilityHighLogged: false,
 
-      history: []
+      history: [],
+
+      // NEW: world boss fields
+      worldBossActive: false,
+      worldBossAwakening: null
     };
   }
 }
@@ -387,4 +391,12 @@ export function addRegionHistory(regionKey, type, message, data = {}) {
   if (r.history.length > 200) {
     r.history.shift();
   }
+}
+
+export function setRegionBossState(regionKey, active, awakening = null) {
+  ensureRegion(regionKey);
+  const r = _worldState.regions[regionKey];
+  r.worldBossActive = active;
+  r.worldBossAwakening = awakening;
+  r.lastUpdated = Date.now();
 }
