@@ -18,6 +18,15 @@ const _worldState = {
   }
 };
 
+_worldState.global = {
+  weatherFronts: [],      // moving weather systems
+  migrations: [],         // beast/undead/elemental migrations
+  anomalies: [],          // cosmic/void/arcane anomalies
+  globalModifiers: [],    // eclipses, blood moons, planar shifts
+  lastGlobalUpdate: Date.now()
+};
+
+
 // ------------------------------------------------------------
 // INIT
 // ------------------------------------------------------------
