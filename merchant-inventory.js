@@ -46,7 +46,7 @@ const MERCHANT_POOLS = {
 export function generateMerchantInventory(merchant) {
   const poolFilter = MERCHANT_POOLS[merchant.type] || MERCHANT_POOLS.general;
 
-  const pool = Object.values(ITEM_REGISTRY).filter(poolFilter);
+  const pool = Object.values(ITEMS).filter(poolFilter);
 
   const items = [];
   const count = 6 + Math.floor(Math.random() * 3); // 6–8 items
