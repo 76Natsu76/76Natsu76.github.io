@@ -110,20 +110,20 @@ h1 {
   opacity: 0.8;
 }
 
-/* ===== HAZARD BAR ===== */
+/* ===== DANGER BAR ===== */
 
-.region-hazard {
+.region-danger {
   width: 55%;
 }
 
-.hazard-label {
+.danger-label {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
   margin-bottom: 4px;
 }
 
-.hazard-bar {
+.danger-bar {
   width: 100%;
   height: 8px;
   background: #1c1f28;
@@ -132,30 +132,75 @@ h1 {
   position: relative;
 }
 
-.hazard-fill {
+.danger-fill {
   height: 100%;
   background: linear-gradient(90deg, #4aff4a, #ffd84a, #ff4a4a);
   transition: width 0.3s ease;
 }
 
-.hazard-low .hazard-fill {
+.danger-low .danger-fill {
   filter: drop-shadow(0 0 4px #4aff4a55);
 }
 
-.hazard-medium .hazard-fill {
+.danger-medium .danger-fill {
   filter: drop-shadow(0 0 4px #ffd84a55);
 }
 
-.hazard-high .hazard-fill {
+.danger-high .danger-fill {
   filter: drop-shadow(0 0 6px #ff4a4a99);
 }
 
-.hazard-warning {
-  margin-top: 4px;
-  font-size: 12px;
+.danger-extreme .danger-fill {
+  filter: drop-shadow(0 0 8px #ff0000aa);
+}
+
+/* ===== CRISIS ===== */
+
+.region-crisis {
+  margin: 10px 0;
+  font-size: 14px;
   color: #ff6b6b;
-  text-align: right;
-  opacity: 0.9;
+}
+
+/* ===== STABILITY ===== */
+
+.region-recovery {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #9affc9;
+}
+
+/* ===== ELEMENTAL CHARGE ===== */
+
+.region-elemental {
+  margin: 10px 0;
+}
+
+.elem-charge {
+  margin-right: 6px;
+  font-size: 1.2em;
+  filter: drop-shadow(0 0 4px #ffffff55);
+}
+
+/* ===== OVERLAYS ===== */
+
+.region-overlays {
+  margin: 10px 0;
+}
+
+.overlay-icon {
+  margin-right: 4px;
+  font-size: 1.4em;
+  filter: drop-shadow(0 0 4px #ffffff33);
+}
+
+/* ===== PLAYER IMPACT ===== */
+
+.region-player-impact {
+  margin: 10px 0;
+  font-size: 13px;
+  opacity: 0.7;
+  font-style: italic;
 }
 
 /* ===== INFLUENCE ===== */
@@ -192,73 +237,51 @@ h1 {
   margin-top: 2px;
 }
 
-/* ===== REGION STATS ===== */
+/* ===== REGION HISTORY ===== */
 
-.region-stats {
-  margin-bottom: 12px;
+.region-history {
+  margin: 12px 0;
 }
 
-.stat-row {
-  display: flex;
-  justify-content: space-between;
+.region-history details {
+  background: #0f1118;
+  border: 1px solid #1c1f28;
+  border-radius: 6px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.region-history summary {
+  font-size: 14px;
+  font-weight: 600;
+  color: #9af7ff;
+  outline: none;
+}
+
+.history-list {
+  margin-top: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.history-entry {
+  font-size: 12px;
   padding: 4px 0;
   border-bottom: 1px solid #1c1f28;
-  font-size: 14px;
 }
 
-.stat-row:last-child {
+.history-entry:last-child {
   border-bottom: none;
 }
 
-/* ===== EVENTS ===== */
-
-.region-events {
-  margin-bottom: 12px;
+.history-time {
+  opacity: 0.6;
+  margin-right: 6px;
 }
 
-.event-badges {
-  margin-top: 6px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.event-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  border: 1px solid #333;
-}
-
-.event-badge-ambient {
-  background: #1a1d24;
-  color: #9ab0ff;
-}
-
-.event-badge-crisis {
-  background: #2a0f0f;
-  color: #ff6b6b;
-  border-color: #ff4444;
-  box-shadow: 0 0 6px #ff444455;
-}
-
-.event-badge-seasonal {
-  background: #1f1430;
-  color: #d8b4ff;
-  border-color: #b47fff;
-  box-shadow: 0 0 6px #b47fff55;
-}
-
-.event-badge-none {
+.history-empty {
   opacity: 0.5;
-}
-
-/* ===== BIOME FLAVOR ===== */
-
-.region-flavor {
-  margin: 10px 0;
-  font-size: 13px;
-  opacity: 0.8;
   font-style: italic;
 }
 
@@ -284,13 +307,3 @@ h1 {
   opacity: 0.4;
   pointer-events: none;
 }
-
-.danger-low { background: #4caf50; }
-.danger-medium { background: #ff9800; }
-.danger-high { background: #f44336; }
-.danger-extreme { background: #b71c1c; }
-
-.elem-charge { margin-right: 6px; font-size: 1.2em; }
-
-.overlay-icon { margin-right: 4px; font-size: 1.4em; }
-
