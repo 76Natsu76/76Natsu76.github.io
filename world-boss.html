@@ -8,29 +8,24 @@
 
 <body>
   <div id="worldboss-container">
-    <h1>World Boss</h1>
+    <h1>World Boss Encounter</h1>
     <div id="worldboss-content"></div>
   </div>
 
   <script type="module">
     import { requireSession } from "./session-guard.js";
     import { WorldSim } from "./world-simulation.js";
+    import { initWorldBossUI } from "./world-boss-ui.js";
 
     // Ensure session
     const session = await requireSession();
     const username = session.username;
 
-    // Load boss templates + region unlocks
+    // Initialize world simulation (loads region state, boss timers, etc.)
     await WorldSim.init();
 
-    // Load engine + UI as modules
-    const engine = await import("./world-boss-engine.js");
-    const ui = await import("./world-boss-ui.js");
-
-    // Initialize UI
-    if (ui && ui.initWorldBossUI) {
-      ui.initWorldBossUI(username, engine, WorldSim);
-    }
+    // Initialize the new boss UI
+    initWorldBossUI(username);
   </script>
 
 </body>
