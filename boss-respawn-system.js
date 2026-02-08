@@ -36,6 +36,7 @@ function tick() {
           "boss_awakened",
           `${boss.name} has awakened in this region!`
         );
+        addSettlementHistory(def.region, "boss_awakened", `${boss.name} threatens the region!`);
       }
       addGlobalAnnouncement("boss_awakened", `${boss.name} has awakened in ${regionKey}!`);
       continue;
