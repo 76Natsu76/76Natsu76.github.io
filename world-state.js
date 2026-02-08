@@ -374,7 +374,8 @@ function ensureRegion(regionKey) {
 
       // NEW: world boss fields
       worldBossActive: false,
-      worldBossAwakening: null
+      worldBossAwakening: null,
+      worldBossDefeated: false
     };
   }
 }
