@@ -1,4 +1,5 @@
 import { BIOME_PRESETS } from "./biome-presets.js";
+import { REGION_BIOMES } from "./region-biomes.js";
 
 const DEFAULT_MODIFIERS = {
   hpMult: 1.0,
