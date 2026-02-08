@@ -53,6 +53,7 @@ async function init() {
   saveWorldState(worldState);
   currentWorldState = worldState;
 
+  renderGlobalAnnouncements(worldState);
   renderSeasonBanner(worldState);
   renderWorldMap(player, worldState, username);
   wireNavigationButtons();
@@ -605,6 +606,32 @@ function wireNavigationButtons() {
   if (charBtn) charBtn.onclick = () => window.location.href = "character.html";
   if (invBtn) invBtn.onclick = () => window.location.href = "inventory.html";
   if (bestiaryBtn) bestiaryBtn.onclick = () => window.location.href = "bestiary.html";
+}
+
+function renderGlobalAnnouncements(worldState) {
+  const box = document.getElementById("globalAnnouncements");
+  if (!box) return;
+
+  const list = worldState.global?.announcements || [];
+
+  if (!list.length) {
+    box.innerHTML = `<div class="global-announcement-entry">No global announcements.</div>`;
+    return;
+  }
+
+  box.innerHTML = list
+    .slice(-20)
+    .reverse()
+    .map(a => {
+      const time = new Date(a.timestamp).toLocaleTimeString();
+      return `
+        <div class="global-announcement-entry">
+          <span class="global-announcement-time">${time}</span>
+          <span>${a.message}</span>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 /************************************************************
