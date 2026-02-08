@@ -23,7 +23,9 @@ _worldState.global = {
   migrations: [],         // beast/undead/elemental migrations
   anomalies: [],          // cosmic/void/arcane anomalies
   globalModifiers: [],    // eclipses, blood moons, planar shifts
-  lastGlobalUpdate: Date.now()
+  lastGlobalUpdate: Date.now(),
+  // NEW
+  announcements: []   // { timestamp, type, message }
 };
 
 
@@ -399,4 +401,18 @@ export function setRegionBossState(regionKey, active, awakening = null) {
   r.worldBossActive = active;
   r.worldBossAwakening = awakening;
   r.lastUpdated = Date.now();
+}
+
+export function addGlobalAnnouncement(type, message, data = {}) {
+  _worldState.global.announcements.push({
+    timestamp: Date.now(),
+    type,
+    message,
+    data
+  });
+
+  // Keep last 100 announcements
+  if (_worldState.global.announcements.length > 100) {
+    _worldState.global.announcements.shift();
+  }
 }
