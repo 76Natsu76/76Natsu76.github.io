@@ -30,6 +30,16 @@ _worldState.global = {
   announcements: []   // { timestamp, type, message }
 };
 
+if (!_worldState.settlements[settlementKey]) {
+  _worldState.settlements[settlementKey] = {
+    morale: def.startingMorale,
+    prosperity: def.startingProsperity,
+    population: def.population,
+    lastUpdated: Date.now(),
+    history: [],
+    npcs: []   // NEW
+  };
+}
 
 // ------------------------------------------------------------
 // INIT
