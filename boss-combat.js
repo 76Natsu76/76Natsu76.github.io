@@ -115,6 +115,7 @@ export function handleBossDeath(encounter, regionKey, logs) {
     "boss_defeated",
     `${encounter.bossName} has fallen!`
   );
+  addSettlementHistory(regionKey, "boss_defeated", `${boss.name} has fallen! The people rejoice.`);
 
   // REGION UNLOCK LOGIC
   const unlockRules = WORLD_DATA.regions[regionKey]?.unlock;
