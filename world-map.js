@@ -152,6 +152,47 @@ function formatEventBadge(evt) {
   return `<span class="event-badge ${cls}">${label}</span>`;
 }
 
+function crisisStageToLabel(crisis, stageIndex) {
+  if (!crisis) return "None";
+  return `${format(crisis)} — Stage ${stageIndex + 1}`;
+}
+
+function dangerLevelToClass(danger) {
+  if (danger >= 3.5) return "danger-extreme";
+  if (danger >= 2.5) return "danger-high";
+  if (danger >= 1.5) return "danger-medium";
+  return "danger-low";
+}
+
+function elementalChargeIcons(charge) {
+  return Object.entries(charge)
+    .filter(([_, v]) => v > 0)
+    .map(([elem, v]) => {
+      const icon =
+        elem === "fire" ? "🔥" :
+        elem === "frost" ? "❄️" :
+        elem === "void" ? "🌀" :
+        elem === "nature" ? "🌿" :
+        "✨";
+      return `<span class="elem-charge">${icon} ${v.toFixed(1)}</span>`;
+    })
+    .join(" ");
+}
+
+function overlayIcons(overlays) {
+  return Object.keys(overlays || {})
+    .map(key => {
+      const icon =
+        key === "blight" ? "🟣" :
+        key === "storm" ? "🌩️" :
+        key === "frost" ? "❄️" :
+        key === "wilds" ? "🌿" :
+        "⬤";
+      return `<span class="overlay-icon">${icon}</span>`;
+    })
+    .join(" ");
+}
+
 /****************************************************
  * RENDER — SEASON + WORLD MAP
  ****************************************************/
@@ -174,27 +215,27 @@ function renderWorldMap(player, worldState, username) {
 
   for (const regionKey in WORLD_DATA.regions) {
     const region = WORLD_DATA.regions[regionKey];
-    const tickRegion = worldState.regions?.[regionKey] || {};
+    const regionState = worldState.regions?.[regionKey] || {};
     const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
     const biome = BIOMES[biomeKey];
 
     const [minLevel, maxLevel] = region.levelRange || [1, 999];
     const levelLocked = playerLevel < minLevel;
 
-    const hazardLevel = tickRegion.hazardLevel ?? 0;
+    const hazardLevel = regionState.dangerLevel * 20 ?? 0;
     const hazardClass = hazardLevelToClass(hazardLevel);
 
-    const influence = tickRegion.influence || {
+    const influence = regionState.factionControl || {
       corruption: 0,
       wildlife: 0,
       humanoid: 0,
       elemental: 0
     };
 
-    const weatherKey = tickRegion.currentWeatherKey || region.weatherPool?.[0] || "clear";
+    const weatherKey = regionState.weather || region.weatherPool?.[0] || "clear";
     const { icon: weatherIcon, label: weatherLabel } = weatherKeyToIconAndLabel(weatherKey);
 
-    const activeEvents = tickRegion.activeEvents || [];
+    const activeEvents = regionState.crisis ? [{ key: regionState.crisis, type: "crisis" }] : [] || [];
     const eventBadges = activeEvents.length
       ? activeEvents.map(formatEventBadge).join(" ")
       : "<span class='event-badge event-badge-none'>None</span>";
@@ -212,39 +253,49 @@ function renderWorldMap(player, worldState, username) {
           <h2>${region.name}</h2>
           <div class="region-subtitle">${format(biomeKey)}</div>
         </div>
-
+    
         <div class="region-row">
           <div class="region-weather">
             <span class="weather-icon">${weatherIcon}</span>
             <span class="weather-label">${weatherLabel}</span>
           </div>
-
-          <div class="region-hazard">
-            <div class="hazard-label">
-              <span>Hazard</span>
-              <span>${hazardLevel.toFixed(0)}%</span>
+    
+          <div class="region-danger">
+            <div class="danger-label">
+              <span>Danger</span>
+              <span>${regionState.dangerLevel.toFixed(2)}</span>
             </div>
-            <div class="hazard-bar ${hazardClass}">
-              <div class="hazard-fill" style="width:${Math.min(100, hazardLevel)}%;"></div>
+            <div class="danger-bar ${dangerLevelToClass(regionState.dangerLevel)}">
+              <div class="danger-fill" style="width:${Math.min(100, regionState.dangerLevel * 20)}%;"></div>
             </div>
           </div>
         </div>
-
+    
+        <div class="region-crisis">
+          <strong>Crisis:</strong>
+          <span>${crisisStageToLabel(regionState.crisis, regionState.crisisStageIndex)}</span>
+        </div>
+    
+        <div class="region-elemental">
+          <strong>Elemental Charge:</strong>
+          <div>${elementalChargeIcons(regionState.elementalCharge)}</div>
+        </div>
+    
+        <div class="region-overlays">
+          <strong>Overlays:</strong>
+          <div>${overlayIcons(regionState.overlays)}</div>
+        </div>
+    
         <div class="region-influence">
-          ${["corruption","wildlife","humanoid","elemental"].map(k => `
+          ${Object.keys(regionState.factionControl || {}).map(k => `
             <div class="influence-item">
               <span class="influence-icon">${influenceIcon(k)}</span>
               <span class="influence-label">${format(k)}</span>
-              <span class="influence-value">${influence[k].toFixed(0)}</span>
+              <span class="influence-value">${regionState.factionControl[k].toFixed(0)}</span>
             </div>
           `).join("")}
         </div>
-
-        <div class="region-events">
-          <strong>Events:</strong>
-          <div class="event-badges">${eventBadges}</div>
-        </div>
-
+    
         <div class="region-subregions">
           <label>Area:
             <select class="subregion-select" data-region="${regionKey}">
@@ -252,7 +303,7 @@ function renderWorldMap(player, worldState, username) {
             </select>
           </label>
         </div>
-
+    
         <button class="btn ${levelLocked ? "disabled" : ""}"
           data-region="${regionKey}"
           data-locked="${levelLocked ? "1" : "0"}">
@@ -261,7 +312,6 @@ function renderWorldMap(player, worldState, username) {
       </div>
     `);
   }
-
   container.innerHTML = out.join("");
 }
 
