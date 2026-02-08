@@ -89,7 +89,9 @@
     import { getRegenRates } from "./regen.js";
     import { getSafeRespawnRemaining } from "./death-handler.js";
     import { applyOfflineRegen } from "./offline-regen.js";
-  
+    import { getWorldState } from "./world-state.js";
+    import { SETTLEMENTS } from "./settlement-definitions.js";
+
     /* ---------------------------------------------------------
        SESSION + LOAD PLAYER
     --------------------------------------------------------- */
@@ -109,6 +111,40 @@
       content.innerHTML = "<div>Failed to load player.</div>";
       throw new Error("Player not found");
     }
+    
+    function initTown() {
+      const params = new URLSearchParams(window.location.search);
+      const key = params.get("town");
+      const def = SETTLEMENTS[key];
+      const world = getWorldState();
+      const state = world.settlements[key];
+    
+      if (!def || !state) {
+        document.getElementById("settlementContainer").innerHTML = "Unknown settlement.";
+        return;
+      }
+    
+      document.getElementById("settlementContainer").innerHTML = `
+        <h1>${def.name}</h1>
+        <p>${def.description}</p>
+    
+        <h3>Morale: ${state.morale.toFixed(2)}</h3>
+        <h3>Prosperity: ${state.prosperity.toFixed(2)}</h3>
+        <h3>Population: ${state.population}</h3>
+    
+        <h2>Recent Events</h2>
+        <div class="settlement-history">
+          ${state.history.slice(-20).reverse().map(h => `
+            <div class="history-entry">
+              <span>${new Date(h.timestamp).toLocaleString()}</span>
+              <span>${h.message}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+    
+    initTown();
   
     /* ---------------------------------------------------------
        OFFLINE REGEN (Phase 4)
@@ -172,6 +208,7 @@
     --------------------------------------------------------- */
     function renderTown(p) {
       content.innerHTML = `
+        <div id="settlementContainer"></div>
         <div class="section center">
           <div class="portrait-frame">
             <img class="portrait-img"
