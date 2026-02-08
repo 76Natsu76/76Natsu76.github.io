@@ -3,6 +3,7 @@
 
 import { WORLD_DATA } from "./world-data.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
+import { REGION_DRIFT } from "./region-drift-definitions.js"
 import { SEASONS, SEASON_DEFINITIONS } from "./season-definitions.js";
 
 // ------------------------------------------------------------
@@ -189,6 +190,62 @@ export function getRegionModifiers(regionKey) {
   return r ? r.persistentModifiers || [] : [];
 }
 
+export function applyRegionDrift(regionKey) {
+  const r = _worldState.regions[regionKey];
+  if (!r) return;
+
+  const season = _worldState.season;
+  const seasonBias = REGION_DRIFT.seasonBias[season] || {};
+
+  // --- BASE DECAY ---
+  r.dangerLevel += REGION_DRIFT.baseDecay.danger;
+  r.stability += REGION_DRIFT.baseDecay.stability;
+
+  // Elemental decay
+  for (const key of Object.keys(r.elementalCharge)) {
+    r.elementalCharge[key] += REGION_DRIFT.baseDecay.elemental;
+  }
+
+  // --- CRISIS PRESSURE ---
+  if (r.crisis) {
+    const stage = r.crisisStageIndex || 0;
+    const crisisMult = stage + 1;
+
+    r.dangerLevel += REGION_DRIFT.crisisPressure.danger * crisisMult;
+    r.stability += REGION_DRIFT.crisisPressure.stability * crisisMult;
+  }
+
+  // --- SEASONAL BIAS ---
+  if (seasonBias.danger) r.dangerLevel += seasonBias.danger;
+  if (seasonBias.stability) r.stability += seasonBias.stability;
+
+  if (seasonBias.elemental) {
+    for (const [elem, amt] of Object.entries(seasonBias.elemental)) {
+      r.elementalCharge[elem] = (r.elementalCharge[elem] || 0) + amt;
+    }
+  }
+
+  // --- FACTION PRESSURE ---
+  for (const [factionId, influence] of Object.entries(r.factionControl)) {
+    const fp = REGION_DRIFT.factionPressure[factionId];
+    if (!fp) continue;
+
+    r.dangerLevel += fp.danger * influence;
+    r.stability += fp.stability * influence;
+  }
+
+  // --- CLAMP VALUES ---
+  r.dangerLevel = Math.max(0.5, Math.min(5.0, r.dangerLevel));
+  r.stability = Math.max(0.0, Math.min(2.0, r.stability));
+
+  for (const key of Object.keys(r.elementalCharge)) {
+    r.elementalCharge[key] = Math.max(0, Math.min(10, r.elementalCharge[key]));
+  }
+
+  r.lastUpdated = Date.now();
+}
+
+
 // ------------------------------------------------------------
 // WORLD TICK (Crisis progression hook)
 // ------------------------------------------------------------
@@ -210,6 +267,11 @@ export function worldTick() {
       r.crisisStartedAt = now;
       applyCrisisStageEffects(regionKey);
     }
+  }
+  
+  // Apply region drift to all regions
+  for (const regionKey of Object.keys(_worldState.regions)) {
+    applyRegionDrift(regionKey);
   }
 
   advanceSeasonIfNeeded();
