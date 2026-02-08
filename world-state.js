@@ -205,6 +205,10 @@ export function applyRegionDrift(regionKey) {
   if (!r.crisis) {
     r.dangerLevel -= 0.01;     // slow recovery
     r.stability += 0.02;       // slow stabilization
+    if (r.dangerLevel > 3.5 && !r._dangerHighLogged) {
+      addRegionHistory(regionKey, "danger_high", "Danger level has become extreme.");
+      r._dangerHighLogged = true;
+    }
   }
 
   const season = _worldState.season;
@@ -226,6 +230,11 @@ export function applyRegionDrift(regionKey) {
 
     r.dangerLevel += REGION_DRIFT.crisisPressure.danger * crisisMult;
     r.stability += REGION_DRIFT.crisisPressure.stability * crisisMult;
+
+    if (r.stability > 1.5 && !r._stabilityHighLogged) {
+      addRegionHistory(regionKey, "stability_high", "Region stability is improving.");
+      r._stabilityHighLogged = true;
+    }
   }
 
   // --- SEASONAL BIAS ---
