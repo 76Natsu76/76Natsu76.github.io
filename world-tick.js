@@ -6,6 +6,7 @@ import { REGION_BIOMES } from "./region-biomes.js";
 import { weatherTable } from "./weatherTable.js";
 import { rotateMerchants } from "./merchant-rotation.js";
 import { updateWorldBosses } from "./world-boss-progression.js";
+import { GlobalSim } from "./global-simulation.js";
 
 /****************************************************
  * CONFIG — edit these to change pacing
@@ -239,6 +240,10 @@ function bossTick(worldState, now) {
  ****************************************************/
 
 export function tickWorld(worldState) {
+  // 1) Global simulation first
+  GlobalSim.tick();
+
+  // 2) Then your existing regional/system ticks
   const now = Date.now();
   worldState.tickCount = (worldState.tickCount || 0) + 1;
 
