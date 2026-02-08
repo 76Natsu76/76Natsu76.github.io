@@ -210,6 +210,67 @@ function renderRegionHistory(regionState) {
     .join("");
 }
 
+function buildGlobalOverlaysForRegion(globalState, regionKey) {
+  if (!globalState) return "";
+
+  const parts = [];
+
+  // Weather fronts
+  for (const front of globalState.weatherFronts || []) {
+    const currentRegion = front.path[front.position];
+    if (currentRegion === regionKey) {
+      const icon = front.weatherKey === "storm" ? "⛈️"
+        : front.weatherKey === "heatwave" ? "🔥"
+        : front.weatherKey === "void_storm" ? "🌀"
+        : "🌦️";
+
+      parts.push(`<span class="global-overlay-tag global-overlay-weather">
+        ${icon} ${format(front.weatherKey)} (Int ${front.intensity || 1})
+      </span>`);
+    }
+  }
+
+  // Migrations
+  for (const mig of globalState.migrations || []) {
+    const currentRegion = mig.path[mig.position];
+    if (currentRegion === regionKey) {
+      parts.push(`<span class="global-overlay-tag global-overlay-migration">
+        🐾 ${format(mig.faction)} Migration
+      </span>`);
+    }
+  }
+
+  // Anomalies
+  for (const anomaly of globalState.anomalies || []) {
+    if (anomaly.region === regionKey) {
+      const icon = anomaly.element === "void" ? "🌀"
+        : anomaly.element === "frost" ? "❄️"
+        : anomaly.element === "fire" ? "🔥"
+        : "✨";
+
+      parts.push(`<span class="global-overlay-tag global-overlay-anomaly">
+        ${icon} ${format(anomaly.element)} Anomaly (Int ${anomaly.intensity})
+      </span>`);
+    }
+  }
+
+  // Global modifiers (shown everywhere, but we still render per region)
+  for (const mod of globalState.globalModifiers || []) {
+    if (mod.expired) continue;
+    parts.push(`<span class="global-overlay-tag global-overlay-global">
+      🌒 Global Effect
+    </span>`);
+  }
+
+  // World boss state (per region)
+  const world = getWorldState?.() || null; // optional, if you want live state
+  // But you already have regionState in renderWorldMap, so better:
+  // handled via regionState.worldBossActive / worldBossAwakening in the card itself
+
+  return parts.join(" ");
+}
+
+
 function renderWorldMap(player, worldState, username) {
   const container = document.getElementById("mapContainer");
   if (!container) return;
@@ -217,11 +278,15 @@ function renderWorldMap(player, worldState, username) {
   const out = [];
   const playerLevel = Number(player.level || 1);
 
+  const global = worldState.global || {};
+
   for (const regionKey in WORLD_DATA.regions) {
     const region = WORLD_DATA.regions[regionKey];
     const regionState = worldState.regions?.[regionKey] || {};
     const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
     const biome = BIOMES[biomeKey];
+
+    const globalOverlays = buildGlobalOverlaysForRegion(global, regionKey);
 
     const [minLevel, maxLevel] = region.levelRange || [1, 999];
     const levelLocked = playerLevel < minLevel;
@@ -329,6 +394,10 @@ function renderWorldMap(player, worldState, username) {
               ${renderRegionHistory(regionState)}
             </div>
           </details>
+        </div>
+
+        <div class="region-global-overlays">
+          ${globalOverlays || "<span class='global-overlay-none'>No global effects</span>"}
         </div>
 
         <div class="region-subregions">
