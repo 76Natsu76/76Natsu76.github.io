@@ -109,8 +109,29 @@ export function setRegionCrisis(regionKey, crisisId, stageIndex = 0) {
     stage: stageIndex
   });
 
+  addSettlementHistory(regionKey, "crisis_start", `A crisis has begun in the region.`);
+
   applyCrisisStageEffects(regionKey);
 }
+
+export function addSettlementHistory(regionKey, type, message) {
+  const world = getWorldState();
+  for (const key in world.settlements) {
+    const def = SETTLEMENTS[key];
+    if (def.region !== regionKey) continue;
+
+    world.settlements[key].history.push({
+      timestamp: Date.now(),
+      type,
+      message
+    });
+
+    if (world.settlements[key].history.length > 100) {
+      world.settlements[key].history.shift();
+    }
+  }
+}
+
 
 export function clearRegionCrisis(regionKey) {
   ensureRegion(regionKey);
@@ -139,6 +160,7 @@ export function escalateRegionCrisis(regionKey, delta = 1) {
     "crisis_escalate",
     `Crisis '${r.crisis}' escalated to stage ${r.crisisStageIndex + 1}.`
   );
+  addSettlementHistory(regionKey, "crisis_resolved", `The crisis has ended.`);
 
   applyCrisisStageEffects(regionKey);
   return r.crisisStageIndex;
