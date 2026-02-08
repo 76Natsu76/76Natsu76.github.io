@@ -356,3 +356,8 @@ h1 {
   font-size: 12px;
   opacity: 0.5;
 }
+
+.locked-region {
+  filter: grayscale(100%) brightness(0.5);
+  cursor: not-allowed;
+}
