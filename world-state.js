@@ -5,6 +5,7 @@ import { WORLD_DATA } from "./world-data.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
 import { REGION_DRIFT } from "./region-drift-definitions.js";
 import { SEASONS, SEASON_DEFINITIONS } from "./season-definitions.js";
+import { SETTLEMENTS } from "./settlement-definitions.js";
 
 // ------------------------------------------------------------
 // INTERNAL STATE
@@ -13,6 +14,7 @@ const _worldState = {
   season: "spring",
   seasonStartedAt: Date.now(),
   day: 1,
+  settlements: {},
   regions: {
     // [regionKey]: { ...see ensureRegion }
   }
@@ -35,6 +37,9 @@ _worldState.global = {
 export function initWorldState() {
   for (const regionKey of Object.keys(WORLD_DATA.regions || {})) {
     ensureRegion(regionKey);
+  }
+  for (const key of Object.keys(SETTLEMENTS)) {
+    ensureSettlement(key);
   }
   return _worldState;
 }
@@ -376,6 +381,21 @@ function ensureRegion(regionKey) {
       worldBossActive: false,
       worldBossAwakening: null,
       worldBossDefeated: false
+    };
+  }
+}
+
+export function ensureSettlement(settlementKey) {
+  const def = SETTLEMENTS[settlementKey];
+  if (!def) return;
+
+  if (!_worldState.settlements[settlementKey]) {
+    _worldState.settlements[settlementKey] = {
+      morale: def.startingMorale,
+      prosperity: def.startingProsperity,
+      population: def.population,
+      lastUpdated: Date.now(),
+      history: []
     };
   }
 }
