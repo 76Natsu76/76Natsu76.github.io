@@ -1,17 +1,18 @@
 // world-map.js
 // World Map 2.2 — World-state overlays, crisis, drift, history
 
-import { WORLD_DATA } from "./world-data.js";
 import { BIOMES } from "./biomes.js";
-import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { EncounterEngine, initEncounters } from "./encounters.js";
 import { EnemyRegistry } from "./enemy-registry.js";
-import { WorldSim } from "./world-simulation.js";
-import { requireSession } from "./session-guard.js";
-import { PlayerStorage } from "./player-storage.js";
 import { getRegenRates } from "./regen.js";
+import { getWorldState } from "./world-state.js";
 import { initWorldState, tickWorld } from "./world-tick.js";
+import { PlayerStorage } from "./player-storage.js";
 import { REGION_HIERARCHY } from "./region-hierarchy.js";
+import { REGION_TO_BIOME } from "./region-to-biome.js";
+import { requireSession } from "./session-guard.js";
+import { WORLD_DATA } from "./world-data.js";
+import { WorldSim } from "./world-simulation.js";
 
 // --- SESSION + INITIALIZATION --- //
 async function init() {
