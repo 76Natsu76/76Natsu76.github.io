@@ -12,6 +12,7 @@ import { initWorldState, getWorldState, worldTick as tickWorld } from "./world-s
 import { REGION_HIERARCHY } from "./region-hierarchy.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
+import { REGION_TO_SETTLEMENT } from "./settlement-index.js";
 
 /************************************************************
  * GLOBALS FOR POPUP CONTEXT
@@ -432,12 +433,23 @@ function renderWorldMap(player, worldState, username) {
       )
       .join("");
 
+    const settlementKey = REGION_TO_SETTLEMENT[regionKey];
+    ${settlementKey ? `
+      <button class="btn" onclick="window.location.href='town.html?town=${settlementKey}'">
+        Visit ${SETTLEMENTS[settlementKey].name}
+      </button>
+    ` : ""}
+
     out.push(`
       <div class="region-card" id="region-card-${regionKey}">
         <div class="region-header">
           <h2>${region.name}</h2>
           <div class="region-subtitle">${format(biomeKey)}</div>
         </div>
+
+        <button onclick="window.location.href='town.html?town=${settlementKey}'">
+          Visit Settlement
+        </button>
 
         <div class="region-row">
           <div class="region-weather">
