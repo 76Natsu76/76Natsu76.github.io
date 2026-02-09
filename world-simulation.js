@@ -6,6 +6,7 @@ import { rotateMerchants } from "./merchant-rotation.js";
 import { REGION_UNLOCKS } from "./region-unlock.js";
 import { tickSettlements } from "./settlement-simulation.js";
 import { tickSettlementEconomy } from "./settlement-economy-simulation.js";
+import { tickTradeRoutes } from "./trade-routes.js";
 
 export const WorldSim = {
   _state: null,
@@ -93,6 +94,7 @@ export const WorldSim = {
     // Settlement system
     tickSettlements();
     tickSettlementEconomy();
+    tickTradeRoutes();
 
     // Future Phase 7: dungeon resets
     // Future Phase 8: weather/events/hazards reintegration
