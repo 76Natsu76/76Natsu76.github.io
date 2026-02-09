@@ -438,10 +438,13 @@ export function ensureSettlement(settlementKey) {
       buildings: {},
       economy: {
         gold: 0,
-        resources: {},   // { wood: 10, ore: 5, ... }
-        production: {},  // { wood: 2 per tick, ore: 1 per tick }
-        consumption: {}  // { food: 3 per tick, etc. }
-      }
+        resources: {},
+        production: {},
+        consumption: {}
+      },
+      crisis: null,              // { type, stage, startedAt } or null
+      destroyed: false,
+      rebuildProgress: 0
     };
   }
 
