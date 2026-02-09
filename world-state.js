@@ -435,7 +435,13 @@ export function ensureSettlement(settlementKey) {
       lastUpdated: Date.now(),
       history: [],
       npcs: [],
-      buildings: {}   // NEW
+      buildings: {},
+      economy: {
+        gold: 0,
+        resources: {},   // { wood: 10, ore: 5, ... }
+        production: {},  // { wood: 2 per tick, ore: 1 per tick }
+        consumption: {}  // { food: 3 per tick, etc. }
+      }
     };
   }
 
@@ -459,7 +465,6 @@ export function ensureSettlement(settlementKey) {
     }
   }
 }
-
 
 export function addRegionHistory(regionKey, type, message, data = {}) {
   const r = _worldState.regions[regionKey];
