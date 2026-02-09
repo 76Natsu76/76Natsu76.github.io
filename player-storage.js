@@ -63,6 +63,9 @@ function load(userId) {
       console.warn("PlayerStorage.load: Parsed data invalid for", key, parsed);
       return createNewPlayer(userId);
     }
+    if (!parsed.quests) {
+      parsed.quests = { active: [], completed: [] };
+    }
 
     const normalized = ensureVitals(parsed);
     save(userId, normalized); // persist migration
@@ -91,7 +94,11 @@ function createNewPlayer(userId) {
     lastCompletedDungeonRun: null,
     flags: {},
     lastEndlessRun: null,
-    endlessRecord: null
+    endlessRecord: null,
+    quests: {
+      active: [],
+      completed: []
+    }
   });
 
   save(userId, newPlayer);
