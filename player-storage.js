@@ -43,7 +43,19 @@ function ensureVitals(p) {
   if (!p.lastEndlessRun) p.lastEndlessRun = null;
   if (!p.endlessRecord) p.endlessRecord = null;
   if (!p.lastCompletedDungeonRun) p.lastCompletedDungeonRun = null;
-  
+
+  if (!p.quests) p.quests = { active: [], completed: [] };
+
+  if (!p.housing) {
+    p.housing = {
+      homeSettlement: null,
+      homeTier: 0
+    };
+  }
+  if (!p.reputation) p.reputation = {};      // { settlementKey: number }
+  if (!p.factions) p.factions = {};          // { factionKey: number }
+  if (!p.ownedBuildings) p.ownedBuildings = []; // [{ settlement, building, share }]
+
   return p;
 }
 
@@ -95,6 +107,13 @@ function createNewPlayer(userId) {
     flags: {},
     lastEndlessRun: null,
     endlessRecord: null,
+    housing: {
+      homeSettlement: null,
+      homeTier: 0
+    },
+    reputation: {},
+    factions: {},
+    ownedBuildings: [],
     quests: {
       active: [],
       completed: []
