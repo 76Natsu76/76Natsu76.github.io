@@ -93,7 +93,63 @@
     import { SETTLEMENTS } from "./settlement-definitions.js";
     import { generateQuestForNPC } from "./quest-generator.js";
     import { acceptQuest } from "./quest-accept.js";
-
+    import { BUILDINGS } from "./settlement-buildings.js";
+    import { canUpgradeBuilding, upgradeBuilding } from "./settlement-upgrade.js";
+    
+    function renderSettlementUpgrades(settlementKey, player) {
+      const world = getWorldState();
+      const settlement = world.settlements[settlementKey];
+    
+      const out = Object.keys(BUILDINGS).map(bKey => {
+        const def = BUILDINGS[bKey];
+        const level = settlement.buildings[bKey].level;
+        const nextTier = def.tiers.find(t => t.level === level + 1);
+    
+        if (!nextTier) {
+          return `
+            <div class="upgrade-entry">
+              <strong>${def.name}</strong> — Level ${level} (MAX)
+            </div>
+          `;
+        }
+    
+        const req = nextTier.requirements;
+        const check = canUpgradeBuilding(settlementKey, bKey, player);
+    
+        return `
+          <div class="upgrade-entry">
+            <strong>${def.name}</strong> — Level ${level}
+            <div class="upgrade-reqs">
+              ${Object.entries(req).map(([k, v]) => `<div>${k}: ${v}</div>`).join("")}
+            </div>
+            <button onclick="upgradeBuildingUI('${settlementKey}', '${bKey}')"
+              ${check.ok ? "" : "disabled"}>
+              Upgrade to Level ${nextTier.level}
+            </button>
+            ${!check.ok ? `<div class="upgrade-error">${check.reason}</div>` : ""}
+          </div>
+        `;
+      }).join("");
+    
+      document.getElementById("settlementUpgrades").innerHTML = out;
+    }
+    
+    window.upgradeBuildingUI = (settlementKey, buildingKey) => {
+      const world = getWorldState();
+      const settlement = world.settlements[settlementKey];
+      const player = PlayerStorage.load(currentUsername);
+    
+      const ok = upgradeBuilding(settlementKey, buildingKey, player);
+      if (!ok) {
+        alert("Upgrade failed.");
+        return;
+      }
+    
+      PlayerStorage.save(currentUsername, player);
+      alert("Upgrade successful!");
+    
+      renderSettlementUpgrades(settlementKey, player);
+    };
     
     function renderNPCQuests(settlementKey, player) {
       const world = getWorldState();
@@ -250,6 +306,8 @@
       content.innerHTML = `
         <div id="settlementContainer"></div>
         <div id="npcQuests"></div>
+        <div id="settlementUpgrades"></div>
+
         <div class="section center">
           <div class="portrait-frame">
             <img class="portrait-img"
