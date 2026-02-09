@@ -80,7 +80,40 @@
 <body>
   <div class="container">
     <h1>🏰 Town Hub</h1>
-    <div id="townContent">Loading...</div>
+    <div id="townContent">
+      <div id="townLayout">
+        <div class="section" id="playerPanel"></div>
+  
+        <div class="section" id="settlementHeader"></div>
+  
+        <div class="section" id="housingReputationPanel"></div>
+  
+        <div class="section" id="npcSection">
+          <h2>NPCs</h2>
+          <div id="npcList"></div>
+          <div id="npcDialoguePanel"></div>
+          <div id="npcQuests"></div>
+        </div>
+  
+        <div class="section" id="shopCraftingSection">
+          <h2>Shops & Crafting</h2>
+          <div id="settlementEconomy"></div>
+          <div id="settlementShop"></div>
+          <div id="craftingPanel"></div>
+        </div>
+  
+        <div class="section" id="upgradesSection">
+          <h2>Settlement Upgrades</h2>
+          <div id="settlementUpgrades"></div>
+        </div>
+  
+        <div class="section" id="worldIntegrationSection">
+          <h2>Settlement Status</h2>
+          <div id="settlementCrisisPanel"></div>
+          <div id="settlementAlliancesPanel"></div>
+        </div>
+      </div>
+    </div>
   </div>
   <script type="module" src="town.js"></script>
 </body>
