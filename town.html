@@ -91,6 +91,46 @@
     import { applyOfflineRegen } from "./offline-regen.js";
     import { getWorldState } from "./world-state.js";
     import { SETTLEMENTS } from "./settlement-definitions.js";
+    import { generateQuestForNPC } from "./quest-generator.js";
+    import { acceptQuest } from "./quest-accept.js";
+
+    
+    function renderNPCQuests(settlementKey, player) {
+      const world = getWorldState();
+      const settlement = world.settlements[settlementKey];
+      const region = world.regions[SETTLEMENTS[settlementKey].region];
+    
+      const out = settlement.npcs.map(npc => {
+        const questKey = generateQuestForNPC(npc, player, region);
+        if (!questKey) return "";
+    
+        const q = QUEST_TEMPLATES[questKey];
+    
+        return `
+          <div class="npc-quest-entry">
+            <strong>${npc.name}</strong> offers:
+            <div class="quest-name">${q.name}</div>
+            <button onclick="acceptQuestUI('${npc.id}', '${questKey}', '${settlementKey}')">
+              Accept Quest
+            </button>
+          </div>
+        `;
+      }).join("");
+    
+      document.getElementById("npcQuests").innerHTML = out;
+    }
+    
+    window.acceptQuestUI = (npcId, questKey, settlementKey) => {
+      const world = getWorldState();
+      const settlement = world.settlements[settlementKey];
+      const npc = settlement.npcs.find(n => n.id === npcId);
+    
+      const quest = acceptQuest(currentPlayer, npc, settlementKey, settlement.region, questKey);
+      PlayerStorage.save(currentUsername, currentPlayer);
+    
+      alert(`Quest accepted: ${QUEST_TEMPLATES[questKey].name}`);
+    };
+
 
     /* ---------------------------------------------------------
        SESSION + LOAD PLAYER
@@ -209,6 +249,7 @@
     function renderTown(p) {
       content.innerHTML = `
         <div id="settlementContainer"></div>
+        <div id="npcQuests"></div>
         <div class="section center">
           <div class="portrait-frame">
             <img class="portrait-img"
