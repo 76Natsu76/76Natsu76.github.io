@@ -8,6 +8,7 @@ import { SEASONS, SEASON_DEFINITIONS } from "./season-definitions.js";
 import { SETTLEMENTS } from "./settlement-definitions.js";
 import { generateNPC } from "./npc-generator.js";
 import { SETTLEMENTS } from "./settlement-definitions.js";
+import { BUILDINGS } from "./settlement-buildings.js";
 
 // ------------------------------------------------------------
 // INTERNAL STATE
@@ -158,7 +159,6 @@ export function addSettlementHistory(regionKey, type, message) {
     }
   }
 }
-
 
 export function clearRegionCrisis(regionKey) {
   ensureRegion(regionKey);
@@ -402,6 +402,14 @@ function applyCrisisStageEffects(regionKey) {
 // ------------------------------------------------------------
 // HELPER
 // ------------------------------------------------------------
+for (const bKey in BUILDINGS) {
+  if (!state.buildings[bKey]) {
+    state.buildings[bKey] = {
+      level: BUILDINGS[bKey].tiers[0].level
+    };
+  }
+}
+
 function ensureRegion(regionKey) {
   if (!_worldState.regions[regionKey]) {
     _worldState.regions[regionKey] = {
@@ -429,7 +437,9 @@ function ensureRegion(regionKey) {
       // NEW: world boss fields
       worldBossActive: false,
       worldBossAwakening: null,
-      worldBossDefeated: false
+      worldBossDefeated: false,
+
+      buildings: {}
     };
   }
 }
