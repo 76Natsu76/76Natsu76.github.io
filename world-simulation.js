@@ -5,6 +5,7 @@ import { BossRespawnSystem } from "./boss-respawn-system.js";
 import { rotateMerchants } from "./merchant-rotation.js";
 import { REGION_UNLOCKS } from "./region-unlock.js";
 import { tickSettlements } from "./settlement-simulation.js";
+import { tickSettlementEconomy } from "./settlement-economy-simulation.js";
 
 export const WorldSim = {
   _state: null,
@@ -91,6 +92,7 @@ export const WorldSim = {
 
     // Settlement system
     tickSettlements();
+    tickSettlementEconomy();
 
     // Future Phase 7: dungeon resets
     // Future Phase 8: weather/events/hazards reintegration
