@@ -95,6 +95,7 @@
     import { acceptQuest } from "./quest-accept.js";
     import { BUILDINGS } from "./settlement-buildings.js";
     import { canUpgradeBuilding, upgradeBuilding } from "./settlement-upgrade.js";
+    import { generateShopInventory } from "./settlement-shops.js";
     
     function renderSettlementUpgrades(settlementKey, player) {
       const world = getWorldState();
@@ -307,6 +308,8 @@
         <div id="settlementContainer"></div>
         <div id="npcQuests"></div>
         <div id="settlementUpgrades"></div>
+        <div id="settlementEconomy"></div>
+        <div id="settlementShop"></div>
 
         <div class="section center">
           <div class="portrait-frame">
@@ -376,6 +379,31 @@
         box.innerHTML = `<p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>`;
       }, 10000);
     }
+
+    /* ----------------------------------------------------------
+       RENDER SETTLEMENT ECONOMY
+    ----------------------------------------------------------- */
+    
+    function renderSettlementEconomy(settlementKey) {
+      const world = getWorldState();
+      const settlement = world.settlements[settlementKey];
+    
+      const res = settlement.economy.resources;
+    
+      const out = Object.keys(res).map(r => `
+        <div>${r}: ${res[r].toFixed(1)}</div>
+      `).join("");
+    
+      document.getElementById("settlementEconomy").innerHTML = out;
+    
+      const shop = generateShopInventory(settlement);
+      const shopOut = shop.map(item => `
+        <div>${item.item} — ${item.price}g (Stock: ${item.stock})</div>
+      `).join("");
+    
+      document.getElementById("settlementShop").innerHTML = shopOut;
+    }
+
   </script>
 </body>
 </html>
