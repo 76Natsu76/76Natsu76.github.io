@@ -1,14 +1,13 @@
 // world-state.js
 // 3F-7: Environmental World States + Crisis Escalation
 
-import { WORLD_DATA } from "./world-data.js";
+import { BUILDINGS } from "./settlement-buildings.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
+import { generateNPC } from "./npc-generator.js";
 import { REGION_DRIFT } from "./region-drift-definitions.js";
 import { SEASONS, SEASON_DEFINITIONS } from "./season-definitions.js";
 import { SETTLEMENTS } from "./settlement-definitions.js";
-import { generateNPC } from "./npc-generator.js";
-import { SETTLEMENTS } from "./settlement-definitions.js";
-import { BUILDINGS } from "./settlement-buildings.js";
+import { WORLD_DATA } from "./world-data.js";
 
 // ------------------------------------------------------------
 // INTERNAL STATE
@@ -32,17 +31,6 @@ _worldState.global = {
   // NEW
   announcements: []   // { timestamp, type, message }
 };
-
-if (!_worldState.settlements[settlementKey]) {
-  _worldState.settlements[settlementKey] = {
-    morale: def.startingMorale,
-    prosperity: def.startingProsperity,
-    population: def.population,
-    lastUpdated: Date.now(),
-    history: [],
-    npcs: []   // NEW
-  };
-}
 
 // ------------------------------------------------------------
 // INIT
@@ -402,13 +390,6 @@ function applyCrisisStageEffects(regionKey) {
 // ------------------------------------------------------------
 // HELPER
 // ------------------------------------------------------------
-for (const bKey in BUILDINGS) {
-  if (!state.buildings[bKey]) {
-    state.buildings[bKey] = {
-      level: BUILDINGS[bKey].tiers[0].level
-    };
-  }
-}
 
 function ensureRegion(regionKey) {
   if (!_worldState.regions[regionKey]) {
@@ -438,8 +419,6 @@ function ensureRegion(regionKey) {
       worldBossActive: false,
       worldBossAwakening: null,
       worldBossDefeated: false,
-
-      buildings: {}
     };
   }
 }
@@ -454,10 +433,33 @@ export function ensureSettlement(settlementKey) {
       prosperity: def.startingProsperity,
       population: def.population,
       lastUpdated: Date.now(),
-      history: []
+      history: [],
+      npcs: [],
+      buildings: {}   // NEW
     };
   }
+
+  const state = _worldState.settlements[settlementKey];
+
+  // Initialize buildings
+  for (const bKey in BUILDINGS) {
+    if (!state.buildings[bKey]) {
+      state.buildings[bKey] = {
+        level: BUILDINGS[bKey].tiers[0].level
+      };
+    }
+  }
+
+  // Initialize NPCs
+  if (state.npcs.length === 0) {
+    for (const template of def.npcTemplates) {
+      for (let i = 0; i < 3; i++) {
+        state.npcs.push(generateNPC(template));
+      }
+    }
+  }
 }
+
 
 export function addRegionHistory(regionKey, type, message, data = {}) {
   const r = _worldState.regions[regionKey];
