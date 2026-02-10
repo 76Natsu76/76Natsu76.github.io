@@ -1,4 +1,48 @@
-// encounter table JSON equivalent
+export const REGION_ENCOUNTER_TABLES = {
+  forest: {
+    base: [
+      { enemyKey: "wolf", weight: 40 },
+      { enemyKey: "boar", weight: 30 },
+      { enemyKey: "forest_bandit", weight: 20 },
+      { enemyKey: "sprite", weight: 10 }
+    ],
+    rare: [
+      { enemyKey: "forest_spirit", weight: 3 },
+      { enemyKey: "ancient_treant", weight: 1 }
+    ]
+  },
+
+  plains: {
+    base: [
+      { enemyKey: "wild_horse", weight: 40 },
+      { enemyKey: "bandit_raider", weight: 30 },
+      { enemyKey: "giant_beetle", weight: 20 },
+      { enemyKey: "wind_sprite", weight: 10 }
+    ],
+    rare: [
+      { enemyKey: "storm_elemental", weight: 2 }
+    ]
+  },
+
+  mountain: {
+    base: [
+      { enemyKey: "rock_golem", weight: 40 },
+      { enemyKey: "mountain_wolf", weight: 30 },
+      { enemyKey: "harpy", weight: 20 },
+      { enemyKey: "stone_sprite", weight: 10 }
+    ],
+    rare: [
+      { enemyKey: "earth_titan", weight: 1 }
+    ]
+  },
+
+  capital_city: {
+    safeZone: true
+  }
+};
+
+
+/*// encounter table JSON equivalent
 
 export const REGION_ENCOUNTER_TABLES = {
   "forest-edge": {
@@ -194,3 +238,4 @@ export const REGION_ENCOUNTER_TABLES = {
     "boss":     { "tiers": [7] }
   }
 };
+*/
