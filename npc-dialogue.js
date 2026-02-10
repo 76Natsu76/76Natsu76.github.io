@@ -51,6 +51,27 @@ export function getNPCDialogue(npc, region, player = null) {
   const idle = template.dialogue?.idle;
   if (idle?.length) return pick(idle);
 
+   // Royal reputation flavor
+   if (npc.template === "royal_courtier") {
+     const rep = player.reputation?.[region.key] || 0;
+   
+     if (rep >= 2000) {
+       const lines = template.dialogue?.highReputation;
+       if (lines?.length) return pick(lines);
+     }
+   
+     // Questline-aware dialogue
+     const active = player.quests.active;
+     if (active.includes("royal_intro")) {
+       return pick(template.dialogue.royalQuestline.intro);
+     }
+     if (active.includes("royal_trial")) {
+       return pick(template.dialogue.royalQuestline.trial);
+     }
+     if (active.includes("royal_oath")) {
+       return pick(template.dialogue.royalQuestline.oath);
+     }
+   }
   return "…";
 }
 
