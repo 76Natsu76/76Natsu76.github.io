@@ -32,5 +32,16 @@ export const SETTLEMENTS = {
     startingMorale: 1.1,
     startingProsperity: 0.8,
     npcTemplates: ["soldier", "scout", "trapper"]
+  },
+
+  capital_city: {
+    name: "Capital City",
+    region: "plains",
+    type: "city",
+    population: 1200,
+    description: "The heart of the realm, home to the royal court.",
+    startingMorale: 1.2,
+    startingProsperity: 1.5,
+    npcTemplates: ["royal_courtier", "royal_guard", "noble", "merchant"]
   }
 };
