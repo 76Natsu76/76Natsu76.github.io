@@ -71,7 +71,7 @@ export const NPC_TEMPLATES = {
     personality: "formal",
     dialogue: {
       idle: [
-        "The Crown watches all.",
+        "The Crown watches over all.",
         "Royal matters are not for common ears."
       ],
       crisis: [
@@ -82,7 +82,22 @@ export const NPC_TEMPLATES = {
       ],
       bossDefeated: [
         "The Crown acknowledges your valor."
-      ]
+      ],
+      highReputation: [
+        "Your deeds echo through the halls of power.",
+        "The Crown speaks highly of you."
+      ],
+      royalQuestline: {
+        intro: [
+          "You are summoned by the Crown. Present yourself in the Throne Room."
+        ],
+        trial: [
+          "Your trial awaits. The Crown judges all."
+        ],
+        oath: [
+          "The Oath of the Crown is a sacred bond."
+        ]
+      }
     }
   }
 };
