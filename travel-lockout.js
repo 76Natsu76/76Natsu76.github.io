@@ -26,3 +26,29 @@ export function finishTravel(player) {
   // Clear travel state
   player.travel = null;
 }
+
+
+export function renderTravelCountdown(ms) {
+  const panel = document.getElementById("travelPanel");
+  if (!panel) return;
+
+  const seconds = Math.ceil(ms / 1000);
+
+  panel.innerHTML = `
+    <div class="section">
+      <h2>Traveling...</h2>
+      <p>Arrival in ${seconds} seconds</p>
+      <button class="btn" id="cancelTravelBtn">Cancel Travel</button>
+    </div>
+  `;
+
+  const cancelBtn = document.getElementById("cancelTravelBtn");
+  if (cancelBtn) {
+    cancelBtn.onclick = () => {
+      player.travel = null;
+      PlayerStorage.save(player.username, player);
+      panel.innerHTML = "";
+    };
+  }
+}
+// maybe?
