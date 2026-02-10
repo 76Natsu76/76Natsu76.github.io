@@ -309,16 +309,29 @@ function renderSettlementStatus(settlementKey) {
 
   if (settlement.destroyed) {
     box.innerHTML = `
-      <div>This settlement lies in ruins.</div>
-      <div>Rebuild progress: ${(settlement.rebuildProgress * 100).toFixed(0)}%</div>
+      <div class="section">
+        <strong>Status:</strong> Destroyed
+        <div>Rebuild progress: ${(settlement.rebuildProgress * 100).toFixed(0)}%</div>
+      </div>
     `;
-  } else if (settlement.crisis) {
-    box.innerHTML = `
-      <div>Crisis: ${settlement.crisis.type} (Stage ${settlement.crisis.stage})</div>
-    `;
-  } else {
-    box.innerHTML = `<div>The settlement is stable.</div>`;
+    return;
   }
+
+  if (settlement.crisis) {
+    box.innerHTML = `
+      <div class="section">
+        <strong>Crisis:</strong> ${settlement.crisis}
+        <div>Stage: ${settlement.crisisStage + 1} / 3</div>
+      </div>
+    `;
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="section">
+      <strong>Status:</strong> Stable
+    </div>
+  `;
 
   const alliancesBox = document.getElementById("settlementAlliancesPanel");
   if (alliancesBox) {
