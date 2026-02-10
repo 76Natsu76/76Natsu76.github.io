@@ -39,6 +39,10 @@ export function getNPCDialogue(npc, region, player = null) {
     if (repLine) return repLine;
   }
 
+   if (player.bounty?.[region.key] > 0) {
+     return `${npc.name} whispers: "The guards are looking for you."`;
+   }
+
   // 5. Seasonal flavor
   const seasonLine = seasonalLine();
   if (seasonLine) return seasonLine;
