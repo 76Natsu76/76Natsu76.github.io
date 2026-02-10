@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Overworld</title>
+  <link rel="stylesheet" href="overworld.css" />
+
+  <style>
+    body {
+      background: #222;
+      color: #eee;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #overworldCanvas {
+      background: #000;
+      border: 2px solid #555;
+      margin-top: 20px;
+    }
+
+    #travelPanel {
+      margin-top: 20px;
+      width: 400px;
+    }
+
+    .section {
+      background: #333;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #555;
+    }
+
+    .btn {
+      background: #444;
+      color: #eee;
+      padding: 8px 12px;
+      border: 1px solid #666;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #555;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🌍 Overworld</h1>
+
+  <!-- The Pokémon-style map -->
+  <canvas id="overworldCanvas" width="800" height="600"></canvas>
+
+  <!-- Travel countdown UI -->
+  <div id="travelPanel"></div>
+
+  <!-- Load player BEFORE overworld.js -->
+  <script type="module">
+    import { PlayerStorage } from "./player-storage.js";
+
+    // Load username from session (same as world-map)
+    const { username } = window.syncState || {};
+    if (!username) {
+      alert("No active session.");
+      window.location.href = "world-map.html";
+    }
+
+    // Load player globally so overworld.js can access it
+    window.player = PlayerStorage.load(username);
+  </script>
+
+  <!-- Overworld logic -->
+  <script type="module" src="./overworld.js"></script>
+
+</body>
+</html>
