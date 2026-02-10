@@ -161,6 +161,14 @@ function renderHousingReputationPanel(settlementKey, p) {
   if (!box) return;
 
   const rep = p.reputation?.[settlementKey] || 0;
+   
+   let housingTier = 1;
+   if (rep >= 200) housingTier = 2;
+   if (rep >= 1000) housingTier = 3;
+   if (rep >= 2000) housingTier = 4;
+   
+   box.innerHTML += `<div>Eligible Housing Tier: ${housingTier}</div>`;
+   
   const isHome = p.housing?.homeSettlement === settlementKey;
 
   box.innerHTML = `
