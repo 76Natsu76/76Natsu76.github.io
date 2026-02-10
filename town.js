@@ -14,6 +14,25 @@ import { acceptQuest } from "./quest-accept.js";
 import { renderNPCList } from "./town-dialogue.js";
 import { renderSettlementEconomyAndShop } from "./town-economy.js";
 import { listEnterableBuildings, enterBuilding } from "./building-interaction.js";
+import { evaluateGuardResponse } from "./guard-system.js";
+import { createGuardInstance } from "./guard-definitions.js";
+
+function checkGuardAggro(settlementKey, player) {
+  const response = evaluateGuardResponse(player, settlementKey);
+
+  if (response === "warn") {
+    alert("A guard warns you to behave.");
+  }
+
+  if (response === "chase") {
+    alert("Guards are chasing you!");
+  }
+
+  if (response === "attack" || response === "execute") {
+    const guard = createGuardInstance();
+    startCombatWithGuard(guard);
+  }
+}
 
 /* ---------------------------------------------------------
    SESSION + LOAD PLAYER
