@@ -60,5 +60,62 @@ export const QUEST_TEMPLATES = {
       gold: 80,
       exp: 250
     }
+  },
+
+  "royal_intro": {
+    id: "royal_intro",
+    name: "An Audience with the Crown",
+    tier: "royal",
+    minReputation: 2000,
+    maxReputation: 999999,
+    repCap: 2500,
+    settlementKey: "capital_city",
+    objectives: [
+      { action: "travel_to_capital", amount: 1 }
+    ],
+    rewards: {
+      gold: 500,
+      xp: 5000,
+      reputation: 100
+    },
+    nextQuest: "royal_trial"
+  },
+
+  "royal_trial": {
+    id: "royal_trial",
+    name: "Trial of the Crown",
+    tier: "royal",
+    minReputation: 2100,
+    maxReputation: 999999,
+    repCap: 3000,
+    settlementKey: "capital_city",
+    objectives: [
+      { enemyTag: "royal_guard_traitor", amount: 3 }
+    ],
+    rewards: {
+      gold: 1000,
+      xp: 10000,
+      reputation: 150
+    },
+    nextQuest: "royal_oath"
+  },
+
+  "royal_oath": {
+    id: "royal_oath",
+    name: "Oath of the Crown",
+    tier: "royal",
+    minReputation: 2300,
+    maxReputation: 999999,
+    repCap: 4000,
+    settlementKey: "capital_city",
+    objectives: [
+      { action: "swear_oath", amount: 1 }
+    ],
+    rewards: {
+      gold: 2000,
+      xp: 20000,
+      reputation: 200
+    },
+    finalRoyal: true
   }
 };
