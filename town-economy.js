@@ -57,8 +57,14 @@ function buyShopItem(settlementKey, username, shopItem) {
   const rep = player.reputation[settlementKey] || 0;
 
   // Simple rep-based discount: max 20% off at 20+ rep
-  const discount = Math.max(0, Math.min(0.2, rep * 0.01));
-  const effectivePrice = Math.ceil(shopItem.price * (1 - discount));
+  let modifier = 1;
+   
+   // Positive rep → discount
+   if (rep > 100) modifier -= Math.min(0.2, rep * 0.001);
+   // Negative rep → surcharge
+   if (rep < 0) modifier += Math.min(0.3, Math.abs(rep) * 0.02);
+   
+   const effectivePrice = Math.ceil(shopItem.price * modifier);
 
   if (player.gold < effectivePrice) {
     alert(`Not enough gold. Price: ${effectivePrice}g`);
