@@ -1273,7 +1273,7 @@
     }
   
     function resolveEnemyFromEncounter(encEnemy) {
-      const hpMax = encEnemy.hpMax ?? encEnemy.hp ?? 1;
+      const hpMax = encEnemy.hpMax ?? encEnemy.hpCurrent ?? 1; // or encEnemy.hp?
   
       return {
         id: encEnemy.key,
