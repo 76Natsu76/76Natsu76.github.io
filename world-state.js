@@ -286,6 +286,15 @@ export function applyRegionDrift(regionKey) {
     r.dangerLevel += REGION_DRIFT.crisisPressure.danger * crisisMult;
     r.stability += REGION_DRIFT.crisisPressure.stability * crisisMult;
   }
+  
+  // --- Settlement crisis reduces prosperity and morale
+  for (const key in _worldState.settlements) {
+    const s = _worldState.settlements[key];
+    if (s.crisis) {
+      s.prosperity -= 0.01;
+      s.morale -= 0.01;
+    }
+  }
 
   // --- SEASONAL BIAS ---
   if (seasonBias.danger) r.dangerLevel += seasonBias.danger;
