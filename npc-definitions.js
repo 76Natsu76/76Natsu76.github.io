@@ -63,5 +63,26 @@ export const NPC_TEMPLATES = {
         "Heroes deserve the finest steel."
       ]
     }
+  },
+
+  royal_courtier: {
+    name: "Royal Courtier",
+    role: "courtier",
+    personality: "formal",
+    dialogue: {
+      idle: [
+        "The Crown watches all.",
+        "Royal matters are not for common ears."
+      ],
+      crisis: [
+        "The realm trembles. The Crown must act."
+      ],
+      bossAwakened: [
+        "A threat to the realm itself…"
+      ],
+      bossDefeated: [
+        "The Crown acknowledges your valor."
+      ]
+    }
   }
 };
