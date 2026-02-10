@@ -67,9 +67,14 @@ function buyShopItem(settlementKey, username, shopItem) {
    const effectivePrice = Math.ceil(shopItem.price * modifier);
 
   if (player.gold < effectivePrice) {
-    alert(`Not enough gold. Price: ${effectivePrice}g`);
-    return;
-  }
+     // Attempted theft
+     import("./crime-system.js").then(({ reportCrime, CRIME_TYPES }) => {
+       reportCrime(player, settlementKey, CRIME_TYPES.THEFT, 2);
+     });
+   
+     alert("You were caught trying to steal!");
+     return;
+   }
 
   player.gold -= effectivePrice;
   player.inventory = player.inventory || [];
