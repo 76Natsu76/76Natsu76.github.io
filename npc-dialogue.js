@@ -12,9 +12,13 @@ export function getNPCDialogue(npc, region, player = null) {
 
   // 1. Crisis dialogue
   if (region?.crisis) {
-    const crisisLines = template.dialogue?.crisis;
-    if (crisisLines?.length) return pick(crisisLines);
+     const crisisLines = template.dialogue?.crisis;
+     if (crisisLines?.length) return pick(crisisLines);
   }
+   if (settlement?.crisis) {
+      const crisisLines = template.dialogue?.crisis;
+      if (crisisLines?.length) return pick(crisisLines);
+   }
 
   // 2. Boss awakened
   if (region?.worldBossActive && region?.worldBossAwakening) {
