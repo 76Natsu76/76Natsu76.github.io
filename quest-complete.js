@@ -10,6 +10,11 @@ export function completeQuest(player, questKey, settlementKey) {
   player.quests.active = player.quests.active.filter(k => k !== questKey);
 
   // Add to completed
+  if (q.nextQuest) {
+    if (!player.quests.active.includes(q.nextQuest)) {
+      player.quests.active.push(q.nextQuest);
+    }
+  }
   player.quests.completed.push(questKey);
 
   // Apply rewards
