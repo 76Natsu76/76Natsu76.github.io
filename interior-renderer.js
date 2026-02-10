@@ -1,4 +1,5 @@
 // interior-renderer.js
+import { searchBuildingForLoot } from "./building-loot.js";
 
 export function renderInterior(settlementKey, buildingDef, buildingState, player) {
   const panel = document.getElementById("npcDialoguePanel") || document.getElementById("townContent");
@@ -35,8 +36,18 @@ export function renderInterior(settlementKey, buildingDef, buildingState, player
 
   if (searchBtn) {
     searchBtn.onclick = () => {
-      // You’ll wire this to searchBuilding() later
-      alert("You search the room (placeholder).");
+      const result = searchBuildingForLoot(player, settlementKey, buildingDef, buildingState);
+    
+      if (!result.ok) {
+        alert(result.reason);
+        return;
+      }
+    
+      if (result.loot.length === 0) {
+        alert("You found nothing.");
+      } else {
+        alert("You found: " + result.loot.map(i => i.name).join(", "));
+      }
     };
   }
 
