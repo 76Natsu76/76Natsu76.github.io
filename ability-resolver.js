@@ -242,8 +242,14 @@ export function applyDamage(attacker, defender, ability, dmg, hitData, logs) {
   let final = dmg;
 
   final = absorbDamageWithShield(defender, final, logs);
-
+  
   defender.hpCurrent = Math.max(0, defender.hpCurrent - final);
+  // NPC murder detection
+  if (!defender.isPlayer && defender.isNPC && defender.hpCurrent <= 0) {
+    import("./crime-system.js").then(({ reportCrime, CRIME_TYPES }) => {
+      reportCrime(attacker, hitData.settlementKey, CRIME_TYPES.MURDER, 5);
+    });
+  }
 
   if (hitData.isCrit) {
     logs.push("Critical hit!");
