@@ -1,3 +1,27 @@
+// world-map-data.js
+
+export const TILE_SIZE = 32;
+
+// 0 = grass, 1 = water, 2 = mountain, 3 = town
+export const TILEMAP = [
+  [0, 0, 0, 0, 3, 0, 0, 0],
+  [0, 1, 1, 0, 0, 0, 2, 2],
+  [0, 1, 1, 0, 0, 0, 2, 2],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [3, 0, 0, 0, 0, 0, 0, 3]
+];
+
+// Tiles that block movement
+export const COLLISION_TILES = new Set([1, 2]);
+
+export function getTileAtPixel(x, y) {
+  const col = Math.floor(x / TILE_SIZE);
+  const row = Math.floor(y / TILE_SIZE);
+  if (row < 0 || row >= TILEMAP.length) return null;
+  if (col < 0 || col >= TILEMAP[0].length) return null;
+  return { row, col, id: TILEMAP[row][col] };
+}
+
 export const WORLD_MAP = {
   tileSize: 32,
 
