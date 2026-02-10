@@ -53,17 +53,24 @@ function buyShopItem(settlementKey, username, shopItem) {
   const player = PlayerStorage.load(username);
   if (!player) return;
 
-  if (player.gold < shopItem.price) {
-    alert("Not enough gold.");
+  player.reputation = player.reputation || {};
+  const rep = player.reputation[settlementKey] || 0;
+
+  // Simple rep-based discount: max 20% off at 20+ rep
+  const discount = Math.max(0, Math.min(0.2, rep * 0.01));
+  const effectivePrice = Math.ceil(shopItem.price * (1 - discount));
+
+  if (player.gold < effectivePrice) {
+    alert(`Not enough gold. Price: ${effectivePrice}g`);
     return;
   }
 
-  player.gold -= shopItem.price;
+  player.gold -= effectivePrice;
   player.inventory = player.inventory || [];
   player.inventory.push({ id: shopItem.item, name: shopItem.item });
 
   PlayerStorage.save(username, player);
-  alert(`Purchased: ${shopItem.item}`);
+  alert(`Purchased: ${shopItem.item} for ${effectivePrice}g`);
 }
 
 /* ---------------------------------------------------------
