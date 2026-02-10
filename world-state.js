@@ -426,6 +426,12 @@ function ensureRegion(regionKey) {
 export function ensureSettlement(settlementKey) {
   const def = SETTLEMENTS[settlementKey];
   if (!def) return;
+  
+  if (!_worldState.settlements[settlementKey].crisis) {
+    _worldState.settlements[settlementKey].crisis = null; 
+    _worldState.settlements[settlementKey].crisisStage = 0;
+    _worldState.settlements[settlementKey].crisisStartedAt = null;
+  }
 
   if (!_worldState.settlements[settlementKey]) {
     _worldState.settlements[settlementKey] = {
