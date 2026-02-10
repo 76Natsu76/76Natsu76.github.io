@@ -1,26 +1,28 @@
 // guard-definitions.js
 
-export const GUARD_STATS = {
-  level: 10,
-  hpMax: 80,
-  atk: 12,
-  def: 8,
-  speed: 5,
-  element: "physical"
+export const GUARD_TIERS = {
+  remote_village: { level: 10, hp: 60, atk: 8, def: 4 },
+  village:        { level: 20, hp: 120, atk: 16, def: 8 },
+  town:           { level: 50, hp: 300, atk: 40, def: 20 },
+  city:           { level: 100, hp: 600, atk: 70, def: 50 },
+  royal_capital:  { level: 500, hp: 3000, atk: 400, def: 250 }
 };
 
-export function createGuardInstance(id = "town_guard") {
+export function createGuardInstance(settlementKey) {
+  const tier = getGuardTierForSettlement(settlementKey);
+  const stats = GUARD_TIERS[tier];
+
   return {
-    id,
-    name: "Town Guard",
+    id: "guard_" + tier,
+    name: tier === "royal_capital" ? "Royal Guard" : "Town Guard",
     isNPC: true,
     isGuard: true,
-    level: GUARD_STATS.level,
-    hpCurrent: GUARD_STATS.hpMax,
-    hpMax: GUARD_STATS.hpMax,
-    atk: GUARD_STATS.atk,
-    def: GUARD_STATS.def,
-    speed: GUARD_STATS.speed,
-    element: GUARD_STATS.element
+    level: stats.level,
+    hpCurrent: stats.hp,
+    hpMax: stats.hp,
+    atk: stats.atk,
+    def: stats.def,
+    speed: 5,
+    element: "physical"
   };
 }
