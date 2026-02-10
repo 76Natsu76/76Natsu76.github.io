@@ -1,322 +1,374 @@
-<script type="module">
-  import { requireSession } from "./session-guard.js";
-  import { PlayerStorage } from "./player-storage.js";
-  import { getRegenRates } from "./regen.js";
-  import { getSafeRespawnRemaining } from "./death-handler.js";
-  import { applyOfflineRegen } from "./offline-regen.js";
-  import { getWorldState } from "./world-state.js";
-  import { SETTLEMENTS } from "./settlement-definitions.js";
-  import { generateQuestForNPC } from "./quest-generator.js";
-  import { acceptQuest } from "./quest-accept.js";
-  import { BUILDINGS } from "./settlement-buildings.js";
-  import { canUpgradeBuilding, upgradeBuilding } from "./settlement-upgrade.js";
-  import { generateShopInventory } from "./settlement-shops.js";
-  
-  function renderSettlementUpgrades(settlementKey, player) {
-    const world = getWorldState();
-    const settlement = world.settlements[settlementKey];
-  
-    const out = Object.keys(BUILDINGS).map(bKey => {
-      const def = BUILDINGS[bKey];
-      const level = settlement.buildings[bKey].level;
-      const nextTier = def.tiers.find(t => t.level === level + 1);
-  
-      if (!nextTier) {
-        return `
-          <div class="upgrade-entry">
-            <strong>${def.name}</strong> — Level ${level} (MAX)
-          </div>
-        `;
-      }
-  
-      const req = nextTier.requirements;
-      const check = canUpgradeBuilding(settlementKey, bKey, player);
-  
-      return `
-        <div class="upgrade-entry">
-          <strong>${def.name}</strong> — Level ${level}
-          <div class="upgrade-reqs">
-            ${Object.entries(req).map(([k, v]) => `<div>${k}: ${v}</div>`).join("")}
-          </div>
-          <button onclick="upgradeBuildingUI('${settlementKey}', '${bKey}')"
-            ${check.ok ? "" : "disabled"}>
-            Upgrade to Level ${nextTier.level}
-          </button>
-          ${!check.ok ? `<div class="upgrade-error">${check.reason}</div>` : ""}
-        </div>
-      `;
-    }).join("");
-  
-    document.getElementById("settlementUpgrades").innerHTML = out;
-  }
-  
-  window.upgradeBuildingUI = (settlementKey, buildingKey) => {
-    const world = getWorldState();
-    const settlement = world.settlements[settlementKey];
-    const player = PlayerStorage.load(currentUsername);
-  
-    const ok = upgradeBuilding(settlementKey, buildingKey, player);
-    if (!ok) {
-      alert("Upgrade failed.");
-      return;
-    }
-  
-    PlayerStorage.save(currentUsername, player);
-    alert("Upgrade successful!");
-  
-    renderSettlementUpgrades(settlementKey, player);
-  };
-  
-  function renderNPCQuests(settlementKey, player) {
-    const world = getWorldState();
-    const settlement = world.settlements[settlementKey];
-    const region = world.regions[SETTLEMENTS[settlementKey].region];
-  
-    const out = settlement.npcs.map(npc => {
-      const questKey = generateQuestForNPC(npc, player, region);
-      if (!questKey) return "";
-  
-      const q = QUEST_TEMPLATES[questKey];
-  
-      return `
-        <div class="npc-quest-entry">
-          <strong>${npc.name}</strong> offers:
-          <div class="quest-name">${q.name}</div>
-          <button onclick="acceptQuestUI('${npc.id}', '${questKey}', '${settlementKey}')">
-            Accept Quest
-          </button>
-        </div>
-      `;
-    }).join("");
-  
-    document.getElementById("npcQuests").innerHTML = out;
-  }
-  
-  window.acceptQuestUI = (npcId, questKey, settlementKey) => {
-    const world = getWorldState();
-    const settlement = world.settlements[settlementKey];
-    const npc = settlement.npcs.find(n => n.id === npcId);
-  
-    const quest = acceptQuest(currentPlayer, npc, settlementKey, settlement.region, questKey);
-    PlayerStorage.save(currentUsername, currentPlayer);
-  
-    alert(`Quest accepted: ${QUEST_TEMPLATES[questKey].name}`);
-  };
+// town.js
+import { requireSession } from "./session-guard.js";
+import { PlayerStorage } from "./player-storage.js";
+import { getRegenRates } from "./regen.js";
+import { getSafeRespawnRemaining } from "./death-handler.js";
+import { applyOfflineRegen } from "./offline-regen.js";
+import { getWorldState } from "./world-state.js";
+import { SETTLEMENTS } from "./settlement-definitions.js";
+import { BUILDINGS } from "./settlement-buildings.js";
+import { canUpgradeBuilding, upgradeBuilding } from "./settlement-upgrade.js";
+import { generateQuestForNPC } from "./quest-generator.js";
+import { QUEST_TEMPLATES } from "./quest-definitions.js";
+import { acceptQuest } from "./quest-accept.js";
 
+import { renderNPCList } from "./town-dialogue.js";
+import { renderSettlementEconomyAndShop } from "./town-economy.js";
 
-  /* ---------------------------------------------------------
-     SESSION + LOAD PLAYER
-  --------------------------------------------------------- */
-  await requireSession();
-  const { username } = window.syncState || {};
+/* ---------------------------------------------------------
+   SESSION + LOAD PLAYER
+--------------------------------------------------------- */
+await requireSession();
+const { username } = window.syncState || {};
 
-  const content = document.getElementById("townContent");
+const content = document.getElementById("townContent");
+if (!username) {
+  content.innerHTML = "<div>No active session.</div>";
+  throw new Error("No username in syncState");
+}
 
-  if (!username) {
-    content.innerHTML = "<div>No active session.</div>";
-    throw new Error("No username in syncState");
-  }
+let player = PlayerStorage.load(username);
+if (!player) {
+  content.innerHTML = "<div>Failed to load player.</div>";
+  throw new Error("Player not found");
+}
 
-  let player = PlayerStorage.load(username);
+/* ---------------------------------------------------------
+   OFFLINE REGEN
+--------------------------------------------------------- */
+player = applyOfflineRegen(player);
+PlayerStorage.save(username, player);
 
-  if (!player) {
-    content.innerHTML = "<div>Failed to load player.</div>";
-    throw new Error("Player not found");
-  }
-  
-  function initTown() {
-    const params = new URLSearchParams(window.location.search);
-    const key = params.get("town");
-    const def = SETTLEMENTS[key];
-    const world = getWorldState();
-    const state = world.settlements[key];
-  
-    if (!def || !state) {
-      document.getElementById("settlementContainer").innerHTML = "Unknown settlement.";
-      return;
-    }
-  
-    document.getElementById("settlementContainer").innerHTML = `
-      <h1>${def.name}</h1>
-      <p>${def.description}</p>
-  
-      <h3>Morale: ${state.morale.toFixed(2)}</h3>
-      <h3>Prosperity: ${state.prosperity.toFixed(2)}</h3>
-      <h3>Population: ${state.population}</h3>
-  
-      <h2>Recent Events</h2>
-      <div class="settlement-history">
-        ${state.history.slice(-20).reverse().map(h => `
-          <div class="history-entry">
-            <span>${new Date(h.timestamp).toLocaleString()}</span>
-            <span>${h.message}</span>
-          </div>
-        `).join("")}
-      </div>
-    `;
-  }
-  
-  initTown();
-
-  /* ---------------------------------------------------------
-     OFFLINE REGEN (Phase 4)
-  --------------------------------------------------------- */
-  player = applyOfflineRegen(player);
-  PlayerStorage.save(username, player);
-
-  /* ---------------------------------------------------------
-     AMBIENT TOWN REGEN
-  --------------------------------------------------------- */
+/* ---------------------------------------------------------
+   AMBIENT TOWN REGEN
+--------------------------------------------------------- */
+{
   const { hpPerMinute, mpPerMinute } = getRegenRates(player);
-
   player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + hpPerMinute);
   player.mana = Math.min(player.manaMax, player.mana + mpPerMinute);
+  PlayerStorage.save(username, player);
+}
+
+/* ---------------------------------------------------------
+   RESPWAN FLAVOR + LOCK UI
+--------------------------------------------------------- */
+let flavor = "";
+let lockUI = "";
+
+if (player.justRespawned) {
+  flavor = `
+    <div class="section">
+      <p>You awaken in town, restored but drained. Your MP is completely depleted.</p>
+    </div>
+  `;
+  delete player.justRespawned;
+  PlayerStorage.save(username, player);
+}
+
+const remaining = getSafeRespawnRemaining(player);
+if (remaining > 0) {
+  const minutes = Math.ceil(remaining / 60000);
+  lockUI = `
+    <div class="section" id="respawnLockBox">
+      <p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>
+    </div>
+  `;
+} else if (player.safeRespawnLockUntil) {
+  delete player.safeRespawnLockUntil;
+  PlayerStorage.save(username, player);
+}
+
+/* ---------------------------------------------------------
+   MAIN INIT
+--------------------------------------------------------- */
+initTown();
+
+if (flavor) content.insertAdjacentHTML("beforeend", flavor);
+if (lockUI) content.insertAdjacentHTML("beforeend", lockUI);
+
+if (player.safeRespawnLockUntil) {
+  startRespawnLockCountdown(player);
+}
+
+/* ---------------------------------------------------------
+   INIT TOWN
+--------------------------------------------------------- */
+function initTown() {
+  const params = new URLSearchParams(window.location.search);
+  const settlementKey = params.get("town");
+  const def = SETTLEMENTS[settlementKey];
+  const world = getWorldState();
+  const state = world.settlements[settlementKey];
+
+  if (!def || !state) {
+    content.innerHTML = "<div>Unknown settlement.</div>";
+    return;
+  }
+
+  renderPlayerPanel(player);
+  renderSettlementHeader(settlementKey);
+  renderHousingReputationPanel(settlementKey, player);
+  renderNPCList(settlementKey, player);
+  renderNPCQuests(settlementKey, player);
+  renderSettlementUpgrades(settlementKey, player);
+  renderSettlementEconomyAndShop(settlementKey, username);
+  renderSettlementStatus(settlementKey);
+  wireGlobalButtons();
+}
+
+/* ---------------------------------------------------------
+   PLAYER PANEL
+--------------------------------------------------------- */
+function renderPlayerPanel(p) {
+  const box = document.getElementById("playerPanel");
+  if (!box) return;
+
+  box.innerHTML = `
+    <h2>${p.username}</h2>
+    <div>Level ${p.level}</div>
+    <div>${p.profession ? p.profession.toUpperCase() : "Adventurer"}</div>
+    <div>HP: ${p.hpCurrent} / ${p.hpMax}</div>
+    <div>MP: ${p.mana} / ${p.manaMax}</div>
+    <div>Gold: ${p.gold || 0}</div>
+  `;
+}
+
+/* ---------------------------------------------------------
+   SETTLEMENT HEADER
+--------------------------------------------------------- */
+function renderSettlementHeader(settlementKey) {
+  const world = getWorldState();
+  const def = SETTLEMENTS[settlementKey];
+  const state = world.settlements[settlementKey];
+
+  const box = document.getElementById("settlementHeader");
+  if (!box) return;
+
+  box.innerHTML = `
+    <h2>${def.name}</h2>
+    <p>${def.description}</p>
+    <div>Morale: ${state.morale.toFixed(2)}</div>
+    <div>Prosperity: ${state.prosperity.toFixed(2)}</div>
+    <div>Population: ${state.population}</div>
+  `;
+}
+
+/* ---------------------------------------------------------
+   HOUSING + REPUTATION
+--------------------------------------------------------- */
+function renderHousingReputationPanel(settlementKey, p) {
+  const box = document.getElementById("housingReputationPanel");
+  if (!box) return;
+
+  const rep = p.reputation?.[settlementKey] || 0;
+  const isHome = p.housing?.homeSettlement === settlementKey;
+
+  box.innerHTML = `
+    <h2>Housing & Reputation</h2>
+    <div>Reputation here: ${rep}</div>
+    <div>Home here: ${isHome ? "Yes" : "No"}</div>
+    ${isHome ? "" : `<button class="btn" id="setHomeBtn">Set Home Here</button>`}
+  `;
+
+  const btn = document.getElementById("setHomeBtn");
+  if (btn) {
+    btn.onclick = () => {
+      p.housing = p.housing || {};
+      p.housing.homeSettlement = settlementKey;
+      p.housing.homeTier = 1;
+      PlayerStorage.save(username, p);
+      renderHousingReputationPanel(settlementKey, p);
+    };
+  }
+}
+
+/* ---------------------------------------------------------
+   NPC QUESTS
+--------------------------------------------------------- */
+function renderNPCQuests(settlementKey, p) {
+  const world = getWorldState();
+  const settlement = world.settlements[settlementKey];
+  const region = world.regions[SETTLEMENTS[settlementKey].region];
+
+  const out = settlement.npcs.map(npc => {
+    const questKey = generateQuestForNPC(npc, p, region);
+    if (!questKey) return "";
+
+    const q = QUEST_TEMPLATES[questKey];
+
+    return `
+      <div class="npc-quest-entry">
+        <strong>${npc.name}</strong> offers:
+        <div class="quest-name">${q.name}</div>
+        <button class="btn" data-npc-id="${npc.id}" data-quest-key="${questKey}">
+          Accept Quest
+        </button>
+      </div>
+    `;
+  }).join("");
+
+  const box = document.getElementById("npcQuests");
+  if (!box) return;
+  box.innerHTML = out;
+
+  box.querySelectorAll("button[data-npc-id]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const npcId = btn.getAttribute("data-npc-id");
+      const questKey = btn.getAttribute("data-quest-key");
+      acceptQuestUI(settlementKey, npcId, questKey);
+    });
+  });
+}
+
+function acceptQuestUI(settlementKey, npcId, questKey) {
+  const world = getWorldState();
+  const settlement = world.settlements[settlementKey];
+  const npc = settlement.npcs.find(n => n.id === npcId);
+  if (!npc) return;
+
+  const quest = acceptQuest(player, npc, settlementKey, SETTLEMENTS[settlementKey].region, questKey);
+  if (!quest) {
+    alert("Failed to accept quest.");
+    return;
+  }
 
   PlayerStorage.save(username, player);
+  alert(`Quest accepted: ${QUEST_TEMPLATES[questKey].name}`);
+}
 
-  /* ---------------------------------------------------------
-     RESPWAN FLAVOR + LOCK UI
-  --------------------------------------------------------- */
-  let flavor = "";
-  let lockUI = "";
+/* ---------------------------------------------------------
+   SETTLEMENT UPGRADES
+--------------------------------------------------------- */
+function renderSettlementUpgrades(settlementKey, p) {
+  const world = getWorldState();
+  const settlement = world.settlements[settlementKey];
 
-  if (player.justRespawned) {
-    flavor = `
-      <div class="section">
-        <p>You awaken in town, restored but drained. Your MP is completely depleted.</p>
-      </div>
-    `;
-    delete player.justRespawned;
-    PlayerStorage.save(username, player);
-  }
+  const out = Object.keys(BUILDINGS).map(bKey => {
+    const def = BUILDINGS[bKey];
+    const level = settlement.buildings[bKey].level;
+    const nextTier = def.tiers.find(t => t.level === level + 1);
 
-  const remaining = getSafeRespawnRemaining(player);
-  if (remaining > 0) {
-    const minutes = Math.ceil(remaining / 60000);
-    lockUI = `
-      <div class="section" id="respawnLockBox">
-        <p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>
-      </div>
-    `;
-  } else if (player.safeRespawnLockUntil) {
-    delete player.safeRespawnLockUntil;
-    PlayerStorage.save(username, player);
-  }
-
-  /* ---------------------------------------------------------
-     RENDER TOWN UI
-  --------------------------------------------------------- */
-  renderTown(player);
-
-  if (flavor) content.insertAdjacentHTML("beforeend", flavor);
-  if (lockUI) content.insertAdjacentHTML("beforeend", lockUI);
-
-  if (player.safeRespawnLockUntil) {
-    startRespawnLockCountdown(player);
-  }
-
-  /* ---------------------------------------------------------
-     RENDER FUNCTION
-  --------------------------------------------------------- */
-  function renderTown(p) {
-    content.innerHTML = `
-      <div id="settlementContainer"></div>
-      <div id="npcQuests"></div>
-      <div id="settlementUpgrades"></div>
-      <div id="settlementEconomy"></div>
-      <div id="settlementShop"></div>
-
-      <div class="section center">
-        <div class="portrait-frame">
-          <img class="portrait-img"
-               src="${p.portrait || "/assets/portraits/default.png"}"
-               onerror="this.src='/assets/portraits/default.png'">
+    if (!nextTier) {
+      return `
+        <div class="upgrade-entry">
+          <strong>${def.name}</strong> — Level ${level} (MAX)
         </div>
-        <h2>${p.username}</h2>
-        <div>Level ${p.level}</div>
-        <div>${p.profession ? p.profession.toUpperCase() : "Adventurer"}</div>
-      </div>
+      `;
+    }
 
-      <div class="section">
-        <h2>Vitals</h2>
-        <div class="stat-row"><span>HP</span><span>${p.hpCurrent} / ${p.hpMax}</span></div>
-        <div class="stat-row"><span>MP</span><span>${p.mana} / ${p.manaMax}</span></div>
-        <div class="stat-row"><span>Gold</span><span>${p.gold || 0}</span></div>
-      </div>
+    const req = nextTier.requirements;
+    const check = canUpgradeBuilding(settlementKey, bKey, p);
 
-      <div class="section center">
-        <button class="btn" id="restBtn">Rest at Inn</button>
-        <button class="btn" id="shopBtn">Visit Shop</button>
-        <button class="btn" id="charBtn">Character Sheet</button>
-        <button class="btn" id="mapBtn">Return to World Map</button>
+    return `
+      <div class="upgrade-entry">
+        <strong>${def.name}</strong> — Level ${level}
+        <div class="upgrade-reqs">
+          ${Object.entries(req).map(([k, v]) => `<div>${k}: ${v}</div>`).join("")}
+        </div>
+        <button class="btn" data-upgrade-building="${bKey}" ${check.ok ? "" : "disabled"}>
+          Upgrade to Level ${nextTier.level}
+        </button>
+        ${!check.ok ? `<div class="upgrade-error">${check.reason}</div>` : ""}
       </div>
     `;
+  }).join("");
 
-    document.getElementById("restBtn").onclick = restAtInn;
-    document.getElementById("shopBtn").onclick = () => window.location.href = "shop.html";
-    document.getElementById("charBtn").onclick = () => window.location.href = "character.html";
-    document.getElementById("mapBtn").onclick = () => window.location.href = "world-map.html";
+  const box = document.getElementById("settlementUpgrades");
+  if (!box) return;
+  box.innerHTML = out;
+
+  box.querySelectorAll("button[data-upgrade-building]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const bKey = btn.getAttribute("data-upgrade-building");
+      upgradeBuildingUI(settlementKey, bKey);
+    });
+  });
+}
+
+function upgradeBuildingUI(settlementKey, buildingKey) {
+  const p = PlayerStorage.load(username);
+  const ok = upgradeBuilding(settlementKey, buildingKey, p);
+  if (!ok) {
+    alert("Upgrade failed.");
+    return;
   }
 
-  /* ---------------------------------------------------------
-     REST AT INN
-  --------------------------------------------------------- */
-  function restAtInn() {
-    const p = PlayerStorage.load(username);
-    if (!p) return;
+  PlayerStorage.save(username, p);
+  alert("Upgrade successful!");
+  renderSettlementUpgrades(settlementKey, p);
+}
 
-    p.hpCurrent = p.hpMax;
-    p.mana = p.manaMax;
+/* ---------------------------------------------------------
+   SETTLEMENT STATUS (CRISIS / DESTRUCTION)
+--------------------------------------------------------- */
+function renderSettlementStatus(settlementKey) {
+  const world = getWorldState();
+  const settlement = world.settlements[settlementKey];
+  const box = document.getElementById("settlementCrisisPanel");
+  if (!box || !settlement) return;
 
-    PlayerStorage.save(username, p);
-    renderTown(p);
+  if (settlement.destroyed) {
+    box.innerHTML = `
+      <div>This settlement lies in ruins.</div>
+      <div>Rebuild progress: ${(settlement.rebuildProgress * 100).toFixed(0)}%</div>
+    `;
+  } else if (settlement.crisis) {
+    box.innerHTML = `
+      <div>Crisis: ${settlement.crisis.type} (Stage ${settlement.crisis.stage})</div>
+    `;
+  } else {
+    box.innerHTML = `<div>The settlement is stable.</div>`;
   }
 
-  /* ---------------------------------------------------------
-     RESPAWN LOCK COUNTDOWN
-  --------------------------------------------------------- */
-  function startRespawnLockCountdown(player) {
-    const box = document.getElementById("respawnLockBox");
-    if (!box) return;
-
-    const interval = setInterval(() => {
-      const remaining = getSafeRespawnRemaining(player);
-
-      if (remaining <= 0) {
-        box.innerHTML = "<p><strong>Safe Respawn Lock:</strong> Ready.</p>";
-        delete player.safeRespawnLockUntil;
-        PlayerStorage.save(username, player);
-        clearInterval(interval);
-        return;
-      }
-
-      const minutes = Math.ceil(remaining / 60000);
-      box.innerHTML = `<p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>`;
-    }, 10000);
+  const alliancesBox = document.getElementById("settlementAlliancesPanel");
+  if (alliancesBox) {
+    alliancesBox.innerHTML = `<div>Alliances UI not implemented yet.</div>`;
   }
+}
 
-  /* ----------------------------------------------------------
-     RENDER SETTLEMENT ECONOMY
-  ----------------------------------------------------------- */
-  
-  function renderSettlementEconomy(settlementKey) {
-    const world = getWorldState();
-    const settlement = world.settlements[settlementKey];
-  
-    const res = settlement.economy.resources;
-  
-    const out = Object.keys(res).map(r => `
-      <div>${r}: ${res[r].toFixed(1)}</div>
-    `).join("");
-  
-    document.getElementById("settlementEconomy").innerHTML = out;
-  
-    const shop = generateShopInventory(settlement);
-    const shopOut = shop.map(item => `
-      <div>${item.item} — ${item.price}g (Stock: ${item.stock})</div>
-    `).join("");
-  
-    document.getElementById("settlementShop").innerHTML = shopOut;
+/* ---------------------------------------------------------
+   GLOBAL BUTTONS (REST / NAV)
+--------------------------------------------------------- */
+function wireGlobalButtons() {
+  // These buttons live inside the layout? If you want them,
+  // you can add a dedicated section in town.html and wire here.
+  // For now, we keep rest logic callable:
+  const restBtn = document.getElementById("restBtn");
+  if (restBtn) {
+    restBtn.onclick = restAtInn;
   }
+}
 
-</script>
+function restAtInn() {
+  const p = PlayerStorage.load(username);
+  if (!p) return;
+
+  p.hpCurrent = p.hpMax;
+  p.mana = p.manaMax;
+
+  PlayerStorage.save(username, p);
+  renderPlayerPanel(p);
+}
+
+/* ---------------------------------------------------------
+   RESPAWN LOCK COUNTDOWN
+--------------------------------------------------------- */
+function startRespawnLockCountdown(p) {
+  const box = document.getElementById("respawnLockBox");
+  if (!box) return;
+
+  const interval = setInterval(() => {
+    const remaining = getSafeRespawnRemaining(p);
+
+    if (remaining <= 0) {
+      box.innerHTML = "<p><strong>Safe Respawn Lock:</strong> Ready.</p>";
+      delete p.safeRespawnLockUntil;
+      PlayerStorage.save(username, p);
+      clearInterval(interval);
+      return;
+    }
+
+    const minutes = Math.ceil(remaining / 60000);
+    box.innerHTML = `<p><strong>Safe Respawn Lock:</strong> ${minutes} minutes remaining.</p>`;
+  }, 10000);
+}
