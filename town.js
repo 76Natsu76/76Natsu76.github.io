@@ -11,9 +11,9 @@ import { canUpgradeBuilding, upgradeBuilding } from "./settlement-upgrade.js";
 import { generateQuestForNPC } from "./quest-generator.js";
 import { QUEST_TEMPLATES } from "./quest-definitions.js";
 import { acceptQuest } from "./quest-accept.js";
-
 import { renderNPCList } from "./town-dialogue.js";
 import { renderSettlementEconomyAndShop } from "./town-economy.js";
+import { listEnterableBuildings, enterBuilding } from "./building-interaction.js";
 
 /* ---------------------------------------------------------
    SESSION + LOAD PLAYER
@@ -94,26 +94,26 @@ if (player.safeRespawnLockUntil) {
    INIT TOWN
 --------------------------------------------------------- */
 function initTown() {
-  const params = new URLSearchParams(window.location.search);
-  const settlementKey = params.get("town");
-  const def = SETTLEMENTS[settlementKey];
-  const world = getWorldState();
-  const state = world.settlements[settlementKey];
+   const params = new URLSearchParams(window.location.search);
+   const settlementKey = params.get("town");
+   const def = SETTLEMENTS[settlementKey];
+   const world = getWorldState();
+   const state = world.settlements[settlementKey];
+   if (!def || !state) {
+     content.innerHTML = "<div>Unknown settlement.</div>";
+     return;
+   }
 
-  if (!def || !state) {
-    content.innerHTML = "<div>Unknown settlement.</div>";
-    return;
-  }
-
-  renderPlayerPanel(player);
-  renderSettlementHeader(settlementKey);
-  renderHousingReputationPanel(settlementKey, player);
-  renderNPCList(settlementKey, player);
-  renderNPCQuests(settlementKey, player);
-  renderSettlementUpgrades(settlementKey, player);
-  renderSettlementEconomyAndShop(settlementKey, username);
-  renderSettlementStatus(settlementKey);
-  wireGlobalButtons(settlementKey);
+   renderPlayerPanel(player);
+   renderSettlementHeader(settlementKey);
+   renderBuildingList(settlementKey, player);
+   renderHousingReputationPanel(settlementKey, player);
+   renderNPCList(settlementKey, player);
+   renderNPCQuests(settlementKey, player);
+   renderSettlementUpgrades(settlementKey, player);
+   renderSettlementEconomyAndShop(settlementKey, username);
+   renderSettlementStatus(settlementKey);
+   wireGlobalButtons(settlementKey);
 }
 
 /* ---------------------------------------------------------
@@ -317,6 +317,33 @@ function upgradeBuildingUI(settlementKey, buildingKey) {
   PlayerStorage.save(username, p);
   alert("Upgrade successful!");
   renderSettlementUpgrades(settlementKey, p);
+}
+
+function renderBuildingList(settlementKey, player) {
+  const buildings = listEnterableBuildings(settlementKey, player);
+  const box = document.getElementById("buildingList");
+
+  box.innerHTML = buildings.map(b => `
+    <div class="building-entry">
+      <strong>${b.name}</strong>
+      ${b.locked ? "<span style='color:red'> (Locked)</span>" : ""}
+      <button class="btn" data-building-id="${b.id}">
+        Enter
+      </button>
+    </div>
+  `).join("");
+
+  box.querySelectorAll("button[data-building-id]").forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.getAttribute("data-building-id");
+      const result = enterBuilding(settlementKey, id, player);
+
+      if (!result.ok) {
+        alert(result.reason);
+        return;
+      }
+    };
+  });
 }
 
 /* ---------------------------------------------------------
