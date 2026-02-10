@@ -11,6 +11,14 @@ export const TILEMAP = [
   [3, 0, 0, 0, 0, 0, 0, 3]
 ];
 
+export const TILE_REGION = [
+  ["forest", "forest", "forest", "forest", "plains", "plains", "plains", "plains"],
+  ["forest", "forest", "forest", "forest", "plains", "plains", "mountain", "mountain"],
+  ["forest", "forest", "forest", "forest", "plains", "plains", "mountain", "mountain"],
+  ["forest", "forest", "forest", "forest", "plains", "plains", "plains", "plains"],
+  ["forest", "forest", "plains", "plains", "plains", "plains", "plains", "capital_city"]
+];
+
 // Tiles that block movement
 export const COLLISION_TILES = new Set([1, 2]);
 
@@ -20,6 +28,16 @@ export function getTileAtPixel(x, y) {
   if (row < 0 || row >= TILEMAP.length) return null;
   if (col < 0 || col >= TILEMAP[0].length) return null;
   return { row, col, id: TILEMAP[row][col] };
+}
+
+export function getRegionAtPixel(x, y) {
+  const col = Math.floor(x / TILE_SIZE);
+  const row = Math.floor(y / TILE_SIZE);
+
+  if (row < 0 || row >= TILE_REGION.length) return null;
+  if (col < 0 || col >= TILE_REGION[0].length) return null;
+
+  return TILE_REGION[row][col];
 }
 
 export const WORLD_MAP = {
