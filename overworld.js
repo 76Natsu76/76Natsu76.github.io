@@ -1,3 +1,16 @@
+import { isTraveling, getTravelRemaining, finishTravel } from "./travel-lockout.js";
+
+function overworldLoop(player) {
+  if (isTraveling(player)) {
+    const remaining = getTravelRemaining(player);
+    renderTravelCountdown(remaining);
+    return; // player cannot move
+  }
+
+  // Normal overworld movement
+  renderOverworld(player);
+}
+
 export function renderOverworld(player) {
   const canvas = document.getElementById("overworldCanvas");
   const ctx = canvas.getContext("2d");
