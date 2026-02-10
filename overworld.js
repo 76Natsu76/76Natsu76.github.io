@@ -1,10 +1,19 @@
 import { isTraveling, getTravelRemaining, finishTravel } from "./travel-lockout.js";
+import { PlayerStorage } from "./player-storage.js";
 
 function overworldLoop(player) {
+  // Check if travel just finished
+  if (player.travel && Date.now() >= player.travel.endsAt) {
+    finishTravel(player);
+    PlayerStorage.save(player.username, player);
+    alert("You have arrived at your destination.");
+  }
+
+  // If still traveling, show countdown
   if (isTraveling(player)) {
     const remaining = getTravelRemaining(player);
     renderTravelCountdown(remaining);
-    return; // player cannot move
+    return;
   }
 
   // Normal overworld movement
@@ -21,20 +30,22 @@ export function renderOverworld(player) {
   drawPlayer(ctx, pos);
 }
 
-document.addEventListener("keydown", e => {
-  const pos = getPlayerPosition(player);
-
-  if (e.key === "ArrowUp") pos.y -= 4;
-  if (e.key === "ArrowDown") pos.y += 4;
-  if (e.key === "ArrowLeft") pos.x -= 4;
-  if (e.key === "ArrowRight") pos.x += 4;
-
-  setPlayerPosition(player, pos.x, pos.y);
-  renderOverworld(player);
-
-  checkForEncounters(player);
-  checkForBuildingEntry(player);
-});
+if (!isTaveling(player)) {
+  document.addEventListener("keydown", e => {
+    const pos = getPlayerPosition(player);
+  
+    if (e.key === "ArrowUp") pos.y -= 4;
+    if (e.key === "ArrowDown") pos.y += 4;
+    if (e.key === "ArrowLeft") pos.x -= 4;
+    if (e.key === "ArrowRight") pos.x += 4;
+  
+    setPlayerPosition(player, pos.x, pos.y);
+    renderOverworld(player);
+  
+    checkForEncounters(player);
+    checkForBuildingEntry(player);
+  });
+}
 
 function gameLoop() {
   overworldLoop(player);
