@@ -7,3 +7,8 @@ export function adjustReputation(player, settlementKey, amount) {
   player.reputation[settlementKey] = current + amount;
   PlayerStorage.save(player.username, player);
 }
+
+/* // -- Use by:
+import { adjustReputation } from "./reputation-utils.js";
+adjustReputation(player, settlementKey, -20);
+*/
