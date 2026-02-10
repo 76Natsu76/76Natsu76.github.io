@@ -20,6 +20,24 @@ import { calculateTravelTime } from "./travel-time.js";
 import { startTravel } from "./travel-lockout.js";
 import { PlayerStorage } from "./player-storage.js";
 
+function wireTownButtons(settlementKey, player) {
+  const travelBtn = document.getElementById("startTravelBtn");
+  if (travelBtn) {
+    travelBtn.onclick = () => {
+      const from = player.position || { x: 0, y: 0 };
+      const to = { x: 1350, y: 350 }; // example destination
+      const mountSpeed = player.mount?.speed ?? 1;
+
+      const travelTime = calculateTravelTime(from, to, mountSpeed);
+
+      startTravel(player, to, travelTime, mountSpeed);
+      PlayerStorage.save(player.username, player);
+
+      alert("Travel started.");
+    };
+  }
+}
+
 document.getElementById("startTravelBtn").onclick = () => {
   const from = player.position || { x: 0, y: 0 };
   const to = { x: 1350, y: 350 }; // Example: capital city throne room
@@ -149,6 +167,7 @@ function initTown() {
    renderSettlementEconomyAndShop(settlementKey, username);
    renderSettlementStatus(settlementKey);
    wireGlobalButtons(settlementKey);
+  wireTownButtons(settlementKey, player);
 }
 
 /* ---------------------------------------------------------
