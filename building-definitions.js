@@ -6,7 +6,8 @@ export const BUILDING_TYPES = {
   HOUSE: "house",
   TOWN_HALL: "town_hall",
   GUARD_POST: "guard_post",
-  TEMPLE: "temple"
+  TEMPLE: "temple",
+  THRONE: "throne_room"
 };
 
 export const BUILDINGS_BY_SETTLEMENT = {
@@ -43,6 +44,14 @@ export const BUILDINGS_BY_SETTLEMENT = {
       locked: false,
       trespassCrime: false,
       interiorId: "guard_post_interior"
+    },
+    {
+      id: "throne_room",
+      type: BUILDING_TYPES.TOWN_HALL,
+      name: "Throne Room",
+      locked: false,
+      trespassCrime: false,
+      interiorId: "throne_room_interior"
     }
   ]
 };
