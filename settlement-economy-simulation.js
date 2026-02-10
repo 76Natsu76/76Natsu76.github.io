@@ -38,6 +38,11 @@ export function tickSettlementEconomy() {
     }
 
     // Crisis reduces production
+    if (region.crisis) {
+      for (const res in settlement.economy.resources) {
+        settlement.economy.resources[res] *= 0.8; // 20% production loss
+      }
+    }
     if (settlement.crisis) {
       for (const res in settlement.economy.resources) {
         settlement.economy.resources[res] *= 0.8; // 20% production loss
