@@ -353,6 +353,14 @@ function renderSettlementStatus(settlementKey) {
       <strong>Status:</strong> Stable
     </div>
   `;
+   
+   if (player.bounty?.[settlementKey] > 0) {
+     box.innerHTML += `
+       <div class="section">
+         <strong>Bounty:</strong> ${player.bounty[settlementKey]}g
+       </div>
+     `;
+   }
 
   const alliancesBox = document.getElementById("settlementAlliancesPanel");
   if (alliancesBox) {
