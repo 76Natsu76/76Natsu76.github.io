@@ -113,7 +113,7 @@ function initTown() {
   renderSettlementUpgrades(settlementKey, player);
   renderSettlementEconomyAndShop(settlementKey, username);
   renderSettlementStatus(settlementKey);
-  wireGlobalButtons();
+  wireGlobalButtons(settlementKey);
 }
 
 /* ---------------------------------------------------------
@@ -371,14 +371,22 @@ function renderSettlementStatus(settlementKey) {
 /* ---------------------------------------------------------
    GLOBAL BUTTONS (REST / NAV)
 --------------------------------------------------------- */
-function wireGlobalButtons() {
-  // These buttons live inside the layout? If you want them,
-  // you can add a dedicated section in town.html and wire here.
-  // For now, we keep rest logic callable:
-  const restBtn = document.getElementById("restBtn");
-  if (restBtn) {
-    restBtn.onclick = restAtInn;
-  }
+function wireGlobalButtons(settlementKey) {
+   const clearBtn = document.getElementById("clearBountyBtn");
+   if (clearBtn) {
+     clearBtn.onclick = () => {
+       if (clearBounty(player, settlementKey)) {
+         alert("Your bounty has been cleared.");
+         renderSettlementStatus(settlementKey);
+       } else {
+         alert("Not enough gold.");
+       }
+     };
+   }
+   const restBtn = document.getElementById("restBtn");
+   if (restBtn) {
+      restBtn.onclick = restAtInn;
+   }
 }
 
 function restAtInn() {
