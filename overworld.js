@@ -35,3 +35,10 @@ document.addEventListener("keydown", e => {
   checkForEncounters(player);
   checkForBuildingEntry(player);
 });
+
+function gameLoop() {
+  overworldLoop(player);
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
