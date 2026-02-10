@@ -58,6 +58,11 @@ function buyShopItem(settlementKey, username, shopItem) {
 
   // Simple rep-based discount: max 20% off at 20+ rep
   let modifier = 1;
+
+   if (player.bounty?.[settlementKey] > 0) {
+     shopBox.innerHTML = "<div>The shop refuses to serve you.</div>";
+     return;
+   }
    
    // Positive rep → discount
    if (rep > 100) modifier -= Math.min(0.2, rep * 0.001);
