@@ -26,3 +26,12 @@ export function createGuardInstance(settlementKey) {
     element: "physical"
   };
 }
+
+function getGuardTierForSettlement(key) {
+  const type = SETTLEMENTS[key].type;
+  if (type === "village") return "village";
+  if (type === "town") return "town";
+  if (type === "city") return "city";
+  if (key === "capital_city") return "royal_capital";
+  return "remote_village";
+}
