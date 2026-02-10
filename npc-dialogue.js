@@ -54,15 +54,25 @@ export function getNPCDialogue(npc, region, player = null) {
    REPUTATION FLAVOR (Phase 3 integration)
 --------------------------------------------------------- */
 function reputationLine(rep, npc) {
-  if (rep >= 20) {
-    return `${npc.name} smiles warmly. "You're a true friend to our people."`;
-  }
-  if (rep >= 10) {
-    return `${npc.name} nods. "Good to see you again."`;
-  }
-  if (rep <= -10) {
-    return `${npc.name} eyes you warily. "I haven't forgotten what you did."`;
-  }
+  if (player) {
+     const rep = player.reputation?.[region.key] || 0;
+     
+     if (rep >= 2000) {
+       return `${npc.name} looks with stars in their eyes. "It is an honor to meet you, Hero!"`;
+     }
+     if (rep >= 250) {
+       return `${npc.name} smiles warmly. "You're a true friend to our people."`;
+     }
+     if (rep >= 100) {
+       return `${npc.name} nods. "Good to see you again."`;
+     }
+     if (rep < 0) {
+       return `${npc.name} eyes you suspiciously. "Watch yourself."`;
+     }
+     if (rep < -50) {
+       return `${npc.name} glares at you. "You shouldn't be here."`;
+     }
+   }
   return null;
 }
 
