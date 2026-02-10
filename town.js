@@ -186,15 +186,22 @@ function renderHousingReputationPanel(settlementKey, p) {
    NPC QUESTS
 --------------------------------------------------------- */
 function renderNPCQuests(settlementKey, p) {
-  const world = getWorldState();
-  const settlement = world.settlements[settlementKey];
-  const region = world.regions[SETTLEMENTS[settlementKey].region];
+   const world = getWorldState();
+   const settlement = world.settlements[settlementKey];
+   const region = world.regions[SETTLEMENTS[settlementKey].region];
 
-  const out = settlement.npcs.map(npc => {
-    const questKey = generateQuestForNPC(npc, p, region);
-    if (!questKey) return "";
-
-    const q = QUEST_TEMPLATES[questKey];
+   const rep = player.reputation?.[settlementKey] || 0;
+   if (rep < 0) {
+     document.getElementById("npcQuests").innerHTML =
+       "<div class='npc-quest-entry'>The townsfolk refuse to work with you.</div>";
+     return;
+   }
+   
+   const out = settlement.npcs.map(npc => {
+      const questKey = generateQuestForNPC(npc, p, region);
+      if (!questKey) return "";
+      
+      const q = QUEST_TEMPLATES[questKey];
 
     return `
       <div class="npc-quest-entry">
