@@ -1,152 +1,174 @@
-/****************************************************
- * OVERWORLD — travel + tiles + sprite + collision
- ****************************************************/
+/************************************************************
+ * OVERWORLD — smooth movement + animation + camera
+ ************************************************************/
 
 import { isTraveling, getTravelRemaining, finishTravel } from "./travel-lockout.js";
 import { PlayerStorage } from "./player-storage.js";
 import { TILE_SIZE, TILEMAP, COLLISION_TILES, getTileAtPixel } from "./world-map-data.js";
 import { getPlayerPosition, setPlayerPosition } from "./player-position.js";
-import { checkForEncounters } from "./encounter-check.js";
-import { checkForBuildingEntry } from "./building-check.js";
 import { checkForOverworldEncounter } from "./overworld-encounter.js";
+import { checkForBuildingEntry } from "./building-check.js";
+import { PLAYER_SPRITE, loadPlayerSprite, updatePlayerSprite, drawPlayerSprite } from "./player-sprite.js";
+import { CAMERA, updateCamera } from "./overworld-camera.js";
 
-/****************************************************
- * TRAVEL COUNTDOWN UI
- ****************************************************/
-export function renderTravelCountdown(ms) {
-  const panel = document.getElementById("travelPanel");
-  if (!panel) return;
+/************************************************************
+ * INITIALIZATION
+ ************************************************************/
+loadPlayerSprite();
 
-  const seconds = Math.ceil(ms / 1000);
+let lastTime = performance.now();
 
-  panel.innerHTML = `
-    <div class="section">
-      <h2>Traveling...</h2>
-      <p>Arrival in ${seconds} seconds</p>
-      <button class="btn" id="cancelTravelBtn">Cancel Travel</button>
-    </div>
-  `;
+/************************************************************
+ * MOVEMENT STATE
+ ************************************************************/
+const movement = {
+  up: false,
+  down: false,
+  left: false,
+  right: false,
+  speed: 2.5 // pixels per frame
+};
 
-  const cancelBtn = document.getElementById("cancelTravelBtn");
-  if (cancelBtn) {
-    cancelBtn.onclick = () => {
-      window.player.travel = null;
-      PlayerStorage.save(window.player.username, window.player);
-      panel.innerHTML = "";
-    };
-  }
+document.addEventListener("keydown", e => {
+  if (isTraveling(player)) return;
+
+  if (e.key === "ArrowUp") movement.up = true;
+  if (e.key === "ArrowDown") movement.down = true;
+  if (e.key === "ArrowLeft") movement.left = true;
+  if (e.key === "ArrowRight") movement.right = true;
+});
+
+document.addEventListener("keyup", e => {
+  if (e.key === "ArrowUp") movement.up = false;
+  if (e.key === "ArrowDown") movement.down = false;
+  if (e.key === "ArrowLeft") movement.left = false;
+  if (e.key === "ArrowRight") movement.right = false;
+});
+
+/************************************************************
+ * COLLISION CHECK
+ ************************************************************/
+function canMoveTo(x, y) {
+  const tile = getTileAtPixel(x + TILE_SIZE / 2, y + TILE_SIZE / 2);
+  if (!tile) return false;
+  return !COLLISION_TILES.has(tile.id);
 }
 
-/****************************************************
- * MAIN OVERWORLD LOOP
- ****************************************************/
-function overworldLoop(player) {
-  // 1. Travel just finished?
+/************************************************************
+ * MAIN LOOP
+ ************************************************************/
+function gameLoop(time) {
+  const deltaTime = time - lastTime;
+  lastTime = time;
+
+  overworldLoop(player, deltaTime);
+  requestAnimationFrame(gameLoop);
+}
+
+function overworldLoop(player, deltaTime) {
+  // Travel completion
   if (player.travel && Date.now() >= player.travel.endsAt) {
     finishTravel(player);
     PlayerStorage.save(player.username, player);
     alert("You have arrived at your destination.");
   }
 
-  // 2. Still traveling?
+  // Travel lockout
   if (isTraveling(player)) {
     const remaining = getTravelRemaining(player);
     renderTravelCountdown(remaining);
     return;
   }
 
-  // 3. Normal overworld rendering
-  renderOverworld(player);
+  updateMovement(player, deltaTime);
+  renderOverworld(player, deltaTime);
 }
 
-/****************************************************
- * RENDER OVERWORLD (tiles + player sprite)
- ****************************************************/
-export function renderOverworld(player) {
-  const canvas = document.getElementById("overworldCanvas");
-  if (!canvas) return;
-
-  const ctx = canvas.getContext("2d");
+/************************************************************
+ * MOVEMENT + ANIMATION
+ ************************************************************/
+function updateMovement(player, deltaTime) {
   const pos = getPlayerPosition(player);
+  let newX = pos.x;
+  let newY = pos.y;
+
+  PLAYER_SPRITE.moving = false;
+
+  if (movement.up) {
+    newY -= movement.speed;
+    PLAYER_SPRITE.direction = "up";
+    PLAYER_SPRITE.moving = true;
+  }
+  if (movement.down) {
+    newY += movement.speed;
+    PLAYER_SPRITE.direction = "down";
+    PLAYER_SPRITE.moving = true;
+  }
+  if (movement.left) {
+    newX -= movement.speed;
+    PLAYER_SPRITE.direction = "left";
+    PLAYER_SPRITE.moving = true;
+  }
+  if (movement.right) {
+    newX += movement.speed;
+    PLAYER_SPRITE.direction = "right";
+    PLAYER_SPRITE.moving = true;
+  }
+
+  if (canMoveTo(newX, newY)) {
+    setPlayerPosition(player, newX, newY);
+    PlayerStorage.save(player.username, player);
+  }
+
+  updatePlayerSprite(deltaTime);
+  updateCamera(pos.x, pos.y);
+
+  if (PLAYER_SPRITE.moving) {
+    checkForOverworldEncounter(player);
+    checkForBuildingEntry(player);
+  }
+}
+
+/************************************************************
+ * RENDERING
+ ************************************************************/
+function renderOverworld(player, deltaTime) {
+  const canvas = document.getElementById("overworldCanvas");
+  const ctx = canvas.getContext("2d");
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawMap(ctx);
-  drawPlayer(ctx, pos);
+  drawPlayer(ctx);
 }
 
 function drawMap(ctx) {
   for (let row = 0; row < TILEMAP.length; row++) {
     for (let col = 0; col < TILEMAP[row].length; col++) {
       const id = TILEMAP[row][col];
-      const x = col * TILE_SIZE;
-      const y = row * TILE_SIZE;
+      const x = col * TILE_SIZE - CAMERA.x;
+      const y = row * TILE_SIZE - CAMERA.y;
 
-      // Simple color mapping
-      let color = "#228B22"; // grass
-      if (id === 1) color = "#1E90FF"; // water
-      if (id === 2) color = "#696969"; // mountain
-      if (id === 3) color = "#B8860B"; // town
+      let color = "#228B22";
+      if (id === 1) color = "#1E90FF";
+      if (id === 2) color = "#696969";
+      if (id === 3) color = "#B8860B";
 
       ctx.fillStyle = color;
       ctx.fillRect(x, y, TILE_SIZE, TILE_SIZE);
-      ctx.strokeStyle = "#111";
-      ctx.strokeRect(x, y, TILE_SIZE, TILE_SIZE);
     }
   }
 }
 
-function drawPlayer(ctx, pos) {
-  ctx.fillStyle = "#FFFFFF";
-  ctx.beginPath();
-  ctx.arc(pos.x + TILE_SIZE / 2, pos.y + TILE_SIZE / 2, TILE_SIZE / 3, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-/****************************************************
- * COLLISION CHECK
- ****************************************************/
-function canMoveTo(player, newX, newY) {
-  const tile = getTileAtPixel(newX + TILE_SIZE / 2, newY + TILE_SIZE / 2);
-  if (!tile) return false;
-  if (COLLISION_TILES.has(tile.id)) return false;
-  return true;
-}
-
-/****************************************************
- * MOVEMENT HANDLER
- ****************************************************/
-
-document.addEventListener("keydown", e => {
-  if (isTraveling(player)) return;
-
+function drawPlayer(ctx) {
   const pos = getPlayerPosition(player);
-  let newX = pos.x;
-  let newY = pos.y;
+  const screenX = pos.x - CAMERA.x;
+  const screenY = pos.y - CAMERA.y;
 
-  if (e.key === "ArrowUp") newY -= TILE_SIZE;
-  if (e.key === "ArrowDown") newY += TILE_SIZE;
-  if (e.key === "ArrowLeft") newX -= TILE_SIZE;
-  if (e.key === "ArrowRight") newX += TILE_SIZE;
-
-  if (!canMoveTo(player, newX, newY)) return;
-
-  setPlayerPosition(player, newX, newY);
-  PlayerStorage.save(player.username, player);
-
-  renderOverworld(player);
-
-  checkForOverworldEncounter(player); // ← NEW
-  checkForBuildingEntry(player);
-});
-
-/****************************************************
- * CONTINUOUS GAME LOOP
- ****************************************************/
-function gameLoop() {
-  const player = window.player;
-  if (player) {
-    overworldLoop(player);
-  }
-  requestAnimationFrame(gameLoop);
+  drawPlayerSprite(ctx, screenX, screenY);
 }
 
-gameLoop();
+/************************************************************
+ * START LOOP
+ ************************************************************/
+gameLoop(performance.now());
