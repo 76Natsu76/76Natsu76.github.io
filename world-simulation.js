@@ -7,6 +7,7 @@ import { REGION_UNLOCKS } from "./region-unlock.js";
 import { tickSettlements } from "./settlement-simulation.js";
 import { tickSettlementEconomy } from "./settlement-economy-simulation.js";
 import { tickTradeRoutes } from "./trade-routes.js";
+import { evaluateSettlementCrisis, advanceSettlementCrisis } from "./settlement-crisis.js";
 
 export const WorldSim = {
   _state: null,
@@ -95,6 +96,17 @@ export const WorldSim = {
     tickSettlements();
     tickSettlementEconomy();
     tickTradeRoutes();
+
+    // Settlement crisis evaluation + progression
+    for (const key of Object.keys(this._state.settlements || {})) {
+      evaluateSettlementCrisis(key);
+    
+      const s = this._state.settlements[key];
+      if (s.crisis && now - s.crisisStartedAt > 60 * 60 * 1000) {
+        advanceSettlementCrisis(key);
+        s.crisisStartedAt = now;
+      }
+    }
 
     // Future Phase 7: dungeon resets
     // Future Phase 8: weather/events/hazards reintegration
