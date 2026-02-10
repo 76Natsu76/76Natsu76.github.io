@@ -12,6 +12,12 @@ export function generateQuestForNPC(npc, player, regionState) {
     if (player.level < (q.minLevel ?? 1)) continue;
     if (player.level > (q.maxLevel ?? 999)) continue;
 
+    // Reputation gating
+    const rep = player.reputation?.[settlementKey] || 0;
+    
+    if (rep < q.minReputation) return null;
+    if (rep > q.maxReputation) return null;
+    
     // Crisis gating
     if (q.requiresCrisis && !regionState.crisis) continue;
 
