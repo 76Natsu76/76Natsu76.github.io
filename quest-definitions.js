@@ -6,6 +6,7 @@ export const QUEST_TEMPLATES = {
     type: "gather",
     minLevel: 1,
     maxLevel: 20,
+    repCap: 100, // low-tier quests
     objectives: [
       { item: "herb", amount: 5 }
     ],
@@ -20,6 +21,7 @@ export const QUEST_TEMPLATES = {
     type: "hunt",
     minLevel: 5,
     maxLevel: 40,
+    repCap: 500,
     objectives: [
       { enemyTag: "beast", amount: 3 }
     ],
@@ -32,6 +34,9 @@ export const QUEST_TEMPLATES = {
   crisis_support: {
     name: "Support the Region",
     type: "crisis",
+    minLevel: 25,
+    maxLevel: 500,
+    repCap: 1000,
     requiresCrisis: true,
     objectives: [
       { action: "assist_settlement", amount: 1 }
@@ -45,6 +50,8 @@ export const QUEST_TEMPLATES = {
   boss_scouting: {
     name: "Scout the Threat",
     type: "boss",
+    minLevel: 10,
+    repCap: 1000,
     requiresBossAwakening: true,
     objectives: [
       { action: "scout_boss_area" }
