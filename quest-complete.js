@@ -1,39 +1,42 @@
 // quest-complete.js
+import { PlayerStorage } from "./player-storage.js";
+import { QUEST_TEMPLATES } from "./quest-definitions.js";
 
-export function checkQuestCompletion(player) {
-  const completed = [];
+export function completeQuest(player, questKey, settlementKey) {
+  const q = QUEST_TEMPLATES[questKey];
+  if (!q) return { ok: false, reason: "Unknown quest" };
 
-  for (const quest of player.quests.active) {
-    const template = QUEST_TEMPLATES[quest.template];
-    let done = true;
+  // Remove from active
+  player.quests.active = player.quests.active.filter(k => k !== questKey);
 
-    for (const obj of template.objectives) {
-      const key = obj.item || obj.enemyTag || obj.action;
-      const required = obj.amount ?? 1;
-      const current = quest.progress[key] || 0;
+  // Add to completed
+  player.quests.completed.push(questKey);
 
-      if (current < required) {
-        done = false;
-        break;
-      }
-    }
+  // Apply rewards
+  if (q.rewards?.gold) player.gold += q.rewards.gold;
+  if (q.rewards?.xp) player.xp += q.rewards.xp;
 
-    if (done) completed.push(quest);
-  }
+  // Reputation reward (with caps)
+  applyReputationReward(player, settlementKey, q);
 
-  for (const quest of completed) {
-    finishQuest(player, quest);
-  }
+  PlayerStorage.save(player.username, player);
+  return { ok: true };
 }
 
-function finishQuest(player, quest) {
-  const template = QUEST_TEMPLATES[quest.template];
+/* ---------------------------------------------------------
+   REPUTATION REWARD LOGIC
+--------------------------------------------------------- */
+function applyReputationReward(player, settlementKey, quest) {
+  player.reputation = player.reputation || {};
 
-  // Rewards
-  player.gold += template.rewards.gold || 0;
-  player.exp += template.rewards.exp || 0;
+  const current = player.reputation[settlementKey] || 0;
+  const repGain = quest.rewards?.reputation || 0;
 
-  // Move to completed
-  player.quests.active = player.quests.active.filter(q => q.id !== quest.id);
-  player.quests.completed.push(quest);
+  // Reputation cap per quest tier
+  const cap = quest.repCap || 100; // default cap
+
+  if (current >= cap) return; // no more rep from this quest tier
+
+  const newRep = Math.min(current + repGain, cap);
+  player.reputation[settlementKey] = newRep;
 }
