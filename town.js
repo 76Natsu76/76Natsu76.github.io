@@ -232,8 +232,14 @@ function acceptQuestUI(settlementKey, npcId, questKey) {
     return;
   }
 
+  // Reputation: small bump for taking work here
+  player.reputation = player.reputation || {};
+  const current = player.reputation[settlementKey] || 0;
+  player.reputation[settlementKey] = current + 1;
+
   PlayerStorage.save(username, player);
   alert(`Quest accepted: ${QUEST_TEMPLATES[questKey].name}`);
+  renderHousingReputationPanel(settlementKey, player);
 }
 
 /* ---------------------------------------------------------
