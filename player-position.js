@@ -1,5 +1,10 @@
+// player-position.js
+
 export function getPlayerPosition(player) {
-  return player.position || { x: 0, y: 0 };
+  if (!player.position) {
+    player.position = { x: 0, y: 0 };
+  }
+  return player.position;
 }
 
 export function setPlayerPosition(player, x, y) {
