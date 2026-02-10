@@ -16,6 +16,22 @@ import { renderSettlementEconomyAndShop } from "./town-economy.js";
 import { listEnterableBuildings, enterBuilding } from "./building-interaction.js";
 import { evaluateGuardResponse } from "./guard-system.js";
 import { createGuardInstance } from "./guard-definitions.js";
+import { calculateTravelTime } from "./travel-time.js";
+import { startTravel } from "./travel-lockout.js";
+import { PlayerStorage } from "./player-storage.js";
+
+document.getElementById("startTravelBtn").onclick = () => {
+  const from = player.position || { x: 0, y: 0 };
+  const to = { x: 1350, y: 350 }; // Example: capital city throne room
+  const mountSpeed = player.mount?.speed ?? 1;
+
+  const travelTime = calculateTravelTime(from, to, mountSpeed);
+
+  startTravel(player, to, travelTime, mountSpeed);
+  PlayerStorage.save(player.username, player);
+
+  alert("Travel started.");
+};
 
 function checkGuardAggro(settlementKey, player) {
   const response = evaluateGuardResponse(player, settlementKey);
