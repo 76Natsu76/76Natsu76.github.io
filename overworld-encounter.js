@@ -2,18 +2,21 @@
 
 import { REGION_ENCOUNTER_TABLES } from "./region-encounter-tables.js";
 import { getRegionAtPixel } from "./world-map-data.js";
-import { startEncounter } from "./encounter-engine.js"; // your existing engine
+import { startEncounter } from "./encounter-engine.js";
+import { chooseRarityWeighted } from "./utils-weighted.js"; // you already have this
+import { pickEnemyFromTierBands } from "./encounter-generator.js"; // you already have this
 
-function chooseWeighted(entries) {
-  let total = 0;
-  for (const e of entries) total += e.weight;
-  let roll = Math.random() * total;
-  for (const e of entries) {
-    if (roll < e.weight) return e;
-    roll -= e.weight;
-  }
-  return entries[entries.length - 1];
-}
+// Map TILE_REGION → subregion keys
+const REGION_TO_SUBREGION = {
+  forest: "forest-edge",
+  deep_forest: "deep-forest",
+  plains: "plains-field",
+  swamp: "swamp-marsh",
+  mountain: "mountain-pass",
+  frostlands: "frost-edge",
+  desert: "desert-dunes",
+  capital_city: null // safe zone
+};
 
 export function checkForOverworldEncounter(player) {
   const pos = player.position;
@@ -21,21 +24,35 @@ export function checkForOverworldEncounter(player) {
 
   if (!region) return;
 
-  const table = REGION_ENCOUNTER_TABLES[region];
+  const subregion = REGION_TO_SUBREGION[region];
+  if (!subregion) return; // safe zone or undefined region
+
+  const table = REGION_ENCOUNTER_TABLES[subregion];
   if (!table) return;
 
-  // 2% base encounter chance per tile step
+  // 2% encounter chance per tile step
   if (Math.random() > 0.02) return;
 
-  // 90% base, 10% rare
-  const pool = Math.random() < 0.1 ? table.rare : table.base;
-  const chosen = chooseWeighted(pool);
+  // Choose rarity using your existing rarity weights
+  const rarity = chooseRarityWeighted({
+    common: 70,
+    uncommon: 20,
+    rare: 9,
+    boss: 1
+  });
 
-  if (!chosen) return;
+  const tierBands = table[rarity]?.tiers;
+  if (!tierBands) return;
+
+  // Use your existing tier-based enemy picker
+  const enemyKey = pickEnemyFromTierBands(subregion, rarity, tierBands);
+  if (!enemyKey) return;
 
   startEncounter({
     type: "overworld",
     region,
-    enemyKey: chosen.enemyKey
+    subregion,
+    rarity,
+    enemyKey
   });
 }
