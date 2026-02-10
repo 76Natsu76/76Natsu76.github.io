@@ -44,6 +44,9 @@ function ensureVitals(p) {
   if (!p.endlessRecord) p.endlessRecord = null;
   if (!p.lastCompletedDungeonRun) p.lastCompletedDungeonRun = null;
 
+  if (!p.mounts) p.mounts = [];
+  if (!p.mount) p.mount = null;
+
   if (!p.quests) p.quests = { active: [], completed: [] };
 
   if (!p.housing) {
@@ -111,6 +114,8 @@ function createNewPlayer(userId) {
       homeSettlement: null,
       homeTier: 0
     },
+    mounts: [],
+    mount: null,
     reputation: {},
     factions: {},
     ownedBuildings: [],
