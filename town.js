@@ -19,6 +19,7 @@ import { createGuardInstance } from "./guard-definitions.js";
 import { calculateTravelTime } from "./travel-time.js";
 import { startTravel } from "./travel-lockout.js";
 import { PlayerStorage } from "./player-storage.js";
+import { renderMountStable } from "./mount-ui.js";
 
 function wireTownButtons(settlementKey, player) {
   const travelBtn = document.getElementById("startTravelBtn");
@@ -163,11 +164,12 @@ function initTown() {
    renderHousingReputationPanel(settlementKey, player);
    renderNPCList(settlementKey, player);
    renderNPCQuests(settlementKey, player);
+   renderMountStable(player);
    renderSettlementUpgrades(settlementKey, player);
    renderSettlementEconomyAndShop(settlementKey, username);
    renderSettlementStatus(settlementKey);
    wireGlobalButtons(settlementKey);
-  wireTownButtons(settlementKey, player);
+   wireTownButtons(settlementKey, player);
 }
 
 /* ---------------------------------------------------------
