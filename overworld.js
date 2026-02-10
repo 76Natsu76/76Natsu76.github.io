@@ -8,6 +8,7 @@ import { TILE_SIZE, TILEMAP, COLLISION_TILES, getTileAtPixel } from "./world-map
 import { getPlayerPosition, setPlayerPosition } from "./player-position.js";
 import { checkForEncounters } from "./encounter-check.js";
 import { checkForBuildingEntry } from "./building-check.js";
+import { checkForOverworldEncounter } from "./overworld-encounter.js";
 
 /****************************************************
  * TRAVEL COUNTDOWN UI
@@ -113,11 +114,9 @@ function canMoveTo(player, newX, newY) {
 /****************************************************
  * MOVEMENT HANDLER
  ****************************************************/
-document.addEventListener("keydown", e => {
-  const player = window.player;
-  if (!player) return;
 
-  if (isTraveling(player)) return; // movement locked during travel
+document.addEventListener("keydown", e => {
+  if (isTraveling(player)) return;
 
   const pos = getPlayerPosition(player);
   let newX = pos.x;
@@ -128,17 +127,14 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowLeft") newX -= TILE_SIZE;
   if (e.key === "ArrowRight") newX += TILE_SIZE;
 
-  // No movement key pressed
-  if (newX === pos.x && newY === pos.y) return;
-
-  // Collision check
   if (!canMoveTo(player, newX, newY)) return;
 
   setPlayerPosition(player, newX, newY);
   PlayerStorage.save(player.username, player);
 
   renderOverworld(player);
-  checkForEncounters(player);
+
+  checkForOverworldEncounter(player); // ← NEW
   checkForBuildingEntry(player);
 });
 
