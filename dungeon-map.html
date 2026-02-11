@@ -16,7 +16,7 @@
       border:1px solid #333;
       padding:20px;
       border-radius:10px;
-      max-width:500px;
+      max-width:600px;
       margin:0 auto;
     }
     .floor {
@@ -33,6 +33,21 @@
     .boss {
       color:#ff7777;
       font-weight:bold;
+    }
+    .mega {
+      color:#ff33aa;
+      font-weight:bold;
+    }
+    .labyrinth-room {
+      padding:8px;
+      margin:6px 0;
+      border:1px solid #333;
+      border-radius:6px;
+      background:#1a1d24;
+    }
+    .labyrinth-current {
+      border-left:4px solid #7fffd4;
+      background:#222832;
     }
     .btn {
       padding:10px 14px;
@@ -80,57 +95,132 @@
     }
 
     const dungeon = DUNGEONS[run.dungeonKey];
-    const isEndless = DungeonEngine.isEndless(run);
+    const isEndless = dungeon.type === "endless";
+    const isLabyrinth = dungeon.type === "labyrinth";
+    const isGreat = dungeon.type === "great_dungeon";
 
-    /* ============================================================
-       RENDER MAP
-    ============================================================ */
+    renderMap();
+
+    /************************************************************
+     * RENDER MAP
+     ************************************************************/
     function renderMap() {
+      if (isEndless) {
+        renderEndlessMap();
+        return;
+      }
+
+      if (isLabyrinth) {
+        renderLabyrinthMap();
+        return;
+      }
+
+      if (isGreat) {
+        renderGreatDungeonMap();
+        return;
+      }
+
+      renderNormalDungeonMap();
+    }
+
+    /************************************************************
+     * NORMAL DUNGEON MAP
+     ************************************************************/
+    function renderNormalDungeonMap() {
       let html = "";
 
-      if (isEndless) {
-        // Show last 10 floors + next 3
-        const start = Math.max(1, run.currentFloor - 10);
-        const end = run.currentFloor + 3;
+      for (let f = 1; f <= dungeon.floors; f++) {
+        const isBoss = dungeon.bossFloor ? f === dungeon.bossFloor : f === dungeon.floors;
 
-        for (let f = start; f <= end; f++) {
-          const isBoss =
-            f % dungeon.bossEvery === 0 ||
-            f % dungeon.megaBossEvery === 0;
-
-          html += `
-            <div class="floor ${f === run.currentFloor ? "current" : ""}">
-              <span>Floor ${f}</span>
-              <span class="${isBoss ? "boss" : ""}">
-                ${isBoss ? "Boss" : ""}
-              </span>
-            </div>
-          `;
-        }
-      } else {
-        // Normal dungeon
-        for (let i = 1; i <= dungeon.floors.length; i++) {
-          const isBoss = i === dungeon.floors.length;
-
-          html += `
-            <div class="floor ${i === run.currentFloor ? "current" : ""}">
-              <span>Floor ${i}</span>
-              <span class="${isBoss ? "boss" : ""}">
-                ${isBoss ? "Boss" : ""}
-              </span>
-            </div>
-          `;
-        }
+        html += `
+          <div class="floor ${f === run.currentFloor ? "current" : ""}">
+            <span>Floor ${f}</span>
+            <span class="${isBoss ? "boss" : ""}">
+              ${isBoss ? "Boss" : ""}
+            </span>
+          </div>
+        `;
       }
 
       mapBox.innerHTML = html;
     }
 
-    renderMap();
+    /************************************************************
+     * GREAT DUNGEON OF 100 FLOORS
+     ************************************************************/
+    function renderGreatDungeonMap() {
+      let html = "";
 
-    /* ============================================================
-       BUTTONS
-    ============================================================ */
+      for (let f = 1; f <= dungeon.floors; f++) {
+        const isBoss = f % dungeon.bossEvery === 0;
+
+        html += `
+          <div class="floor ${f === run.currentFloor ? "current" : ""}">
+            <span>Floor ${f}</span>
+            <span class="${isBoss ? "boss" : ""}">
+              ${isBoss ? "Boss Floor" : ""}
+            </span>
+          </div>
+        `;
+      }
+
+      mapBox.innerHTML = html;
+    }
+
+    /************************************************************
+     * ENDLESS ABYSS MAP
+     ************************************************************/
+    function renderEndlessMap() {
+      let html = "";
+
+      const start = Math.max(1, run.currentFloor - 10);
+      const end = run.currentFloor + 3;
+
+      for (let f = start; f <= end; f++) {
+        const isMega = dungeon.megaBossEvery && f % dungeon.megaBossEvery === 0;
+        const isBoss = dungeon.bossEvery && f % dungeon.bossEvery === 0;
+
+        html += `
+          <div class="floor ${f === run.currentFloor ? "current" : ""}">
+            <span>Floor ${f}</span>
+            <span class="${isMega ? "mega" : isBoss ? "boss" : ""}">
+              ${isMega ? "Mega Boss" : isBoss ? "Boss" : ""}
+            </span>
+          </div>
+        `;
+      }
+
+      mapBox.innerHTML = html;
+    }
+
+    /************************************************************
+     * LABYRINTH MAP (room graph)
+     ************************************************************/
+    function renderLabyrinthMap() {
+      let html = `<h3>Labyrinth Layout</h3>`;
+
+      // For now, show a simple linear list of rooms
+      // (You can replace this with a graph visualization later)
+      const totalRooms = dungeon.roomsPerFloor;
+
+      for (let r = 0; r < totalRooms; r++) {
+        const roomKey = `${run.currentFloor}-${r}`;
+        const isCurrent = run.roomIndex === r;
+
+        html += `
+          <div class="labyrinth-room ${isCurrent ? "labyrinth-current" : ""}">
+            Room ${r + 1}
+            ${isCurrent ? " (You are here)" : ""}
+          </div>
+        `;
+      }
+
+      mapBox.innerHTML = html;
+    }
+
+    /************************************************************
+     * BUTTONS
+     ************************************************************/
     window.returnToRun = () => {
       window.location.href = "dungeon-room.html";
     };
