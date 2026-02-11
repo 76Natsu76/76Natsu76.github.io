@@ -1,7 +1,4 @@
-/************************************************************
- * dungeon-engine.js — Canonical Dungeon Run Engine
- ************************************************************/
-
+// dungeon-engine.js
 import { DUNGEONS } from "./dungeons.js";
 import { DUNGEON_EVENTS } from "./dungeon-events.js";
 import { DUNGEON_LOOT_TABLES } from "./dungeon-loot-tables.js";
@@ -9,21 +6,17 @@ import { DUNGEON_LOOT_TABLES } from "./dungeon-loot-tables.js";
 import { rollLootTable } from "./loot-tables.js";
 import { resolveEnemy } from "./resolveEnemy.js";
 import { PlayerStorage } from "./player-storage.js";
+import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
 
 export const DungeonEngine = {
-  /************************************************************
-   * RUN LIFECYCLE
-   ************************************************************/
+  // --- RUN LIFECYCLE --- //
   createRun(player, dungeonKey) {
     const dungeon = DUNGEONS[dungeonKey];
-    if (!dungeon) {
-      throw new Error(`Unknown dungeon: ${dungeonKey}`);
-    }
 
     const run = {
       dungeonKey,
       currentFloor: 1,
-      state: "exploring", // exploring | boss | completed | failed
+      state: "exploring",
       modifiers: {
         ...(dungeon.dungeonModifiers || {})
       },
@@ -34,9 +27,8 @@ export const DungeonEngine = {
       completed: false,
       failed: false,
       startedAt: Date.now(),
-      progress: [], // optional: per-room logs, etc.
-      openedChests: {}, // roomKey -> true
-      clearedRooms: {}  // roomKey -> true
+      progress: [],
+      roomIndex: 0 // for labyrinth / room-based dungeons
     };
 
     if (dungeon.type === "endless") {
@@ -52,100 +44,64 @@ export const DungeonEngine = {
     return dungeon && dungeon.type === "endless";
   },
 
-  getCurrentFloorConfig(run) {
+  getCurrentFloor(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
     if (!dungeon || dungeon.type === "endless") return null;
-
-    // canonical: floors is a number, details live in floorsConfig
-    const floorIndex = run.currentFloor;
-    return (dungeon.floorsConfig && dungeon.floorsConfig[floorIndex]) || null;
+    // Old-style explicit floors array
+    if (Array.isArray(dungeon.floors)) {
+      return dungeon.floors[run.currentFloor - 1] || null;
+    }
+    // New-style numeric floors: generic floor config
+    return {
+      floorIndex: run.currentFloor,
+      encounterTable: dungeon.baseEncounterTable || [],
+      events: ["echo_shrine"],
+      lootTable: dungeon.baseLootTable || null
+    };
   },
 
-  /************************************************************
-   * ROOM GENERATION
-   ************************************************************/
+  // --- ROOM GENERATION --- //
   generateRoom(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
-    if (!dungeon) return null;
 
     if (dungeon.type === "endless") {
       return this.generateEndlessRoom(run);
     }
 
-    // normal / labyrinth / great_dungeon share this path
-    const floorConfig = this.getCurrentFloorConfig(run);
+    const floor = this.getCurrentFloor(run);
     const roll = Math.random();
 
-    // basic distribution: 60% combat, 20% event, 20% treasure
-    if (roll < 0.6 && floorConfig?.encounterTable) {
-      return {
-        type: "encounter",
-        enemies: floorConfig.encounterTable,
-        floorConfig
-      };
+    if (roll < 0.6) {
+      return { type: "encounter", enemies: floor.encounterTable };
     }
-
-    if (roll < 0.8 && floorConfig?.events?.length) {
-      return {
-        type: "event",
-        events: floorConfig.events,
-        floorConfig
-      };
+    if (roll < 0.8) {
+      return { type: "event", events: floor.events };
     }
-
-    return {
-      type: "treasure",
-      lootTable: floorConfig?.lootTable || null,
-      floorConfig
-    };
+    return { type: "treasure", lootTable: floor.lootTable };
   },
 
   generateEndlessRoom(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
     const floor = run.currentFloor;
 
-    // Boss cadence
-    if (dungeon.megaBossEvery && floor % dungeon.megaBossEvery === 0) {
+    if (floor % dungeon.megaBossEvery === 0) {
       return { type: "boss", tier: "mega" };
     }
-    if (dungeon.bossEvery && floor % dungeon.bossEvery === 0) {
+    if (floor % dungeon.bossEvery === 0) {
       return { type: "boss", tier: "mini" };
     }
 
     const roll = Math.random();
-
-    if (roll < 0.6 && dungeon.baseEncounterTable) {
-      return {
-        type: "encounter",
-        enemies: dungeon.baseEncounterTable
-      };
+    if (roll < 0.6) {
+      return { type: "encounter", enemies: dungeon.baseEncounterTable };
     }
-
     if (roll < 0.8) {
-      return {
-        type: "event",
-        events: ["rift_anomaly"]
-      };
+      return { type: "event", events: ["rift_anomaly"] };
     }
-
-    return {
-      type: "treasure",
-      lootTable: dungeon.baseLootTable || null
-    };
+    return { type: "treasure", lootTable: dungeon.baseLootTable };
   },
 
-  /************************************************************
-   * ENCOUNTER ENEMY RESOLUTION (MULTI-ENEMY)
-   ************************************************************/
-  /**
-   * Given a dungeon run and an "enemies" descriptor from generateRoom,
-   * build an array of resolved enemy instances.
-   *
-   * Supports:
-   * - array of enemy keys: ["goblin_scout", "goblin_scout", "goblin_shaman"]
-   * - array of objects: [{ key, tier, count }, ...]
-   * - single key or single object
-   */
+  // --- ENCOUNTER ENEMY RESOLUTION (MULTI-ENEMY) --- //
   buildEncounterEnemies(run, enemiesDescriptor) {
     const dungeon = DUNGEONS[run.dungeonKey];
     const regionKey = dungeon.regionKey || dungeon.region || "forest";
@@ -187,9 +143,7 @@ export const DungeonEngine = {
     return result;
   },
 
-  /************************************************************
-   * EVENTS
-   ************************************************************/
+  // --- EVENTS --- //
   resolveEvent(eventKey, player, run, logs) {
     const event = DUNGEON_EVENTS[eventKey];
     if (!event) return;
@@ -229,7 +183,7 @@ export const DungeonEngine = {
         logs.push(`You take ${effect.value} damage.`);
         break;
       case "modifier": {
-        const [key, delta] = String(effect.value).split("+");
+        const [key, delta] = effect.value.split("+");
         const amount = parseFloat(delta);
         run.modifiers[key] = (run.modifiers[key] || 0) + amount;
         logs.push(`Dungeon shifts: ${key} increased by ${amount}.`);
@@ -238,20 +192,10 @@ export const DungeonEngine = {
     }
   },
 
-  /************************************************************
-   * TREASURE
-   ************************************************************/
+  // --- TREASURE --- //
   resolveTreasure(lootTableKey, run, logs) {
-    if (!lootTableKey) {
-      logs.push("You find an empty, dust‑covered chest.");
-      return null;
-    }
-
     const table = DUNGEON_LOOT_TABLES[lootTableKey];
-    if (!table) {
-      logs.push("You find a strange chest, but its contents are undefined.");
-      return null;
-    }
+    if (!table) return null;
 
     let loot = rollLootTable(table);
     if (run.doubleLoot) {
@@ -266,24 +210,20 @@ export const DungeonEngine = {
     return loot;
   },
 
-  /************************************************************
-   * BOSS GENERATION
-   ************************************************************/
+  // --- BOSS --- //
   generateBoss(run, tierOverride = null) {
     const dungeon = DUNGEONS[run.dungeonKey];
-    if (!dungeon) return null;
 
-    const regionKey = dungeon.regionKey || dungeon.region || "forest";
-
-    // Endless-style boss
     if (dungeon.type === "endless") {
       const tier = tierOverride || run.nextBossTier || "mini";
       const key =
         tier === "mega" ? dungeon.megaBossEnemyKey : dungeon.bossEnemyKey;
 
-      if (!key) return null;
-
-      const enemy = resolveEnemy(key, regionKey, 1);
+      const enemy = resolveEnemy(
+        key,
+        dungeon.regionKey || dungeon.region || "forest",
+        1
+      );
       enemy.isDungeonBoss = true;
       enemy.dungeonKey = run.dungeonKey;
 
@@ -296,15 +236,9 @@ export const DungeonEngine = {
       return enemy;
     }
 
-    // Normal / labyrinth / great_dungeon boss
-    if (!dungeon.boss) {
-      // Some dungeons may rely on external boss logic; return null here.
-      return null;
-    }
-
     const enemy = resolveEnemy(
       dungeon.boss.enemyKey,
-      regionKey,
+      dungeon.regionKey || dungeon.region || "forest",
       dungeon.boss.tier || 1
     );
     enemy.isDungeonBoss = true;
@@ -317,32 +251,27 @@ export const DungeonEngine = {
     return enemy;
   },
 
-  /************************************************************
-   * FLOOR / DUNGEON PROGRESSION
-   ************************************************************/
+  // --- FLOOR / DUNGEON PROGRESSION --- //
   completeFloor(run) {
     const dungeon = DUNGEONS[run.dungeonKey];
-    if (!dungeon) return;
 
     if (dungeon.type === "endless") {
       run.currentFloor++;
-      this.updateEndlessScore(run);
+      run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
+      run.endlessScore = run.highestFloor;
       run.state = "exploring";
       return;
     }
 
     run.currentFloor++;
-
-    // For normal / labyrinth / great_dungeon, floors is a number
-    if (run.currentFloor > dungeon.floors) {
-      // Move to boss phase if dungeon has a boss, otherwise mark completed
-      if (dungeon.boss || dungeon.bossEvery) {
+    if (Array.isArray(dungeon.floors)) {
+      if (run.currentFloor > dungeon.floors.length) {
         run.state = "boss";
-      } else {
-        this.completeDungeon(run);
       }
     } else {
-      run.state = "exploring";
+      if (run.currentFloor > dungeon.floors) {
+        run.state = "boss";
+      }
     }
   },
 
@@ -356,17 +285,33 @@ export const DungeonEngine = {
     run.state = "failed";
   },
 
-  /************************************************************
-   * SCALING HELPERS
-   ************************************************************/
+  // Called when the dungeon is fully cleared and rewards should be granted
+  finalizeDungeon(player, run, chestLoot, username) {
+    const dungeon = DUNGEONS[run.dungeonKey];
+    const rewards = summarizeDungeonRewards(player, dungeon, chestLoot);
+
+    run.completed = true;
+    run.state = "completed";
+
+    player.lastCompletedDungeonRun = {
+      dungeonKey: run.dungeonKey,
+      xp: rewards.xp,
+      gold: rewards.gold,
+      items: rewards.items,
+      floorsCleared: run.currentFloor,
+      score: this.isEndless(run) ? run.endlessScore : null
+    };
+
+    player.activeDungeonRun = null;
+    PlayerStorage.save(username, player);
+  },
+
   applyEndlessScaling(enemy, run) {
     const dungeon = DUNGEONS[run.dungeonKey];
-    if (!dungeon || !dungeon.scaling) return enemy;
-
     const floor = run.currentFloor;
 
-    const hpMult = Math.pow(dungeon.scaling.enemyHP || 1, floor - 1);
-    const atkMult = Math.pow(dungeon.scaling.enemyATK || 1, floor - 1);
+    const hpMult = Math.pow(dungeon.scaling.enemyHP, floor - 1);
+    const atkMult = Math.pow(dungeon.scaling.enemyATK, floor - 1);
 
     if (typeof enemy.hp === "number") {
       enemy.hp = Math.floor(enemy.hp * hpMult);
@@ -383,8 +328,6 @@ export const DungeonEngine = {
   },
 
   applyScaling(enemy, mult) {
-    if (!mult || mult === 1) return enemy;
-
     if (typeof enemy.hp === "number") {
       enemy.hp = Math.floor(enemy.hp * mult);
       enemy.hpMax = Math.floor((enemy.hpMax || enemy.hp) * mult);
@@ -403,9 +346,6 @@ export const DungeonEngine = {
     run.endlessScore = run.highestFloor;
   },
 
-  /************************************************************
-   * PERSISTENCE
-   ************************************************************/
   saveRun(player, run, username) {
     player.activeDungeonRun = run;
     PlayerStorage.save(username, player);
