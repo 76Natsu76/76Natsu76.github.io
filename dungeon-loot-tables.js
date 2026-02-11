@@ -213,8 +213,8 @@ export const DUNGEON_LOOT_TABLES = {
    * MIMIC LOOT (universal)
    ************************************************************/
   mimic_loot: {
-    goldRange: [20, 60],
-    xpRange: [30, 80],
+    goldRange: [20, 130],
+    xpRange: [30, 90],
     items: [
       { itemKey: "mimic_tooth", weight: 10, min: 1, max: 1 },
       { itemKey: "sticky_resin", weight: 5, min: 1, max: 2 },
