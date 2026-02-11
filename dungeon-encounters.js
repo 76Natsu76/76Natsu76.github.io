@@ -7,7 +7,7 @@ import { resolveEnemy } from "./resolveEnemy.js";
 import { DungeonEngine } from "./dungeon-engine.js";
 
 /**
- * Generate a multi‑wave encounter for a dungeon room.
+ * Generate multi‑wave encounter for a dungeon room.
  * This is used for:
  *  - normal dungeon combat rooms
  *  - labyrinth combat rooms
