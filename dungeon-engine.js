@@ -73,20 +73,43 @@ function getCurrentFloor(run) {
 function generateRoom(run) {
   const dungeon = DUNGEONS[run.dungeonKey];
 
+  // Endless handled separately
   if (dungeon.type === "endless") {
-    return generateEndlessRoom(run);
+    return this.generateEndlessRoom(run);
   }
 
-  const floor = getCurrentFloor(run);
+  const floor = this.getCurrentFloor(run);
+
+  // --- Chest Room Logic ---
+  if (dungeon.chestRoomsPerFloor) {
+    const roomsPerFloor = dungeon.roomsPerFloor || 3;
+    const chestRooms = dungeon.chestRoomsPerFloor;
+
+    // Determine if this room index is a chest room
+    const roomIndex = run.roomIndex || 0;
+    const chestInterval = Math.floor(roomsPerFloor / chestRooms);
+
+    if (roomIndex % chestInterval === 0) {
+      // Boss floor chest override
+      if (dungeon.bossFloor && run.currentFloor === dungeon.bossFloor && dungeon.bossChest) {
+        return { type: "boss_chest", lootTable: dungeon.treasureLootTable };
+      }
+
+      // Mimic roll
+      const mimicChance = dungeon.mimicChance ?? 0.25;
+      if (Math.random() < mimicChance) {
+        return { type: "mimic", enemyKey: "mimic_monster" };
+      }
+
+      // Normal treasure chest
+      return { type: "treasure", lootTable: dungeon.treasureLootTable };
+    }
+  }
+
+  // --- Normal room logic ---
   const roll = Math.random();
-
-  if (roll < 0.6) {
-    // floor.encounterTable can describe multi-enemy packs
-    return { type: "encounter", enemies: floor.encounterTable };
-  }
-  if (roll < 0.8) {
-    return { type: "event", events: floor.events };
-  }
+  if (roll < 0.6) return { type: "encounter", enemies: floor.encounterTable };
+  if (roll < 0.8) return { type: "event", events: floor.events };
   return { type: "treasure", lootTable: floor.lootTable };
 }
 
