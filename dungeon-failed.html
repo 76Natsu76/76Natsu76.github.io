@@ -57,6 +57,7 @@
       "Logged in as: " + username;
 
     window.retry = () => {
+      // Clear only the active run
       player.activeDungeonRun = null;
       PlayerStorage.save(username, player);
       window.location.href = "dungeon-select.html";
