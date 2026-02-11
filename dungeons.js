@@ -245,6 +245,8 @@ export const DUNGEONS = {
     floors: 3,
     roomsPerFloor: 4,
     chestRoomsPerFloor: 1,
+    mimicChance: 0.25,
+    treasureLootTable: "generic_treasure_t1",
 
     baseTier: 1,
     maxTier: 3,
@@ -267,6 +269,8 @@ export const DUNGEONS = {
     floors: 1,
     roomsPerFloor: 20,
     chestRoomsPerFloor: 2,
+    mimicChance: 0.25,
+    treasureLootTable: "generic_treasure_t1",
 
     baseTier: 3,
     maxTier: 5,
@@ -289,6 +293,8 @@ export const DUNGEONS = {
     floors: 100,
     roomsPerFloor: 3,
     chestRoomsPerFloor: 1,
+    mimicChance: 0.25, // 25% chance a chest is a mimic
+    treasureLootTable: "generic_treasure_t1"
 
     bossEvery: 10,
     bossChest: true
