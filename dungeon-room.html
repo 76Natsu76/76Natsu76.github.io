@@ -54,15 +54,16 @@
     import { PlayerStorage } from "./player-storage.js";
     import { DungeonEngine } from "./dungeon-engine.js";
     import { DUNGEONS } from "./dungeons.js";
-  
+    import { generateDungeonEncounter } from "./dungeon-encounters.js";
+    import { resolveDungeonEvent, resolveDungeonChest } from "./dungeon-events.js";
+
     await requireSession();
     const { username } = window.syncState;
-  
+
     const player = PlayerStorage.load(username);
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
-  
-    // --- Load active dungeon run ---
+
     const run = player.activeDungeonRun;
 
     if (!run) {
@@ -70,15 +71,15 @@
         "<p>No active dungeon run found.</p>";
       throw new Error("No active dungeon run");
     }
-  
+
     const dungeon = DUNGEONS[run.dungeonKey];
-    const isEndless = DungeonEngine.isEndless(run);
-  
-    // --- Render dungeon header ---
+    const isEndless = dungeon.type === "endless";
+
+    // Determine floor label
     const floorLabel = isEndless
       ? `Floor ${run.currentFloor}`
-      : `Floor ${run.currentFloor} / ${dungeon.floors.length}`;
-  
+      : `Floor ${run.currentFloor} / ${dungeon.floors}`;
+
     document.getElementById("dungeonInfo").innerHTML = `
       <div class="room-box">
         <h2>${dungeon.name}</h2>
@@ -86,13 +87,15 @@
         <p>State: ${run.state}</p>
       </div>
     `;
-  
-    // --- Generate room based on state ---
+
+    /************************************************************
+     * ROOM GENERATION
+     ************************************************************/
     let room = null;
-  
+
     if (run.state === "exploring") {
       room = DungeonEngine.generateRoom(run);
-    } else if (run.state === "boss" && !isEndless) {
+    } else if (run.state === "boss") {
       room = { type: "boss" };
     } else if (run.state === "completed") {
       document.getElementById("roomContainer").innerHTML =
@@ -103,145 +106,168 @@
         "<p>Your dungeon run has failed.</p>";
       return;
     }
-  
+
     renderRoom(room);
-  
-    /* ============================================================
-       RENDER ROOM
-    ============================================================ */
+
+    /************************************************************
+     * RENDER ROOM
+     ************************************************************/
     function renderRoom(room) {
       const box = document.getElementById("roomContainer");
-  
+
+      /************************************************************
+       * ENCOUNTER ROOM (multi-wave)
+       ************************************************************/
       if (room.type === "encounter") {
         box.innerHTML = `
           <h3>Enemy Encounter</h3>
           <p>You sense danger ahead...</p>
           <button class="btn" id="fightBtn">Fight</button>
         `;
-  
+
         document.getElementById("fightBtn").onclick = () => {
           DungeonEngine.saveRun(player, run, username);
-  
-          const encounter = {
-            type: "dungeon",
+
+          const encounter = generateDungeonEncounter(run);
+
+          localStorage.setItem("current_encounter", JSON.stringify({
+            type: "dungeon_multiwave",
             dungeonKey: run.dungeonKey,
             floor: run.currentFloor,
-            enemies: room.enemies
-          };
-  
-          localStorage.setItem("current_encounter", JSON.stringify(encounter));
+            waves: encounter.waves,
+            totalWaves: encounter.totalWaves
+          }));
+
           window.location.href = "fight-interactive.html";
         };
-  
+
         return;
       }
-  
+
+      /************************************************************
+       * EVENT ROOM
+       ************************************************************/
       if (room.type === "event") {
         const eventKey =
           room.events[Math.floor(Math.random() * room.events.length)];
-  
+
         box.innerHTML = `
           <h3>Dungeon Event</h3>
           <p>An event unfolds: <strong>${eventKey}</strong></p>
           <button class="btn" id="eventBtn">Resolve Event</button>
         `;
-  
+
         document.getElementById("eventBtn").onclick = () => {
-          const logs = [];
-          DungeonEngine.resolveEvent(eventKey, player, run, logs);
-  
+          const result = resolveDungeonEvent(eventKey, player, run);
+
           PlayerStorage.save(username, player);
-  
+
           box.innerHTML = `
             <h3>Event Resolved</h3>
-            <p>${logs.join("<br>")}</p>
+            <p>${result.logs.join("<br>")}</p>
             <button class="btn" id="continueBtn">Continue</button>
           `;
-  
+
           document.getElementById("continueBtn").onclick = () => {
             DungeonEngine.completeFloor(run);
             DungeonEngine.saveRun(player, run, username);
             window.location.reload();
           };
         };
-  
+
         return;
       }
-  
+
+      /************************************************************
+       * TREASURE ROOM (with mimic chance)
+       ************************************************************/
       if (room.type === "treasure") {
+        const roomKey = `${run.currentFloor}-treasure`;
+
         box.innerHTML = `
           <h3>Treasure Room</h3>
           <p>You discover a treasure chest...</p>
           <button class="btn" id="lootBtn">Open Chest</button>
         `;
-  
+
         document.getElementById("lootBtn").onclick = () => {
-          const logs = [];
-          const loot = DungeonEngine.resolveTreasure(room.lootTable, run, logs);
-  
-          if (loot) {
-            player.gold = (player.gold || 0) + (loot.gold || 0);
-            player.xp = (player.xp || 0) + (loot.xp || 0);
-            player.inventory = player.inventory || [];
-            player.inventory.push(...(loot.items || []));
+          const result = resolveDungeonChest(player, run, roomKey);
+
+          // If mimic → start combat
+          if (result.type === "mimic") {
+            DungeonEngine.saveRun(player, run, username);
+
+            localStorage.setItem("current_encounter", JSON.stringify({
+              type: "dungeon_mimic",
+              dungeonKey: run.dungeonKey,
+              floor: run.currentFloor,
+              enemies: [result.enemy]
+            }));
+
+            window.location.href = "fight-interactive.html";
+            return;
           }
-  
+
+          // Treasure
+          if (result.loot) {
+            player.gold = (player.gold || 0) + (result.loot.gold || 0);
+            player.xp = (player.xp || 0) + (result.loot.xp || 0);
+            player.inventory = player.inventory || [];
+            player.inventory.push(...(result.loot.items || []));
+          }
+
           PlayerStorage.save(username, player);
-  
+
           box.innerHTML = `
             <h3>Treasure Found</h3>
-            <p>${logs.join("<br>")}</p>
+            <p>${result.logs.join("<br>")}</p>
             <button class="btn" id="continueBtn">Continue</button>
           `;
-  
+
           document.getElementById("continueBtn").onclick = () => {
             DungeonEngine.completeFloor(run);
             DungeonEngine.saveRun(player, run, username);
             window.location.reload();
           };
         };
-  
+
         return;
       }
-  
+
+      /************************************************************
+       * BOSS ROOM
+       ************************************************************/
       if (room.type === "boss") {
-        // For endless, remember tier
-        if (isEndless && room.tier) {
-          run.nextBossTier = room.tier;
-        }
-  
         box.innerHTML = `
           <h3>Boss Chamber</h3>
           <p>The final challenge awaits...</p>
           <button class="btn" id="bossBtn">Fight Boss</button>
         `;
-  
+
         document.getElementById("bossBtn").onclick = () => {
-          const encounter = {
+          DungeonEngine.saveRun(player, run, username);
+
+          localStorage.setItem("current_encounter", JSON.stringify({
             type: "dungeon_boss",
             dungeonKey: run.dungeonKey,
-            floor: run.currentFloor,
-            boss: true
-          };
-  
-          DungeonEngine.saveRun(player, run, username);
-  
-          localStorage.setItem("current_encounter", JSON.stringify(encounter));
+            floor: run.currentFloor
+          }));
+
           window.location.href = "fight-interactive.html";
         };
-  
+
         return;
       }
     }
-  
-    /* ============================================================
-       LEAVE DUNGEON
-    ============================================================ */
+
+    /************************************************************
+     * LEAVE DUNGEON
+     ************************************************************/
     function leaveDungeon() {
       PlayerStorage.save(username, player);
       window.location.href = "town.html";
     }
-    
+
     window.openMap = () => {
       window.location.href = "dungeon-map.html";
     };
