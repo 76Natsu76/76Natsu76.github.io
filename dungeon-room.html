@@ -258,6 +258,71 @@
 
         return;
       }
+      
+      /************************************************************
+       * MIMIC ROOM
+       ************************************************************/
+
+      if (room.type === "mimic") {
+        box.innerHTML = `
+          <h3>Mimic!</h3>
+          <p>The chest sprouts teeth and attacks!</p>
+          <button class="btn" id="fightMimicBtn">Fight</button>
+        `;
+      
+        document.getElementById("fightMimicBtn").onclick = () => {
+          DungeonEngine.saveRun(player, run, username);
+      
+          const encounter = {
+            type: "dungeon",
+            dungeonKey: run.dungeonKey,
+            floor: run.currentFloor,
+            enemies: [{ key: room.enemyKey }]
+          };
+      
+          localStorage.setItem("current_encounter", JSON.stringify(encounter));
+          window.location.href = "fight-interactive.html";
+        };
+        return;
+      }
+      
+    /************************************************************
+     * BOSS CHEST ROOM
+     ************************************************************/
+      
+      if (room.type === "boss_chest") {
+        box.innerHTML = `
+          <h3>Boss Treasure</h3>
+          <p>The guardian has fallen. A radiant chest awaits.</p>
+          <button class="btn" id="lootBossChestBtn">Open Chest</button>
+        `;
+      
+        document.getElementById("lootBossChestBtn").onclick = () => {
+          const logs = [];
+          const loot = DungeonEngine.resolveTreasure(room.lootTable, run, logs);
+      
+          if (loot) {
+            player.gold += loot.gold || 0;
+            player.xp += loot.xp || 0;
+            player.inventory.push(...(loot.items || []));
+          }
+      
+          PlayerStorage.save(username, player);
+      
+          box.innerHTML = `
+            <h3>Treasure Claimed</h3>
+            <p>${logs.join("<br>")}</p>
+            <button class="btn" id="continueBtn">Continue</button>
+          `;
+      
+          document.getElementById("continueBtn").onclick = () => {
+            DungeonEngine.completeFloor(run);
+            DungeonEngine.saveRun(player, run, username);
+            window.location.reload();
+          };
+        };
+        return;
+      }
     }
 
     /************************************************************
