@@ -49,25 +49,27 @@
     import { PlayerStorage } from "./player-storage.js";
     import { DUNGEONS } from "./dungeons.js";
     import { DungeonEngine } from "./dungeon-engine.js";
-  
+
     await requireSession();
     const { username } = window.syncState;
-  
+
     const player = PlayerStorage.load(username);
     document.getElementById("usernameDisplay").textContent =
       "Logged in as: " + username;
-  
+
     const container = document.getElementById("dungeonList");
     container.innerHTML = "";
-  
-    // --- Continue existing run card ---
+
+    /************************************************************
+     * CONTINUE EXISTING RUN
+     ************************************************************/
     if (player.activeDungeonRun) {
       const run = player.activeDungeonRun;
       const d = DUNGEONS[run.dungeonKey];
-  
+
       const div = document.createElement("div");
       div.className = "dungeon-card";
-  
+
       div.innerHTML = `
         <h2>Continue Run</h2>
         <p>Dungeon: ${d.name}</p>
@@ -75,75 +77,83 @@
         <button class="btn" onclick="continueRun()">Resume</button>
         <button class="btn" onclick="abandonRun()">Abandon Run</button>
       `;
-  
+
       container.appendChild(div);
     }
-  
-    // --- Dungeon list ---
+
+    /************************************************************
+     * DUNGEON LIST
+     ************************************************************/
     for (const key in DUNGEONS) {
       const d = DUNGEONS[key];
       const allowed = canEnter(player, d);
-  
+
       const div = document.createElement("div");
       div.className = "dungeon-card";
-  
-      const floorsLabel = d.type === "endless"
-        ? "∞"
-        : d.floors.length;
-  
-      const bossLabel = d.type === "endless"
-        ? "Endless"
-        : d.boss.enemyKey;
-  
+
+      // Floors label
+      let floorsLabel = "";
+      if (d.type === "endless") floorsLabel = "∞";
+      else floorsLabel = d.floors;
+
+      // Boss label
+      let bossLabel = "";
+      if (d.type === "endless") bossLabel = "Endless Bosses";
+      else if (d.type === "great_dungeon") bossLabel = `Boss every ${d.bossEvery} floors`;
+      else if (d.boss) bossLabel = d.boss.enemyKey;
+      else bossLabel = "None";
+
       div.innerHTML = `
         <h2>${d.name}</h2>
-        <p>Recommended Level: ${d.recommendedLevel}</p>
+        <p>Recommended Level: ${d.recommendedLevel ?? d.minLevel}</p>
         <p>Floors: ${floorsLabel}</p>
         <p>Boss: ${bossLabel}</p>
-  
+
         <button class="btn" data-key="${key}" ${allowed ? "" : "disabled"}>
           ${allowed ? "Start Run" : "Locked"}
         </button>
-  
+
         ${!allowed ? `<div class="locked-text">${explainRequirements(player, d)}</div>` : ""}
       `;
-  
+
       container.appendChild(div);
     }
-  
-    // Handle clicking a dungeon card button
+
+    /************************************************************
+     * CLICK HANDLER
+     ************************************************************/
     container.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-key]");
       if (!btn) return;
-  
+
       const dungeonKey = btn.getAttribute("data-key");
       const dungeon = DUNGEONS[dungeonKey];
-  
+
       if (!canEnter(player, dungeon)) {
         alert("You do not meet the entry requirements for this dungeon.");
         return;
       }
-  
+
       // Create run
       const run = DungeonEngine.createRun(player, dungeonKey);
-  
+
       // Save to player
       player.activeDungeonRun = run;
       PlayerStorage.save(username, player);
-  
+
       // Go to dungeon-room
       window.location.href = "dungeon-room.html";
     });
-  
-    /* ============================================================
-       ENTRY REQUIREMENT CHECKS
-    ============================================================ */
+
+    /************************************************************
+     * ENTRY REQUIREMENTS
+     ************************************************************/
     function canEnter(player, dungeon) {
       const req = dungeon.entryRequirements || {};
-  
+
       if (req.minLevel && player.level < req.minLevel) return false;
-  
-      if (req.requiredItems && req.requiredItems.length > 0) {
+
+      if (req.requiredItems?.length) {
         for (const item of req.requiredItems) {
           const hasItem = player.inventory?.some(i =>
             i.id === item || i.key === item
@@ -151,55 +161,55 @@
           if (!hasItem) return false;
         }
       }
-  
-      if (req.requiredFlags && req.requiredFlags.length > 0) {
+
+      if (req.requiredFlags?.length) {
         for (const flag of req.requiredFlags) {
           if (!player.flags || !player.flags[flag]) return false;
         }
       }
-  
+
       return true;
     }
-  
+
     function explainRequirements(player, dungeon) {
       const req = dungeon.entryRequirements || {};
       const parts = [];
-  
+
       if (req.minLevel && player.level < req.minLevel) {
         parts.push(`Requires level ${req.minLevel}`);
       }
-  
+
       if (req.requiredItems?.length) {
         parts.push(`Requires items: ${req.requiredItems.join(", ")}`);
       }
-  
+
       if (req.requiredFlags?.length) {
         parts.push(`Requires: ${req.requiredFlags.join(", ")}`);
       }
-  
+
       return parts.join(" • ");
     }
-  
-    // --- Continue / Abandon handlers ---
+
+    /************************************************************
+     * CONTINUE / ABANDON
+     ************************************************************/
     window.continueRun = () => {
       window.location.href = "dungeon-room.html";
     };
-  
+
     window.abandonRun = () => {
       if (!confirm("Are you sure you want to abandon your current run?")) return;
       player.activeDungeonRun = null;
       PlayerStorage.save(username, player);
       window.location.reload();
     };
-  
+
     function goBack() {
       window.location.href = "town.html";
     }
-  
-    // expose for inline onclick
+
     window.goBack = goBack;
   </script>
-  
 
 </body>
 </html>
