@@ -66,17 +66,42 @@
 
     const dungeon = DUNGEONS[run.dungeonKey];
 
-    const lootHtml = run.items.length
-      ? run.items.map(i => `<div class="loot-item">${i.name} x${i.quantity}</div>`).join("")
-      : "<p>No items found.</p>";
+    /* ============================================================
+       BUILD LOOT HTML
+    ============================================================ */
+    let lootHtml = "";
+
+    if (run.items && run.items.length > 0) {
+      lootHtml = run.items
+        .map(i => `<div class="loot-item">${i.itemKey} x${i.quantity ?? 1}</div>`)
+        .join("");
+    } else {
+      lootHtml = "<p>No items found.</p>";
+    }
+
+    /* ============================================================
+       ENDLESS MODE SPECIAL HANDLING
+    ============================================================ */
+    const isEndless = dungeon.type === "endless";
+    const scoreHtml = isEndless
+      ? `<p>Endless Score: <strong>${run.score}</strong></p>`
+      : "";
+
+    /* ============================================================
+       NORMAL DUNGEON REWARDS
+    ============================================================ */
+    const xpHtml = run.xp ? `<p>XP: <strong>${run.xp}</strong></p>` : "";
+    const goldHtml = run.gold ? `<p>Gold: <strong>${run.gold}</strong></p>` : "";
 
     summaryBox.innerHTML = `
       <h2>${dungeon.name}</h2>
       <p>You cleared the dungeon!</p>
 
+      ${scoreHtml}
+
       <h3>Rewards</h3>
-      <p>XP: <strong>${run.xp}</strong></p>
-      <p>Gold: <strong>${run.gold}</strong></p>
+      ${xpHtml}
+      ${goldHtml}
 
       <h3>Items</h3>
       ${lootHtml}
@@ -86,6 +111,9 @@
       <button class="btn" onclick="leaderboard()">View Leaderboard</button>
     `;
 
+    /* ============================================================
+       BUTTON HANDLERS
+    ============================================================ */
     window.runAgain = () => {
       player.activeDungeonRun = null;
       PlayerStorage.save(username, player);
