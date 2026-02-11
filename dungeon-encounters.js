@@ -1,124 +1,78 @@
-/************************************************************
- * dungeon-encounters.js — Multi‑Wave Dungeon Encounter Generator
- ************************************************************/
+// dungeon-encounters.js
+// Multi-wave dungeon encounters for dungeon runs
 
-import { DUNGEONS, getGreatDungeonLevelRange } from "./dungeons.js";
-import { resolveEnemy } from "./resolveEnemy.js";
+import { DUNGEONS } from "./dungeons.js";
 import { DungeonEngine } from "./dungeon-engine.js";
 
 /**
- * Generate multi‑wave encounter for a dungeon room.
- * This is used for:
- *  - normal dungeon combat rooms
- *  - labyrinth combat rooms
- *  - great dungeon floors
- *  - endless dungeon floors
+ * Generate a multi-wave encounter for the current dungeon floor.
+ *
+ * options:
+ *  - waves: number of waves (default 3)
+ *  - statStep: per-wave stat multiplier step (e.g. 0.15 => +15% per wave)
  */
-export function generateDungeonEncounter(run) {
+export function generateDungeonEncounter(run, options = {}) {
   const dungeon = DUNGEONS[run.dungeonKey];
-  const floor = run.currentFloor;
+  if (!dungeon) {
+    throw new Error(`Unknown dungeon key: ${run.dungeonKey}`);
+  }
 
-  // Determine wave count
-  const waves = getWaveCount(dungeon, floor);
+  const waves = Math.max(1, options.waves ?? 3);
+  const statStep = options.statStep ?? 0.15;
 
-  const waveList = [];
+  // Base enemy descriptor for this floor
+  let enemiesDescriptor = null;
+
+  if (dungeon.type === "endless") {
+    enemiesDescriptor = dungeon.baseEncounterTable;
+  } else {
+    const floor = DungeonEngine.getCurrentFloor(run);
+    enemiesDescriptor = floor?.encounterTable || [];
+  }
+
+  const resultWaves = [];
+
   for (let i = 0; i < waves; i++) {
-    const waveEnemies = generateWaveEnemies(run, i);
-    waveList.push({
+    const baseEnemies = DungeonEngine.buildEncounterEnemies(run, enemiesDescriptor);
+    const scaledEnemies = applyWaveScaling(baseEnemies, i, statStep);
+
+    resultWaves.push({
       waveIndex: i,
-      enemies: waveEnemies
+      waveNumber: i + 1,
+      enemies: scaledEnemies,
+      statMult: 1 + statStep * i
     });
   }
 
   return {
-    type: "multiwave",
-    waves: waveList,
+    waves: resultWaves,
     totalWaves: waves
   };
 }
 
-/************************************************************
- * WAVE COUNT LOGIC
- ************************************************************/
-function getWaveCount(dungeon, floor) {
-  if (dungeon.type === "endless") {
-    // Endless: 2 waves normally, 3 waves on boss floors
-    if (floor % dungeon.megaBossEvery === 0) return 4;
-    if (floor % dungeon.bossEvery === 0) return 3;
-    return 2;
-  }
+/**
+ * Scale enemies for a given wave.
+ */
+function applyWaveScaling(enemies, waveIndex, statStep) {
+  const statMult = 1 + statStep * waveIndex;
 
-  if (dungeon.type === "great_dungeon") {
-    // Great Dungeon: 2 waves normally, 3 waves on boss floors
-    if (floor % dungeon.bossEvery === 0) return 3;
-    return 2;
-  }
+  return enemies.map(e => {
+    const hpMaxBase = e.hpMax ?? e.hp ?? 1;
+    const hpMax = Math.round(hpMaxBase * statMult);
+    const hp = Math.min(hpMax, Math.round((e.hp ?? hpMaxBase) * statMult));
+    const atk = typeof e.atk === "number" ? Math.round(e.atk * statMult) : e.atk;
+    const def = typeof e.def === "number" ? Math.round(e.def * statMult) : e.def;
 
-  // Normal / labyrinth: always 2 waves
-  return 2;
-}
-
-/************************************************************
- * WAVE ENEMY GENERATION
- ************************************************************/
-function generateWaveEnemies(run, waveIndex) {
-  const dungeon = DUNGEONS[run.dungeonKey];
-  const floor = run.currentFloor;
-
-  // Determine enemy source
-  let enemyKeys = [];
-
-  if (dungeon.type === "endless") {
-    enemyKeys = dungeon.baseEncounterTable;
-  } else if (dungeon.type === "great_dungeon") {
-    // Great Dungeon uses level scaling
-    const { min, max } = getGreatDungeonLevelRange(floor);
-    enemyKeys = pickEnemiesByLevelRange(min, max);
-  } else {
-    // Normal / labyrinth
-    const floorConfig = dungeon.floorsConfig?.[floor];
-    enemyKeys = floorConfig?.encounterTable || [];
-  }
-
-  // Convert enemy keys → resolved enemy objects
-  const enemies = [];
-  for (const key of enemyKeys) {
-    const enemy = resolveEnemy(key, dungeon.regionKey || dungeon.region || "dungeon", 1);
-
-    // Apply dungeon scaling
-    if (dungeon.type === "endless") {
-      DungeonEngine.applyEndlessScaling(enemy, run);
-    } else if (run.enemyScaling && run.enemyScaling !== 1.0) {
-      DungeonEngine.applyScaling(enemy, run.enemyScaling);
-    }
-
-    // Apply wave scaling (each wave gets stronger)
-    const waveMult = 1 + waveIndex * 0.15;
-    enemy.hp = Math.floor(enemy.hp * waveMult);
-    enemy.hpMax = Math.floor(enemy.hpMax * waveMult);
-    enemy.atk = Math.floor(enemy.atk * waveMult);
-
-    enemy.isDungeonEnemy = true;
-    enemy.waveIndex = waveIndex;
-
-    enemies.push(enemy);
-  }
-
-  return enemies;
-}
-
-/************************************************************
- * GREAT DUNGEON ENEMY PICKER
- ************************************************************/
-function pickEnemiesByLevelRange(minLevel, maxLevel) {
-  // Placeholder: you will plug in your tier/level enemy registry
-  // For now, return generic enemies based on level band
-  if (maxLevel <= 20) return ["slime", "goblin_scout"];
-  if (maxLevel <= 50) return ["orc_raider", "shadow_wolf"];
-  if (maxLevel <= 100) return ["voidling", "abyss_shade"];
-  if (maxLevel <= 300) return ["astral_chimera", "rift_beast"];
-  if (maxLevel <= 600) return ["mana_crest_riftlord", "nullborn_ravager"];
-  if (maxLevel <= 1000) return ["depth_crowned_cataclysm", "abyssal_warden"];
-
-  return ["slime"];
+    return {
+      ...e,
+      hp,
+      hpMax,
+      atk,
+      def,
+      dungeonScaling: {
+        waveIndex,
+        statMult
+      }
+    };
+  });
 }
