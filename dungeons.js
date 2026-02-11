@@ -189,5 +189,61 @@ export const DUNGEONS = {
     },
     // No fixed rewards; score is the reward
     rewards: null
+  },
+  
+  greenhaven_catacombs: {
+    id: "greenhaven_catacombs",
+    name: "Greenhaven Catacombs",
+    type: "normal",
+    minLevel: 5,
+    maxLevel: 15,
+    floors: 3,
+    roomsPerFloor: 4,
+    baseTier: 1,
+    maxTier: 3,
+    chestRoomsPerFloor: 1, // 1 room per floor has a chest (treasure or mimic)
+    bossFloor: 3,
+    bossChest: true
+  },
+
+  twisted_labyrinth: {
+    id: "twisted_labyrinth",
+    name: "Twisted Labyrinth",
+    type: "labyrinth",
+    minLevel: 20,
+    maxLevel: 40,
+    floors: 1,              // one huge floor
+    roomsPerFloor: 20,      // labyrinth graph
+    baseTier: 3,
+    maxTier: 5,
+    chestRoomsPerFloor: 2,
+    bossRoomId: "center_chamber",
+    bossChest: true
+  },
+
+  great_dungeon_100: {
+    id: "great_dungeon_100",
+    name: "Great Dungeon of 100 Floors",
+    type: "great_dungeon",
+    minLevel: 1,
+    maxLevel: 1000,
+    floors: 100,
+    roomsPerFloor: 3,       // small floors, focused on progression
+    chestRoomsPerFloor: 1,
+    bossEvery: 10,          // boss on floors 10, 20, ..., 100
+    bossChest: true
   }
 };
+
+export function getGreatDungeonLevelRange(floor) {
+  if (floor <= 10) return { min: 1, max: 10 };
+  if (floor <= 20) return { min: 10, max: 20 };
+  if (floor <= 30) return { min: 20, max: 40 };
+  if (floor <= 40) return { min: 40, max: 80 };
+  if (floor <= 50) return { min: 80, max: 160 };
+  if (floor <= 60) return { min: 160, max: 240 };
+  if (floor <= 70) return { min: 240, max: 360 };
+  if (floor <= 80) return { min: 360, max: 540 };
+  if (floor <= 90) return { min: 540, max: 800 };
+  return { min: 800, max: 1000 };
+}
