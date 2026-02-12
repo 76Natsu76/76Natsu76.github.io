@@ -294,10 +294,29 @@ export const DUNGEONS = {
     roomsPerFloor: 3,
     chestRoomsPerFloor: 1,
     mimicChance: 0.25, // 25% chance a chest is a mimic
-    treasureLootTable: "generic_treasure_t1"
+    treasureLootTable: "generic_treasure_t1",
 
     bossEvery: 10,
     bossChest: true
+  },
+
+  LABYRINTH_OF_ECHOES: {
+    key: "LABYRINTH_OF_ECHOES",
+    name: "Labyrinth of Echoes",
+    type: "labyrinth",
+    regionKey: "forest",
+    recommendedLevel: 8,
+    entryRequirements: { minLevel: 6 },
+    // how big / dense the graph is
+    labyrinthConfig: {
+      roomCount: 24,
+      minDegree: 1,
+      maxDegree: 3,
+      startGuaranteedTreasure: true,
+      bossAtDepth: 4
+    },
+    // optional: global modifiers
+    modifiers: ["thick_fog"]
   }
 };
 
