@@ -11,6 +11,12 @@ import {
 import { computeHitData, computeFinalDamage } from "./ability-resolver.js";
 import { FAMILY_SYNERGIES } from "./family-synergies.js";
 import { World } from "./world.js";
+import {
+  ANOMALIES,
+  MIGRATIONS,
+  GLOBAL_MODIFIERS,
+  ENVIRONMENT_INTERACTIONS
+} from "./environment-taxonomy.js";
 
 function applyRegionCombatModifiers(player, enemies, context, logs) {
   const region = World.getRegion(context.regionKey);
@@ -236,6 +242,112 @@ function debugEnvironment(context, logs) {
 }
 
 /****************************************************
+ * ENVIRONMENTAL HOOK UPGRADE CONTEXT
+ ****************************************************/
+
+export function applyPhaseDModifiers(context, player, enemy, logs) {
+  // ANOMALY EFFECTS
+  if (context.anomalyKey) {
+    const anomaly = ANOMALIES[context.anomalyKey];
+    if (anomaly?.tags?.includes("fire")) {
+      player.fireDamageMult = (player.fireDamageMult || 1) * 1.10;
+      logs.push("🔥 The Fire Rift intensifies fire damage.");
+    }
+    if (anomaly?.tags?.includes("frost")) {
+      enemy.speed = Math.max(1, Math.floor(enemy.speed * 0.9));
+      logs.push("❄ Frost Bloom slows enemy movement.");
+    }
+    if (anomaly?.tags?.includes("void")) {
+      enemy.corruptionChance = (enemy.corruptionChance || 0) + 0.05;
+      logs.push("🜄 Void Tear increases corruption chance.");
+    }
+  }
+
+  // MIGRATION EFFECTS
+  if (context.migrationKey) {
+    const mig = MIGRATIONS[context.migrationKey];
+    if (mig?.family === enemy.family) {
+      enemy.atk = Math.round(enemy.atk * 1.10);
+      logs.push(`🐾 Migration surge empowers ${enemy.family} enemies.`);
+    }
+  }
+
+  // GLOBAL MODIFIER EFFECTS
+  if (context.globalModifierKey) {
+    const gm = GLOBAL_MODIFIERS[context.globalModifierKey];
+
+    if (gm?.tags?.includes("crit")) {
+      player.critChance = (player.critChance || 0.05) + 0.05;
+      logs.push("🌕 Blood Moon increases your critical strike chance.");
+    }
+
+    if (gm?.tags?.includes("winter")) {
+      enemy.speed = Math.max(1, Math.floor(enemy.speed * 0.85));
+      logs.push("❄ Deepwinter slows enemy movement.");
+    }
+
+    if (gm?.tags?.includes("nature")) {
+      player.healingMult = (player.healingMult || 1) * 1.15;
+      logs.push("🌿 Verdant Bloom enhances healing.");
+    }
+  }
+}
+
+export function applyEnvironmentalSynergies(context, player, enemy, logs) {
+  const w = context.weatherKey;
+  const a = context.anomalyKey;
+  const g = context.globalModifierKey;
+
+  // Storm + Storm Node
+  if (w === "thunderstorm" && a === "storm_node") {
+    player.lightningChainChance = (player.lightningChainChance || 0) + 0.15;
+    logs.push("⚡ Storm Node amplifies the thunderstorm — lightning chains more often!");
+  }
+
+  // Blizzard + Frost Bloom
+  if (w === "blizzard" && a === "frost_bloom") {
+    enemy.speed = Math.max(1, Math.floor(enemy.speed * 0.8));
+    logs.push("❄ Blizzard + Frost Bloom create extreme frostbite conditions.");
+  }
+
+  // Beast Tide + Beast Migration
+  if (context.crisis?.includes("beast") && context.migrationKey?.includes("beast")) {
+    enemy.atk = Math.round(enemy.atk * 1.15);
+    logs.push("🐺 Beast Tide + Migration cause feral aggression!");
+  }
+
+  // Blood Moon + Astral Drizzle
+  if (g === "blood_moon" && w === "astral_drizzle") {
+    player.astralDamageMult = (player.astralDamageMult || 1) * 1.20;
+    logs.push("🌕✨ Blood Moon resonates with Astral Drizzle — astral power surges!");
+  }
+}
+
+export function tickEnvironmentalEffects(context, player, enemy, logs) {
+  // Void Tear corruption tick
+  if (context.anomalyKey === "void_tear") {
+    if (Math.random() < 0.10) {
+      player.hpCurrent = Math.max(0, player.hpCurrent - 2);
+      logs.push("🜄 Void corruption gnaws at your life.");
+    }
+  }
+
+  // Stampede hazard from migrations
+  if (context.migrationKey && Math.random() < 0.05) {
+    player.hpCurrent = Math.max(0, player.hpCurrent - 3);
+    logs.push("🐾 A stampede hazard tramples you!");
+  }
+
+  // Deepwinter frostbite tick
+  if (context.globalModifierKey === "deepwinter") {
+    if (Math.random() < 0.10) {
+      player.speed = Math.max(1, player.speed - 1);
+      logs.push("❄ Deepwinter frostbite slows your movements.");
+    }
+  }
+}
+
+/****************************************************
  * CORE CONTEXT
  ****************************************************/
 
@@ -360,6 +472,22 @@ export function buildCombatContext(
   };
 }
 
+export function logEnvironmentIntro(context, logs) {
+  if (context.anomalyKey) {
+    const a = ANOMALIES[context.anomalyKey];
+    if (a) logs.push(`⚡ <em>Anomaly detected:</em> ${a.label} — ${a.description}`);
+  }
+
+  if (context.migrationKey) {
+    const m = MIGRATIONS[context.migrationKey];
+    if (m) logs.push(`🐾 <em>Migration event:</em> ${m.label} — ${m.description}`);
+  }
+
+  if (context.globalModifierKey) {
+    const g = GLOBAL_MODIFIERS[context.globalModifierKey];
+    if (g) logs.push(`🌍 <em>Global condition:</em> ${g.label} — ${g.description}`);
+  }
+}
 
 function assignPlayerPosition(player, context) {
   if (context.mode === "solo") {
@@ -1304,6 +1432,7 @@ function describeEncounterModifiers(context, logs) {
 
 export function runCombatRound(player, enemyOrEnemies, context, playerAction, logs) {
   logs = logs || [];
+  logEnvironmentIntro(context, logs);
 
   const enemies = normalizeEnemies(enemyOrEnemies);
 
