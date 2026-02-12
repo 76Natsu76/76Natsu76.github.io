@@ -10,7 +10,55 @@ import {
 } from "./weatherTable.js";
 import { computeHitData, computeFinalDamage } from "./ability-resolver.js";
 import { FAMILY_SYNERGIES } from "./family-synergies.js";
+import { World } from "./world.js";
 
+function applyRegionCombatModifiers(player, enemies, context, logs) {
+  const region = World.getRegion(context.regionKey);
+  if (!region || !region.combatModifiers) return;
+
+  const mods = region.combatModifiers;
+
+  // Player modifiers
+  if (mods.playerATKMult) {
+    player.atk = Math.floor(player.atk * mods.playerATKMult);
+  }
+  if (mods.playerDEFMult) {
+    player.def = Math.floor(player.def * mods.playerDEFMult);
+  }
+
+  // Enemy modifiers
+  enemies.forEach(e => {
+    if (!e) return;
+    if (mods.enemyATKMult) {
+      e.atk = Math.floor(e.atk * mods.enemyATKMult);
+    }
+    if (mods.enemyDEFMult) {
+      e.def = Math.floor(e.def * mods.enemyDEFMult);
+    }
+
+    // Elemental bias
+    if (mods.elementBias) {
+      e.environmentalModifiers = e.environmentalModifiers || {};
+      e.environmentalModifiers.elementalBias = {
+        ...(e.environmentalModifiers.elementalBias || {}),
+        ...mods.elementBias
+      };
+    }
+
+    // Special rules (e.g., voidPressure, reducedHealing)
+    if (mods.specialRules) {
+      e.environmentalModifiers = e.environmentalModifiers || {};
+      e.environmentalModifiers.specialRules = {
+        ...(e.environmentalModifiers.specialRules || {}),
+        ...mods.specialRules
+      };
+    }
+  });
+
+  if (logs) {
+    logs.push(`Regional modifiers applied for ${region.name}.`);
+  }
+}
 
 const DEBUG_ENVIRONMENT = false; // set to true when debugging
 if (DEBUG_ENVIRONMENT && context.enemy?.environmentalModifiers) {
@@ -1097,6 +1145,7 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   // Ensure positions are assigned
   assignPlayerPosition(player, context);
   assignEnemyPositions(enemies, context);
+  applyRegionCombatModifiers(player, enemies, context, logs);
 
   tickStatusEffects(player, context, logs);
   enemies.forEach(e => tickStatusEffects(e, context, logs));
