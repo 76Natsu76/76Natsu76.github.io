@@ -1,58 +1,154 @@
-// overworld-encounter.js
+// overworld-encounter.js — Phase 4 Overworld Encounter Engine
 
-import { REGION_ENCOUNTER_TABLES } from "./region-encounter-tables.js";
+import { WORLD_DATA } from "./world-data.js";
+import { getWorldState } from "./world-state.js";
 import { getRegionAtPixel } from "./world-map-data.js";
-import { startEncounter } from "./encounter-engine.js";
-import { chooseRarityWeighted } from "./utils-weighted.js"; // you already have this
-import { pickEnemyFromTierBands } from "./encounter-generator.js"; // you already have this
+import { seededRNG } from "./rng.js";
+import { generateRegionEncounter } from "./region-encounters.js";
+import { WeatherEngine } from "./weather-engine.js";
+import { PlayerStorage } from "./player-storage.js";
 
-// Map TILE_REGION → subregion keys
-const REGION_TO_SUBREGION = {
-  forest: "forest-edge",
-  deep_forest: "deep-forest",
-  plains: "plains-field",
-  swamp: "swamp-marsh",
-  mountain: "mountain-pass",
-  frostlands: "frost-edge",
-  desert: "desert-dunes",
-  capital_city: null // safe zone
-};
+// EncounterEngine.generate() is used for region-info → fight
+import { EncounterEngine } from "./encounters.js";
 
+// --- Encounter chance tuning ---
+const BASE_ENCOUNTER_CHANCE = 0.02; // 2% per tile step
+
+// --- Seed & Relic Modifiers ---
+function getSeedAndRelicEncounterMods(player) {
+  const mods = {
+    encounterRateMult: 1.0,
+    rareSpawnMult: 1.0,
+    chaosChance: 0.0,
+    blessedBonus: false,
+    cursedBonus: false,
+    lootBonus: false,
+    chaosBonus: false,
+    bossrushBonus: false
+  };
+
+  const meta = player.seedMeta || {};
+  const relics = player.relics || [];
+
+  if (meta.blessedClears > 0) {
+    mods.encounterRateMult *= 0.9; // safer overworld
+    mods.blessedBonus = true;
+  }
+  if (meta.cursedClears > 0) {
+    mods.encounterRateMult *= 1.2;
+    mods.rareSpawnMult *= 1.2;
+    mods.cursedBonus = true;
+  }
+  if (meta.lootClears > 0) {
+    mods.rareSpawnMult *= 1.3;
+    mods.lootBonus = true;
+  }
+  if (meta.chaosClears > 0) {
+    mods.chaosChance += 0.15;
+    mods.chaosBonus = true;
+  }
+  if (meta.bossrushClears > 0) {
+    mods.rareSpawnMult *= 1.15;
+    mods.bossrushBonus = true;
+  }
+
+  // Relics
+  if (relics.includes("chaos_orb")) mods.chaosChance += 0.10;
+  if (relics.includes("golden_idol")) mods.rareSpawnMult *= 1.25;
+  if (relics.includes("cursed_crown")) mods.encounterRateMult *= 1.15;
+
+  return mods;
+}
+
+// --- Main Overworld Encounter Check ---
 export function checkForOverworldEncounter(player) {
   const pos = player.position;
-  const region = getRegionAtPixel(pos.x, pos.y);
+  const regionKey = getRegionAtPixel(pos.x, pos.y);
+  if (!regionKey) return;
 
+  const region = WORLD_DATA.regions[regionKey];
   if (!region) return;
 
-  const subregion = REGION_TO_SUBREGION[region];
-  if (!subregion) return; // safe zone or undefined region
+  const worldState = getWorldState();
+  const regionState = worldState.regions[regionKey] || {};
 
-  const table = REGION_ENCOUNTER_TABLES[subregion];
-  if (!table) return;
+  // Safe zones (towns, capitals)
+  if (region.safeZone) return;
 
-  // 2% encounter chance per tile step
-  if (Math.random() > 0.02) return;
+  // Seed & relic modifiers
+  const metaMods = getSeedAndRelicEncounterMods(player);
 
-  // Choose rarity using your existing rarity weights
-  const rarity = chooseRarityWeighted({
-    common: 70,
-    uncommon: 20,
-    rare: 9,
-    boss: 1
-  });
+  // Region encounter rate
+  const encounterRate =
+    BASE_ENCOUNTER_CHANCE *
+    region.encounterRateMult *
+    metaMods.encounterRateMult;
 
-  const tierBands = table[rarity]?.tiers;
-  if (!tierBands) return;
+  if (Math.random() > encounterRate) return;
 
-  // Use your existing tier-based enemy picker
-  const enemyKey = pickEnemyFromTierBands(subregion, rarity, tierBands);
-  if (!enemyKey) return;
+  // Weather
+  const weatherKey =
+    regionState.weather ||
+    WeatherEngine.rollWeather(regionKey);
 
-  startEncounter({
+  // Crisis modifier
+  const crisis = regionState.crisis || null;
+  const crisisMult = crisis ? 1.25 : 1.0;
+
+  // Rare spawn chance
+  const rareMult =
+    region.rareSpawnMult *
+    metaMods.rareSpawnMult *
+    crisisMult;
+
+  // RNG
+  const rng = seededRNG(regionKey + Date.now());
+
+  // Generate base encounter (family + rarity)
+  const base = generateRegionEncounter(regionKey, rng());
+
+  // Chaos mutation?
+  let chaosMutated = false;
+  if (rng() < metaMods.chaosChance) {
+    chaosMutated = true;
+  }
+
+  // Rare spawn upgrade?
+  let rarity = base.rarity;
+  if (rng() < rareMult * 0.01) {
+    rarity = "rare";
+  }
+
+  // Build encounter object
+  const encounter = {
     type: "overworld",
-    region,
-    subregion,
+    region: regionKey,
+    biome: region.biome,
+    weather: weatherKey,
+    crisis,
+    danger: regionState.dangerLevel ?? 1.0,
     rarity,
-    enemyKey
-  });
+    family: base.family,
+    chaosMutated,
+    modifiers: []
+  };
+
+  // Seed & relic modifiers → encounter.modifiers
+  if (metaMods.blessedBonus) encounter.modifiers.push("blessed_world");
+  if (metaMods.cursedBonus) encounter.modifiers.push("cursed_world");
+  if (metaMods.lootBonus) encounter.modifiers.push("loot_world");
+  if (metaMods.chaosBonus) encounter.modifiers.push("chaos_world");
+  if (metaMods.bossrushBonus) encounter.modifiers.push("bossrush_world");
+
+  // Relics
+  if (player.relics?.includes("chaos_orb")) encounter.modifiers.push("chaos_flux");
+  if (player.relics?.includes("golden_idol")) encounter.modifiers.push("treasure_magnet");
+  if (player.relics?.includes("cursed_crown")) encounter.modifiers.push("cursed_pressure");
+  if (player.relics?.includes("blessed_feather")) encounter.modifiers.push("healing_winds");
+
+  // Save encounter → region-encounter.html
+  sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
+
+  // Redirect to encounter preview
+  window.location.href = "region-encounter.html";
 }
