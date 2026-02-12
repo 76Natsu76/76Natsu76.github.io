@@ -236,6 +236,14 @@ function resolveTreasure(lootTableKey, run, logs) {
   if (!table) return null;
 
   let loot = rollLootTable(table);
+  if (run.activeModifiers?.includes("double_loot")) {
+    logs.push("Modifier active: Double Loot!");
+    const extra = rollLootTable(table);
+    loot.gold += extra.gold;
+    loot.xp += extra.xp;
+    loot.items.push(...extra.items);
+  }
+
   if (run.doubleLoot) {
     const extra = rollLootTable(table);
     loot.gold += extra.gold;
