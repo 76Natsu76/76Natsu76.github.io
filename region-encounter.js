@@ -1,44 +1,11 @@
 import { requireSession } from "./session-guard.js";
 import { PlayerStorage } from "./player-storage.js";
 import { WORLD_DATA } from "./world-data.js";
-import { getWorldState } from "./world-state.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { BIOMES } from "./biomes.js";
-import { EncounterEngine } from "./encounters.js";
 
-// --- Seed & Relic Overlays ---
-function buildSeedAndRelicOverlays(player) {
-  const overlays = [];
-  const meta = player.seedMeta || {};
-  const relics = player.relics || [];
-
-  if (meta.blessedClears > 0) overlays.push(`<span class="global-overlay-tag">✨ Blessed Aura</span>`);
-  if (meta.cursedClears > 0) overlays.push(`<span class="global-overlay-tag">🜂 Cursed Influence</span>`);
-  if (meta.lootClears > 0) overlays.push(`<span class="global-overlay-tag">💰 Treasure Surge</span>`);
-  if (meta.chaosClears > 0) overlays.push(`<span class="global-overlay-tag">🌀 Chaotic Distortion</span>`);
-  if (meta.bossrushClears > 0) overlays.push(`<span class="global-overlay-tag">⚔️ Boss Resonance</span>`);
-
-  if (relics.includes("chaos_orb")) overlays.push(`<span class="global-overlay-tag">🌀 Chaotic Flux</span>`);
-  if (relics.includes("bossheart")) overlays.push(`<span class="global-overlay-tag">❤️ Boss Empowerment</span>`);
-  if (relics.includes("blessed_feather")) overlays.push(`<span class="global-overlay-tag">✨ Healing Winds</span>`);
-  if (relics.includes("cursed_crown")) overlays.push(`<span class="global-overlay-tag">🜂 Cursed Pressure</span>`);
-  if (relics.includes("golden_idol")) overlays.push(`<span class="global-overlay-tag">💰 Treasure Magnet</span>`);
-
-  return overlays.join(" ");
-}
-
-// --- Weather Icons ---
-function weatherKeyToIconAndLabel(key) {
-  switch (key) {
-    case "clear": return { icon: "☀️", label: "Clear" };
-    case "rain": return { icon: "🌧️", label: "Rain" };
-    case "storm": return { icon: "🌩️", label: "Storm" };
-    case "fog": return { icon: "🌫️", label: "Fog" };
-    case "heatwave": return { icon: "🔥", label: "Heatwave" };
-    case "void_storm": return { icon: "🌀", label: "Void Storm" };
-    case "arcane_winds": return { icon: "✨", label: "Arcane Winds" };
-    default: return { icon: "☁️", label: key };
-  }
+function tag(label, cls="") {
+  return `<span class="modifier-tag ${cls}">${label}</span>`;
 }
 
 async function init() {
@@ -57,26 +24,32 @@ async function init() {
   }
 
   const encounter = JSON.parse(encounterRaw);
-  const regionKey = encounter.region;
-  const region = WORLD_DATA.regions[regionKey];
-  const worldState = getWorldState();
-  const regionState = worldState.regions[regionKey] || {};
-
-  renderEncounter(player, encounter, region, regionState);
+  renderEncounter(player, encounter);
 }
 
 init().catch(err => console.error(err));
 
-function renderEncounter(player, encounter, region, regionState) {
+function renderEncounter(player, encounter) {
   const container = document.getElementById("encounterContainer");
 
-  const biomeKey = REGION_TO_BIOME[region.key] || region.biome;
+  const region = WORLD_DATA.regions[encounter.region];
+  const biomeKey = REGION_TO_BIOME[encounter.region] || region.biome;
   const biome = BIOMES[biomeKey];
 
-  const weatherKey = regionState.weather || region.weatherPool?.[0] || "clear";
-  const { icon: weatherIcon, label: weatherLabel } = weatherKeyToIconAndLabel(weatherKey);
+  // Build modifier tags
+  const modTags = encounter.modifiers.map(m => {
+    if (m.startsWith("crisis_")) return tag(m.replace("crisis_", "Crisis: "), "crisis-tag");
+    if (m.startsWith("storm_") || m.startsWith("weather_front")) return tag(m.replace(/_/g, " "), "weather-tag");
+    if (m.startsWith("migration_")) return tag(m.replace("migration_", "Migration: "), "migration-tag");
+    if (m.startsWith("anomaly_")) return tag(m.replace("anomaly_", "Anomaly: "), "anomaly-tag");
+    if (m.startsWith("global_")) return tag(m.replace("global_", "Global: "), "global-tag");
+    if (m.includes("chaos")) return tag(m.replace(/_/g, " "), "chaos-tag");
+    return tag(m.replace(/_/g, " "));
+  }).join("");
 
-  const seedRelicOverlays = buildSeedAndRelicOverlays(player);
+  const chaosTag = encounter.chaosMutated
+    ? tag("Chaos Mutation", "chaos-tag")
+    : "";
 
   container.innerHTML = `
     <div class="encounter-card">
@@ -85,22 +58,28 @@ function renderEncounter(player, encounter, region, regionState) {
 
       <div class="encounter-row"><strong>Region:</strong> ${region.name}</div>
       <div class="encounter-row"><strong>Biome:</strong> ${biomeKey.replace(/_/g, " ")}</div>
+      <div class="encounter-row"><strong>Weather:</strong> ${encounter.weather}</div>
+
+      <div class="encounter-row"><strong>Enemy Family:</strong> ${encounter.family}</div>
+      <div class="encounter-row"><strong>Rarity:</strong> ${encounter.rarity}</div>
+
+      <div class="encounter-row"><strong>Danger Level:</strong> ${encounter.danger.toFixed(2)}</div>
+
+      ${encounter.crisis ? `
+        <div class="encounter-row"><strong>Crisis:</strong> ${encounter.crisis}</div>
+      ` : ""}
+
+      ${encounter.anomalyElement ? `
+        <div class="encounter-row"><strong>Anomaly:</strong> ${encounter.anomalyElement}</div>
+      ` : ""}
+
+      ${encounter.migrationFaction ? `
+        <div class="encounter-row"><strong>Migration:</strong> ${encounter.migrationFaction}</div>
+      ` : ""}
 
       <div class="encounter-row">
-        <strong>Weather:</strong> ${weatherIcon} ${weatherLabel}
-      </div>
-
-      <div class="encounter-row">
-        <strong>Enemy Family:</strong> ${encounter.family}
-      </div>
-
-      <div class="encounter-row">
-        <strong>Rarity:</strong> ${encounter.rarity}
-      </div>
-
-      <div class="encounter-row">
-        <strong>Seed/Relic Effects:</strong>
-        <div>${seedRelicOverlays || "<span class='global-overlay-none'>None</span>"}</div>
+        <strong>Modifiers:</strong>
+        <div>${chaosTag}${modTags || "<span class='modifier-tag'>None</span>"}</div>
       </div>
 
       <div class="encounter-buttons">
@@ -116,8 +95,7 @@ function renderEncounter(player, encounter, region, regionState) {
   };
 
   document.getElementById("fleeBtn").onclick = () => {
-    alert("You flee back to the region.");
-    window.location.href = `region-info.html?region=${region.key}`;
+    window.location.href = `region-info.html?region=${encounter.region}`;
   };
 }
 
