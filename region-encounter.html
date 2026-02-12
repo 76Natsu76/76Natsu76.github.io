@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Overworld Encounter</title>
+  <link rel="stylesheet" href="world-map.css">
+  <style>
+    .encounter-card {
+      background:#11141c;
+      border:1px solid #262a36;
+      border-radius:8px;
+      padding:20px;
+      margin-top:20px;
+      box-shadow:0 0 12px #0008;
+    }
+    .encounter-title {
+      font-size:22px;
+      font-weight:bold;
+      color:#9af7ff;
+      margin-bottom:10px;
+    }
+    .encounter-row {
+      margin:8px 0;
+      font-size:15px;
+    }
+    .encounter-buttons {
+      margin-top:20px;
+      display:flex;
+      gap:12px;
+    }
+    .btn {
+      padding:10px 14px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      flex:1;
+      text-align:center;
+    }
+    .btn:hover {
+      background:#222832;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Overworld Encounter</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="encounterContainer">Loading encounter...</div>
+
+  <button class="btn" onclick="goBack()">Return to Region</button>
+
+  <script type="module" src="region-encounter.js"></script>
+
+</body>
+</html>
