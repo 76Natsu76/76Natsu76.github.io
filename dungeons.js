@@ -316,3 +316,22 @@ export function getGreatDungeonLevelRange(floor) {
   if (floor <= 90) return { min: 540, max: 800 };
   return { min: 800, max: 1000 };
 }
+
+
+/*
+modifiers: ["no_healing", "enemy_frenzy"]
+
+floorModifiers: {
+  10: ["enemy_frenzy"],
+  20: ["unstable_magic"],
+  30: ["no_healing", "thick_fog"],
+  50: ["double_loot"],
+  100: ["empowered_ultimate"]
+}
+
+labyrinthModifiers: {
+  global: ["thick_fog"],
+  perRoomChance: 0.25
+}
+
+*/
