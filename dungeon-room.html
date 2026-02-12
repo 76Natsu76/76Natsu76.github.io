@@ -87,10 +87,13 @@
         <p><strong>Modifiers:</strong> ${run.activeModifiers.join(", ")}</p>
       `;
     }
+
+    let seedHtml = run.seed ? `<p><strong>Seed:</strong> ${run.seed}</p>` : "";
     
     document.getElementById("dungeonInfo").innerHTML = `
       <div class="room-box">
         <h2>${dungeon.name}</h2>
+        ${seedHtml}
         <p>${floorLabel}</p>
         <p>State: ${run.state}</p>
         ${modifierHtml}
