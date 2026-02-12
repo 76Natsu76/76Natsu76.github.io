@@ -23,3 +23,11 @@ export const RELICS = {
     }
   }
 };
+
+export const RELIC_DROPS = {
+  boss: ["bossheart", "blessed_feather"],
+  cursed: ["cursed_crown"],
+  chaos: ["chaos_orb"],
+  loot: ["golden_idol"],
+  blessed: ["holy_sigil"]
+};
