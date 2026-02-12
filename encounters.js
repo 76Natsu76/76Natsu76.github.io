@@ -17,6 +17,14 @@ import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affix
 import { SEASON_DEFINITIONS } from "./season-definitions.js";
 import { WORLD_DATA } from "./world-data.js";
 
+// Phase D taxonomy (environmental categories)
+import {
+  WEATHER_TYPES,
+  ANOMALIES,
+  MIGRATIONS,
+  GLOBAL_MODIFIERS as GLOBAL_PHASED_MODIFIERS
+} from "./environment-taxonomy.js";
+
 export function initEncounters() {
   return true;
 }
@@ -88,6 +96,11 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
   const variantPool = region.variantPool || [];
   const variant = pickFromArray(variantPool);
 
+  // Phase D: anomaly / migration / global modifier
+  const anomaly = rollAnomalyForEncounter(biome, regionState, seasonData);
+  const migration = rollMigrationForEncounter(regionKey, biome, regionState, crisisData);
+  const globalModifier = rollGlobalModifierForEncounter(seasonData);
+
   // Build unified encounter context
   const encounterContext = {
     region: regionKey,
@@ -96,9 +109,16 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
 
     weather,
     event,
+    hazard,
+    variant,
+
     crisis,
     crisisStage,
     crisisData,
+
+    anomaly,
+    migration,
+    globalModifier,
 
     season,
     seasonData,
@@ -179,10 +199,17 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     region: regionKey,
     subregion: subregionKey,
     biome: biomeKey,
+
     weather,
     event,
     hazard,
     variant,
+
+    // Phase D fields
+    anomaly,
+    migration,
+    globalModifier,
+
     rarity,
     tier: finalTier,
     flavor: pickFromArray(biome.flavor) || region.flavor || "",
@@ -204,7 +231,10 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
       season,
       dangerLevel: regionState.dangerLevel,
       stability: regionState.stability,
-      elementalCharge: regionState.elementalCharge
+      elementalCharge: regionState.elementalCharge,
+      anomaly,
+      migration,
+      globalModifier
     }
   };
 
@@ -410,6 +440,93 @@ function rarityScaling(rarity) {
     case "ancient": return 2.6;
     default: return 1.0;
   }
+}
+
+// ------------------------------------------------------------
+// PHASE D ROLL HELPERS
+// ------------------------------------------------------------
+
+function rollAnomalyForEncounter(biome, regionState, seasonData) {
+  // Low baseline chance; anomalies should feel special
+  if (Math.random() > 0.20) return null;
+
+  const biomeTags = biome?.tags || [];
+  const candidates = [];
+
+  for (const anomaly of Object.values(ANOMALIES)) {
+    const tags = anomaly.tags || [];
+    let weight = 1;
+
+    // Simple biome-tag synergy (e.g., volcanic -> fire, swamp -> fungus)
+    if (biomeTags.includes("volcanic") && tags.includes("fire")) weight += 3;
+    if (biomeTags.includes("swamp") && tags.includes("fungus")) weight += 3;
+    if (biomeTags.includes("frost") && tags.includes("frost")) weight += 3;
+    if (biomeTags.includes("arcane") && tags.includes("arcane")) weight += 3;
+
+    // Region instability increases anomaly chance/weight
+    const instability = 1 - (regionState?.stability ?? 1);
+    weight += Math.max(0, Math.floor(instability * 5));
+
+    if (weight > 0) {
+      candidates.push({ key: anomaly.key, weight });
+    }
+  }
+
+  if (!candidates.length) return null;
+  return pickWeightedObject(Object.fromEntries(candidates.map(c => [c.key, c.weight])));
+}
+
+function rollMigrationForEncounter(regionKey, biome, regionState, crisisData) {
+  // Migrations are more likely during beast/monster crises
+  const hasCrisis = !!crisisData;
+  const baseChance = hasCrisis ? 0.35 : 0.15;
+  if (Math.random() > baseChance) return null;
+
+  const biomeTags = biome?.tags || [];
+  const candidates = [];
+
+  for (const mig of Object.values(MIGRATIONS)) {
+    const tags = mig.tags || [];
+    let weight = 1;
+
+    if (mig.movementType === "air" && biomeTags.includes("mountain")) weight += 2;
+    if (mig.movementType === "air" && biomeTags.includes("coastal")) weight += 2;
+    if (mig.movementType === "ground" && biomeTags.includes("forest")) weight += 2;
+    if (mig.movementType === "ground" && biomeTags.includes("plains")) weight += 2;
+
+    // Beast/void crises amplify related migrations
+    if (crisisData?.tags?.includes("beast") && tags.includes("beast")) weight += 3;
+    if (crisisData?.tags?.includes("void") && tags.includes("void")) weight += 3;
+
+    if (weight > 0) {
+      candidates.push({ key: mig.key, weight });
+    }
+  }
+
+  if (!candidates.length) return null;
+  return pickWeightedObject(Object.fromEntries(candidates.map(c => [c.key, c.weight])));
+}
+
+function rollGlobalModifierForEncounter(seasonData) {
+  // Global modifiers are rare, world-feeling events
+  if (Math.random() > 0.05) return null;
+
+  const candidates = [];
+
+  for (const gm of Object.values(GLOBAL_PHASED_MODIFIERS)) {
+    let weight = 1;
+
+    // Simple seasonal synergy
+    if (seasonData?.key === "winter" && gm.tags?.includes("winter")) weight += 3;
+    if (seasonData?.key === "spring" && gm.tags?.includes("nature")) weight += 3;
+    if (seasonData?.key === "summer" && gm.tags?.includes("solar")) weight += 3;
+    if (seasonData?.key === "autumn" && gm.tags?.includes("rift")) weight += 2;
+
+    candidates.push({ key: gm.key, weight });
+  }
+
+  if (!candidates.length) return null;
+  return pickWeightedObject(Object.fromEntries(candidates.map(c => [c.key, c.weight])));
 }
 
 // ------------------------------------------------------------
