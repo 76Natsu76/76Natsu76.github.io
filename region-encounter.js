@@ -4,6 +4,16 @@ import { WORLD_DATA } from "./world-data.js";
 import { ENEMY_REGISTRY } from "./enemy-registry.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { BIOMES } from "./biomes.js";
+import {
+  ANOMALIES,
+  MIGRATIONS,
+  GLOBAL_MODIFIERS
+} from "./environment-taxonomy.js";
+
+function prettyEnvLabel(key, table) {
+  if (!key) return "None";
+  return table[key]?.label || key;
+}
 
 function tag(label, cls="") {
   return `<span class="modifier-tag ${cls}">${label}</span>`;
@@ -68,8 +78,9 @@ function renderEncounter(player, encounter) {
       <div><strong>Weather:</strong> ${encounter.weather}</div>
       <div><strong>Danger:</strong> ${encounter.danger.toFixed(2)}</div>
       ${encounter.crisis ? `<div><strong>Crisis:</strong> ${encounter.crisis}</div>` : ""}
-      ${encounter.anomalyElement ? `<div><strong>Anomaly:</strong> ${encounter.anomalyElement}</div>` : ""}
-      ${encounter.migrationFaction ? `<div><strong>Migration:</strong> ${encounter.migrationFaction}</div>` : ""}
+      ${encounter.anomaly ? `<div>${tag(prettyEnvLabel(encounter.anomaly, ANOMALIES), "anomaly-tag")}</div>` : ""}
+      ${encounter.migration ? `<div>${tag(prettyEnvLabel(encounter.migration, MIGRATIONS), "migration-tag")}</div>` : ""}
+      ${encounter.globalModifier ? `<div>${tag(prettyEnvLabel(encounter.globalModifier, GLOBAL_MODIFIERS), "global-tag")}</div>` : ""}
 
       <div class="section-title">Modifiers</div>
       <div>${modTags || "<span class='modifier-tag'>None</span>"}</div>
