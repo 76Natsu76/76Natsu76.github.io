@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Seed Meta Progression</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    .meta-card {
+      background:#14171f;
+      border:1px solid #333;
+      padding:16px;
+      border-radius:8px;
+      margin-bottom:16px;
+    }
+
+    .meta-title {
+      font-size:18px;
+      font-weight:bold;
+      color:#7fffd4;
+    }
+
+    .btn {
+      padding:8px 12px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      margin-top:10px;
+    }
+    .btn:hover { background:#222832; }
+  </style>
+</head>
+
+<body>
+
+  <h1>Seed Meta Progression</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="metaList">Loading...</div>
+
+  <button class="btn" onclick="goBack()">Return</button>
+
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+
+    await requireSession();
+    const { username } = window.syncState;
+
+    const player = PlayerStorage.load(username);
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+
+    const meta = player.seedMeta || {};
+    const container = document.getElementById("metaList");
+
+    container.innerHTML = `
+      <div class="meta-card">
+        <div class="meta-title">Seed Clears</div>
+        <p>Blessed: ${meta.blessedClears || 0}</p>
+        <p>Cursed: ${meta.cursedClears || 0}</p>
+        <p>Loot: ${meta.lootClears || 0}</p>
+        <p>Chaos: ${meta.chaosClears || 0}</p>
+        <p>Boss Rush: ${meta.bossrushClears || 0}</p>
+      </div>
+
+      <div class="meta-card">
+        <div class="meta-title">Unlocked Modifiers</div>
+        <p>${(meta.unlockedModifiers || []).join(", ") || "None"}</p>
+      </div>
+
+      <div class="meta-card">
+        <div class="meta-title">Unlocked Relics</div>
+        <p>${(meta.unlockedRelics || []).join(", ") || "None"}</p>
+      </div>
+
+      <div class="meta-card">
+        <div class="meta-title">Unlocked Cosmetics</div>
+        <p>${(meta.unlockedCosmetics || []).join(", ") || "None"}</p>
+      </div>
+    `;
+
+    function goBack() {
+      window.location.href = "town.html";
+    }
+  </script>
+
+</body>
+</html>
