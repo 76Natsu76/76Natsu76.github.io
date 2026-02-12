@@ -37,6 +37,9 @@ function createRun(player, dungeonKey) {
     dungeonKey,
     currentFloor: 1,
     state: "exploring",
+    if (dungeon.modifiers) {
+      run.activeModifiers = [...dungeon.modifiers];
+    },
     modifiers: {
       ...(dungeon.dungeonModifiers || {})
     },
