@@ -42,6 +42,7 @@
 
   <h1>Dungeon Room</h1>
   <div id="usernameDisplay"></div>
+  
 
   <div id="dungeonInfo"></div>
   <div id="roomContainer" class="room-box">Loading...</div>
@@ -80,11 +81,19 @@
       ? `Floor ${run.currentFloor}`
       : `Floor ${run.currentFloor} / ${dungeon.floors}`;
 
+    let modifierHtml = "";
+    if (run.activeModifiers?.length) {
+      modifierHtml = `
+        <p><strong>Modifiers:</strong> ${run.activeModifiers.join(", ")}</p>
+      `;
+    }
+    
     document.getElementById("dungeonInfo").innerHTML = `
       <div class="room-box">
         <h2>${dungeon.name}</h2>
         <p>${floorLabel}</p>
         <p>State: ${run.state}</p>
+        ${modifierHtml}
       </div>
     `;
 
