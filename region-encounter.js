@@ -1,6 +1,7 @@
 import { requireSession } from "./session-guard.js";
 import { PlayerStorage } from "./player-storage.js";
 import { WORLD_DATA } from "./world-data.js";
+import { ENEMY_REGISTRY } from "./enemy-registry.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { BIOMES } from "./biomes.js";
 
@@ -36,56 +37,51 @@ function renderEncounter(player, encounter) {
   const biomeKey = REGION_TO_BIOME[encounter.region] || region.biome;
   const biome = BIOMES[biomeKey];
 
-  // Build modifier tags
-  const modTags = encounter.modifiers.map(m => {
-    if (m.startsWith("crisis_")) return tag(m.replace("crisis_", "Crisis: "), "crisis-tag");
-    if (m.startsWith("storm_") || m.startsWith("weather_front")) return tag(m.replace(/_/g, " "), "weather-tag");
-    if (m.startsWith("migration_")) return tag(m.replace("migration_", "Migration: "), "migration-tag");
-    if (m.startsWith("anomaly_")) return tag(m.replace("anomaly_", "Anomaly: "), "anomaly-tag");
-    if (m.startsWith("global_")) return tag(m.replace("global_", "Global: "), "global-tag");
-    if (m.includes("chaos")) return tag(m.replace(/_/g, " "), "chaos-tag");
-    return tag(m.replace(/_/g, " "));
-  }).join("");
+  const baseEnemy = ENEMY_REGISTRY[encounter.family];
+  if (!baseEnemy) {
+    container.innerHTML = `<div class="encounter-card">Unknown enemy family: ${encounter.family}</div>`;
+    return;
+  }
 
-  const chaosTag = encounter.chaosMutated
-    ? tag("Chaos Mutation", "chaos-tag")
-    : "";
+  const enemy = buildPreviewEnemy(baseEnemy, encounter);
+
+  const modTags = buildModifierTags(encounter);
 
   container.innerHTML = `
     <div class="encounter-card">
 
-      <div class="encounter-title">A Wild Encounter Appears</div>
+      <div class="section-title">Enemy</div>
+      <div><strong>Name:</strong> ${enemy.name}</div>
+      <div><strong>Family:</strong> ${encounter.family}</div>
+      <div><strong>Element:</strong> ${enemy.element || "none"}</div>
+      <div><strong>Rarity:</strong> ${encounter.rarity}</div>
 
-      <div class="encounter-row"><strong>Region:</strong> ${region.name}</div>
-      <div class="encounter-row"><strong>Biome:</strong> ${biomeKey.replace(/_/g, " ")}</div>
-      <div class="encounter-row"><strong>Weather:</strong> ${encounter.weather}</div>
+      <div class="section-title">Stats</div>
+      ${statRow("HP", `${enemy.hpCurrent} / ${enemy.hpMax}`)}
+      ${statRow("ATK", enemy.atk)}
+      ${statRow("DEF", enemy.def)}
+      ${statRow("SPD", enemy.speed)}
 
-      <div class="encounter-row"><strong>Enemy Family:</strong> ${encounter.family}</div>
-      <div class="encounter-row"><strong>Rarity:</strong> ${encounter.rarity}</div>
+      <div class="section-title">Environment</div>
+      <div><strong>Region:</strong> ${region.name}</div>
+      <div><strong>Biome:</strong> ${biomeKey.replace(/_/g, " ")}</div>
+      <div><strong>Weather:</strong> ${encounter.weather}</div>
+      <div><strong>Danger:</strong> ${encounter.danger.toFixed(2)}</div>
+      ${encounter.crisis ? `<div><strong>Crisis:</strong> ${encounter.crisis}</div>` : ""}
+      ${encounter.anomalyElement ? `<div><strong>Anomaly:</strong> ${encounter.anomalyElement}</div>` : ""}
+      ${encounter.migrationFaction ? `<div><strong>Migration:</strong> ${encounter.migrationFaction}</div>` : ""}
 
-      <div class="encounter-row"><strong>Danger Level:</strong> ${encounter.danger.toFixed(2)}</div>
+      <div class="section-title">Modifiers</div>
+      <div>${modTags || "<span class='modifier-tag'>None</span>"}</div>
 
-      ${encounter.crisis ? `
-        <div class="encounter-row"><strong>Crisis:</strong> ${encounter.crisis}</div>
-      ` : ""}
+      <div class="section-title">Abilities</div>
+      <div>${renderAbilities(enemy)}</div>
 
-      ${encounter.anomalyElement ? `
-        <div class="encounter-row"><strong>Anomaly:</strong> ${encounter.anomalyElement}</div>
-      ` : ""}
+      <div class="section-title">Flavor Tags</div>
+      <div>${(enemy.flavorTags || []).join(", ") || "None"}</div>
 
-      ${encounter.migrationFaction ? `
-        <div class="encounter-row"><strong>Migration:</strong> ${encounter.migrationFaction}</div>
-      ` : ""}
-
-      <div class="encounter-row">
-        <strong>Modifiers:</strong>
-        <div>${chaosTag}${modTags || "<span class='modifier-tag'>None</span>"}</div>
-      </div>
-
-      <div class="encounter-buttons">
-        <button class="btn" id="fightBtn">Fight</button>
-        <button class="btn" id="fleeBtn">Flee</button>
-      </div>
+      <button class="btn" id="fightBtn">Fight</button>
+      <button class="btn" id="fleeBtn">Flee</button>
 
     </div>
   `;
@@ -99,6 +95,66 @@ function renderEncounter(player, encounter) {
   };
 }
 
-function goBack() {
-  window.location.href = "world-map.html";
+function statRow(label, value) {
+  return `
+    <div class="stat-row">
+      <span>${label}</span>
+      <span>${value}</span>
+    </div>
+  `;
+}
+
+function buildModifierTags(encounter) {
+  return encounter.modifiers
+    .map(m => {
+      if (m.startsWith("crisis_")) return tag(m.replace("crisis_", "Crisis: "), "crisis-tag");
+      if (m.startsWith("storm_") || m.startsWith("weather_front")) return tag(m.replace(/_/g, " "), "weather-tag");
+      if (m.startsWith("migration_")) return tag(m.replace("migration_", "Migration: "), "migration-tag");
+      if (m.startsWith("anomaly_")) return tag(m.replace("anomaly_", "Anomaly: "), "anomaly-tag");
+      if (m.startsWith("global_")) return tag(m.replace("global_", "Global: "), "global-tag");
+      if (m.includes("chaos")) return tag(m.replace(/_/g, " "), "chaos-tag");
+      return tag(m.replace(/_/g, " "));
+    })
+    .join("");
+}
+
+function buildPreviewEnemy(base, encounter) {
+  const e = JSON.parse(JSON.stringify(base));
+
+  e.hpMax = Math.floor(e.hpMax * rarityMult(encounter.rarity));
+  e.atk = Math.floor(e.atk * rarityMult(encounter.rarity));
+  e.def = Math.floor(e.def * rarityMult(encounter.rarity));
+  e.speed = Math.floor(e.speed * rarityMult(encounter.rarity));
+
+  const dangerMult = 1 + (encounter.danger - 1) * 0.25;
+  e.hpMax = Math.floor(e.hpMax * dangerMult);
+  e.atk = Math.floor(e.atk * dangerMult);
+  e.def = Math.floor(e.def * dangerMult);
+
+  if (encounter.chaosMutated) {
+    e.flavorTags = e.flavorTags || [];
+    e.flavorTags.push("chaos-mutated");
+    e.atk = Math.floor(e.atk * 1.1);
+    e.def = Math.floor(e.def * 1.1);
+    e.speed = Math.floor(e.speed * 1.1);
+  }
+
+  e.hpCurrent = e.hpMax;
+
+  return e;
+}
+
+function rarityMult(r) {
+  return {
+    common: 1.0,
+    uncommon: 1.15,
+    rare: 1.35,
+    elite: 1.6,
+    boss: 2.0
+  }[r] || 1.0;
+}
+
+function renderAbilities(enemy) {
+  if (!enemy.abilities || !enemy.abilities.length) return "None";
+  return enemy.abilities.map(a => `<div>• ${a.name}</div>`).join("");
 }
