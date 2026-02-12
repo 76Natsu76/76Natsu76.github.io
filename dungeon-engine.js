@@ -9,6 +9,7 @@ import { PlayerStorage, recordBeatenSeed } from "./player-storage.js";
 import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
 import { detectSeedType, SEED_TYPES } from "./seeds.js";
 import { RELICS } from "./relics.js";
+import { SEED_LOOT } from "./seed-loot.js";
 
 function seededRNG(seed) {
   let h = 0;
@@ -414,6 +415,27 @@ function resolveTreasure(lootTableKey, run, logs) {
     const chaosMods = ["unstable_magic", "enemy_frenzy", "thick_fog"];
     const randomMod = chaosMods[Math.floor(rng() * chaosMods.length)];
     run.activeModifiers.push(randomMod);
+  }
+  
+  const seedType = run.seedType;
+  const seedLoot = SEED_LOOT[seedType];
+  
+  if (seedLoot) {
+    loot.gold = Math.floor(loot.gold * seedLoot.goldMult);
+    loot.xp = Math.floor(loot.xp * seedLoot.xpMult);
+  
+    if (seedLoot.extraItems) {
+      loot.items.push(...seedLoot.extraItems);
+    }
+  
+    if (seedLoot.curseChance && rng() < seedLoot.curseChance) {
+      loot.items.push("cursed_mark");
+    }
+  
+    if (seedLoot.chaosItemChance && rng() < seedLoot.chaosItemChance) {
+      const chaosItem = seedLoot.chaosItems[Math.floor(rng() * seedLoot.chaosItems.length)];
+      loot.items.push(chaosItem);
+    }
   }
 
   logs.push(`You found: ${JSON.stringify(loot)}`);
