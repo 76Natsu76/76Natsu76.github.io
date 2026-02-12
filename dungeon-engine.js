@@ -8,6 +8,7 @@ import { resolveEnemy } from "./resolveEnemy.js";
 import { PlayerStorage, recordBeatenSeed } from "./player-storage.js";
 import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
 import { detectSeedType, SEED_TYPES } from "./seeds.js";
+import { RELICS } from "./relics.js";
 
 function seededRNG(seed) {
   let h = 0;
@@ -45,6 +46,13 @@ export const DungeonEngine = {
 // --- RUN LIFECYCLE --- //
 function createRun(player, dungeonKey, seed = null) {
   const dungeon = DUNGEONS[dungeonKey];
+
+  if (player.relics?.length) {
+    for (const relicKey of player.relics) {
+      const relic = RELICS[relicKey];
+      if (relic?.apply) relic.apply(run);
+    }
+  }
 
   // If no seed provided, generate one
   if (!seed) {
