@@ -60,18 +60,23 @@ function applyRegionCombatModifiers(player, enemies, context, logs) {
   }
 }
 
-const DEBUG_ENVIRONMENT = false; // set to true when debugging
-if (DEBUG_ENVIRONMENT && context.enemy?.environmentalModifiers) {
-  const mods = context.enemy.environmentalModifiers;
+const DEBUG_ENVIRONMENT = false;
+
+function debugEnvironment(context, logs) {
+  if (!DEBUG_ENVIRONMENT) return;
+  const enemy = context.enemy;
+  if (!enemy || !enemy.environmentalModifiers) return;
+
+  const mods = enemy.environmentalModifiers;
 
   logs.push("Environmental Multipliers:");
-  logs.push(`• HP: x${mods.hpMult.toFixed(2)}`);
-  logs.push(`• ATK: x${mods.atkMult.toFixed(2)}`);
-  logs.push(`• DEF: x${mods.defMult.toFixed(2)}`);
-  logs.push(`• SPD: x${mods.spdMult.toFixed(2)}`);
-  logs.push(`• Crit: x${mods.critMult.toFixed(2)}`);
-  logs.push(`• Dodge: x${mods.dodgeMult.toFixed(2)}`);
-  logs.push(`• Accuracy: x${mods.accuracyMult.toFixed(2)}`);
+  if (mods.hpMult != null) logs.push(`• HP: x${mods.hpMult.toFixed(2)}`);
+  if (mods.atkMult != null) logs.push(`• ATK: x${mods.atkMult.toFixed(2)}`);
+  if (mods.defMult != null) logs.push(`• DEF: x${mods.defMult.toFixed(2)}`);
+  if (mods.spdMult != null) logs.push(`• SPD: x${mods.spdMult.toFixed(2)}`);
+  if (mods.critMult != null) logs.push(`• Crit: x${mods.critMult.toFixed(2)}`);
+  if (mods.dodgeMult != null) logs.push(`• Dodge: x${mods.dodgeMult.toFixed(2)}`);
+  if (mods.accuracyMult != null) logs.push(`• Accuracy: x${mods.accuracyMult.toFixed(2)}`);
 
   const elems = Object.entries(mods.elementalBias || {});
   if (elems.length) {
@@ -82,13 +87,12 @@ if (DEBUG_ENVIRONMENT && context.enemy?.environmentalModifiers) {
   }
 }
 
-
 /****************************************************
  * CORE CONTEXT
  ****************************************************/
 
 function generateEnvironmentalFlavor(enemy) {
-  const tags = enemy.flavorTags || [];
+  const tags = enemy?.flavorTags || [];
   if (!tags.length) return [];
 
   const lines = [];
@@ -137,7 +141,6 @@ function generateEnvironmentalFlavor(enemy) {
         break;
 
       default:
-        // Generic fallback
         lines.push(`The environment shifts with a ${tag.replace(/-/g, " ")} influence.`);
         break;
     }
@@ -146,8 +149,27 @@ function generateEnvironmentalFlavor(enemy) {
   return lines;
 }
 
-export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, mode = "solo") {
+/**
+ * regionKey, biomeKey, weatherKey, eventKey, mode, encounterMeta (optional)
+ * encounterMeta is where overworld-encounter.js can pass:
+ *   { crisis, danger, rarity, chaosMutated, modifiers: [...] }
+ */
+export function buildCombatContext(
+  regionKey,
+  biomeKey,
+  weatherKey,
+  eventKey,
+  mode = "solo",
+  encounterMeta = null
+) {
   const weatherDef = weatherTable[weatherKey] || null;
+
+  const crisis = encounterMeta?.crisis ?? null;
+  const danger = encounterMeta?.danger ?? 1.0;
+  const chaosMutated = encounterMeta?.chaosMutated ?? false;
+  const modifiers = encounterMeta?.modifiers || [];
+  const rarity = encounterMeta?.rarity || null;
+  const family = encounterMeta?.family || null;
 
   return {
     regionKey,
@@ -162,19 +184,25 @@ export function buildCombatContext(regionKey, biomeKey, weatherKey, eventKey, mo
     grid: {
       playerRow: [],
       enemyRows: []
-    }
+    },
+    // Overworld encounter meta
+    crisis,
+    danger,
+    chaosMutated,
+    modifiers,
+    rarity,
+    family,
+    encounterMeta
   };
 }
 
 function assignPlayerPosition(player, context) {
   if (context.mode === "solo") {
-    // Player is always frontline, column 0
     player.position = { row: 0, col: 0 };
     context.grid.playerRow = [player];
     return;
   }
 
-  // Multiplayer / raid mode (to be expanded with raid system)
   if (!player.position) {
     player.position = { row: 0, col: 0 };
   }
@@ -189,7 +217,6 @@ export function applyEnvironmentIntroFlavor(context, logs) {
     const line = pool[Math.floor(Math.random() * pool.length)];
     logs.push(line);
   }
-  // NEW: merge weather + region flavor
   if (context.enemy && context.enemy.flavorTags) {
     const envLines = generateEnvironmentalFlavor(context.enemy);
     for (const l of envLines) logs.push(l);
@@ -239,7 +266,6 @@ export function tickStatusEffects(target, context, logs) {
         statusType: eff.type,
         source: eff.source || "status"
       });
-      // NEW: environmental DOT flavor
       if (target.flavorTags && Math.random() < 0.05) {
         const envLines = generateEnvironmentalFlavor(target);
         if (envLines.length) logs.push(envLines[Math.floor(Math.random() * envLines.length)]);
@@ -323,7 +349,6 @@ function applyEnvironmentalStatusEffects(entity, context, logs) {
   const tags = entity.flavorTags || [];
   if (!tags.length) return;
 
-  // Low-frequency trigger
   if (Math.random() > 0.05) return;
 
   for (const tag of tags) {
@@ -395,7 +420,6 @@ function triggerEnvironmentalHazard(entity, context, logs) {
   const tags = entity.flavorTags || [];
   if (!tags.length) return;
 
-  // Very low chance per round
   if (Math.random() > 0.03) return;
 
   for (const tag of tags) {
@@ -473,7 +497,6 @@ function triggerEnvironmentalHazard(entity, context, logs) {
   }
 }
 
-
 /****************************************************
  * TACTICAL CLASSIFICATION
  ****************************************************/
@@ -482,7 +505,6 @@ function isTacticalEnemy(enemy) {
   if (enemy.tacticalProfile === "tactical") return true;
   if (enemy.tacticalProfile === "simple") return false;
 
-  // AUTO rules
   if (enemy.rarity === "mythical" || enemy.rarity === "boss" || enemy.rarity === "final") return true;
   if ((enemy.tier || 1) >= 4) return true;
   if (["dragon", "void", "demon", "celestial", "aberration"].includes(enemy.family)) return true;
@@ -606,12 +628,10 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
     dmg = Math.floor(dmg * weatherMult);
   }
 
-  // ENVIRONMENTAL ELEMENTAL BIAS (Step 1)
   if (attacker) {
     const envMods = attacker.environmentalModifiers || null;
     const bias = envMods?.elementalBias || null;
 
-    // Prefer ability element if present, otherwise attacker.element
     const abilityElement = opts.abilityElement || null;
     const elem = abilityElement || attacker.element || null;
 
@@ -619,7 +639,7 @@ export function applyDamage(attacker, defender, baseDamage, context, logs, opts 
       dmg = Math.floor(dmg * bias[elem]);
     }
   }
-  
+
   if (dmg < 0) dmg = 0;
   const def = defender.def || 0;
   const k = 0.015;
@@ -693,11 +713,6 @@ function pickPrimaryEnemy(enemies, action) {
   return living[0];
 }
 
-/**
- * Simple 2-row assignment for non-tactical solo encounters.
- * Front row: melee/brute/tank (or default)
- * Back row: ranged/caster/support
- */
 function assignSimpleEnemyRows(enemies, context) {
   const frontRow = [];
   const backRow = [];
@@ -720,15 +735,10 @@ function assignSimpleEnemyRows(enemies, context) {
   context.grid.enemyRows[1] = backRow;
 }
 
-/**
- * Tactical formation assignment for stronger enemies / multiplayer.
- * For now: similar to simple, but prioritizes leaders/casters in back center.
- */
 function assignTacticalEnemyFormation(enemies, context) {
   const frontRow = [];
   const backRow = [];
 
-  // First pass: leaders/casters/support to back
   const leaders = [];
   const casters = [];
   const supports = [];
@@ -743,14 +753,12 @@ function assignTacticalEnemyFormation(enemies, context) {
     else others.push(e);
   });
 
-  // Back row: leaders center, casters, supports
   const backOrdered = [...leaders, ...casters, ...supports];
   backOrdered.forEach((e, idx) => {
     e.position = { row: 1, col: idx };
     backRow.push(e);
   });
 
-  // Front row: everyone else
   others.forEach((e, idx) => {
     e.position = { row: 0, col: idx };
     frontRow.push(e);
@@ -765,11 +773,9 @@ function assignEnemyPositions(enemies, context) {
   const tactical = enemies.some(e => isTacticalEnemy(e));
 
   if (context.mode === "solo" && !tactical) {
-    // Simple 2-row logic
     return assignSimpleEnemyRows(enemies, context);
   }
 
-  // Tactical formation logic
   return assignTacticalEnemyFormation(enemies, context);
 }
 
@@ -818,11 +824,6 @@ function getAbilityTargets(attacker, enemies, primaryTarget, ability, context) {
 
   if (!primaryTarget || !living.length) return [];
 
-  // For now, mode does not change shapes, but hook is here for future:
-  // - solo: simpler rules
-  // - multiplayer/raid: full tactical rules
-  // You can expand this later if you want melee vs backline restrictions, etc.
-
   switch (shape) {
     case "aoe":
       return living;
@@ -848,7 +849,6 @@ function getAbilityTargets(attacker, enemies, primaryTarget, ability, context) {
   }
 }
 
-// Backward-compatible single-target wrapper
 export function resolveAbilityUse(attacker, defender, ability, context, logs) {
   return resolveAbilityUseMulti(attacker, [defender], ability, defender, context, logs);
 }
@@ -869,7 +869,6 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
   const isUlt = ability.isUltimate;
   const cost = isUlt ? 0 : (ability.manaCost || ability.mpCost || 0);
 
-  // Uniform MP read
   const currentMP =
     attacker.manaCurrent ??
     attacker.mana ??
@@ -881,7 +880,6 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
     return;
   }
 
-  // Deduct MP ONCE, only if not ultimate
   if (!isUlt && cost > 0) {
     const newMP = Math.max(0, currentMP - cost);
     attacker.manaCurrent = newMP;
@@ -904,7 +902,13 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
       continue;
     }
 
-    const { finalDamage, interactionResult } = computeFinalDamage(attacker, target, ability, hitData, context);
+    const { finalDamage, interactionResult } = computeFinalDamage(
+      attacker,
+      target,
+      ability,
+      hitData,
+      context
+    );
     const finalDmg = applyDamage(attacker, target, finalDamage, context, logs, {
       isAbility: true,
       abilityKey: ability.key,
@@ -916,7 +920,6 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
       logs.push("Critical hit!");
     }
 
-    // NEW: environmental flavor on ability hit
     if (attacker.flavorTags && attacker.flavorTags.length) {
       const envLines = generateEnvironmentalFlavor(attacker);
       if (envLines.length && Math.random() < 0.15) {
@@ -931,31 +934,27 @@ export function resolveAbilityUseMulti(attacker, enemies, ability, primaryTarget
       }
     }
 
-    // Apply extra status from environment interaction
     if (interactionResult.extraStatus) {
       applyStatusEffect(target, interactionResult.extraStatus);
       logs.push(`${target.name} is affected by ${interactionResult.extraStatus.type}.`);
     }
-    
-    // CHAIN LIGHTNING LOGIC (3F-4)
+
     if (interactionResult.chain) {
       logs.push(`Lightning arcs from ${target.name} to another enemy!`);
-    
-      // Find a secondary target
+
       const living = enemies.filter(e => e && e.hpCurrent > 0 && e !== target);
       if (living.length > 0) {
         const secondary = living[Math.floor(Math.random() * living.length)];
-    
-        // 50% damage falloff (tweakable)
+
         const chainDmg = Math.floor(finalDmg * 0.5);
-    
+
         applyDamage(attacker, secondary, chainDmg, context, logs, {
           isAbility: true,
           abilityKey: ability.key,
           isChain: true,
           abilityElement: ability.element
         });
-    
+
         logs.push(`The lightning strike hits ${secondary.name} for ${chainDmg} damage!`);
       }
     }
@@ -1000,7 +999,6 @@ export function resolveBasicAttack(attacker, defender, context, logs) {
     logs.push("Critical hit!");
   }
 
-  // NEW: environmental flavor on basic attack
   if (attacker.flavorTags && attacker.flavorTags.length) {
     const envLines = generateEnvironmentalFlavor(attacker);
     if (envLines.length && Math.random() < 0.10) {
@@ -1034,12 +1032,6 @@ function runSimpleAI(enemy, player, context, logs) {
 }
 
 function runTacticalAI(enemy, player, context, logs) {
-  // For now, tactical AI uses the same core logic as simple AI,
-  // but this is the hook where you can later add:
-  // - focus fire
-  // - protect casters
-  // - formation abilities
-  // - synergy abilities
   const cc = crowdControlCheck(enemy, logs);
   if (cc.stunned) return;
 
@@ -1110,27 +1102,35 @@ function applyFamilySynergy(attacker, defender, baseDamage) {
 
   let dmg = baseDamage;
 
-  // Attacker bonus
   if (synergy.bonusAgainst?.includes(defFam)) {
     dmg *= 1.20;
   }
 
-  // Defender resistance
   if (defense.resistantTo?.includes(attacker.element)) {
     dmg *= 0.80;
   }
 
-  // Defender weakness
   if (defense.weakTo?.includes(attacker.element)) {
     dmg *= 1.25;
   }
 
-  // Defender immunity
   if (defense.immuneTo?.includes(attacker.element)) {
     dmg = 0;
   }
 
   return dmg;
+}
+
+/****************************************************
+ * ENCOUNTER MODIFIER REPRESENTATION
+ ****************************************************/
+
+function describeEncounterModifiers(context, logs) {
+  const mods = context.modifiers || [];
+  if (!mods.length) return;
+
+  const labels = mods.map(m => m.replace(/_/g, " ")).join(", ");
+  logs.push(`Overworld Modifiers: ${labels}.`);
 }
 
 /****************************************************
@@ -1142,45 +1142,58 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
 
   const enemies = normalizeEnemies(enemyOrEnemies);
 
-  // Ensure positions are assigned
+  // Ensure positions and primary enemy
   assignPlayerPosition(player, context);
   assignEnemyPositions(enemies, context);
+  const primaryEnemyInitial = getLivingEnemies(enemies)[0] || enemies[0] || null;
+  context.enemy = primaryEnemyInitial || context.enemy || null;
+
   applyRegionCombatModifiers(player, enemies, context, logs);
 
   tickStatusEffects(player, context, logs);
   enemies.forEach(e => tickStatusEffects(e, context, logs));
-  // STEP 2: Environmental status effects
+
   applyEnvironmentalStatusEffects(player, context, logs);
   enemies.forEach(e => applyEnvironmentalStatusEffects(e, context, logs));
 
+  // Environment intro + overworld meta
   applyEnvironmentIntroFlavor(context, logs);
-  
-  // STEP 6: Environmental context intro
-  const enemy = context.enemy || null;
+
   if (context.enemy) {
     const e = context.enemy;
-  
+
     logs.push(`Environment:`);
     if (e.region) logs.push(`• Region: ${e.region}`);
     if (e.subregion) logs.push(`• Subregion: ${e.subregion}`);
     if (e.biome) logs.push(`• Biome: ${e.biome}`);
     if (context.weatherKey) logs.push(`• Weather: ${context.weatherKey}`);
     if (context.eventKey) logs.push(`• Event: ${context.eventKey}`);
-  
+    if (context.crisis) logs.push(`• Crisis: ${context.crisis}`);
+    if (context.danger != null) logs.push(`• Danger: ${Number(context.danger).toFixed(2)}`);
+    if (context.chaosMutated) logs.push(`• Chaos Mutation: Active`);
+
     if (e.flavorTags?.length) {
       logs.push(`• Environmental Traits: ${e.flavorTags.join(", ")}`);
     }
+
+    describeEncounterModifiers(context, logs);
   }
 
+  debugEnvironment(context, logs);
+
   const weather = context.weatherKey;
-  if (weather === "blizzard" && Math.random() < 0.05) {
-    applyStatusEffect(entity, { type: "slow", duration: 1, isDebuff: true });
-    logs.push(`${entity.name} is slowed by the blizzard winds.`);
-  }
-  
-  if (weather === "storm" && Math.random() < 0.05) {
-    applyStatusEffect(entity, { type: "charged", duration: 1 });
-    logs.push(`Lightning dances around ${entity.name}.`);
+  if (weather === "blizzard" || weather === "storm") {
+    const actorsForWeather = [player, ...enemies].filter(a => a && a.hpCurrent > 0);
+    for (const entity of actorsForWeather) {
+      if (weather === "blizzard" && Math.random() < 0.05) {
+        applyStatusEffect(entity, { type: "slow", duration: 1, isDebuff: true });
+        logs.push(`${entity.name} is slowed by the blizzard winds.`);
+      }
+      if (weather === "storm" && Math.random() < 0.05) {
+        applyStatusEffect(entity, { type: "charged", duration: 1 });
+        logs.push(`Lightning dances around ${entity.name}.`);
+      }
+    }
   }
 
   const actors = [player, ...enemies].filter(a => a && a.hpCurrent > 0);
@@ -1217,11 +1230,10 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   enemies.forEach(e => tickCooldowns(e));
 
   context.turn += 1;
-  // STEP 3: Environmental Hazards
+
   triggerEnvironmentalHazard(player, context, logs);
   enemies.forEach(e => triggerEnvironmentalHazard(e, context, logs));
 
-  // NEW: occasional environmental reminder
   if (context.enemy && Math.random() < 0.03) {
     const envLines = generateEnvironmentalFlavor(context.enemy);
     if (envLines.length) {
