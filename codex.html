@@ -52,6 +52,8 @@
     import { requireSession } from "./session-guard.js";
     import { PlayerStorage } from "./player-storage.js";
     import { DUNGEONS } from "./dungeons.js";
+    import { DungeonEngine } from "./dungeon-engine.js";
+    import { SEED_TYPES } from "./seeds.js";
 
     await requireSession();
     const { username } = window.syncState;
@@ -71,12 +73,15 @@
         const entry = codex[seed];
         const dungeon = DUNGEONS[entry.dungeonKey];
 
+        const seedType = entry.type || "unknown";
+        const seedInfo = SEED_TYPES[seedType] || { name: "Unknown Seed" };
+
         const div = document.createElement("div");
         div.className = "codex-entry";
 
         div.innerHTML = `
           <h2>${seed}</h2>
-          <p class="seed-type">${entry.type}</p>
+          <p class="seed-type">${seedInfo.name}</p>
           <p><strong>Dungeon:</strong> ${dungeon?.name || entry.dungeonKey}</p>
           <p><strong>Modifiers:</strong> ${entry.modifiers.join(", ")}</p>
           <p><strong>Beaten:</strong> ${new Date(entry.timestamp).toLocaleString()}</p>
@@ -94,7 +99,9 @@
       }
     }
 
-    // Replay a seed
+    /************************************************************
+     * REPLAY + SHARE
+     ************************************************************/
     container.addEventListener("click", (e) => {
       const replay = e.target.closest(".replay-btn");
       if (replay) {
