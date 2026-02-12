@@ -26,36 +26,52 @@ export const DungeonEngine = {
   applyScaling,
   updateEndlessScore,
   saveRun,
-  finalizeDungeon
+  finalizeDungeon,
+  moveToLabyrinthRoom
 };
 
 // --- RUN LIFECYCLE --- //
 function createRun(player, dungeonKey) {
   const dungeon = DUNGEONS[dungeonKey];
+  if (!dungeon) {
+    throw new Error(`Unknown dungeon key: ${dungeonKey}`);
+  }
+
+  const baseDungeonMods = dungeon.dungeonModifiers || {};
 
   const run = {
     dungeonKey,
-    currentFloor: 1,
     state: "exploring",
-    if (dungeon.modifiers) {
-      run.activeModifiers = [...dungeon.modifiers];
-    },
+    currentFloor: 1,
+    highestFloor: 1,
+
+    // legacy dungeonModifiers (numeric / boolean knobs)
     modifiers: {
       ...(dungeon.dungeonModifiers || {})
     },
-    noHealing: !!(dungeon.dungeonModifiers && dungeon.dungeonModifiers.noHealing),
-    doubleLoot: !!(dungeon.dungeonModifiers && dungeon.dungeonModifiers.doubleLoot),
-    enemyScaling:
-      (dungeon.dungeonModifiers && dungeon.dungeonModifiers.enemyScaling) || 1.0,
+    noHealing: !!baseDungeonMods.noHealing,
+    doubleLoot: !!baseDungeonMods.doubleLoot,
+    enemyScaling: baseDungeonMods.enemyScaling || 1.0,
+
+    // new-style modifier keys (for DUNGEON_MODIFIERS)
+    activeModifiers: dungeon.modifiers ? [...dungeon.modifiers] : [],
+
     completed: false,
     failed: false,
     startedAt: Date.now(),
     progress: []
   };
 
-  if (dungeon.type === "endless") {
+  if (dungeon.type === "labyrinth") {
+    run.mode = "labyrinth";
+    run.labyrinth = generateLabyrinth(dungeon);
+  } else if (dungeon.type === "endless") {
+    run.mode = "endless";
     run.highestFloor = 1;
     run.endlessScore = 0;
+  } else {
+    // normal / great_dungeon / other finite types
+    run.mode = "linear";
   }
 
   return run;
@@ -69,32 +85,52 @@ function isEndless(run) {
 function getCurrentFloor(run) {
   const dungeon = DUNGEONS[run.dungeonKey];
   if (!dungeon || dungeon.type === "endless") return null;
-  return dungeon.floors[run.currentFloor - 1];
+
+  // Prefer floorsConfig (canonical)
+  if (dungeon.floorsConfig) {
+    return dungeon.floorsConfig[run.currentFloor] || null;
+  }
+
+  // Legacy: dungeon.floors as an array of floor configs
+  if (Array.isArray(dungeon.floors)) {
+    return dungeon.floors[run.currentFloor - 1] || null;
+  }
+
+  return null;
 }
 
 // --- ROOM GENERATION --- //
 function generateRoom(run) {
   const dungeon = DUNGEONS[run.dungeonKey];
+  if (!dungeon) throw new Error(`Unknown dungeon key: ${run.dungeonKey}`);
+
+  // Labyrinth handled via graph
+  if (run.mode === "labyrinth" || dungeon.type === "labyrinth") {
+    return generateLabyrinthRoom(run);
+  }
 
   // Endless handled separately
   if (dungeon.type === "endless") {
-    return this.generateEndlessRoom(run);
+    return generateEndlessRoom(run);
   }
 
-  const floor = this.getCurrentFloor(run);
+  const floor = getCurrentFloor(run);
 
-  // --- Chest Room Logic ---
+  // --- Chest Room Logic (linear / great_dungeon / normal) ---
   if (dungeon.chestRoomsPerFloor) {
     const roomsPerFloor = dungeon.roomsPerFloor || 3;
     const chestRooms = dungeon.chestRoomsPerFloor;
 
-    // Determine if this room index is a chest room
     const roomIndex = run.roomIndex || 0;
-    const chestInterval = Math.floor(roomsPerFloor / chestRooms);
+    const chestInterval = Math.max(1, Math.floor(roomsPerFloor / chestRooms));
 
     if (roomIndex % chestInterval === 0) {
       // Boss floor chest override
-      if (dungeon.bossFloor && run.currentFloor === dungeon.bossFloor && dungeon.bossChest) {
+      if (
+        dungeon.bossFloor &&
+        run.currentFloor === dungeon.bossFloor &&
+        dungeon.bossChest
+      ) {
         return { type: "boss_chest", lootTable: dungeon.treasureLootTable };
       }
 
@@ -111,9 +147,36 @@ function generateRoom(run) {
 
   // --- Normal room logic ---
   const roll = Math.random();
-  if (roll < 0.6) return { type: "encounter", enemies: floor.encounterTable };
-  if (roll < 0.8) return { type: "event", events: floor.events };
-  return { type: "treasure", lootTable: floor.lootTable };
+
+  // If we have a floor config, use it
+  if (floor) {
+    if (roll < 0.6) {
+      return { type: "encounter", enemies: floor.encounterTable };
+    }
+    if (roll < 0.8) {
+      return { type: "event", events: floor.events };
+    }
+    return { type: "treasure", lootTable: floor.lootTable };
+  }
+
+  // Fallback for dungeons without per-floor config
+  if (roll < 0.6) {
+    return {
+      type: "encounter",
+      enemies: dungeon.baseEncounterTable || []
+    };
+  }
+  if (roll < 0.8) {
+    return {
+      type: "event",
+      events: dungeon.baseEvents || []
+    };
+  }
+  return {
+    type: "treasure",
+    lootTable:
+      dungeon.baseLootTable || dungeon.treasureLootTable || null
+  };
 }
 
 function generateEndlessRoom(run) {
@@ -149,11 +212,13 @@ function buildEncounterEnemies(run, enemiesDescriptor) {
   const addResolved = (enemyKey, tier = 1, count = 1) => {
     for (let i = 0; i < count; i++) {
       const enemy = resolveEnemy(enemyKey, regionKey, tier);
+
       if (isEndless(run)) {
         applyEndlessScaling(enemy, run);
       } else if (run.enemyScaling && run.enemyScaling !== 1.0) {
         applyScaling(enemy, run.enemyScaling);
       }
+
       enemy.isDungeonEnemy = true;
       enemy.dungeonKey = run.dungeonKey;
       result.push(enemy);
@@ -236,6 +301,8 @@ function resolveTreasure(lootTableKey, run, logs) {
   if (!table) return null;
 
   let loot = rollLootTable(table);
+
+  // New-style modifier: "double_loot" in activeModifiers
   if (run.activeModifiers?.includes("double_loot")) {
     logs.push("Modifier active: Double Loot!");
     const extra = rollLootTable(table);
@@ -244,6 +311,7 @@ function resolveTreasure(lootTableKey, run, logs) {
     loot.items.push(...extra.items);
   }
 
+  // Legacy dungeonModifiers flag
   if (run.doubleLoot) {
     const extra = rollLootTable(table);
     loot.gold += extra.gold;
@@ -301,10 +369,11 @@ function generateBoss(run, tierOverride = null) {
 function completeFloor(run) {
   const dungeon = DUNGEONS[run.dungeonKey];
 
+  // Floor-based modifier injection (for great_dungeon / others)
   if (dungeon.floorModifiers && dungeon.floorModifiers[run.currentFloor]) {
     run.activeModifiers.push(...dungeon.floorModifiers[run.currentFloor]);
   }
-  
+
   if (dungeon.type === "endless") {
     run.currentFloor++;
     run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
@@ -314,8 +383,15 @@ function completeFloor(run) {
   }
 
   run.currentFloor++;
-  if (run.currentFloor > dungeon.floors.length) {
-    run.state = "boss";
+  if (dungeon.floorsConfig) {
+    const maxFloor = Object.keys(dungeon.floorsConfig).length;
+    if (run.currentFloor > maxFloor) {
+      run.state = "boss";
+    }
+  } else if (typeof dungeon.floors === "number") {
+    if (run.currentFloor > dungeon.floors) {
+      run.state = "boss";
+    }
   }
 }
 
@@ -405,7 +481,8 @@ function finalizeDungeon(player, run, combatResult, username) {
       i => i.name === item.name && i.type === item.type
     );
     if (existing) {
-      existing.quantity = (existing.quantity || 1) + (item.quantity || item.qty || 1);
+      existing.quantity =
+        (existing.quantity || 1) + (item.quantity || item.qty || 1);
     } else {
       player.inventory.push(item);
     }
@@ -422,4 +499,195 @@ function finalizeDungeon(player, run, combatResult, username) {
   PlayerStorage.save(username, player);
 
   return player.lastCompletedDungeonRun;
+}
+
+// --- LABYRINTH GENERATION --- //
+function generateLabyrinth(dungeon) {
+  const cfg = dungeon.labyrinthConfig || {};
+  const roomCount = cfg.roomCount || 20;
+  const minDegree = cfg.minDegree || 1;
+  const maxDegree = cfg.maxDegree || 3;
+
+  const rooms = {};
+  const ids = [];
+
+  // create nodes
+  for (let i = 0; i < roomCount; i++) {
+    const id = `R${i + 1}`;
+    ids.push(id);
+    rooms[id] = {
+      id,
+      type: "normal", // will refine later
+      neighbors: [],
+      depth: 0,
+      visited: false,
+      modifiers: []
+    };
+  }
+
+  // build a connected backbone (simple chain)
+  for (let i = 0; i < ids.length - 1; i++) {
+    const a = ids[i];
+    const b = ids[i + 1];
+    rooms[a].neighbors.push(b);
+    rooms[b].neighbors.push(a);
+  }
+
+  // add extra edges for loops / branches
+  const extraEdges = Math.floor(roomCount * 0.6);
+  for (let i = 0; i < extraEdges; i++) {
+    const a = ids[Math.floor(Math.random() * ids.length)];
+    const b = ids[Math.floor(Math.random() * ids.length)];
+    if (a === b) continue;
+    if (!rooms[a].neighbors.includes(b)) {
+      if (
+        rooms[a].neighbors.length < maxDegree &&
+        rooms[b].neighbors.length < maxDegree
+      ) {
+        rooms[a].neighbors.push(b);
+        rooms[b].neighbors.push(a);
+      }
+    }
+  }
+
+  // compute depths from start (R1)
+  const startId = ids[0];
+  const queue = [startId];
+  rooms[startId].depth = 0;
+  const visited = new Set([startId]);
+
+  while (queue.length) {
+    const cur = queue.shift();
+    const curDepth = rooms[cur].depth;
+    for (const n of rooms[cur].neighbors) {
+      if (!visited.has(n)) {
+        visited.add(n);
+        rooms[n].depth = curDepth + 1;
+        queue.push(n);
+      }
+    }
+  }
+
+  // pick boss room: farthest depth or cfg.bossAtDepth
+  let bossRoomId = null;
+  if (cfg.bossAtDepth != null) {
+    const candidates = ids.filter(id => rooms[id].depth >= cfg.bossAtDepth);
+    bossRoomId = candidates.length
+      ? candidates[Math.floor(Math.random() * candidates.length)]
+      : ids[ids.length - 1];
+  } else {
+    bossRoomId = ids.reduce(
+      (best, id) => (rooms[id].depth > rooms[best].depth ? id : best),
+      ids[0]
+    );
+  }
+
+  rooms[bossRoomId].type = "boss";
+
+  // sprinkle treasure / events / mimics
+  const nonBossIds = ids.filter(id => id !== bossRoomId);
+  shuffle(nonBossIds);
+
+  const treasureCount = Math.max(2, Math.floor(roomCount * 0.15));
+  const eventCount = Math.max(2, Math.floor(roomCount * 0.15));
+  const mimicCount = Math.max(1, Math.floor(roomCount * 0.05));
+
+  for (let i = 0; i < treasureCount && i < nonBossIds.length; i++) {
+    rooms[nonBossIds[i]].type = "treasure";
+  }
+  for (
+    let i = treasureCount;
+    i < treasureCount + eventCount && i < nonBossIds.length;
+    i++
+  ) {
+    if (rooms[nonBossIds[i]].type === "normal") {
+      rooms[nonBossIds[i]].type = "event";
+    }
+  }
+  for (
+    let i = treasureCount + eventCount;
+    i < treasureCount + eventCount + mimicCount &&
+    i < nonBossIds.length;
+    i++
+  ) {
+    if (rooms[nonBossIds[i]].type === "normal") {
+      rooms[nonBossIds[i]].type = "mimic";
+      rooms[nonBossIds[i]].enemyKey = "mimic_monster";
+    }
+  }
+
+  return {
+    rooms,
+    startRoomId: startId,
+    currentRoomId: startId,
+    bossRoomId
+  };
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+// Generate a room from the labyrinth graph
+function generateLabyrinthRoom(run) {
+  const dungeon = DUNGEONS[run.dungeonKey];
+  const lab = run.labyrinth;
+  if (!lab) throw new Error("No labyrinth data on run");
+
+  const room = lab.rooms[lab.currentRoomId];
+  if (!room) throw new Error("Invalid labyrinth room");
+
+  room.visited = true;
+
+  const baseFloor =
+    (dungeon.floorsConfig && dungeon.floorsConfig[1]) || null;
+
+  switch (room.type) {
+    case "boss":
+      run.state = "boss";
+      return { type: "boss" };
+
+    case "treasure":
+      return {
+        type: "treasure",
+        lootTable:
+          (baseFloor && baseFloor.lootTable) ||
+          dungeon.baseLootTable ||
+          dungeon.treasureLootTable
+      };
+
+    case "event":
+      return {
+        type: "event",
+        events: ["labyrinth_whisper", "lost_explorer", "cursed_altar"]
+      };
+
+    case "mimic":
+      return {
+        type: "mimic",
+        enemyKey: room.enemyKey || "mimic_monster"
+      };
+
+    default:
+      return {
+        type: "encounter",
+        enemies:
+          (baseFloor && baseFloor.encounterTable) ||
+          dungeon.baseEncounterTable ||
+          []
+      };
+  }
+}
+
+function moveToLabyrinthRoom(run, nextRoomId) {
+  if (!run.labyrinth) return;
+  const lab = run.labyrinth;
+  const current = lab.rooms[lab.currentRoomId];
+  if (!current.neighbors.includes(nextRoomId)) {
+    throw new Error("Invalid move: not a neighbor");
+  }
+  lab.currentRoomId = nextRoomId;
 }
