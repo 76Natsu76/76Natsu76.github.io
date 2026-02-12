@@ -1,4 +1,4 @@
-// overworld-encounter.js — Phase 4 Overworld Encounter Engine
+// overworld-encounter.js — Phase 4 Overworld Encounter Engine (Final Updated)
 
 import { WORLD_DATA } from "./world-data.js";
 import { getWorldState } from "./world-state.js";
@@ -6,7 +6,6 @@ import { getRegionAtPixel } from "./world-map-data.js";
 import { seededRNG } from "./rng.js";
 import { generateRegionEncounter } from "./region-encounters.js";
 import { WeatherEngine } from "./weather-engine.js";
-import { PlayerStorage } from "./player-storage.js";
 
 // EncounterEngine.generate() is used for region-info → fight
 import { EncounterEngine } from "./encounters.js";
@@ -31,7 +30,7 @@ function getSeedAndRelicEncounterMods(player) {
   const relics = player.relics || [];
 
   if (meta.blessedClears > 0) {
-    mods.encounterRateMult *= 0.9; // safer overworld
+    mods.encounterRateMult *= 0.9;
     mods.blessedBonus = true;
   }
   if (meta.cursedClears > 0) {
@@ -78,11 +77,16 @@ export function checkForOverworldEncounter(player) {
   // Seed & relic modifiers
   const metaMods = getSeedAndRelicEncounterMods(player);
 
+  // World event multipliers (from overworld.js)
+  const eventEncounterMult = player._eventEncounterMult || 1.0;
+  const eventRareMult = player._eventRareMult || 1.0;
+
   // Region encounter rate
   const encounterRate =
     BASE_ENCOUNTER_CHANCE *
     region.encounterRateMult *
-    metaMods.encounterRateMult;
+    metaMods.encounterRateMult *
+    eventEncounterMult;
 
   if (Math.random() > encounterRate) return;
 
@@ -99,7 +103,8 @@ export function checkForOverworldEncounter(player) {
   const rareMult =
     region.rareSpawnMult *
     metaMods.rareSpawnMult *
-    crisisMult;
+    crisisMult *
+    eventRareMult;
 
   // RNG
   const rng = seededRNG(regionKey + Date.now());
