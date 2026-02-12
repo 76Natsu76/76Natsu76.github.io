@@ -46,24 +46,33 @@ export const DungeonEngine = {
 function createRun(player, dungeonKey, seed = null) {
   const dungeon = DUNGEONS[dungeonKey];
 
+  // If no seed provided, generate one
   if (!seed) {
     seed = Math.random().toString(36).substring(2, 10).toUpperCase();
   }
 
+  // Detect seed type
   const seedType = detectSeedType(seed);
+
+  const baseMods = dungeon.dungeonModifiers || {};
 
   const run = {
     dungeonKey,
     seed,
-    seedType,
+    seedType,                     // ⭐ NEW
     state: "exploring",
     currentFloor: 1,
     highestFloor: 1,
+
+    // Legacy modifiers
+    modifiers: { ...baseMods },
+    noHealing: !!baseMods.noHealing,
+    doubleLoot: !!baseMods.doubleLoot,
+    enemyScaling: baseMods.enemyScaling || 1.0,
+
+    // New-style modifiers
     activeModifiers: dungeon.modifiers ? [...dungeon.modifiers] : [],
-    modifiers: { ...(dungeon.dungeonModifiers || {}) },
-    noHealing: !!dungeon.dungeonModifiers?.noHealing,
-    doubleLoot: !!dungeon.dungeonModifiers?.doubleLoot,
-    enemyScaling: dungeon.dungeonModifiers?.enemyScaling || 1.0,
+
     completed: false,
     failed: false,
     startedAt: Date.now(),
@@ -76,9 +85,10 @@ function createRun(player, dungeonKey, seed = null) {
     run.activeModifiers.push(...seedDef.modifiers);
   }
 
+  // ⭐ Initialize labyrinth with seed
   if (dungeon.type === "labyrinth") {
     run.mode = "labyrinth";
-    run.labyrinth = generateLabyrinth(dungeon, seed);
+    run.labyrinth = generateLabyrinth(dungeon, seed); // pass seed
   } else if (dungeon.type === "endless") {
     run.mode = "endless";
     run.highestFloor = 1;
@@ -519,11 +529,12 @@ function finalizeDungeon(player, run, combatResult, username) {
 }
 
 // --- LABYRINTH GENERATION --- //
-function generateLabyrinth(dungeon) {
+function generateLabyrinth(dungeon, seed) {
   const cfg = dungeon.labyrinthConfig || {};
   const roomCount = cfg.roomCount || 20;
   const minDegree = cfg.minDegree || 1;
   const maxDegree = cfg.maxDegree || 3;
+  const rng = seededRNG(seed);
 
   const rooms = {};
   const ids = [];
@@ -553,8 +564,8 @@ function generateLabyrinth(dungeon) {
   // add extra edges for loops / branches
   const extraEdges = Math.floor(roomCount * 0.6);
   for (let i = 0; i < extraEdges; i++) {
-    const a = ids[Math.floor(Math.random() * ids.length)];
-    const b = ids[Math.floor(Math.random() * ids.length)];
+    const a = ids[Math.floor(rng() * ids.length)];
+    const b = ids[Math.floor(rng() * ids.length)];
     if (a === b) continue;
     if (!rooms[a].neighbors.includes(b)) {
       if (
@@ -590,7 +601,7 @@ function generateLabyrinth(dungeon) {
   if (cfg.bossAtDepth != null) {
     const candidates = ids.filter(id => rooms[id].depth >= cfg.bossAtDepth);
     bossRoomId = candidates.length
-      ? candidates[Math.floor(Math.random() * candidates.length)]
+      ? candidates[Math.floor(rng() * candidates.length)]
       : ids[ids.length - 1];
   } else {
     bossRoomId = ids.reduce(
@@ -603,7 +614,7 @@ function generateLabyrinth(dungeon) {
 
   // sprinkle treasure / events / mimics
   const nonBossIds = ids.filter(id => id !== bossRoomId);
-  shuffle(nonBossIds);
+  shuffle(nonBossIds, rng);
 
   const treasureCount = Math.max(2, Math.floor(roomCount * 0.15));
   const eventCount = Math.max(2, Math.floor(roomCount * 0.15));
