@@ -1,6 +1,4 @@
-/************************************************************
- * world-map.js — Region cards + map markers + boss unlocks
- ************************************************************/
+// --- world-map.js — Region cards + map markers + boss unlocks //
 
 import { requireSession } from "./session-guard.js";
 import { PlayerStorage } from "./player-storage.js";
@@ -13,17 +11,25 @@ import { REGION_HIERARCHY } from "./region-hierarchy.js";
 import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { REGION_TO_SETTLEMENT } from "./settlement-index.js";
+import { SETTLEMENTS } from "./settlements.js";
 
-/************************************************************
- * GLOBALS FOR POPUP CONTEXT
- ************************************************************/
+// --- GLOBALS FOR POPUP CONTEXT //
 let currentPlayer = null;
 let currentWorldState = null;
 let currentUsername = null;
 
-/************************************************************
- * INIT
- ************************************************************/
+// --- SIMPLE REGEN RATES (local helper) //
+function getRegenRates(player) {
+  const hpMax = Number(player.hpMax || 0);
+  const mpMax = Number(player.manaMax ?? player.mana ?? 0);
+
+  const hpPerMinute = Math.max(1, Math.floor(hpMax * 0.02));
+  const mpPerMinute = Math.max(1, Math.floor(mpMax * 0.02));
+
+  return { hpPerMinute, mpPerMinute };
+}
+
+// --- INIT //
 async function init() {
   await requireSession();
   await initEncounters();
@@ -67,9 +73,7 @@ init().catch(err => {
   console.error("Failed to init world map:", err);
 });
 
-/************************************************************
- * PLAYER REGEN
- ************************************************************/
+// --- PLAYER REGEN //
 function applyRegen(player) {
   if (!player) return player;
 
@@ -94,9 +98,7 @@ function applyRegen(player) {
   return player;
 }
 
-/************************************************************
- * WORLD STATE LOAD / SAVE / TICK
- ************************************************************/
+// --- WORLD STATE LOAD / SAVE / TICK //
 const WORLD_TICK_STORAGE_KEY = "world_tick_state";
 
 function loadOrInitWorldState() {
@@ -123,9 +125,7 @@ function maybeTickWorld(worldState) {
   return tickWorld(worldState);
 }
 
-/************************************************************
- * REGION UNLOCK LOGIC
- ************************************************************/
+// --- REGION UNLOCK LOGIC //
 function isRegionUnlocked(player, regionKey, regionState) {
   const rules = WORLD_DATA.regions[regionKey].unlock;
 
@@ -135,9 +135,7 @@ function isRegionUnlocked(player, regionKey, regionState) {
   return true;
 }
 
-/************************************************************
- * UI HELPERS — WEATHER, HAZARD, EVENTS
- ************************************************************/
+// --- UI HELPERS — WEATHER, HAZARD, EVENTS //
 function weatherKeyToIconAndLabel(key) {
   switch (key) {
     case "clear": return { icon: "☀️", label: "Clear" };
@@ -154,9 +152,10 @@ function weatherKeyToIconAndLabel(key) {
 }
 
 function hazardLevelToClass(level) {
-  if (level >= 70) return "hazard-high";
-  if (level >= 40) return "hazard-medium";
-  return "hazard-low";
+  // Map directly to danger-* classes used in CSS
+  if (level >= 70) return "danger-high";
+  if (level >= 40) return "danger-medium";
+  return "danger-low";
 }
 
 function influenceIcon(key) {
@@ -230,42 +229,42 @@ function renderWorldEvents(worldState) {
   // Global Modifiers
   if (global.globalModifiers?.length) {
     out.push(`<div class="world-event-entry">
-      <span class="world-event-tag">Global Modifiers</span>
-      ${global.globalModifiers.map(m => format(m.key || "modifier")).join(", ")}
-    </div>`);
+<span class="world-event-tag">Global Modifiers</span>
+${global.globalModifiers.map(m => format(m.key || "modifier")).join(", ")}
+</div>`);
   }
 
   // Weather Fronts
   if (global.weatherFronts?.length) {
     out.push(`<div class="world-event-entry">
-      <span class="world-event-tag">Weather Fronts</span>
-      ${global.weatherFronts.map(f => format(f.weatherKey)).join(", ")}
-    </div>`);
+<span class="world-event-tag">Weather Fronts</span>
+${global.weatherFronts.map(f => format(f.weatherKey)).join(", ")}
+</div>`);
   }
 
   // Migrations
   if (global.migrations?.length) {
     out.push(`<div class="world-event-entry">
-      <span class="world-event-tag">Migrations</span>
-      ${global.migrations.map(m => format(m.faction)).join(", ")}
-    </div>`);
+<span class="world-event-tag">Migrations</span>
+${global.migrations.map(m => format(m.faction)).join(", ")}
+</div>`);
   }
 
   // Anomalies
   if (global.anomalies?.length) {
     out.push(`<div class="world-event-entry">
-      <span class="world-event-tag">Anomalies</span>
-      ${global.anomalies.map(a => format(a.element)).join(", ")}
-    </div>`);
+<span class="world-event-tag">Anomalies</span>
+${global.anomalies.map(a => format(a.element)).join(", ")}
+</div>`);
   }
 
   // Global Announcements (last 5)
   const announcements = global.announcements || [];
   if (announcements.length) {
     out.push(`<div class="world-event-entry">
-      <span class="world-event-tag">Announcements</span>
-      ${announcements.slice(-5).map(a => a.message).join("<br>")}
-    </div>`);
+<span class="world-event-tag">Announcements</span>
+${announcements.slice(-5).map(a => a.message).join("<br>")}
+</div>`);
   }
 
   if (!out.length) {
@@ -275,9 +274,7 @@ function renderWorldEvents(worldState) {
   }
 }
 
-/************************************************************
- * GLOBAL OVERLAYS PER REGION
- ************************************************************/
+// --- GLOBAL OVERLAYS PER REGION //
 function buildGlobalOverlaysForRegion(globalState, regionKey) {
   if (!globalState) return "";
 
@@ -293,8 +290,8 @@ function buildGlobalOverlaysForRegion(globalState, regionKey) {
         : "🌦️";
 
       parts.push(`<span class="global-overlay-tag global-overlay-weather">
-        ${icon} ${format(front.weatherKey)} (Int ${front.intensity || 1})
-      </span>`);
+${icon} ${format(front.weatherKey)} (Int ${front.intensity || 1})
+</span>`);
     }
   }
 
@@ -303,8 +300,8 @@ function buildGlobalOverlaysForRegion(globalState, regionKey) {
     const currentRegion = mig.path[mig.position];
     if (currentRegion === regionKey) {
       parts.push(`<span class="global-overlay-tag global-overlay-migration">
-        🐾 ${format(mig.faction)} Migration
-      </span>`);
+🐾 ${format(mig.faction)} Migration
+</span>`);
     }
   }
 
@@ -317,8 +314,8 @@ function buildGlobalOverlaysForRegion(globalState, regionKey) {
         : "✨";
 
       parts.push(`<span class="global-overlay-tag global-overlay-anomaly">
-        ${icon} ${format(anomaly.element)} Anomaly (Int ${anomaly.intensity})
-      </span>`);
+${icon} ${format(anomaly.element)} Anomaly (Int ${anomaly.intensity})
+</span>`);
     }
   }
 
@@ -326,16 +323,14 @@ function buildGlobalOverlaysForRegion(globalState, regionKey) {
   for (const mod of globalState.globalModifiers || []) {
     if (mod.expired) continue;
     parts.push(`<span class="global-overlay-tag global-overlay-global">
-      🌒 Global Effect
-    </span>`);
+🌒 Global Effect
+</span>`);
   }
 
   return parts.join(" ");
 }
 
-/************************************************************
- * BOSS STATUS RENDERING
- ************************************************************/
+// --- BOSS STATUS RENDERING //
 function renderBossStatus(regionState) {
   if (regionState.worldBossActive) {
     return "⚔️ WORLD BOSS ACTIVE";
@@ -349,9 +344,7 @@ function renderBossStatus(regionState) {
   return "Dormant";
 }
 
-/************************************************************
- * REGION HISTORY RENDERING
- ************************************************************/
+// --- REGION HISTORY RENDERING //
 function renderRegionHistory(regionState) {
   const history = regionState.history || [];
   if (!history.length) {
@@ -364,16 +357,14 @@ function renderRegionHistory(regionState) {
     .map(entry => {
       const time = new Date(entry.timestamp).toLocaleString();
       return `<div class="history-entry">
-        <span class="history-time">${time}</span>
-        <span class="history-msg">${entry.message}</span>
-      </div>`;
+<span class="history-time">${time}</span>
+<span class="history-msg">${entry.message}</span>
+</div>`;
     })
     .join("");
 }
 
-/************************************************************
- * SEASON BANNER
- ************************************************************/
+// --- SEASON BANNER //
 function renderSeasonBanner(worldState) {
   const banner = document.getElementById("seasonBanner");
   if (!banner) return;
@@ -383,9 +374,7 @@ function renderSeasonBanner(worldState) {
   banner.className = "season-banner season-" + season;
 }
 
-/************************************************************
- * WORLD MAP — REGION CARDS
- ************************************************************/
+// --- WORLD MAP — REGION CARDS //
 function renderWorldMap(player, worldState, username) {
   const container = document.getElementById("mapContainer");
   if (!container) return;
@@ -434,114 +423,112 @@ function renderWorldMap(player, worldState, username) {
       .join("");
 
     const settlementKey = REGION_TO_SETTLEMENT[regionKey];
-    ${settlementKey ? `
-      <button class="btn" onclick="window.location.href='town.html?town=${settlementKey}'">
-        Visit ${SETTLEMENTS[settlementKey].name}
-      </button>
-    ` : ""}
+    let settlementButtonHtml = "";
+    if (settlementKey && SETTLEMENTS[settlementKey]) {
+      settlementButtonHtml = `
+<button class="btn" onclick="window.location.href='town.html?town=${settlementKey}'">
+Visit ${SETTLEMENTS[settlementKey].name}
+</button>`;
+    }
 
     out.push(`
-      <div class="region-card" id="region-card-${regionKey}">
-        <div class="region-header">
-          <h2>${region.name}</h2>
-          <div class="region-subtitle">${format(biomeKey)}</div>
-        </div>
+<div class="region-card" id="region-card-${regionKey}">
+  <div class="region-header">
+    <h2>${region.name}</h2>
+    <div class="region-subtitle">${format(biomeKey)}</div>
+  </div>
 
-        <button onclick="window.location.href='town.html?town=${settlementKey}'">
-          Visit Settlement
-        </button>
+  ${settlementButtonHtml}
 
-        <div class="region-row">
-          <div class="region-weather">
-            <span class="weather-icon">${weatherIcon}</span>
-            <span class="weather-label">${weatherLabel}</span>
-          </div>
+  <div class="region-row">
+    <div class="region-weather">
+      <span class="weather-icon">${weatherIcon}</span>
+      <span class="weather-label">${weatherLabel}</span>
+    </div>
 
-          <div class="region-danger">
-            <div class="danger-label">
-              <span>Danger</span>
-              <span>${dangerLevel.toFixed(2)}</span>
-            </div>
-            <div class="danger-bar ${hazardClass}">
-              <div class="danger-fill" style="width:${Math.min(100, hazardLevel)}%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="region-crisis">
-          <strong>Crisis:</strong>
-          <span>${crisisStageToLabel(regionState.crisis, regionState.crisisStageIndex)}</span>
-        </div>
-
-        <div class="region-boss">
-          ${renderBossStatus(regionState)}
-        </div>
-
-        <div class="region-recovery">
-          <strong>Stability:</strong>
-          <span>${Number(regionState.stability ?? 1.0).toFixed(2)}</span>
-        </div>
-
-        <div class="region-elemental">
-          <strong>Elemental Charge:</strong>
-          <div>${elementalChargeIcons(regionState.elementalCharge)}</div>
-        </div>
-
-        <div class="region-overlays">
-          <strong>Overlays:</strong>
-          <div>${overlayIcons(regionState.overlays)}</div>
-        </div>
-
-        <div class="region-player-impact">
-          <strong>Player Influence Active</strong>
-        </div>
-
-        <div class="region-influence">
-          ${Object.keys(influence).map(k => `
-            <div class="influence-item">
-              <span class="influence-icon">${influenceIcon(k)}</span>
-              <span class="influence-label">${format(k)}</span>
-              <span class="influence-value">${Number(influence[k] || 0).toFixed(0)}</span>
-            </div>
-          `).join("")}
-        </div>
-
-        <div class="region-history">
-          <details>
-            <summary>Region History</summary>
-            <div class="history-list">
-              ${renderRegionHistory(regionState)}
-            </div>
-          </details>
-        </div>
-
-        <div class="region-global-overlays">
-          ${globalOverlays || "<span class='global-overlay-none'>No global effects</span>"}
-        </div>
-
-        <div class="region-subregions">
-          <label>Area:
-            <select class="subregion-select" data-region="${regionKey}">
-              ${subregionOptions}
-            </select>
-          </label>
-        </div>
-
-        <button class="btn ${levelLocked ? "disabled" : ""}"
-          data-region="${regionKey}"
-          data-locked="${levelLocked ? "1" : "0"}">
-          ${levelLocked ? `Requires Lv ${minLevel}` : "Enter Area"}
-        </button>
+    <div class="region-danger">
+      <div class="danger-label">
+        <span>Danger</span>
+        <span>${dangerLevel.toFixed(2)}</span>
       </div>
-    `);
+      <div class="danger-bar ${hazardClass}">
+        <div class="danger-fill" style="width:${Math.min(100, hazardLevel)}%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="region-crisis">
+    <strong>Crisis:</strong>
+    <span>${crisisStageToLabel(regionState.crisis, regionState.crisisStageIndex)}</span>
+  </div>
+
+  <div class="region-boss">
+    ${renderBossStatus(regionState)}
+  </div>
+
+  <div class="region-recovery">
+    <strong>Stability:</strong>
+    <span>${Number(regionState.stability ?? 1.0).toFixed(2)}</span>
+  </div>
+
+  <div class="region-elemental">
+    <strong>Elemental Charge:</strong>
+    <div>${elementalChargeIcons(regionState.elementalCharge)}</div>
+  </div>
+
+  <div class="region-overlays">
+    <strong>Overlays:</strong>
+    <div>${overlayIcons(regionState.overlays)}</div>
+  </div>
+
+  <div class="region-player-impact">
+    <strong>Player Influence Active</strong>
+  </div>
+
+  <div class="region-influence">
+    ${Object.keys(influence).map(k => `
+      <div class="influence-item">
+        <span class="influence-icon">${influenceIcon(k)}</span>
+        <span class="influence-label">${format(k)}</span>
+        <span class="influence-value">${Number(influence[k] || 0).toFixed(0)}</span>
+      </div>
+    `).join("")}
+  </div>
+
+  <div class="region-history">
+    <details>
+      <summary>Region History</summary>
+      <div class="history-list">
+        ${renderRegionHistory(regionState)}
+      </div>
+    </details>
+  </div>
+
+  <div class="region-global-overlays">
+    ${globalOverlays || "<span class='global-overlay-none'>No global effects</span>"}
+  </div>
+
+  <div class="region-subregions">
+    <label>Area:
+      <select class="subregion-select" data-region="${regionKey}">
+        ${subregionOptions}
+      </select>
+    </label>
+  </div>
+
+  <button class="btn ${levelLocked ? "disabled" : ""}"
+    data-region="${regionKey}"
+    data-locked="${levelLocked ? "1" : "0"}">
+    ${levelLocked ? `Requires Lv ${minLevel}` : "Enter Area"}
+  </button>
+</div>
+`);
   }
 
   container.innerHTML = out.join("");
 }
 
-/************************************************************
- * MAP MARKERS — WITH POPUP (Option C)
- ************************************************************/
+// --- MAP MARKERS — WITH POPUP (Option C) //
 function renderRegionMarkers(player) {
   const world = getWorldState();
 
@@ -587,19 +574,19 @@ function openRegionPopup(regionKey) {
   const crisisLabel = crisisStageToLabel(regionState.crisis, regionState.crisisStageIndex);
 
   popup.innerHTML = `
-    <div class="region-popup-inner">
-      <h2>${region.name}</h2>
-      <p><strong>Boss:</strong> ${bossStatus}</p>
-      <p><strong>Crisis:</strong> ${crisisLabel}</p>
+<div class="region-popup-inner">
+  <h2>${region.name}</h2>
+  <p><strong>Boss:</strong> ${bossStatus}</p>
+  <p><strong>Crisis:</strong> ${crisisLabel}</p>
 
-      <div class="region-popup-buttons">
-        <button id="popupRegionOverviewBtn">Region Overview</button>
-        <button id="popupOpenCardBtn">Open Region Card</button>
-        <button id="popupEnterAreaBtn">Enter Area</button>
-        <button id="popupCloseBtn">Close</button>
-      </div>
-    </div>
-  `;
+  <div class="region-popup-buttons">
+    <button id="popupRegionOverviewBtn">Region Overview</button>
+    <button id="popupOpenCardBtn">Open Region Card</button>
+    <button id="popupEnterAreaBtn">Enter Area</button>
+    <button id="popupCloseBtn">Close</button>
+  </div>
+</div>
+`;
 
   popup.style.display = "block";
 
@@ -633,9 +620,7 @@ function openRegionPopup(regionKey) {
   };
 }
 
-/************************************************************
- * EVENT WIRING — REGION CARD BUTTONS
- ************************************************************/
+// --- EVENT WIRING — REGION CARD BUTTONS //
 function wireRegionClicks(player, worldState, username) {
   const container = document.getElementById("mapContainer");
   if (!container) return;
@@ -663,9 +648,7 @@ function wireRegionClicks(player, worldState, username) {
   });
 }
 
-/************************************************************
- * NAVIGATION BUTTONS
- ************************************************************/
+// --- NAVIGATION BUTTONS //
 function wireNavigationButtons() {
   const charBtn = document.getElementById("characterBtn");
   const invBtn = document.getElementById("inventoryBtn");
@@ -693,18 +676,16 @@ function renderGlobalAnnouncements(worldState) {
     .map(a => {
       const time = new Date(a.timestamp).toLocaleTimeString();
       return `
-        <div class="global-announcement-entry">
-          <span class="global-announcement-time">${time}</span>
-          <span>${a.message}</span>
-        </div>
-      `;
+<div class="global-announcement-entry">
+  <span class="global-announcement-time">${time}</span>
+  <span>${a.message}</span>
+</div>
+`;
     })
     .join("");
 }
 
-/************************************************************
- * UTIL
- ************************************************************/
+// --- UTIL //
 function format(str) {
   return String(str)
     .replace(/_/g, " ")
