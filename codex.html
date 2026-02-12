@@ -1,8 +1,125 @@
 <!DOCTYPE html>
+<html>
 <head>
-  
+  <meta charset="UTF-8">
+  <title>Seed Codex</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    .codex-entry {
+      background:#14171f;
+      border:1px solid #333;
+      padding:16px;
+      border-radius:8px;
+      margin-bottom:16px;
+    }
+
+    .seed-type {
+      font-weight:bold;
+      color:#7fffd4;
+    }
+
+    .btn {
+      padding:8px 12px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      margin-top:10px;
+      margin-right:10px;
+    }
+    .btn:hover { background:#222832; }
+  </style>
 </head>
+
 <body>
-  
+
+  <h1>Seed Codex</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="codexList">Loading...</div>
+
+  <button class="btn" onclick="goBack()">Return</button>
+
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { DUNGEONS } from "./dungeons.js";
+
+    await requireSession();
+    const { username } = window.syncState;
+
+    const player = PlayerStorage.load(username);
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+
+    const codex = player.labyrinthCodex?.beatenSeeds || {};
+    const container = document.getElementById("codexList");
+
+    if (Object.keys(codex).length === 0) {
+      container.innerHTML = "<p>No seeds recorded yet.</p>";
+    } else {
+      container.innerHTML = "";
+      for (const seed in codex) {
+        const entry = codex[seed];
+        const dungeon = DUNGEONS[entry.dungeonKey];
+
+        const div = document.createElement("div");
+        div.className = "codex-entry";
+
+        div.innerHTML = `
+          <h2>${seed}</h2>
+          <p class="seed-type">${entry.type}</p>
+          <p><strong>Dungeon:</strong> ${dungeon?.name || entry.dungeonKey}</p>
+          <p><strong>Modifiers:</strong> ${entry.modifiers.join(", ")}</p>
+          <p><strong>Beaten:</strong> ${new Date(entry.timestamp).toLocaleString()}</p>
+
+          <button class="btn replay-btn" data-seed="${seed}" data-dkey="${entry.dungeonKey}">
+            Replay Seed
+          </button>
+
+          <button class="btn share-btn" data-seed="${seed}">
+            Copy Seed
+          </button>
+        `;
+
+        container.appendChild(div);
+      }
+    }
+
+    // Replay a seed
+    container.addEventListener("click", (e) => {
+      const replay = e.target.closest(".replay-btn");
+      if (replay) {
+        const seed = replay.getAttribute("data-seed");
+        const dungeonKey = replay.getAttribute("data-dkey");
+
+        const run = DungeonEngine.createRun(player, dungeonKey, seed);
+        player.activeDungeonRun = run;
+        PlayerStorage.save(username, player);
+
+        window.location.href = "dungeon-room.html";
+      }
+
+      const share = e.target.closest(".share-btn");
+      if (share) {
+        const seed = share.getAttribute("data-seed");
+        navigator.clipboard.writeText(seed);
+        alert("Seed copied to clipboard: " + seed);
+      }
+    });
+
+    function goBack() {
+      window.location.href = "dungeon-select.html";
+    }
+  </script>
+
 </body>
 </html>
