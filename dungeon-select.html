@@ -76,6 +76,7 @@
         <p>Floor: ${run.currentFloor}</p>
         <button class="btn" onclick="continueRun()">Resume</button>
         <button class="btn" onclick="abandonRun()">Abandon Run</button>
+        <input class="seed-input" placeholder="Custom Seed (optional)" />
       `;
 
       container.appendChild(div);
@@ -125,23 +126,24 @@
     container.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-key]");
       if (!btn) return;
-
+      
       const dungeonKey = btn.getAttribute("data-key");
       const dungeon = DUNGEONS[dungeonKey];
-
+      
       if (!canEnter(player, dungeon)) {
         alert("You do not meet the entry requirements for this dungeon.");
         return;
       }
-
-      // Create run
-      const run = DungeonEngine.createRun(player, dungeonKey);
-
-      // Save to player
+    
+      const card = btn.closest(".dungeon-card");
+      const seedInput = card.querySelector(".seed-input");
+      const seed = seedInput?.value.trim() || null;
+    
+      const run = DungeonEngine.createRun(player, dungeonKey, seed);
+    
       player.activeDungeonRun = run;
       PlayerStorage.save(username, player);
-
-      // Go to dungeon-room
+    
       window.location.href = "dungeon-room.html";
     });
 
