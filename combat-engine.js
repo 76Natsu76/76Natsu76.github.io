@@ -312,6 +312,7 @@ export function buildCombatContext(
 ) {
   const weatherDef = weatherTable[weatherKey] || null;
 
+  // Existing overworld meta
   const crisis = encounterMeta?.crisis ?? null;
   const danger = encounterMeta?.danger ?? 1.0;
   const chaosMutated = encounterMeta?.chaosMutated ?? false;
@@ -319,30 +320,46 @@ export function buildCombatContext(
   const rarity = encounterMeta?.rarity || null;
   const family = encounterMeta?.family || null;
 
+  // ⭐ Phase D additions
+  const anomalyKey = encounterMeta?.anomaly ?? null;
+  const migrationKey = encounterMeta?.migration ?? null;
+  const globalModifierKey = encounterMeta?.globalModifier ?? null;
+
   return {
     regionKey,
     biomeKey,
     weatherKey: weatherKey || (weatherDef ? weatherDef.key : "clear"),
     eventKey,
     mode, // "solo" | "multiplayer" | "raid"
+
     turn: 1,
     lastPlayerActionType: null,
     fled: false,
-    combatEnded: null, // "victory" | "defeat" | "draw" | "fled"
+    combatEnded: null,
+
     grid: {
       playerRow: [],
       enemyRows: []
     },
-    // Overworld encounter meta
+
+    // Existing overworld encounter meta
     crisis,
     danger,
     chaosMutated,
     modifiers,
     rarity,
     family,
+
+    // ⭐ Phase D environmental meta
+    anomalyKey,
+    migrationKey,
+    globalModifierKey,
+
+    // Keep full encounterMeta for debugging or future use
     encounterMeta
   };
 }
+
 
 function assignPlayerPosition(player, context) {
   if (context.mode === "solo") {
