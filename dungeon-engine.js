@@ -293,6 +293,10 @@ function generateBoss(run, tierOverride = null) {
 function completeFloor(run) {
   const dungeon = DUNGEONS[run.dungeonKey];
 
+  if (dungeon.floorModifiers && dungeon.floorModifiers[run.currentFloor]) {
+    run.activeModifiers.push(...dungeon.floorModifiers[run.currentFloor]);
+  }
+  
   if (dungeon.type === "endless") {
     run.currentFloor++;
     run.highestFloor = Math.max(run.highestFloor || 1, run.currentFloor);
