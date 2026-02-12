@@ -395,8 +395,14 @@ function renderWorldMap(player, worldState, username) {
     const levelLocked = playerLevel < minLevel;
 
     const dangerLevel = Number(regionState.dangerLevel ?? 1.0);
-    const hazardLevel = dangerLevel * 20;
-    const hazardClass = dangerLevelToClass(dangerLevel);
+    let dangerBoost = 0;
+    
+    if (player.seedMeta?.cursedClears > 0) dangerBoost += 0.2;
+    if (player.seedMeta?.chaosClears > 0) dangerBoost += 0.1;
+    
+    const effectiveDanger = dangerLevel + dangerBoost;
+    const hazardClass = dangerLevelToClass(effectiveDanger);
+    const hazardLevel = effectiveDanger * 20;
 
     const influence = regionState.factionControl || {
       corruption: 0,
@@ -505,7 +511,8 @@ Visit ${SETTLEMENTS[settlementKey].name}
   </div>
 
   <div class="region-global-overlays">
-    ${globalOverlays || "<span class='global-overlay-none'>No global effects</span>"}
+    ${globalOverlays}
+    ${buildSeedAndRelicOverlays(player)}
   </div>
 
   <div class="region-subregions">
@@ -524,7 +531,6 @@ Visit ${SETTLEMENTS[settlementKey].name}
 </div>
 `);
   }
-
   container.innerHTML = out.join("");
 }
 
@@ -643,6 +649,58 @@ function wireRegionClicks(player, worldState, username) {
     }
 
     const encounter = EncounterEngine.generate(regionKey, subregionKey, username);
+    // Apply seed-based modifiers
+    if (player.seedMeta?.blessedClears > 0) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("blessed_world");
+    }
+    
+    if (player.seedMeta?.cursedClears > 0) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("cursed_world");
+    }
+    
+    if (player.seedMeta?.lootClears > 0) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("loot_world");
+    }
+    
+    if (player.seedMeta?.chaosClears > 0) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("chaos_world");
+    }
+    
+    if (player.seedMeta?.bossrushClears > 0) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("bossrush_world");
+    }
+    
+    // Apply relic-based modifiers
+    if (player.relics?.includes("chaos_orb")) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("chaos_flux");
+    }
+    
+    if (player.relics?.includes("bossheart")) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("boss_empower");
+    }
+    
+    if (player.relics?.includes("blessed_feather")) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("healing_winds");
+    }
+    
+    if (player.relics?.includes("cursed_crown")) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("cursed_pressure");
+    }
+    
+    if (player.relics?.includes("golden_idol")) {
+      encounter.modifiers = encounter.modifiers || [];
+      encounter.modifiers.push("treasure_magnet");
+    }
+
     sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
     window.location.href = "fight-interactive.html";
   });
@@ -683,6 +741,29 @@ function renderGlobalAnnouncements(worldState) {
 `;
     })
     .join("");
+}
+
+function buildSeedAndRelicOverlays(player) {
+  const overlays = [];
+
+  const meta = player.seedMeta || {};
+  const relics = player.relics || [];
+
+  // Seed-based overlays
+  if (meta.blessedClears > 0) overlays.push(`<span class="global-overlay-tag">✨ Blessed Aura</span>`);
+  if (meta.cursedClears > 0) overlays.push(`<span class="global-overlay-tag">🜂 Cursed Influence</span>`);
+  if (meta.lootClears > 0) overlays.push(`<span class="global-overlay-tag">💰 Treasure Surge</span>`);
+  if (meta.chaosClears > 0) overlays.push(`<span class="global-overlay-tag">🌀 Chaotic Distortion</span>`);
+  if (meta.bossrushClears > 0) overlays.push(`<span class="global-overlay-tag">⚔️ Boss Resonance</span>`);
+
+  // Relic-based overlays
+  if (relics.includes("chaos_orb")) overlays.push(`<span class="global-overlay-tag">🌀 Chaotic Flux</span>`);
+  if (relics.includes("bossheart")) overlays.push(`<span class="global-overlay-tag">❤️ Boss Empowerment</span>`);
+  if (relics.includes("blessed_feather")) overlays.push(`<span class="global-overlay-tag">✨ Healing Winds</span>`);
+  if (relics.includes("cursed_crown")) overlays.push(`<span class="global-overlay-tag">🜂 Cursed Pressure</span>`);
+  if (relics.includes("golden_idol")) overlays.push(`<span class="global-overlay-tag">💰 Treasure Magnetism</span>`);
+
+  return overlays.join(" ");
 }
 
 // --- UTIL //
