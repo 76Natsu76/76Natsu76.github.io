@@ -60,6 +60,11 @@ function ensureVitals(p) {
   if (!p.ownedBuildings) p.ownedBuildings = []; // [{ settlement, building, share }]
 
   if (!p.labyrinthCodex) p.labyrinthCodex = { beatenSeeds: {} };
+  
+  if (!p.seedMeta) p.seedMeta = { blessedClears: 0, cursedClears: 0,
+    lootClears: 0, chaosClears: 0, bossrushClears: 0, unlockedModifiers: [],
+    unlockedCosmetics: [],  unlockedTitles: [] // player titles
+  };
 
   return p;
 }
@@ -176,7 +181,9 @@ export function recordBeatenSeed(player, run) {
   if (!run.seed) return;
 
   player.labyrinthCodex = player.labyrinthCodex || { beatenSeeds: {} };
+  player.seedMeta = player.seedMeta || {};
 
+  // Store codex entry
   player.labyrinthCodex.beatenSeeds[run.seed] = {
     type: run.seedType || "unknown",
     dungeonKey: run.dungeonKey,
@@ -184,4 +191,32 @@ export function recordBeatenSeed(player, run) {
     modifiers: [...(run.activeModifiers || [])],
     depth: run.labyrinth ? Object.keys(run.labyrinth.rooms).length : null
   };
+
+  // Meta-progression
+  const type = run.seedType;
+  if (type && player.seedMeta[type + "Clears"] !== undefined) {
+    player.seedMeta[type + "Clears"]++;
+  }
+
+  // Unlock rewards
+  if (type === "blessed" && player.seedMeta.blessedClears === 1) {
+    player.seedMeta.unlockedModifiers.push("empowered_ultimate");
+  }
+
+  if (type === "cursed" && player.seedMeta.cursedClears === 1) {
+    player.seedMeta.unlockedModifiers.push("enemy_frenzy");
+  }
+
+  if (type === "loot" && player.seedMeta.lootClears === 1) {
+    player.seedMeta.unlockedModifiers.push("double_loot");
+  }
+
+  if (type === "chaos" && player.seedMeta.chaosClears === 1) {
+    player.seedMeta.unlockedTitles.push("The Chaotic");
+  }
+
+  if (type === "bossrush" && player.seedMeta.bossrushClears === 1) {
+    player.seedMeta.unlockedCosmetics.push("bossrush_map_theme");
+  }
 }
+
