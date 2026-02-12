@@ -1,15 +1,18 @@
 /************************************************************
- * OVERWORLD — smooth movement + animation + camera
+ * OVERWORLD — Phase 4 Movement + Region Awareness + Encounters
  ************************************************************/
 
 import { isTraveling, getTravelRemaining, finishTravel } from "./travel-lockout.js";
 import { PlayerStorage } from "./player-storage.js";
-import { TILE_SIZE, TILEMAP, COLLISION_TILES, getTileAtPixel } from "./world-map-data.js";
+import { TILE_SIZE, TILEMAP, COLLISION_TILES, getTileAtPixel, getRegionAtPixel } from "./world-map-data.js";
 import { getPlayerPosition, setPlayerPosition } from "./player-position.js";
 import { checkForOverworldEncounter } from "./overworld-encounter.js";
 import { checkForBuildingEntry } from "./building-check.js";
 import { PLAYER_SPRITE, loadPlayerSprite, updatePlayerSprite, drawPlayerSprite } from "./player-sprite.js";
 import { CAMERA, updateCamera } from "./overworld-camera.js";
+import { WORLD_DATA } from "./world-data.js";
+import { getWorldState } from "./world-state.js";
+import { WeatherEngine } from "./weather-engine.js";
 
 /************************************************************
  * INITIALIZATION
@@ -17,6 +20,7 @@ import { CAMERA, updateCamera } from "./overworld-camera.js";
 loadPlayerSprite();
 
 let lastTime = performance.now();
+let currentRegionKey = null;
 
 /************************************************************
  * MOVEMENT STATE
@@ -26,7 +30,7 @@ const movement = {
   down: false,
   left: false,
   right: false,
-  speed: 2.5 // pixels per frame
+  baseSpeed: 2.5
 };
 
 document.addEventListener("keydown", e => {
@@ -44,6 +48,37 @@ document.addEventListener("keyup", e => {
   if (e.key === "ArrowLeft") movement.left = false;
   if (e.key === "ArrowRight") movement.right = false;
 });
+
+/************************************************************
+ * REGION-AWARE MOVEMENT SPEED
+ ************************************************************/
+function computeMovementSpeed(player, regionKey, regionState) {
+  let speed = movement.baseSpeed;
+
+  // Mount speed
+  if (player.mount) {
+    speed *= 1.25;
+  }
+
+  // Weather penalties
+  const weatherKey = regionState.weather || WeatherEngine.rollWeather(regionKey);
+  if (weatherKey === "storm") speed *= 0.85;
+  if (weatherKey === "blizzard") speed *= 0.80;
+  if (weatherKey === "fog") speed *= 0.90;
+  if (weatherKey === "heatwave") speed *= 0.90;
+
+  // Crisis penalties
+  if (regionState.crisis) {
+    speed *= 0.90;
+  }
+
+  // Seed meta bonuses
+  const meta = player.seedMeta || {};
+  if (meta.blessedClears > 0) speed *= 1.05;
+  if (meta.cursedClears > 0) speed *= 0.95;
+
+  return speed;
+}
 
 /************************************************************
  * COLLISION CHECK
@@ -85,7 +120,7 @@ function overworldLoop(player, deltaTime) {
 }
 
 /************************************************************
- * MOVEMENT + ANIMATION
+ * MOVEMENT + REGION TRANSITIONS + ENCOUNTERS
  ************************************************************/
 function updateMovement(player, deltaTime) {
   const pos = getPlayerPosition(player);
@@ -94,35 +129,53 @@ function updateMovement(player, deltaTime) {
 
   PLAYER_SPRITE.moving = false;
 
+  // Determine region
+  const regionKey = getRegionAtPixel(pos.x, pos.y);
+  const worldState = getWorldState();
+  const regionState = worldState.regions[regionKey] || {};
+  const region = WORLD_DATA.regions[regionKey];
+
+  // Movement speed (region-aware)
+  const speed = computeMovementSpeed(player, regionKey, regionState);
+
   if (movement.up) {
-    newY -= movement.speed;
+    newY -= speed;
     PLAYER_SPRITE.direction = "up";
     PLAYER_SPRITE.moving = true;
   }
   if (movement.down) {
-    newY += movement.speed;
+    newY += speed;
     PLAYER_SPRITE.direction = "down";
     PLAYER_SPRITE.moving = true;
   }
   if (movement.left) {
-    newX -= movement.speed;
+    newX -= speed;
     PLAYER_SPRITE.direction = "left";
     PLAYER_SPRITE.moving = true;
   }
   if (movement.right) {
-    newX += movement.speed;
+    newX += speed;
     PLAYER_SPRITE.direction = "right";
     PLAYER_SPRITE.moving = true;
   }
 
+  // Collision
   if (canMoveTo(newX, newY)) {
     setPlayerPosition(player, newX, newY);
     PlayerStorage.save(player.username, player);
   }
 
+  // Region transition detection
+  const newRegionKey = getRegionAtPixel(newX, newY);
+  if (newRegionKey !== currentRegionKey) {
+    currentRegionKey = newRegionKey;
+    console.log(`Entered region: ${newRegionKey}`);
+  }
+
   updatePlayerSprite(deltaTime);
   updateCamera(pos.x, pos.y);
 
+  // Only check encounters when moving
   if (PLAYER_SPRITE.moving) {
     checkForOverworldEncounter(player);
     checkForBuildingEntry(player);
