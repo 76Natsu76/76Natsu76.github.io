@@ -32,6 +32,29 @@
       font-size:13px;
       margin-top:6px;
     }
+    .seed-row {
+      margin-top:10px;
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .seed-input {
+      padding:6px 8px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#0d0f14;
+      color:#eee;
+      flex:1;
+      min-width:140px;
+    }
+    .seed-preset {
+      padding:6px 8px;
+      border-radius:4px;
+      border:1px solid #444;
+      background:#0d0f14;
+      color:#eee;
+    }
   </style>
 </head>
 
@@ -60,6 +83,12 @@
     const container = document.getElementById("dungeonList");
     container.innerHTML = "";
 
+    function generatePresetSeed(type) {
+      const base = type.toUpperCase().slice(0, 4);
+      const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+      return `${base}-${rand}`;
+    }
+
     /************************************************************
      * CONTINUE EXISTING RUN
      ************************************************************/
@@ -76,7 +105,6 @@
         <p>Floor: ${run.currentFloor}</p>
         <button class="btn" onclick="continueRun()">Resume</button>
         <button class="btn" onclick="abandonRun()">Abandon Run</button>
-        <input class="seed-input" placeholder="Custom Seed (optional)" />
       `;
 
       container.appendChild(div);
@@ -92,12 +120,10 @@
       const div = document.createElement("div");
       div.className = "dungeon-card";
 
-      // Floors label
       let floorsLabel = "";
       if (d.type === "endless") floorsLabel = "∞";
       else floorsLabel = d.floors;
 
-      // Boss label
       let bossLabel = "";
       if (d.type === "endless") bossLabel = "Endless Bosses";
       else if (d.type === "great_dungeon") bossLabel = `Boss every ${d.bossEvery} floors`;
@@ -109,6 +135,18 @@
         <p>Recommended Level: ${d.recommendedLevel ?? d.minLevel}</p>
         <p>Floors: ${floorsLabel}</p>
         <p>Boss: ${bossLabel}</p>
+
+        <div class="seed-row">
+          <select class="seed-preset">
+            <option value="">Seed Preset: None</option>
+            <option value="blessed">Blessed</option>
+            <option value="cursed">Cursed</option>
+            <option value="loot">Loot</option>
+            <option value="chaos">Chaotic</option>
+            <option value="bossrush">Boss Rush</option>
+          </select>
+          <input class="seed-input" placeholder="Custom Seed (optional)" />
+        </div>
 
         <button class="btn" data-key="${key}" ${allowed ? "" : "disabled"}>
           ${allowed ? "Start Run" : "Locked"}
@@ -126,24 +164,31 @@
     container.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-key]");
       if (!btn) return;
-      
+
       const dungeonKey = btn.getAttribute("data-key");
       const dungeon = DUNGEONS[dungeonKey];
-      
+
       if (!canEnter(player, dungeon)) {
         alert("You do not meet the entry requirements for this dungeon.");
         return;
       }
-    
+
       const card = btn.closest(".dungeon-card");
       const seedInput = card.querySelector(".seed-input");
-      const seed = seedInput?.value.trim() || null;
-    
+      const presetSelect = card.querySelector(".seed-preset");
+
+      let seed = seedInput?.value.trim() || null;
+      const preset = presetSelect?.value || "";
+
+      if (!seed && preset) {
+        seed = generatePresetSeed(preset);
+      }
+
       const run = DungeonEngine.createRun(player, dungeonKey, seed);
-    
+
       player.activeDungeonRun = run;
       PlayerStorage.save(username, player);
-    
+
       window.location.href = "dungeon-room.html";
     });
 
