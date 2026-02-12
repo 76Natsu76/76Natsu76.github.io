@@ -153,6 +153,37 @@
         return;
       }
 
+      function renderLabyrinthExits() {
+        if (run.mode !== "labyrinth" || !run.labyrinth) return;
+      
+        const lab = run.labyrinth;
+        const room = lab.rooms[lab.currentRoomId];
+        const box = document.getElementById("roomContainer");
+      
+        let html = `<h4>Paths</h4>`;
+      
+        for (const id of room.neighbors) {
+          const r = lab.rooms[id];
+          const label =
+            r.type === "boss"
+              ? `${id} (Boss)`
+              : `${id} (Depth ${r.depth})`;
+      
+          html += `<button class="btn lab-exit" data-room="${id}">${label}</button>`;
+        }
+      
+        box.innerHTML += html;
+      
+        box.querySelectorAll(".lab-exit").forEach(btn => {
+          btn.onclick = () => {
+            const next = btn.getAttribute("data-room");
+            DungeonEngine.moveToLabyrinthRoom(run, next);
+            DungeonEngine.saveRun(player, run, username);
+            window.location.reload();
+          };
+        });
+      }
+
       /************************************************************
        * EVENT ROOM
        ************************************************************/
@@ -178,12 +209,15 @@
           `;
 
           document.getElementById("continueBtn").onclick = () => {
-            DungeonEngine.completeFloor(run);
-            DungeonEngine.saveRun(player, run, username);
-            window.location.reload();
+            if (run.mode === "labyrinth") {
+              renderLabyrinthExits();
+            } else {
+              DungeonEngine.completeFloor(run);
+              DungeonEngine.saveRun(player, run, username);
+              window.location.reload();
+            }
           };
         };
-
         return;
       }
 
@@ -234,9 +268,13 @@
           `;
 
           document.getElementById("continueBtn").onclick = () => {
-            DungeonEngine.completeFloor(run);
-            DungeonEngine.saveRun(player, run, username);
-            window.location.reload();
+            if (run.mode === "labyrinth") {
+              renderLabyrinthExits();
+            } else {
+              DungeonEngine.completeFloor(run);
+              DungeonEngine.saveRun(player, run, username);
+              window.location.reload();
+            }
           };
         };
 
@@ -325,11 +363,15 @@
           `;
       
           document.getElementById("continueBtn").onclick = () => {
-            DungeonEngine.completeFloor(run);
-            DungeonEngine.saveRun(player, run, username);
-            window.location.reload();
+            if (run.mode === "labyrinth") {
+              renderLabyrinthExits();
+            } else {
+              DungeonEngine.completeFloor(run);
+              DungeonEngine.saveRun(player, run, username);
+              window.location.reload();
+            }
           };
-        };
+        };      
         return;
       }
     }
