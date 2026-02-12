@@ -83,7 +83,32 @@ function createRun(player, dungeonKey, seed = null) {
   const seedDef = SEED_TYPES[seedType];
   if (seedDef?.modifiers) {
     run.activeModifiers.push(...seedDef.modifiers);
+  
   }
+  switch (seedType) {
+    case "blessed":
+      run.enemyScaling *= 0.9; // enemies slightly weaker
+      run.bonusTreasureRooms = 1;
+      break;
+  
+    case "cursed":
+      run.enemyScaling *= 1.25;
+      run.noHealing = true;
+      break;
+  
+    case "loot":
+      run.bonusTreasureRooms = 2;
+      break;
+  
+    case "chaos":
+      run.chaosMode = true; // random mutator each room
+      break;
+  
+    case "bossrush":
+      run.bossRush = true; // boss every 3 rooms
+      break;
+  }
+
 
   // ⭐ Initialize labyrinth with seed
   if (dungeon.type === "labyrinth") {
@@ -137,6 +162,16 @@ function generateRoom(run) {
     return generateEndlessRoom(run);
   }
 
+  if (run.bossRush && roomIndex % 3 === 0) {
+    return { type: "boss" };
+  }
+  
+  if (run.chaosMode) {
+    const chaosMods = ["unstable_magic", "enemy_frenzy", "thick_fog"];
+    const randomMod = chaosMods[Math.floor(rng() * chaosMods.length)];
+    run.activeModifiers.push(randomMod);
+  }
+  
   const floor = getCurrentFloor(run);
 
   // --- Chest Room Logic (linear / great_dungeon / normal) ---
