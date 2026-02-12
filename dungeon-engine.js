@@ -5,9 +5,9 @@ import { DUNGEON_LOOT_TABLES } from "./dungeon-loot-tables.js";
 
 import { rollLootTable } from "./loot-tables.js";
 import { resolveEnemy } from "./resolveEnemy.js";
-import { PlayerStorage } from "./player-storage.js";
+import { PlayerStorage, recordBeatenSeed } from "./player-storage.js";
 import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
-import { detectSeedType, SEED_TYPES, recordBeatenSeed } from "./seeds.js";
+import { detectSeedType, SEED_TYPES } from "./seeds.js";
 
 function seededRNG(seed) {
   let h = 0;
