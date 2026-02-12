@@ -11,17 +11,7 @@ import { detectSeedType, SEED_TYPES } from "./seeds.js";
 import { RELICS, RELIC_DROPS } from "./relics.js";
 import { SEED_LOOT } from "./seed-loot.js";
 import { COMPLETION_REWARDS } from "./completion-rewards.js";
-
-function seededRNG(seed) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) {
-    h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  }
-  return function () {
-    h = (h * 1664525 + 1013904223) >>> 0;
-    return (h >>> 0) / 0xFFFFFFFF;
-  };
-}
+import { seededRNG } from "./rng.js";
 
 export const DungeonEngine = {
   createRun,
