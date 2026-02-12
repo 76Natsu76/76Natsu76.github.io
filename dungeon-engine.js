@@ -8,6 +8,17 @@ import { resolveEnemy } from "./resolveEnemy.js";
 import { PlayerStorage } from "./player-storage.js";
 import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
 
+function seededRNG(seed) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) {
+    h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  return function () {
+    h = (h * 1664525 + 1013904223) >>> 0;
+    return (h >>> 0) / 0xFFFFFFFF;
+  };
+}
+
 export const DungeonEngine = {
   createRun,
   isEndless,
@@ -31,31 +42,25 @@ export const DungeonEngine = {
 };
 
 // --- RUN LIFECYCLE --- //
-function createRun(player, dungeonKey) {
+function createRun(player, dungeonKey, seed = null) {
   const dungeon = DUNGEONS[dungeonKey];
-  if (!dungeon) {
-    throw new Error(`Unknown dungeon key: ${dungeonKey}`);
-  }
 
-  const baseDungeonMods = dungeon.dungeonModifiers || {};
+  // If no seed provided, generate one
+  if (!seed) {
+    seed = Math.random().toString(36).substring(2, 10).toUpperCase();
+  }
 
   const run = {
     dungeonKey,
+    seed,                // ⭐ NEW
     state: "exploring",
     currentFloor: 1,
     highestFloor: 1,
-
-    // legacy dungeonModifiers (numeric / boolean knobs)
-    modifiers: {
-      ...(dungeon.dungeonModifiers || {})
-    },
-    noHealing: !!baseDungeonMods.noHealing,
-    doubleLoot: !!baseDungeonMods.doubleLoot,
-    enemyScaling: baseDungeonMods.enemyScaling || 1.0,
-
-    // new-style modifier keys (for DUNGEON_MODIFIERS)
     activeModifiers: dungeon.modifiers ? [...dungeon.modifiers] : [],
-
+    modifiers: { ...(dungeon.dungeonModifiers || {}) },
+    noHealing: !!dungeon.dungeonModifiers?.noHealing,
+    doubleLoot: !!dungeon.dungeonModifiers?.doubleLoot,
+    enemyScaling: dungeon.dungeonModifiers?.enemyScaling || 1.0,
     completed: false,
     failed: false,
     startedAt: Date.now(),
@@ -64,16 +69,14 @@ function createRun(player, dungeonKey) {
 
   if (dungeon.type === "labyrinth") {
     run.mode = "labyrinth";
-    run.labyrinth = generateLabyrinth(dungeon);
+    run.labyrinth = generateLabyrinth(dungeon, seed); // ⭐ pass seed
   } else if (dungeon.type === "endless") {
     run.mode = "endless";
     run.highestFloor = 1;
     run.endlessScore = 0;
   } else {
-    // normal / great_dungeon / other finite types
     run.mode = "linear";
   }
-
   return run;
 }
 
@@ -624,9 +627,9 @@ function generateLabyrinth(dungeon) {
   };
 }
 
-function shuffle(arr) {
+function shuffle(arr, rng) {
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = Math.floor(rng() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
 }
