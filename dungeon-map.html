@@ -38,37 +38,26 @@
       color:#ff33aa;
       font-weight:bold;
     }
-    .labyrinth-room {
-      padding:8px;
-      margin:6px 0;
-      border:1px solid #333;
-      border-radius:6px;
-      background:#1a1d24;
-    }
-    .labyrinth-current {
-      border-left:4px solid #7fffd4;
-      background:#222832;
-    }
+
+    /* LABYRINTH FOG-OF-WAR */
     .lab-room {
       padding: 8px;
       margin: 4px 0;
       border-radius: 6px;
     }
-    
     .lab-room.visible {
       background: #1f2533;
       border-left: 4px solid #7fffd4;
     }
-    
     .lab-room.adjacent {
       background: #14171f;
       opacity: 0.5;
     }
-    
     .lab-room.hidden {
       background: #0d0f14;
       color: #333;
     }
+
     .btn {
       padding:10px 14px;
       border-radius:6px;
@@ -88,6 +77,7 @@
   <h1>Dungeon Map</h1>
   <div id="usernameDisplay"></div>
 
+  <div id="dungeonInfo" class="map-box"></div>
   <div id="map" class="map-box">Loading...</div>
 
   <button class="btn" onclick="returnToRun()">Return to Run</button>
@@ -119,28 +109,29 @@
     const isLabyrinth = dungeon.type === "labyrinth";
     const isGreat = dungeon.type === "great_dungeon";
 
-    renderMap();
+    /************************************************************
+     * HEADER (Dungeon Name + Seed)
+     ************************************************************/
+    let headerHtml = `
+      <h2>${dungeon.name}</h2>
+    `;
+
+    if (run.seed) {
+      headerHtml += `<p><strong>Seed:</strong> ${run.seed}</p>`;
+    }
+
+    document.getElementById("dungeonInfo").innerHTML = headerHtml;
 
     /************************************************************
      * RENDER MAP
      ************************************************************/
+    renderMap();
+
     function renderMap() {
-      if (isEndless) {
-        renderEndlessMap();
-        return;
-      }
-
-      if (isLabyrinth) {
-        renderLabyrinthMap();
-        return;
-      }
-
-      if (isGreat) {
-        renderGreatDungeonMap();
-        return;
-      }
-
-      renderNormalDungeonMap();
+      if (isEndless) return renderEndlessMap();
+      if (isLabyrinth) return renderLabyrinthMap();
+      if (isGreat) return renderGreatDungeonMap();
+      return renderNormalDungeonMap();
     }
 
     /************************************************************
@@ -150,7 +141,9 @@
       let html = "";
 
       for (let f = 1; f <= dungeon.floors; f++) {
-        const isBoss = dungeon.bossFloor ? f === dungeon.bossFloor : f === dungeon.floors;
+        const isBoss = dungeon.bossFloor
+          ? f === dungeon.bossFloor
+          : f === dungeon.floors;
 
         html += `
           <div class="floor ${f === run.currentFloor ? "current" : ""}">
@@ -166,7 +159,7 @@
     }
 
     /************************************************************
-     * GREAT DUNGEON OF 100 FLOORS
+     * GREAT DUNGEON MAP
      ************************************************************/
     function renderGreatDungeonMap() {
       let html = "";
@@ -214,39 +207,38 @@
     }
 
     /************************************************************
-     * LABYRINTH MAP (room graph)
+     * LABYRINTH MAP (Fog-of-War)
      ************************************************************/
-    function renderLabyrinthMap(run) {
+    function renderLabyrinthMap() {
       const lab = run.labyrinth;
       const visibility = DungeonEngine.getLabyrinthVisibility(run);
-    
+
       let html = `<h3>Labyrinth Map</h3>`;
-    
+
       for (const id in lab.rooms) {
         const room = lab.rooms[id];
         const state = visibility[id] || "hidden";
-    
+
         let label = id;
-    
-        if (state === "hidden") {
-          html += `<div class="lab-room hidden">???</div>`;
-          continue;
+
+        if (state !== "hidden") {
+          if (room.type === "boss") label += " (Boss)";
+          if (room.type === "treasure") label += " (Treasure)";
+          if (room.type === "event") label += " (Event)";
+          if (room.type === "mimic") label += " (Mimic)";
         }
-    
-        if (room.type === "boss") label += " (Boss)";
-        if (room.type === "treasure") label += " (Treasure)";
-        if (room.type === "event") label += " (Event)";
-        if (room.type === "mimic") label += " (Mimic)";
-    
+
         const cls =
           state === "visible"
             ? "lab-room visible"
-            : "lab-room adjacent";
-    
+            : state === "adjacent"
+            ? "lab-room adjacent"
+            : "lab-room hidden";
+
         html += `<div class="${cls}">${label}</div>`;
       }
-    
-      document.getElementById("map").innerHTML = html;
+
+      mapBox.innerHTML = html;
     }
 
     /************************************************************
