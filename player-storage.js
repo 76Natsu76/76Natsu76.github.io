@@ -59,6 +59,8 @@ function ensureVitals(p) {
   if (!p.factions) p.factions = {};          // { factionKey: number }
   if (!p.ownedBuildings) p.ownedBuildings = []; // [{ settlement, building, share }]
 
+  if (!p.labyrinthCodex) p.labyrinthCodex = { beatenSeeds: {} };
+
   return p;
 }
 
@@ -170,3 +172,16 @@ function clearDungeonRun(userId) {
   save(userId, p);
 }
 
+export function recordBeatenSeed(player, run) {
+  if (!run.seed) return;
+
+  player.labyrinthCodex = player.labyrinthCodex || { beatenSeeds: {} };
+
+  player.labyrinthCodex.beatenSeeds[run.seed] = {
+    type: run.seedType || "unknown",
+    dungeonKey: run.dungeonKey,
+    timestamp: Date.now(),
+    modifiers: [...(run.activeModifiers || [])],
+    depth: run.labyrinth ? Object.keys(run.labyrinth.rooms).length : null
+  };
+}
