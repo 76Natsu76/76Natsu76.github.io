@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Relic Inventory</title>
+
+  <style>
+    body {
+      background:#0d0f14;
+      color:#e8e8e8;
+      font-family:system-ui, sans-serif;
+      padding:24px;
+    }
+
+    .relic-card {
+      background:#14171f;
+      border:1px solid #333;
+      padding:16px;
+      border-radius:8px;
+      margin-bottom:16px;
+    }
+
+    .relic-name {
+      font-size:18px;
+      font-weight:bold;
+      color:#7fffd4;
+    }
+
+    .btn {
+      padding:8px 12px;
+      border-radius:6px;
+      border:1px solid #444;
+      background:#1a1d24;
+      color:#eee;
+      cursor:pointer;
+      margin-top:10px;
+    }
+    .btn:hover { background:#222832; }
+  </style>
+</head>
+
+<body>
+
+  <h1>Relic Inventory</h1>
+  <div id="usernameDisplay"></div>
+
+  <div id="relicList">Loading...</div>
+
+  <button class="btn" onclick="goBack()">Return</button>
+
+  <script type="module">
+    import { requireSession } from "./session-guard.js";
+    import { PlayerStorage } from "./player-storage.js";
+    import { RELICS } from "./relics.js";
+
+    await requireSession();
+    const { username } = window.syncState;
+
+    const player = PlayerStorage.load(username);
+    document.getElementById("usernameDisplay").textContent =
+      "Logged in as: " + username;
+
+    const container = document.getElementById("relicList");
+
+    if (!player.relics || player.relics.length === 0) {
+      container.innerHTML = "<p>You have no relics yet.</p>";
+    } else {
+      container.innerHTML = "";
+      for (const relicKey of player.relics) {
+        const relic = RELICS[relicKey];
+        if (!relic) continue;
+
+        const div = document.createElement("div");
+        div.className = "relic-card";
+
+        div.innerHTML = `
+          <div class="relic-name">${relic.name}</div>
+          <p>${relic.description}</p>
+        `;
+
+        container.appendChild(div);
+      }
+    }
+
+    function goBack() {
+      window.location.href = "town.html";
+    }
+  </script>
+
+</body>
+</html>
