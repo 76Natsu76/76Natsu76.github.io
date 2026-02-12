@@ -1431,8 +1431,10 @@ function describeEncounterModifiers(context, logs) {
  ****************************************************/
 
 export function runCombatRound(player, enemyOrEnemies, context, playerAction, logs) {
+  
   logs = logs || [];
   logEnvironmentIntro(context, logs);
+  
 
   const enemies = normalizeEnemies(enemyOrEnemies);
 
@@ -1444,6 +1446,11 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
 
   applyRegionCombatModifiers(player, enemies, context, logs);
   applyEncounterMetaCombatEffects(player, enemies, context, logs);
+
+  // ⭐ Phase D static modifiers
+  const primaryEnemy = context.enemy;
+  applyPhaseDModifiers(context, player, primaryEnemy, logs);
+  applyEnvironmentalSynergies(context, player, primaryEnemy, logs);
 
   tickStatusEffects(player, context, logs);
   enemies.forEach(e => tickStatusEffects(e, context, logs));
@@ -1520,7 +1527,8 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
       break;
     }
   }
-
+  // ⭐ Phase D ongoing environmental effects
+  tickEnvironmentalEffects(context, player, context.enemy, logs)
   tickCooldowns(player);
   enemies.forEach(e => tickCooldowns(e));
 
