@@ -60,6 +60,154 @@ function applyRegionCombatModifiers(player, enemies, context, logs) {
   }
 }
 
+/****************************************************
+ * ENCOUNTER META → COMBAT EFFECTS (Phase 4)
+ ****************************************************/
+
+function applyEncounterMetaCombatEffects(player, enemies, context, logs) {
+  const crisis = context.crisis;
+  const anomaly = context.anomalyElement;
+  const migration = context.migrationFaction;
+  const danger = Number(context.danger ?? 1.0);
+  const chaos = context.chaosMutated;
+  const mods = context.modifiers || [];
+
+  /***********************
+   * DANGER SCALING
+   ***********************/
+  if (danger > 1) {
+    const mult = 1 + (danger - 1) * 0.15;
+    enemies.forEach(e => {
+      e.atk = Math.floor(e.atk * mult);
+      e.def = Math.floor(e.def * mult);
+      e.hpMax = Math.floor(e.hpMax * mult);
+      e.hpCurrent = Math.min(e.hpCurrent, e.hpMax);
+    });
+    logs.push(`Danger level increases enemy stats (x${mult.toFixed(2)}).`);
+  }
+
+  /***********************
+   * CHAOS MUTATION
+   ***********************/
+  if (chaos) {
+    enemies.forEach(e => {
+      e.atk = Math.floor(e.atk * 1.10);
+      e.def = Math.floor(e.def * 1.10);
+      e.speed = Math.floor(e.speed * 1.10);
+      e.flavorTags = e.flavorTags || [];
+      if (!e.flavorTags.includes("chaos-mutated")) {
+        e.flavorTags.push("chaos-mutated");
+      }
+    });
+    logs.push("Chaotic instability warps the enemy's power.");
+  }
+
+  /***********************
+   * CRISIS EFFECTS
+   ***********************/
+  if (crisis) {
+    switch (crisis) {
+      case "plague":
+        enemies.forEach(e => {
+          e.atk = Math.floor(e.atk * 1.05);
+        });
+        logs.push("Plague crisis: enemies spread disease and strike harder.");
+        break;
+
+      case "warfront":
+        enemies.forEach(e => {
+          e.atk = Math.floor(e.atk * 1.10);
+          e.def = Math.floor(e.def * 1.10);
+        });
+        logs.push("Warfront crisis: enemies are battle‑hardened.");
+        break;
+
+      case "corruption":
+        enemies.forEach(e => {
+          e.element = "void";
+        });
+        logs.push("Corruption crisis: void energy empowers the enemy.");
+        break;
+
+      case "famine":
+        enemies.forEach(e => {
+          e.speed = Math.floor(e.speed * 1.10);
+        });
+        logs.push("Famine crisis: enemies act with desperate speed.");
+        break;
+    }
+  }
+
+  /***********************
+   * ANOMALY EFFECTS
+   ***********************/
+  if (anomaly) {
+    enemies.forEach(e => {
+      switch (anomaly) {
+        case "void":
+          e.atk = Math.floor(e.atk * 1.10);
+          logs.push("Void anomaly: enemy attacks distort reality.");
+          break;
+        case "frost":
+          e.def = Math.floor(e.def * 1.10);
+          logs.push("Frost anomaly: enemy defenses harden like ice.");
+          break;
+        case "fire":
+          e.atk = Math.floor(e.atk * 1.10);
+          logs.push("Fire anomaly: enemy burns with aggression.");
+          break;
+        case "arcane":
+          e.speed = Math.floor(e.speed * 1.10);
+          logs.push("Arcane anomaly: enemy moves with supernatural quickness.");
+          break;
+      }
+    });
+  }
+
+  /***********************
+   * MIGRATION EFFECTS
+   ***********************/
+  if (migration) {
+    enemies.forEach(e => {
+      e.atk = Math.floor(e.atk * 1.10);
+      e.speed = Math.floor(e.speed * 1.05);
+    });
+    logs.push(`Migration event: ${migration} forces empower the enemy.`);
+  }
+
+  /***********************
+   * GLOBAL MODIFIERS
+   ***********************/
+  for (const m of mods) {
+    if (!m.startsWith("global_")) continue;
+
+    switch (m) {
+      case "global_increased_monsters":
+        enemies.forEach(e => {
+          e.hpMax = Math.floor(e.hpMax * 1.10);
+          e.hpCurrent = Math.min(e.hpCurrent, e.hpMax);
+        });
+        logs.push("Global modifier: increased monster vitality.");
+        break;
+
+      case "global_rare_creatures":
+        enemies.forEach(e => {
+          e.atk = Math.floor(e.atk * 1.10);
+        });
+        logs.push("Global modifier: rare creatures are empowered.");
+        break;
+
+      case "global_void_incursion":
+        enemies.forEach(e => {
+          e.element = "void";
+          e.atk = Math.floor(e.atk * 1.15);
+        });
+        logs.push("Global modifier: void incursion corrupts the enemy.");
+        break;
+    }
+  }
+}
+
 const DEBUG_ENVIRONMENT = false;
 
 function debugEnvironment(context, logs) {
@@ -1149,6 +1297,7 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
   context.enemy = primaryEnemyInitial || context.enemy || null;
 
   applyRegionCombatModifiers(player, enemies, context, logs);
+  applyEncounterMetaCombatEffects(player, enemies, context, logs);
 
   tickStatusEffects(player, context, logs);
   enemies.forEach(e => tickStatusEffects(e, context, logs));
