@@ -49,6 +49,26 @@
       border-left:4px solid #7fffd4;
       background:#222832;
     }
+    .lab-room {
+      padding: 8px;
+      margin: 4px 0;
+      border-radius: 6px;
+    }
+    
+    .lab-room.visible {
+      background: #1f2533;
+      border-left: 4px solid #7fffd4;
+    }
+    
+    .lab-room.adjacent {
+      background: #14171f;
+      opacity: 0.5;
+    }
+    
+    .lab-room.hidden {
+      background: #0d0f14;
+      color: #333;
+    }
     .btn {
       padding:10px 14px;
       border-radius:6px;
@@ -196,26 +216,37 @@
     /************************************************************
      * LABYRINTH MAP (room graph)
      ************************************************************/
-    function renderLabyrinthMap() {
-      let html = `<h3>Labyrinth Layout</h3>`;
-
-      // For now, show a simple linear list of rooms
-      // (You can replace this with a graph visualization later)
-      const totalRooms = dungeon.roomsPerFloor;
-
-      for (let r = 0; r < totalRooms; r++) {
-        const roomKey = `${run.currentFloor}-${r}`;
-        const isCurrent = run.roomIndex === r;
-
-        html += `
-          <div class="labyrinth-room ${isCurrent ? "labyrinth-current" : ""}">
-            Room ${r + 1}
-            ${isCurrent ? " (You are here)" : ""}
-          </div>
-        `;
+    function renderLabyrinthMap(run) {
+      const lab = run.labyrinth;
+      const visibility = DungeonEngine.getLabyrinthVisibility(run);
+    
+      let html = `<h3>Labyrinth Map</h3>`;
+    
+      for (const id in lab.rooms) {
+        const room = lab.rooms[id];
+        const state = visibility[id] || "hidden";
+    
+        let label = id;
+    
+        if (state === "hidden") {
+          html += `<div class="lab-room hidden">???</div>`;
+          continue;
+        }
+    
+        if (room.type === "boss") label += " (Boss)";
+        if (room.type === "treasure") label += " (Treasure)";
+        if (room.type === "event") label += " (Event)";
+        if (room.type === "mimic") label += " (Mimic)";
+    
+        const cls =
+          state === "visible"
+            ? "lab-room visible"
+            : "lab-room adjacent";
+    
+        html += `<div class="${cls}">${label}</div>`;
       }
-
-      mapBox.innerHTML = html;
+    
+      document.getElementById("map").innerHTML = html;
     }
 
     /************************************************************
