@@ -160,88 +160,95 @@ function generateRoom(run) {
   const dungeon = DUNGEONS[run.dungeonKey];
   if (!dungeon) throw new Error(`Unknown dungeon key: ${run.dungeonKey}`);
 
-  // Labyrinth handled via graph
+  const rng = seededRNG(run.seed || "default");
+
+  // Track room index for linear dungeons
+  run.roomIndex = run.roomIndex || 0;
+  const roomIndex = run.roomIndex;
+
+  // LABYRINTH
   if (run.mode === "labyrinth" || dungeon.type === "labyrinth") {
     return generateLabyrinthRoom(run);
   }
 
-  // Endless handled separately
+  // ENDLESS
   if (dungeon.type === "endless") {
     return generateEndlessRoom(run);
   }
 
+  // SEED: Boss Rush
   if (run.bossRush && roomIndex % 3 === 0) {
+    run.roomIndex++;
     return { type: "boss" };
   }
-  
+
+  // SEED: Chaos Mode
   if (run.chaosMode) {
     const chaosMods = ["unstable_magic", "enemy_frenzy", "thick_fog"];
     const randomMod = chaosMods[Math.floor(rng() * chaosMods.length)];
     run.activeModifiers.push(randomMod);
   }
-  
+
   const floor = getCurrentFloor(run);
 
-  // --- Chest Room Logic (linear / great_dungeon / normal) ---
+  // CHEST LOGIC
   if (dungeon.chestRoomsPerFloor) {
     const roomsPerFloor = dungeon.roomsPerFloor || 3;
     const chestRooms = dungeon.chestRoomsPerFloor;
-
-    const roomIndex = run.roomIndex || 0;
     const chestInterval = Math.max(1, Math.floor(roomsPerFloor / chestRooms));
 
     if (roomIndex % chestInterval === 0) {
-      // Boss floor chest override
-      if (
-        dungeon.bossFloor &&
-        run.currentFloor === dungeon.bossFloor &&
-        dungeon.bossChest
-      ) {
+      // Boss chest override
+      if (dungeon.bossFloor &&
+          run.currentFloor === dungeon.bossFloor &&
+          dungeon.bossChest) {
+        run.roomIndex++;
         return { type: "boss_chest", lootTable: dungeon.treasureLootTable };
       }
 
-      // Mimic roll
+      // Mimic roll (seeded)
       const mimicChance = dungeon.mimicChance ?? 0.25;
-      if (Math.random() < mimicChance) {
+      if (rng() < mimicChance) {
+        run.roomIndex++;
         return { type: "mimic", enemyKey: "mimic_monster" };
       }
 
-      // Normal treasure chest
+      // Normal treasure
+      run.roomIndex++;
       return { type: "treasure", lootTable: dungeon.treasureLootTable };
     }
   }
 
-  // --- Normal room logic ---
-  const roll = Math.random();
+  // NORMAL ROOM LOGIC (seeded)
+  const roll = rng();
 
-  // If we have a floor config, use it
   if (floor) {
     if (roll < 0.6) {
+      run.roomIndex++;
       return { type: "encounter", enemies: floor.encounterTable };
     }
     if (roll < 0.8) {
+      run.roomIndex++;
       return { type: "event", events: floor.events };
     }
+    run.roomIndex++;
     return { type: "treasure", lootTable: floor.lootTable };
   }
 
-  // Fallback for dungeons without per-floor config
+  // FALLBACK
   if (roll < 0.6) {
-    return {
-      type: "encounter",
-      enemies: dungeon.baseEncounterTable || []
-    };
+    run.roomIndex++;
+    return { type: "encounter", enemies: dungeon.baseEncounterTable || [] };
   }
   if (roll < 0.8) {
-    return {
-      type: "event",
-      events: dungeon.baseEvents || []
-    };
+    run.roomIndex++;
+    return { type: "event", events: dungeon.baseEvents || [] };
   }
+
+  run.roomIndex++;
   return {
     type: "treasure",
-    lootTable:
-      dungeon.baseLootTable || dungeon.treasureLootTable || null
+    lootTable: dungeon.baseLootTable || dungeon.treasureLootTable || null
   };
 }
 
@@ -330,27 +337,38 @@ function applyEventEffect(effect, player, run, logs) {
       player.atk += effect.value;
       logs.push(`You feel empowered (+${effect.value} ATK).`);
       break;
+
     case "debuff":
       player.def -= effect.value;
       logs.push(`A curse weakens you (-${effect.value} DEF).`);
       break;
+
     case "heal":
       if (run.noHealing) {
-        logs.push(
-          "A healing force tries to reach you, but the dungeon forbids it."
-        );
+        logs.push("A healing force tries to reach you, but the dungeon forbids it.");
       } else {
-        player.hpCurrent = Math.min(
-          player.hpMax,
-          player.hpCurrent + effect.value
-        );
-        logs.push(`You recover ${effect.value} HP.`);
+        let healAmount = effect.value;
+
+        if (run.healBonus) {
+          healAmount = Math.floor(healAmount * run.healBonus);
+        }
+
+        player.hpCurrent = Math.min(player.hpMax, player.hpCurrent + healAmount);
+        logs.push(`You recover ${healAmount} HP.`);
       }
       break;
+
     case "damage":
-      player.hpCurrent = Math.max(0, player.hpCurrent - effect.value);
-      logs.push(`You take ${effect.value} damage.`);
+      let dmg = effect.value;
+
+      if (run.damageReduction) {
+        dmg = Math.max(0, Math.floor(dmg * (1 - run.damageReduction)));
+      }
+
+      player.hpCurrent = Math.max(0, player.hpCurrent - dmg);
+      logs.push(`You take ${dmg} damage.`);
       break;
+
     case "modifier": {
       const [key, delta] = effect.value.split("+");
       const amount = parseFloat(delta);
@@ -363,6 +381,7 @@ function applyEventEffect(effect, player, run, logs) {
 
 // --- TREASURE --- //
 function resolveTreasure(lootTableKey, run, logs) {
+  const rng = seededRNG(run.seed || "default");
   const table = DUNGEON_LOOT_TABLES[lootTableKey];
   if (!table) return null;
 
@@ -384,6 +403,17 @@ function resolveTreasure(lootTableKey, run, logs) {
     loot.xp += extra.xp;
     loot.items.push(...extra.items);
     logs.push("Dungeon modifier: Double loot!");
+  }
+
+  if (run.bossLootMult) {
+    loot.gold = Math.floor(loot.gold * run.bossLootMult);
+    loot.xp = Math.floor(loot.xp * run.bossLootMult);
+  }
+
+  if (run.chaosChance && rng() < run.chaosChance) {
+    const chaosMods = ["unstable_magic", "enemy_frenzy", "thick_fog"];
+    const randomMod = chaosMods[Math.floor(rng() * chaosMods.length)];
+    run.activeModifiers.push(randomMod);
   }
 
   logs.push(`You found: ${JSON.stringify(loot)}`);
