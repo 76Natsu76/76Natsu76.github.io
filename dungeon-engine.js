@@ -7,6 +7,7 @@ import { rollLootTable } from "./loot-tables.js";
 import { resolveEnemy } from "./resolveEnemy.js";
 import { PlayerStorage } from "./player-storage.js";
 import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
+import { detectSeedType, SEED_TYPES } from "./seeds.js";
 
 function seededRNG(seed) {
   let h = 0;
@@ -45,14 +46,16 @@ export const DungeonEngine = {
 function createRun(player, dungeonKey, seed = null) {
   const dungeon = DUNGEONS[dungeonKey];
 
-  // If no seed provided, generate one
   if (!seed) {
     seed = Math.random().toString(36).substring(2, 10).toUpperCase();
   }
 
+  const seedType = detectSeedType(seed);
+
   const run = {
     dungeonKey,
-    seed,                // ⭐ NEW
+    seed,
+    seedType,
     state: "exploring",
     currentFloor: 1,
     highestFloor: 1,
@@ -67,9 +70,15 @@ function createRun(player, dungeonKey, seed = null) {
     progress: []
   };
 
+  // ⭐ Apply seed-based modifiers
+  const seedDef = SEED_TYPES[seedType];
+  if (seedDef?.modifiers) {
+    run.activeModifiers.push(...seedDef.modifiers);
+  }
+
   if (dungeon.type === "labyrinth") {
     run.mode = "labyrinth";
-    run.labyrinth = generateLabyrinth(dungeon, seed); // ⭐ pass seed
+    run.labyrinth = generateLabyrinth(dungeon, seed);
   } else if (dungeon.type === "endless") {
     run.mode = "endless";
     run.highestFloor = 1;
@@ -77,6 +86,7 @@ function createRun(player, dungeonKey, seed = null) {
   } else {
     run.mode = "linear";
   }
+
   return run;
 }
 
