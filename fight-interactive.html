@@ -898,6 +898,9 @@
       <div><strong>Weather:</strong> <span id="envWeather"></span></div>
       <div><strong>Event:</strong> <span id="envEvent"></span></div>
       <div><strong>Traits:</strong> <span id="envTraits"></span></div>
+      <div><strong>Anomaly:</strong> <span id="envAnomaly"></span></div>
+      <div><strong>Migration:</strong> <span id="envMigration"></span></div>
+      <div><strong>Global:</strong> <span id="envGlobal"></span></div>
     </div>
   
     <!-- ============================
@@ -1395,6 +1398,7 @@
       renderEnemyList(combat.enemies, combat.activeEnemyIndex);
       renderStatusIcons(combat.playerState, "playerStatusIcons");
       renderStatusIcons(activeEnemy, "enemyStatusIcons");
+      renderEnvironment(encounter);
       renderEnvironmentPanel();
     }
   
@@ -1519,6 +1523,15 @@
       document.getElementById("envWeather").textContent = weather;
       document.getElementById("envEvent").textContent = eventKey;
       document.getElementById("envTraits").textContent = traits;
+      document.getElementById("envAnomaly").textContent =
+        encounter.anomaly || "None";
+      
+      document.getElementById("envMigration").textContent =
+        encounter.migration || "None";
+      
+      document.getElementById("envGlobal").textContent =
+        encounter.globalModifier || "None";
+
     }
   
     /****************************************************
@@ -2247,6 +2260,24 @@
     function format(num) {
       return Number(num).toLocaleString();
     }
+
+    function renderEnvironment(encounter) {
+      document.getElementById("envRegion").textContent = encounter.region;
+      document.getElementById("envBiome").textContent = encounter.biome;
+      document.getElementById("envWeather").textContent = encounter.weather;
+      document.getElementById("envEvent").textContent = encounter.event;
+      document.getElementById("envTraits").textContent = (encounter.traits || []).join(", ");
+    
+      document.getElementById("envAnomaly").textContent =
+        encounter.anomaly || "None";
+    
+      document.getElementById("envMigration").textContent =
+        encounter.migration || "None";
+    
+      document.getElementById("envGlobal").textContent =
+        encounter.globalModifier || "None";
+    }
+
   
     function formatLog(text) {
       return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
