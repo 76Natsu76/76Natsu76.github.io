@@ -1491,11 +1491,18 @@
     
       context.subregionKey = encounter.subregion || null;
       context.tier = encounter.tier ?? null;
-    
+
       if (encounter.type === "dungeon" || encounter.type === "dungeon_boss") {
         const p = PlayerStorage.load(username);
         if (p && p.activeDungeonRun) {
           context.dungeonRun = p.activeDungeonRun;
+          if (context.dungeonRun?.activeModifiers?.length) {
+            for (const modKey of context.dungeonRun.activeModifiers) {
+              const mod = DUNGEON_MODIFIERS[modKey];
+              if (mod?.applyToPlayer) mod.applyToPlayer(playerState);
+              if (mod?.applyToContext) mod.applyToContext(context);
+            }
+          }
         }
       }
     
