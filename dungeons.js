@@ -133,6 +133,7 @@ export const DUNGEONS = {
 
   /************************************************************
    * 3. Astral Rift Labyrinth (Labyrinth Dungeon)
+   *    (Uses labyrinth graph; floorsConfig used as base flavor/loot)
    ************************************************************/
   astral_rift_labyrinth: {
     id: "astral_rift_labyrinth",
@@ -232,7 +233,7 @@ export const DUNGEONS = {
   },
 
   /************************************************************
-   * 5. Greenhaven Catacombs (Normal Dungeon)
+   * 5. Greenhaven Catacombs (Normal Dungeon, chest/mimic demo)
    ************************************************************/
   greenhaven_catacombs: {
     id: "greenhaven_catacombs",
@@ -252,11 +253,17 @@ export const DUNGEONS = {
     maxTier: 3,
 
     bossFloor: 3,
-    bossChest: true
+    bossChest: true,
+
+    dungeonModifiers: {
+      noHealing: false,
+      doubleLoot: false,
+      enemyScaling: 1.1
+    }
   },
 
   /************************************************************
-   * 6. Twisted Labyrinth (Labyrinth Dungeon)
+   * 6. Twisted Labyrinth (Labyrinth Dungeon, chest/mimic demo)
    ************************************************************/
   twisted_labyrinth: {
     id: "twisted_labyrinth",
@@ -276,7 +283,13 @@ export const DUNGEONS = {
     maxTier: 5,
 
     bossRoomId: "center_chamber",
-    bossChest: true
+    bossChest: true,
+
+    dungeonModifiers: {
+      noHealing: false,
+      doubleLoot: false,
+      enemyScaling: 1.25
+    }
   },
 
   /************************************************************
@@ -293,13 +306,31 @@ export const DUNGEONS = {
     floors: 100,
     roomsPerFloor: 3,
     chestRoomsPerFloor: 1,
-    mimicChance: 0.25, // 25% chance a chest is a mimic
+    mimicChance: 0.25,
     treasureLootTable: "generic_treasure_t1",
 
     bossEvery: 10,
-    bossChest: true
+    bossChest: true,
+
+    // Example floor-based modifier schedule (used by DungeonEngine.completeFloor)
+    floorModifiers: {
+      10: ["enemy_frenzy"],
+      20: ["unstable_magic"],
+      30: ["no_healing", "thick_fog"],
+      50: ["double_loot"],
+      100: ["empowered_ultimate"]
+    },
+
+    dungeonModifiers: {
+      noHealing: false,
+      doubleLoot: false,
+      enemyScaling: 1.2
+    }
   },
 
+  /************************************************************
+   * 8. Labyrinth of Echoes (Graph-based Labyrinth Demo)
+   ************************************************************/
   LABYRINTH_OF_ECHOES: {
     key: "LABYRINTH_OF_ECHOES",
     name: "Labyrinth of Echoes",
@@ -307,7 +338,7 @@ export const DUNGEONS = {
     regionKey: "forest",
     recommendedLevel: 8,
     entryRequirements: { minLevel: 6 },
-    // how big / dense the graph is
+
     labyrinthConfig: {
       roomCount: 24,
       minDegree: 1,
@@ -315,8 +346,15 @@ export const DUNGEONS = {
       startGuaranteedTreasure: true,
       bossAtDepth: 4
     },
-    // optional: global modifiers
-    modifiers: ["thick_fog"]
+
+    // optional: global DUNGEON_MODIFIERS keys
+    modifiers: ["thick_fog"],
+
+    dungeonModifiers: {
+      noHealing: false,
+      doubleLoot: false,
+      enemyScaling: 1.15
+    }
   }
 };
 
@@ -336,8 +374,9 @@ export function getGreatDungeonLevelRange(floor) {
   return { min: 800, max: 1000 };
 }
 
-
 /*
+Example modifier usage:
+
 modifiers: ["no_healing", "enemy_frenzy"]
 
 floorModifiers: {
@@ -352,5 +391,4 @@ labyrinthModifiers: {
   global: ["thick_fog"],
   perRoomChance: 0.25
 }
-
 */
