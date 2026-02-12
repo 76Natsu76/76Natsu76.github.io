@@ -7,7 +7,7 @@ import { rollLootTable } from "./loot-tables.js";
 import { resolveEnemy } from "./resolveEnemy.js";
 import { PlayerStorage } from "./player-storage.js";
 import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
-import { detectSeedType, SEED_TYPES } from "./seeds.js";
+import { detectSeedType, SEED_TYPES, recordBeatenSeed } from "./seeds.js";
 
 function seededRNG(seed) {
   let h = 0;
@@ -510,6 +510,10 @@ function finalizeDungeon(player, run, combatResult, username) {
 
   player.activeDungeonRun = null;
   PlayerStorage.save(username, player);
+
+  if (run.mode === "labyrinth") {
+    recordBeatenSeed(player, run);
+  }
 
   return player.lastCompletedDungeonRun;
 }
