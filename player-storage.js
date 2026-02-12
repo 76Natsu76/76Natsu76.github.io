@@ -177,6 +177,13 @@ function clearDungeonRun(userId) {
   save(userId, p);
 }
 
+function notify(msg) {
+  player.notifications.push({
+    message: msg,
+    time: Date.now()
+  });
+}
+
 export function recordBeatenSeed(player, run) {
   if (!run.seed) return;
 
@@ -201,22 +208,27 @@ export function recordBeatenSeed(player, run) {
   // Unlock rewards
   if (type === "blessed" && player.seedMeta.blessedClears === 1) {
     player.seedMeta.unlockedModifiers.push("empowered_ultimate");
+    notify("Unlocked: Empowered Ultimate (Blessed Seed reward)");
   }
-
+  
   if (type === "cursed" && player.seedMeta.cursedClears === 1) {
     player.seedMeta.unlockedModifiers.push("enemy_frenzy");
+    notify("Unlocked: Enemy Frenzy (Cursed Seed reward)");
   }
-
+  
   if (type === "loot" && player.seedMeta.lootClears === 1) {
     player.seedMeta.unlockedModifiers.push("double_loot");
+    notify("Unlocked: Double Loot (Loot Seed reward)");
   }
-
+  
   if (type === "chaos" && player.seedMeta.chaosClears === 1) {
-    player.seedMeta.unlockedTitles.push("The Chaotic");
+    player.seedMeta.unlockedRelics.push("chaos_orb");
+    notify("Unlocked Relic: Chaos Orb");
   }
-
+  
   if (type === "bossrush" && player.seedMeta.bossrushClears === 1) {
-    player.seedMeta.unlockedCosmetics.push("bossrush_map_theme");
+    player.seedMeta.unlockedRelics.push("bossheart");
+    notify("Unlocked Relic: Bossheart");
   }
+  player.notifications = player.notifications || [];
 }
-
