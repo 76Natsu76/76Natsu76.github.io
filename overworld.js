@@ -15,6 +15,88 @@ import { getWorldState } from "./world-state.js";
 import { WeatherEngine } from "./weather-engine.js";
 
 /************************************************************
+ * WORLD EVENT INTEGRATION (Phase 4)
+ ************************************************************/
+function applyWorldEventMovementModifiers(player, regionKey, regionState) {
+  const worldState = getWorldState();
+  const global = worldState.global || {};
+
+  let speedMult = 1.0;
+  let encounterMult = 1.0;
+  let rareMult = 1.0;
+
+  /***********************
+   * WEATHER FRONTS
+   ***********************/
+  for (const front of global.weatherFronts || []) {
+    const currentRegion = front.path[front.position];
+    if (currentRegion === regionKey) {
+      // Movement penalties
+      if (front.weatherKey === "storm") speedMult *= 0.85;
+      if (front.weatherKey === "heatwave") speedMult *= 0.90;
+      if (front.weatherKey === "void_storm") speedMult *= 0.80;
+
+      // Encounter boost
+      encounterMult *= 1.25;
+
+      // Rare spawns
+      rareMult *= 1.20;
+    }
+  }
+
+  /***********************
+   * MIGRATIONS
+   ***********************/
+  for (const mig of global.migrations || []) {
+    const currentRegion = mig.path[mig.position];
+    if (currentRegion === regionKey) {
+      // Wildlife or humanoid migrations increase encounter rate
+      encounterMult *= 1.30;
+      rareMult *= 1.10;
+
+      // Slight movement penalty due to chaos
+      speedMult *= 0.95;
+    }
+  }
+
+  /***********************
+   * ANOMALIES
+   ***********************/
+  for (const anomaly of global.anomalies || []) {
+    if (anomaly.region === regionKey) {
+      // Elemental anomalies distort movement
+      if (anomaly.element === "void") speedMult *= 0.85;
+      if (anomaly.element === "frost") speedMult *= 0.90;
+      if (anomaly.element === "fire") speedMult *= 0.95;
+
+      // Encounters spike
+      encounterMult *= 1.40;
+      rareMult *= 1.30;
+    }
+  }
+
+  /***********************
+   * GLOBAL MODIFIERS
+   ***********************/
+  for (const mod of global.globalModifiers || []) {
+    if (mod.expired) continue;
+
+    if (mod.key === "increased_monsters") {
+      encounterMult *= 1.25;
+    }
+    if (mod.key === "reduced_visibility") {
+      speedMult *= 0.90;
+    }
+    if (mod.key === "rare_creatures") {
+      rareMult *= 1.50;
+    }
+  }
+
+  return { speedMult, encounterMult, rareMult };
+}
+
+
+/************************************************************
  * INITIALIZATION
  ************************************************************/
 loadPlayerSprite();
@@ -135,8 +217,12 @@ function updateMovement(player, deltaTime) {
   const regionState = worldState.regions[regionKey] || {};
   const region = WORLD_DATA.regions[regionKey];
 
-  // Movement speed (region-aware)
-  const speed = computeMovementSpeed(player, regionKey, regionState);
+  // Base region-aware speed
+  let speed = computeMovementSpeed(player, regionKey, regionState);
+  
+  // Apply world event modifiers
+  const eventMods = applyWorldEventMovementModifiers(player, regionKey, regionState);
+  speed *= eventMods.speedMult;
 
   if (movement.up) {
     newY -= speed;
@@ -177,6 +263,10 @@ function updateMovement(player, deltaTime) {
 
   // Only check encounters when moving
   if (PLAYER_SPRITE.moving) {
+    // Pass event modifiers to encounter engine
+    player._eventEncounterMult = eventMods.encounterMult;
+    player._eventRareMult = eventMods.rareMult;
+    
     checkForOverworldEncounter(player);
     checkForBuildingEntry(player);
   }
