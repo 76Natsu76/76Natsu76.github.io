@@ -691,3 +691,32 @@ function moveToLabyrinthRoom(run, nextRoomId) {
   }
   lab.currentRoomId = nextRoomId;
 }
+
+function getLabyrinthVisibility(run) {
+  const lab = run.labyrinth;
+  if (!lab) return {};
+
+  const visible = {};
+  const frontier = new Set();
+
+  // Mark visited rooms as visible
+  for (const id in lab.rooms) {
+    if (lab.rooms[id].visited) {
+      visible[id] = "visible";
+      for (const n of lab.rooms[id].neighbors) {
+        if (!lab.rooms[n].visited) {
+          frontier.add(n);
+        }
+      }
+    }
+  }
+
+  // Mark frontier rooms as "adjacent"
+  for (const id of frontier) {
+    if (!visible[id]) visible[id] = "adjacent";
+  }
+
+  return visible;
+}
+
+DungeonEngine.getLabyrinthVisibility = getLabyrinthVisibility;
