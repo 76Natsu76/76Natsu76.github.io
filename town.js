@@ -87,6 +87,14 @@ if (!player) {
   throw new Error("Player not found");
 }
 
+if (player.notifications?.length) {
+  const notes = player.notifications.splice(0);
+  PlayerStorage.save(username, player);
+
+  const msg = notes.map(n => n.message).join("\n");
+  alert(msg);
+}
+
 /* ---------------------------------------------------------
    OFFLINE REGEN
 --------------------------------------------------------- */
