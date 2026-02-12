@@ -8,8 +8,9 @@ import { resolveEnemy } from "./resolveEnemy.js";
 import { PlayerStorage, recordBeatenSeed } from "./player-storage.js";
 import { summarizeDungeonRewards } from "./dungeon-reward-summary.js";
 import { detectSeedType, SEED_TYPES } from "./seeds.js";
-import { RELICS } from "./relics.js";
+import { RELICS, RELIC_DROPS } from "./relics.js";
 import { SEED_LOOT } from "./seed-loot.js";
+import { COMPLETION_REWARDS } from "./completion-rewards.js";
 
 function seededRNG(seed) {
   let h = 0;
@@ -94,30 +95,32 @@ function createRun(player, dungeonKey, seed = null) {
     run.activeModifiers.push(...seedDef.modifiers);
   
   }
+
   switch (seedType) {
     case "blessed":
-      run.enemyScaling *= 0.9; // enemies slightly weaker
+      run.healBonus = (run.healBonus || 1) * 1.25;
       run.bonusTreasureRooms = 1;
       break;
   
     case "cursed":
       run.enemyScaling *= 1.25;
-      run.noHealing = true;
+      run.curseLootChance = 0.25;
       break;
   
     case "loot":
       run.bonusTreasureRooms = 2;
+      run.doubleLoot = true;
       break;
   
     case "chaos":
-      run.chaosMode = true; // random mutator each room
+      run.chaosChance = 0.15;
       break;
   
     case "bossrush":
-      run.bossRush = true; // boss every 3 rooms
+      run.bossRush = true;
+      run.bossLootMult = (run.bossLootMult || 1) * 1.3;
       break;
   }
-
 
   // ⭐ Initialize labyrinth with seed
   if (dungeon.type === "labyrinth") {
@@ -188,6 +191,11 @@ function generateRoom(run) {
     const chaosMods = ["unstable_magic", "enemy_frenzy", "thick_fog"];
     const randomMod = chaosMods[Math.floor(rng() * chaosMods.length)];
     run.activeModifiers.push(randomMod);
+  }
+
+  if (run.bonusTreasureRooms && rng() < 0.1 * run.bonusTreasureRooms) {
+    run.roomIndex++;
+    return { type: "treasure", lootTable: dungeon.treasureLootTable };
   }
 
   const floor = getCurrentFloor(run);
@@ -416,6 +424,10 @@ function resolveTreasure(lootTableKey, run, logs) {
     const randomMod = chaosMods[Math.floor(rng() * chaosMods.length)];
     run.activeModifiers.push(randomMod);
   }
+
+  if (run.curseLootChance && rng() < run.curseLootChance) {
+    loot.items.push("cursed_mark");
+  }
   
   const seedType = run.seedType;
   const seedLoot = SEED_LOOT[seedType];
@@ -604,6 +616,38 @@ function finalizeDungeon(player, run, combatResult, username) {
     } else {
       player.inventory.push(item);
     }
+  }
+  
+  if (!player.relics) player.relics = [];
+  
+  const seedType = run.seedType;
+  const relicPool = RELIC_DROPS[seedType] || [];
+  
+  if (relicPool.length && Math.random() < 0.25) {
+    const relic = relicPool[Math.floor(Math.random() * relicPool.length)];
+  
+    if (!player.relics.includes(relic)) {
+      player.relics.push(relic);
+  
+      player.notifications = player.notifications || [];
+      player.notifications.push({
+        message: `Unlocked Relic: ${relic}`,
+        time: Date.now()
+      });
+    }
+  }
+
+  const seedReward = COMPLETION_REWARDS[run.seedType];
+  if (seedReward) {
+    player.xp += seedReward.xp;
+    player.gold += seedReward.gold;
+    player.inventory.push(...seedReward.items);
+  
+    player.notifications = player.notifications || [];
+    player.notifications.push({
+      message: `Seed Completion Reward: +${seedReward.xp} XP, +${seedReward.gold} gold, items: ${seedReward.items.join(", ")}`,
+      time: Date.now()
+    });
   }
 
   player.lastCompletedDungeonRun = {
