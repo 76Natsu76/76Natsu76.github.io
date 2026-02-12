@@ -60,6 +60,7 @@ function ensureVitals(p) {
   if (!p.ownedBuildings) p.ownedBuildings = []; // [{ settlement, building, share }]
 
   if (!p.labyrinthCodex) p.labyrinthCodex = { beatenSeeds: {} };
+  if (!p.relics) p.relics = [];
   
   if (!p.seedMeta) p.seedMeta = { blessedClears: 0, cursedClears: 0,
     lootClears: 0, chaosClears: 0, bossrushClears: 0, unlockedModifiers: [],
@@ -111,6 +112,7 @@ function createNewPlayer(userId) {
     gold: 0,
     inventory: [],
     equipment: {},
+    relics: [],
     logs: [],
     activeDungeonRun: null,
     lastCompletedDungeonRun: null,
