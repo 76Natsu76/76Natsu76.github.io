@@ -9,6 +9,11 @@ import {
   MIGRATIONS,
   GLOBAL_MODIFIERS
 } from "./environment-taxonomy.js";
+// NEW IMPORTS
+import { REGION_IDENTITY } from "./region-identity.js";
+import { BIOME_IDENTITY } from "./biome-identity.js";
+import { SUBREGION_IDENTITY } from "./subregion-identity.js";
+
 
 function prettyEnvLabel(key, table) {
   if (!key) return "None";
@@ -168,4 +173,28 @@ function rarityMult(r) {
 function renderAbilities(enemy) {
   if (!enemy.abilities || !enemy.abilities.length) return "None";
   return enemy.abilities.map(a => `<div>• ${a.name}</div>`).join("");
+}
+
+export function getRegionContext(regionId, biomeId, subregionId) {
+  return {
+    regionId,
+    biomeId,
+    subregionId,
+    regionIdentity: REGION_IDENTITY[regionId] || null,
+    biomeIdentity: BIOME_IDENTITY[biomeId] || null,
+    subregionIdentity:
+      SUBREGION_IDENTITY[regionId]?.[subregionId] || null
+  };
+}
+
+export function resolveRegionEncounter(regionId, biomeId, subregionId, rng) {
+  const ctx = getRegionContext(regionId, biomeId, subregionId);
+
+  // build base weights from your existing tables
+  let weights = buildBaseEncounterWeights(regionId, biomeId, subregionId);
+
+  // apply identity biases (from encounters.js helper)
+  weights = applyIdentityBiases(weights, ctx);
+
+  return rollFromWeights(weights, rng);
 }
