@@ -65,9 +65,23 @@ export const WorldSim = {
         this._state.regions[key] = {
           worldBossActive: false,
           worldBossAwakening: null,
+        
           dangerLevel: 1.0,
           stability: 1.0,
-          elementalCharge: {}
+          elementalCharge: {},
+        
+          // ⭐ Phase D fields
+          activeAnomaly: null,
+          anomalyTimer: 0,
+        
+          activeMigration: null,
+          migrationTimer: 0,
+        
+          activeGlobalModifier: null,
+          globalTimer: 0,
+        
+          weatherFront: null,
+          weatherTimer: 0
         };
       }
     }
@@ -107,6 +121,20 @@ export const WorldSim = {
         s.crisisStartedAt = now;
       }
     }
+    // ============================================================
+    // Phase D: Environmental Evolution
+    // ============================================================
+    for (const regionKey of Object.keys(this._state.regions)) {
+      const r = this._state.regions[regionKey];
+    
+      evolveWeatherFront(regionKey, r);
+      evolveAnomaly(regionKey, r);
+      evolveMigration(regionKey, r);
+      evolveGlobalModifiaer(regionKey, r);
+    
+      // Danger & stability drift
+      driftRegionDangerAndStability(r);
+    }
 
     // Future Phase 7: dungeon resets
     // Future Phase 8: weather/events/hazards reintegration
@@ -137,3 +165,97 @@ function _getRegionUnlocks() {
 }
 
 WorldSim._getRegionUnlocks = _getRegionUnlocks;
+
+function evolveWeatherFront(regionKey, r) {
+  r.weatherTimer++;
+
+  // Change weather every 30–90 minutes
+  if (r.weatherTimer > 30 && Math.random() < 0.05) {
+    const weatherKeys = Object.keys(WEATHER_TYPES);
+    r.weatherFront = weatherKeys[Math.floor(Math.random() * weatherKeys.length)];
+    r.weatherTimer = 0;
+  }
+}
+
+function evolveAnomaly(regionKey, r) {
+  // If no anomaly, small chance to spawn one
+  if (!r.activeAnomaly) {
+    if (Math.random() < 0.02) { // 2% per tick
+      const keys = Object.keys(ANOMALIES);
+      r.activeAnomaly = keys[Math.floor(Math.random() * keys.length)];
+      r.anomalyTimer = 0;
+    }
+    return;
+  }
+
+  // If active, increase timer
+  r.anomalyTimer++;
+
+  // Collapse after 20–60 minutes
+  if (r.anomalyTimer > 20 && Math.random() < 0.05) {
+    r.activeAnomaly = null;
+    r.anomalyTimer = 0;
+  }
+}
+
+function evolveMigration(regionKey, r) {
+  if (!r.activeMigration) {
+    if (Math.random() < 0.03) { // 3% per tick
+      const keys = Object.keys(MIGRATIONS);
+      r.activeMigration = keys[Math.floor(Math.random() * keys.length)];
+      r.migrationTimer = 0;
+    }
+    return;
+  }
+
+  r.migrationTimer++;
+
+  // Migrations dissipate after 15–45 minutes
+  if (r.migrationTimer > 15 && Math.random() < 0.07) {
+    r.activeMigration = null;
+    r.migrationTimer = 0;
+  }
+}
+
+function evolveGlobalModifier(regionKey, r) {
+  if (!r.activeGlobalModifier) {
+    if (Math.random() < 0.01) { // 1% per tick
+      const keys = Object.keys(GLOBAL_MODIFIERS);
+      r.activeGlobalModifier = keys[Math.floor(Math.random() * keys.length)];
+      r.globalTimer = 0;
+    }
+    return;
+  }
+
+  r.globalTimer++;
+
+  // Global modifiers last 30–120 minutes
+  if (r.globalTimer > 30 && Math.random() < 0.03) {
+    r.activeGlobalModifier = null;
+    r.globalTimer = 0;
+  }
+}
+
+function driftRegionDangerAndStability(r) {
+  // Stability slowly returns to 1.0
+  if (r.stability < 1.0) r.stability += 0.002;
+  if (r.stability > 1.0) r.stability -= 0.002;
+
+  // Danger slowly trends toward 1.0
+  if (r.dangerLevel < 1.0) r.dangerLevel += 0.001;
+  if (r.dangerLevel > 1.0) r.dangerLevel -= 0.001;
+
+  // Anomalies increase danger
+  if (r.activeAnomaly) r.dangerLevel += 0.002;
+
+  // Migrations increase danger slightly
+  if (r.activeMigration) r.dangerLevel += 0.001;
+
+  // Global modifiers can swing danger
+  if (r.activeGlobalModifier === "blood_moon") r.dangerLevel += 0.003;
+  if (r.activeGlobalModifier === "verdant_bloom") r.dangerLevel -= 0.002;
+
+  // Clamp
+  r.dangerLevel = Math.max(0.5, Math.min(3.0, r.dangerLevel));
+  r.stability = Math.max(0.0, Math.min(2.0, r.stability));
+}
