@@ -12,6 +12,11 @@ import { BIOMES } from "./biomes.js";
 import { REGION_TO_BIOME } from "./region-to-biome.js";
 import { REGION_TO_SETTLEMENT } from "./settlement-index.js";
 import { SETTLEMENTS } from "./settlements.js";
+// NEW IMPORTS
+import { REGION_IDENTITY } from "./region-identity.js";
+import { BIOME_IDENTITY } from "./biome-identity.js";
+import { SUBREGION_IDENTITY } from "./subregion-identity.js";
+
 
 // --- GLOBALS FOR POPUP CONTEXT //
 let currentPlayer = null;
@@ -856,6 +861,21 @@ function buildSeedAndRelicOverlays(player) {
   if (relics.includes("golden_idol")) overlays.push(`<span class="global-overlay-tag">💰 Treasure Magnetism</span>`);
 
   return overlays.join(" ");
+}
+
+function buildRegionTooltip(regionId, biomeId, subregionId) {
+  const region = REGION_IDENTITY[regionId];
+  const biome = BIOME_IDENTITY[biomeId];
+  const subregion =
+    SUBREGION_IDENTITY[regionId]?.[subregionId] || null;
+
+  const lines = [];
+
+  if (region?.personality) lines.push(region.personality);
+  if (biome?.flavor?.length) lines.push(biome.flavor[0]);
+  if (subregion?.quirk) lines.push(`Quirk: ${subregion.quirk}`);
+
+  return lines.join("\n");
 }
 
 // --- UTIL //
