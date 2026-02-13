@@ -477,3 +477,7 @@ h1 {
 .anomaly-icon { filter: drop-shadow(0 0 4px #b47fff); }
 .migration-icon { filter: drop-shadow(0 0 4px #7fff7f); }
 .global-icon { filter: drop-shadow(0 0 4px #ffb347); }
+
+.region-marker div[title] {
+  cursor: help;
+}
