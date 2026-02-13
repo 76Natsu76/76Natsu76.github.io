@@ -17,6 +17,11 @@ import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affix
 import { SEASON_DEFINITIONS } from "./season-definitions.js";
 import { WORLD_DATA } from "./world-data.js";
 
+import { BIOME_IDENTITY } from "./biome-identity.js";
+import { REGION_IDENTITY } from "./region-identity.js";
+import { SUBREGION_IDENTITY } from "./subregion-identity.js"; // if you export it
+
+
 // Phase D taxonomy (environmental categories)
 import {
   WEATHER_TYPES,
@@ -34,6 +39,22 @@ export const EncounterEngine = {
   loadFromSession,
   clear
 };
+
+// NEW HELPERS
+
+function getRegionIdentity(regionId) {
+  return REGION_IDENTITY[regionId] || null;
+}
+
+function getBiomeIdentity(biomeId) {
+  return BIOME_IDENTITY[biomeId] || null;
+}
+
+function getSubregionIdentity(regionId, subregionId) {
+  const regionBlock = SUBREGION_IDENTITY[regionId];
+  if (!regionBlock) return null;
+  return regionBlock[subregionId] || null;
+}
 
 // ------------------------------------------------------------
 // MAIN ENTRY POINT
@@ -251,10 +272,43 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
 
   // Rare spawns
   maybeInjectRareSpawn(encounter, EnemyRegistry.templatesByKey);
+  applyIdentityBiases();
 
   // Save
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
   return encounter;
+}
+
+// EXAMPLE: inside your encounter weighting logic
+function applyIdentityBiases(baseWeights, { regionId, biomeId, subregionId }) {
+  const region = getRegionIdentity(regionId);
+  const biome = getBiomeIdentity(biomeId);
+  const subregion = getSubregionIdentity(regionId, subregionId);
+
+  const weights = { ...baseWeights };
+
+  // biome encounterBias
+  if (biome?.encounterBias) {
+    for (const [tag, delta] of Object.entries(biome.encounterBias)) {
+      weights[tag] = (weights[tag] || 0) + delta;
+    }
+  }
+
+  // region traits / anomalyAffinity / migrationAffinity can hook into tags
+  if (region?.traits) {
+    for (const trait of region.traits) {
+      weights[trait] = (weights[trait] || 0) + 2; // small generic nudge
+    }
+  }
+
+  // subregion encounterBias
+  if (subregion?.encounterBias) {
+    for (const [tag, delta] of Object.entries(subregion.encounterBias)) {
+      weights[tag] = (weights[tag] || 0) + delta;
+    }
+  }
+
+  return weights;
 }
 
 // ------------------------------------------------------------
