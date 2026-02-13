@@ -481,3 +481,27 @@ h1 {
 .region-marker div[title] {
   cursor: help;
 }
+
+.legend-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #11141c;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #333;
+  color: #eee;
+  font-size: 14px;
+}
+
+.legend-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  background-size: contain;
+}
+
+.legend-icon.anomaly { background-image: url('/assets/icons/anomaly.png'); }
+.legend-icon.migration { background-image: url('/assets/icons/migration.png'); }
+.legend-icon.global { background-image: url('/assets/icons/global.png'); }
