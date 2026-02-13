@@ -482,6 +482,10 @@ Visit ${SETTLEMENTS[settlementKey].name}
     <div>${elementalChargeIcons(regionState.elementalCharge)}</div>
   </div>
 
+  <div class="anomaly-icon"></div>
+  <div class="migration-icon"></div>
+  <div class="global-icon"></div>
+
   <div class="region-overlays">
     <strong>Overlays:</strong>
     <div>${overlayIcons(regionState.overlays)}</div>
