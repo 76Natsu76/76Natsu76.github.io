@@ -536,6 +536,48 @@ Visit ${SETTLEMENTS[settlementKey].name}
 `);
   }
   container.innerHTML = out.join("");
+  
+  // ⭐ Phase D: Populate anomaly/migration/global icons on region cards
+  for (const regionKey in WORLD_DATA.regions) {
+    const regionState = worldState.regions?.[regionKey] || {};
+    const card = document.getElementById(`region-card-${regionKey}`);
+    if (!card) continue;
+  
+    const anomaly = regionState.activeAnomaly;
+    const migration = regionState.activeMigration;
+    const globalMod = regionState.activeGlobalModifier;
+  
+    const anomalyEl = card.querySelector(".anomaly-icon");
+    const migrationEl = card.querySelector(".migration-icon");
+    const globalEl = card.querySelector(".global-icon");
+  
+    // ANOMALY
+    if (anomaly) {
+      anomalyEl.style.display = "block";
+      anomalyEl.style.backgroundImage = `url('/assets/icons/anomalies/${anomaly}.png')`;
+      anomalyEl.title = anomaly;
+    } else {
+      anomalyEl.style.display = "none";
+    }
+  
+    // MIGRATION
+    if (migration) {
+      migrationEl.style.display = "block";
+      migrationEl.style.backgroundImage = `url('/assets/icons/migrations/${migration}.png')`;
+      migrationEl.title = migration;
+    } else {
+      migrationEl.style.display = "none";
+    }
+  
+    // GLOBAL MODIFIER
+    if (globalMod) {
+      globalEl.style.display = "block";
+      globalEl.style.backgroundImage = `url('/assets/icons/global/${globalMod}.png')`;
+      globalEl.title = globalMod;
+    } else {
+      globalEl.style.display = "none";
+    }
+  }
 }
 
 // --- MAP MARKERS — WITH POPUP (Option C) //
@@ -546,7 +588,43 @@ function renderRegionMarkers(player) {
     const regionState = world.regions[regionKey];
     const marker = document.getElementById(`region-${regionKey}-marker`);
     if (!marker) continue;
-
+    
+    // ⭐ Phase D: anomaly/migration/global icons for map markers
+    const anomaly = regionState.activeAnomaly;
+    const migration = regionState.activeMigration;
+    const globalMod = regionState.activeGlobalModifier;
+  
+    const anomalyEl = marker.querySelector(".anomaly-icon");
+    const migrationEl = marker.querySelector(".migration-icon");
+    const globalEl = marker.querySelector(".global-icon");
+  
+    // ANOMALY
+    if (anomaly) {
+      anomalyEl.style.display = "block";
+      anomalyEl.style.backgroundImage = `url('/assets/icons/anomalies/${anomaly}.png')`;
+      anomalyEl.title = anomaly;
+    } else {
+      anomalyEl.style.display = "none";
+    }
+  
+    // MIGRATION
+    if (migration) {
+      migrationEl.style.display = "block";
+      migrationEl.style.backgroundImage = `url('/assets/icons/migrations/${migration}.png')`;
+      migrationEl.title = migration;
+    } else {
+      migrationEl.style.display = "none";
+    }
+  
+    // GLOBAL MODIFIER
+    if (globalMod) {
+      globalEl.style.display = "block";
+      globalEl.style.backgroundImage = `url('/assets/icons/global/${globalMod}.png')`;
+      globalEl.title = globalMod;
+    } else {
+      globalEl.style.display = "none";
+    }
+    
     const unlocked = isRegionUnlocked(player, regionKey, regionState);
 
     if (!unlocked) {
@@ -722,6 +800,16 @@ function wireNavigationButtons() {
 }
 
 function renderGlobalAnnouncements(worldState) {
+  const anyGlobal = Object.values(worldState.regions).some(r => r.activeGlobalModifier);
+
+  const banner = document.getElementById("globalBanner");
+  if (anyGlobal) {
+    banner.style.display = "block";
+    banner.textContent = `Global Condition Active: ${prettyEnvLabel(anyGlobalKey, GLOBAL_MODIFIERS)}`;
+  } else {
+    banner.style.display = "none";
+  }
+
   const box = document.getElementById("globalAnnouncements");
   if (!box) return;
 
