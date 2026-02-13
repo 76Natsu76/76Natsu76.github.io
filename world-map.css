@@ -456,9 +456,11 @@ h1 {
   background: #222832;
 }
 
-.anomaly-icon,
-.migration-icon,
-.global-icon {
+/* Positioning */
+.anomaly-icon { top: 28px; }
+.migration-icon { top: 52px; }
+.global-icon { 
+  top: 76px;        
   width: 20px;
   height: 20px;
   background-size: contain;
@@ -467,11 +469,6 @@ h1 {
   right: 4px;
   opacity: 0.9;
 }
-
-/* Positioning */
-.anomaly-icon { top: 28px; }
-.migration-icon { top: 52px; }
-.global-icon { top: 76px; }
 
 /* Optional glow effects */
 .anomaly-icon { filter: drop-shadow(0 0 4px #b47fff); }
@@ -505,3 +502,16 @@ h1 {
 .legend-icon.anomaly { background-image: url('/assets/icons/anomaly.png'); }
 .legend-icon.migration { background-image: url('/assets/icons/migration.png'); }
 .legend-icon.global { background-image: url('/assets/icons/global.png'); }
+
+.global-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #ffb34733;
+  color: #ffb347;
+  text-align: center;
+  padding: 6px 0;
+  font-weight: bold;
+  display: none;
+}
