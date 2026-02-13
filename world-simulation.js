@@ -8,6 +8,9 @@ import { tickSettlements } from "./settlement-simulation.js";
 import { tickSettlementEconomy } from "./settlement-economy-simulation.js";
 import { tickTradeRoutes } from "./trade-routes.js";
 import { evaluateSettlementCrisis, advanceSettlementCrisis } from "./settlement-crisis.js";
+// NEW IMPORT
+import { REGION_IDENTITY } from "./region-identity.js";
+import { BIOME_IDENTITY } from "./biome-identity.js";
 
 export const WorldSim = {
   _state: null,
@@ -110,6 +113,10 @@ export const WorldSim = {
     tickSettlements();
     tickSettlementEconomy();
     tickTradeRoutes();
+    const next = { ...worldState }; 
+    for (const regionId of Object.keys(next.regions)) { 
+      next.regions[regionId] = applyRegionDrift(next.regions[regionId], regionId); 
+    }
 
     // Settlement crisis evaluation + progression
     for (const key of Object.keys(this._state.settlements || {})) {
@@ -259,3 +266,20 @@ function driftRegionDangerAndStability(r) {
   r.dangerLevel = Math.max(0.5, Math.min(3.0, r.dangerLevel));
   r.stability = Math.max(0.0, Math.min(2.0, r.stability));
 }
+
+function applyRegionDrift(regionState, regionId) {
+  const identity = REGION_IDENTITY[regionId];
+  if (!identity) return regionState;
+
+  const next = { ...regionState };
+
+  if (typeof identity.stabilityDrift === "number") {
+    next.stability = (next.stability || 0) + identity.stabilityDrift;
+  }
+  if (typeof identity.dangerDrift === "number") {
+    next.danger = (next.danger || 0) + identity.dangerDrift;
+  }
+
+  return next;
+}
+
