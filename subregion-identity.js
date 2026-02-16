@@ -11,7 +11,10 @@ export const SUBREGION_IDENTITY = {
       biome: "deep_forest",
       quirk: "Soft moss dampens footsteps, increasing ambush chance.",
       encounterBias: { beast: +10, plant: +5 },
-      lootBias: ["herbs", "moss"]
+      lootBias: ["herbs", "moss"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "whisperbark-thicket": {
       tier: 2,
@@ -19,7 +22,10 @@ export const SUBREGION_IDENTITY = {
       biome: "wildwood",
       quirk: "Dense brush reduces accuracy.",
       encounterBias: { beast: +5, dark: +5 },
-      lootBias: ["wood", "spores"]
+      lootBias: ["wood", "spores"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "sunleaf-clearing": {
       tier: 1,
@@ -27,7 +33,10 @@ export const SUBREGION_IDENTITY = {
       biome: "deep_forest",
       quirk: "Healing herbs grow abundantly.",
       encounterBias: { plant: +10 },
-      lootBias: ["herbs", "light_essence"]
+      lootBias: ["herbs", "light_essence"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     }
   },
 
@@ -38,7 +47,10 @@ export const SUBREGION_IDENTITY = {
       biome: "wildwood",
       quirk: "Wildlife density increased.",
       encounterBias: { beast: +10 },
-      lootBias: ["fur", "herbs"]
+      lootBias: ["fur", "herbs"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "bloomroot-hollow": {
       tier: 3,
@@ -46,7 +58,10 @@ export const SUBREGION_IDENTITY = {
       biome: "overgrowth",
       quirk: "Roots occasionally snare enemies.",
       encounterBias: { plant: +10 },
-      lootBias: ["roots", "fungal_spores"]
+      lootBias: ["roots", "fungal_spores"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "eldermoss-rise": {
       tier: 4,
@@ -54,7 +69,10 @@ export const SUBREGION_IDENTITY = {
       biome: "wildwood",
       quirk: "Ancient spores cause random buffs or debuffs.",
       encounterBias: { plant: +5, arcane: +5 },
-      lootBias: ["spores", "arcane_residue"]
+      lootBias: ["spores", "arcane_residue"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     }
   },
 
@@ -65,7 +83,10 @@ export const SUBREGION_IDENTITY = {
       biome: "overgrowth",
       quirk: "Nature magic intensifies healing.",
       encounterBias: { plant: +10, spirit: +5 },
-      lootBias: ["ancient_bark", "life_essence"]
+      lootBias: ["ancient_bark", "life_essence"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "thornbind-crossing": {
       tier: 4,
@@ -73,7 +94,10 @@ export const SUBREGION_IDENTITY = {
       biome: "deep_forest",
       quirk: "Thorn traps deal minor bleed.",
       encounterBias: { beast: +5, plant: +5 },
-      lootBias: ["thorns", "beast_blood"]
+      lootBias: ["thorns", "beast_blood"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "verdant-altar": {
       tier: 6,
@@ -81,7 +105,10 @@ export const SUBREGION_IDENTITY = {
       biome: "grove",
       quirk: "Elemental nature damage increased.",
       encounterBias: { nature: +10 },
-      lootBias: ["nature_essence", "ancient_relic"]
+      lootBias: ["nature_essence", "ancient_relic"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     }
   },
 
@@ -92,7 +119,10 @@ export const SUBREGION_IDENTITY = {
       biome: "wildwood",
       quirk: "Fog reduces visibility.",
       encounterBias: { dark: +5, beast: +5 },
-      lootBias: ["spores", "shadow_leaf"]
+      lootBias: ["spores", "shadow_leaf"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "rootspire-ridge": {
       tier: 4,
@@ -100,7 +130,10 @@ export const SUBREGION_IDENTITY = {
       biome: "deep_forest",
       quirk: "Elevated terrain boosts ranged attacks.",
       encounterBias: { beast: +5 },
-      lootBias: ["wood", "feathers"]
+      lootBias: ["wood", "feathers"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "glimmerleaf-run": {
       tier: 2,
@@ -108,7 +141,10 @@ export const SUBREGION_IDENTITY = {
       biome: "wildwood",
       quirk: "Rare herbs spawn more often.",
       encounterBias: { plant: +10 },
-      lootBias: ["rare_herbs"]
+      lootBias: ["rare_herbs"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     }
   },
 
@@ -123,7 +159,10 @@ export const SUBREGION_IDENTITY = {
       biome: "plains",
       quirk: "Wind boosts crit chance slightly.",
       encounterBias: { beast: +5, wind: +5 },
-      lootBias: ["feathers", "grain"]
+      lootBias: ["feathers", "grain"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "stonehoof-steppe": {
       tier: 2,
@@ -131,7 +170,10 @@ export const SUBREGION_IDENTITY = {
       biome: "open_steppe",
       quirk: "Beast encounters increased.",
       encounterBias: { beast: +10 },
-      lootBias: ["fur", "meat"]
+      lootBias: ["fur", "meat"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "suncrest-ridge": {
       tier: 3,
@@ -139,7 +181,10 @@ export const SUBREGION_IDENTITY = {
       biome: "plains",
       quirk: "High visibility increases accuracy.",
       encounterBias: { wind: +5 },
-      lootBias: ["feathers", "light_essence"]
+      lootBias: ["feathers", "light_essence"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     }
   },
 
@@ -150,7 +195,10 @@ export const SUBREGION_IDENTITY = {
       biome: "storm_cliffs",
       quirk: "Lightning hazard chance increased.",
       encounterBias: { storm: +10 },
-      lootBias: ["storm_essence"]
+      lootBias: ["storm_essence"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "razorwind-ledge": {
       tier: 3,
@@ -158,7 +206,10 @@ export const SUBREGION_IDENTITY = {
       biome: "high_cliffs",
       quirk: "Wind reduces ranged accuracy.",
       encounterBias: { wind: +10 },
-      lootBias: ["feathers"]
+      lootBias: ["feathers"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     },
     "eaglecrest-spire": {
       tier: 5,
@@ -166,7 +217,10 @@ export const SUBREGION_IDENTITY = {
       biome: "high_cliffs",
       quirk: "Aerial enemies more common.",
       encounterBias: { wind: +10, beast: +5 },
-      lootBias: ["feathers", "talons"]
+      lootBias: ["feathers", "talons"],
+      professionBias: {},
+      elementBias : {},
+      subraceBias: {}
     }
   },
 
@@ -177,7 +231,10 @@ export const SUBREGION_IDENTITY = {
       biome: "storm_highlands",
       quirk: "Solar flares boost fire damage.",
       encounterBias: { fire: +10, storm: +5 },
-      lootBias: ["fire_essence"]
+      lootBias: ["fire_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "thunderfall-ravine": {
       tier: 4,
@@ -185,7 +242,10 @@ export const SUBREGION_IDENTITY = {
       biome: "storm_cliffs",
       quirk: "Storm hazards increased.",
       encounterBias: { storm: +10 },
-      lootBias: ["storm_essence"]
+      lootBias: ["storm_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "spirelight-ascend": {
       tier: 6,
@@ -193,7 +253,10 @@ export const SUBREGION_IDENTITY = {
       biome: "high_cliffs",
       quirk: "High altitude reduces stamina.",
       encounterBias: { wind: +10 },
-      lootBias: ["light_essence"]
+      lootBias: ["light_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -204,7 +267,10 @@ export const SUBREGION_IDENTITY = {
       biome: "stone_pass",
       quirk: "Rocky terrain boosts defense.",
       encounterBias: { earth: +10 },
-      lootBias: ["stone", "ore"]
+      lootBias: ["stone", "ore"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "ironroot-plateau": {
       tier: 5,
@@ -212,7 +278,10 @@ export const SUBREGION_IDENTITY = {
       biome: "high_cliffs",
       quirk: "Mineral nodes more common.",
       encounterBias: { earth: +5 },
-      lootBias: ["ore", "crystal"]
+      lootBias: ["ore", "crystal"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "stormclash-ridge": {
       tier: 6,
@@ -220,7 +289,10 @@ export const SUBREGION_IDENTITY = {
       biome: "storm_cliffs",
       quirk: "Storm crit volatility increased.",
       encounterBias: { storm: +10 },
-      lootBias: ["storm_essence"]
+      lootBias: ["storm_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -231,7 +303,10 @@ export const SUBREGION_IDENTITY = {
       biome: "stone_pass",
       quirk: "Climbing fatigue reduces stamina.",
       encounterBias: { earth: +5 },
-      lootBias: ["stone"]
+      lootBias: ["stone"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "frostbite-crag": {
       tier: 4,
@@ -239,7 +314,10 @@ export const SUBREGION_IDENTITY = {
       biome: "high_cliffs",
       quirk: "Cold slows movement.",
       encounterBias: { ice: +5 },
-      lootBias: ["ice_shard"]
+      lootBias: ["ice_shard"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "echoing-cavern-mouth": {
       tier: 5,
@@ -247,7 +325,10 @@ export const SUBREGION_IDENTITY = {
       biome: "stone_pass",
       quirk: "Echoes reveal enemy positions.",
       encounterBias: { dark: +5 },
-      lootBias: ["crystal", "ore"]
+      lootBias: ["crystal", "ore"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -258,7 +339,10 @@ export const SUBREGION_IDENTITY = {
       biome: "titanic_crater",
       quirk: "Chaos surges cause random damage.",
       encounterBias: { chaos: +10, fire: +5 },
-      lootBias: ["chaos_fragment"]
+      lootBias: ["chaos_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "shattered-ridge": {
       tier: 6,
@@ -266,7 +350,10 @@ export const SUBREGION_IDENTITY = {
       biome: "stone_pass",
       quirk: "Unstable ground collapses easily.",
       encounterBias: { earth: +10 },
-      lootBias: ["stone", "ore"]
+      lootBias: ["stone", "ore"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "emberfall-breach": {
       tier: 8,
@@ -274,7 +361,10 @@ export const SUBREGION_IDENTITY = {
       biome: "magma_fields",
       quirk: "Fire hazards frequent.",
       encounterBias: { fire: +15 },
-      lootBias: ["fire_essence"]
+      lootBias: ["fire_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -289,7 +379,10 @@ export const SUBREGION_IDENTITY = {
       biome: "marsh",
       quirk: "Poison mist fills the air.",
       encounterBias: { poison: +10 },
-      lootBias: ["fungal_spores", "sludge"]
+      lootBias: ["fungal_spores", "sludge"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "drowned-root-delta": {
       tier: 3,
@@ -297,7 +390,10 @@ export const SUBREGION_IDENTITY = {
       biome: "bog",
       quirk: "Water slows movement.",
       encounterBias: { water: +10 },
-      lootBias: ["water_essence"]
+      lootBias: ["water_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "hollowreed-basin": {
       tier: 4,
@@ -305,7 +401,10 @@ export const SUBREGION_IDENTITY = {
       biome: "marsh",
       quirk: "Fungal spores cause confusion.",
       encounterBias: { poison: +5, dark: +5 },
-      lootBias: ["spores", "toxin"]
+      lootBias: ["spores", "toxin"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -320,7 +419,10 @@ export const SUBREGION_IDENTITY = {
       biome: "dunes",
       quirk: "Heat reduces stamina.",
       encounterBias: { fire: +10 },
-      lootBias: ["sand", "fire_essence"]
+      lootBias: ["sand", "fire_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "glasswind-basin": {
       tier: 4,
@@ -328,7 +430,10 @@ export const SUBREGION_IDENTITY = {
       biome: "sunscorched_dunes",
       quirk: "Mirage illusions distort vision.",
       encounterBias: { fire: +5, light: +5 },
-      lootBias: ["glass_fragment"]
+      lootBias: ["glass_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "emberdune-ridge": {
       tier: 5,
@@ -336,7 +441,10 @@ export const SUBREGION_IDENTITY = {
       biome: "dunes",
       quirk: "Fire damage increased.",
       encounterBias: { fire: +10 },
-      lootBias: ["fire_essence"]
+      lootBias: ["fire_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -347,7 +455,10 @@ export const SUBREGION_IDENTITY = {
       biome: "shattered_wastes",
       quirk: "Chaos fissures erupt unpredictably.",
       encounterBias: { chaos: +10 },
-      lootBias: ["chaos_fragment"]
+      lootBias: ["chaos_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "obsidian-drift": {
       tier: 7,
@@ -355,7 +466,10 @@ export const SUBREGION_IDENTITY = {
       biome: "dunes",
       quirk: "Sharp terrain causes bleed.",
       encounterBias: { earth: +5, fire: +5 },
-      lootBias: ["obsidian"]
+      lootBias: ["obsidian"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "sunbreaker-ravine": {
       tier: 5,
@@ -363,7 +477,10 @@ export const SUBREGION_IDENTITY = {
       biome: "shattered_wastes",
       quirk: "Solar flares scorch the ground.",
       encounterBias: { fire: +10, light: +5 },
-      lootBias: ["light_essence"]
+      lootBias: ["light_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -374,7 +491,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ashlands",
       quirk: "Ash reduces accuracy.",
       encounterBias: { fire: +10 },
-      lootBias: ["ash", "fire_essence"]
+      lootBias: ["ash", "fire_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "magmaflow-ridge": {
       tier: 6,
@@ -382,7 +502,10 @@ export const SUBREGION_IDENTITY = {
       biome: "magma_fields",
       quirk: "Lava bursts erupt frequently.",
       encounterBias: { fire: +15 },
-      lootBias: ["magma_core"]
+      lootBias: ["magma_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "emberstorm-chasm": {
       tier: 7,
@@ -390,7 +513,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ashlands",
       quirk: "Firestorms sweep the area.",
       encounterBias: { fire: +15, chaos: +5 },
-      lootBias: ["fire_essence", "chaos_fragment"]
+      lootBias: ["fire_essence", "chaos_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -405,7 +531,10 @@ export const SUBREGION_IDENTITY = {
       biome: "tundra",
       quirk: "Frostbite chance increases in extreme cold.",
       encounterBias: { ice: +10 },
-      lootBias: ["ice_shard", "fur"]
+      lootBias: ["ice_shard", "fur"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "glacierfall-ridge": {
       tier: 4,
@@ -413,7 +542,10 @@ export const SUBREGION_IDENTITY = {
       biome: "frozen_expanse",
       quirk: "Slippery terrain reduces movement control.",
       encounterBias: { ice: +10, wind: +5 },
-      lootBias: ["frost_crystal"]
+      lootBias: ["frost_crystal"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "icewind-basin": {
       tier: 5,
@@ -421,7 +553,10 @@ export const SUBREGION_IDENTITY = {
       biome: "tundra",
       quirk: "Wind chill reduces speed.",
       encounterBias: { wind: +10 },
-      lootBias: ["ice_shard"]
+      lootBias: ["ice_shard"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -432,7 +567,10 @@ export const SUBREGION_IDENTITY = {
       biome: "crystalline_frost",
       quirk: "Light refraction boosts crit chance.",
       encounterBias: { arcane: +5, ice: +10 },
-      lootBias: ["crystal", "ice_shard"]
+      lootBias: ["crystal", "ice_shard"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "frostspire-cliffs": {
       tier: 5,
@@ -440,7 +578,10 @@ export const SUBREGION_IDENTITY = {
       biome: "frozen_expanse",
       quirk: "Ice hazards form underfoot.",
       encounterBias: { ice: +10 },
-      lootBias: ["frost_crystal"]
+      lootBias: ["frost_crystal"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "everfrost-depths": {
       tier: 6,
@@ -448,7 +589,10 @@ export const SUBREGION_IDENTITY = {
       biome: "crystalline_frost",
       quirk: "Extreme cold drains stamina.",
       encounterBias: { ice: +15 },
-      lootBias: ["frost_core"]
+      lootBias: ["frost_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -463,7 +607,10 @@ export const SUBREGION_IDENTITY = {
       biome: "cave",
       quirk: "Echoes reveal enemy positions.",
       encounterBias: { dark: +5, earth: +5 },
-      lootBias: ["stone", "crystal"]
+      lootBias: ["stone", "crystal"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "stalagmite-pass": {
       tier: 3,
@@ -471,7 +618,10 @@ export const SUBREGION_IDENTITY = {
       biome: "stone_pass",
       quirk: "Narrow corridors restrict movement.",
       encounterBias: { earth: +10 },
-      lootBias: ["ore"]
+      lootBias: ["ore"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "glowshard-den": {
       tier: 4,
@@ -479,7 +629,10 @@ export const SUBREGION_IDENTITY = {
       biome: "cave",
       quirk: "Crystal light boosts arcane effects.",
       encounterBias: { arcane: +10 },
-      lootBias: ["crystal", "arcane_residue"]
+      lootBias: ["crystal", "arcane_residue"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -490,7 +643,10 @@ export const SUBREGION_IDENTITY = {
       biome: "prism_caverns",
       quirk: "Light refraction alters spell behavior.",
       encounterBias: { arcane: +15 },
-      lootBias: ["prism_fragment"]
+      lootBias: ["prism_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "shardspire-chamber": {
       tier: 6,
@@ -498,7 +654,10 @@ export const SUBREGION_IDENTITY = {
       biome: "crystal_caverns",
       quirk: "Arcane resonance increases crit chance.",
       encounterBias: { arcane: +10, light: +5 },
-      lootBias: ["crystal", "arcane_core"]
+      lootBias: ["crystal", "arcane_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "glitterfall-grotto": {
       tier: 4,
@@ -506,7 +665,10 @@ export const SUBREGION_IDENTITY = {
       biome: "crystal_caverns",
       quirk: "Crystal growth creates unstable footing.",
       encounterBias: { arcane: +5 },
-      lootBias: ["crystal"]
+      lootBias: ["crystal"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -517,7 +679,10 @@ export const SUBREGION_IDENTITY = {
       biome: "void_labyrinth",
       quirk: "Darkness reduces accuracy.",
       encounterBias: { dark: +10, void: +5 },
-      lootBias: ["shadow_essence"]
+      lootBias: ["shadow_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "whispering-maze": {
       tier: 8,
@@ -525,7 +690,10 @@ export const SUBREGION_IDENTITY = {
       biome: "underdeep",
       quirk: "Confusion chance increased.",
       encounterBias: { dark: +10 },
-      lootBias: ["void_fragment"]
+      lootBias: ["void_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "abyssal-throat": {
       tier: 9,
@@ -533,7 +701,10 @@ export const SUBREGION_IDENTITY = {
       biome: "void_labyrinth",
       quirk: "Void corruption builds rapidly.",
       encounterBias: { void: +15 },
-      lootBias: ["void_core"]
+      lootBias: ["void_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -548,7 +719,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ruins",
       quirk: "Undead bias increased.",
       encounterBias: { undead: +10 },
-      lootBias: ["bone", "dust"]
+      lootBias: ["bone", "dust"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "sunken-hall": {
       tier: 4,
@@ -556,7 +730,10 @@ export const SUBREGION_IDENTITY = {
       biome: "forgotten_ruins",
       quirk: "Ancient traps activate randomly.",
       encounterBias: { dark: +5, arcane: +5 },
-      lootBias: ["ancient_relic"]
+      lootBias: ["ancient_relic"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "echoing-plaza": {
       tier: 5,
@@ -564,7 +741,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ruins",
       quirk: "Arcane echoes distort sound.",
       encounterBias: { arcane: +10 },
-      lootBias: ["arcane_residue"]
+      lootBias: ["arcane_residue"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -575,7 +755,10 @@ export const SUBREGION_IDENTITY = {
       biome: "celestial_fortress",
       quirk: "Holy damage bias increased.",
       encounterBias: { holy: +10 },
-      lootBias: ["radiant_shard"]
+      lootBias: ["radiant_shard"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "spire-of-judgment": {
       tier: 8,
@@ -583,7 +766,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ascension_spires",
       quirk: "Light hazards strike periodically.",
       encounterBias: { light: +10 },
-      lootBias: ["light_essence"]
+      lootBias: ["light_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "sanctum-core": {
       tier: 9,
@@ -591,7 +777,10 @@ export const SUBREGION_IDENTITY = {
       biome: "celestial_fortress",
       quirk: "Divine enemies gather here.",
       encounterBias: { holy: +15 },
-      lootBias: ["divine_fragment"]
+      lootBias: ["divine_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -606,7 +795,10 @@ export const SUBREGION_IDENTITY = {
       biome: "coastal",
       quirk: "Water boosts elemental effects.",
       encounterBias: { water: +10 },
-      lootBias: ["shell", "water_essence"]
+      lootBias: ["shell", "water_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "reefglow-basin": {
       tier: 3,
@@ -614,7 +806,10 @@ export const SUBREGION_IDENTITY = {
       biome: "reef",
       quirk: "Light refraction increases crit chance.",
       encounterBias: { water: +10, light: +5 },
-      lootBias: ["coral", "light_essence"]
+      lootBias: ["coral", "light_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "stormwake-cliff": {
       tier: 4,
@@ -622,7 +817,10 @@ export const SUBREGION_IDENTITY = {
       biome: "coastal",
       quirk: "Storm hazards frequent.",
       encounterBias: { storm: +10 },
-      lootBias: ["storm_essence"]
+      lootBias: ["storm_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -633,7 +831,10 @@ export const SUBREGION_IDENTITY = {
       biome: "storm_coast",
       quirk: "Lightning hazards frequent.",
       encounterBias: { electric: +10 },
-      lootBias: ["storm_essence"]
+      lootBias: ["storm_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "windlash-ridge": {
       tier: 6,
@@ -641,7 +842,10 @@ export const SUBREGION_IDENTITY = {
       biome: "thunder_coast",
       quirk: "Wind reduces accuracy.",
       encounterBias: { wind: +10 },
-      lootBias: ["feathers"]
+      lootBias: ["feathers"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "maelstrom-breach": {
       tier: 7,
@@ -649,7 +853,10 @@ export const SUBREGION_IDENTITY = {
       biome: "storm_coast",
       quirk: "Storm crit volatility increased.",
       encounterBias: { storm: +15 },
-      lootBias: ["storm_core"]
+      lootBias: ["storm_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -660,7 +867,10 @@ export const SUBREGION_IDENTITY = {
       biome: "island",
       quirk: "Water bias increased.",
       encounterBias: { water: +10 },
-      lootBias: ["shell", "driftwood"]
+      lootBias: ["shell", "driftwood"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "shatterreef-cove": {
       tier: 4,
@@ -668,7 +878,10 @@ export const SUBREGION_IDENTITY = {
       biome: "reef",
       quirk: "Sharp coral causes bleed.",
       encounterBias: { water: +10, light: +5 },
-      lootBias: ["coral"]
+      lootBias: ["coral"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "stormcall-spire": {
       tier: 5,
@@ -676,7 +889,10 @@ export const SUBREGION_IDENTITY = {
       biome: "coastal",
       quirk: "Storm affinity increased.",
       encounterBias: { storm: +10 },
-      lootBias: ["storm_essence"]
+      lootBias: ["storm_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -691,7 +907,10 @@ export const SUBREGION_IDENTITY = {
       biome: "arcane_storm",
       quirk: "Arcane lightning surges unpredictably.",
       encounterBias: { arcane: +10, electric: +10 },
-      lootBias: ["storm_core", "arcane_residue"]
+      lootBias: ["storm_core", "arcane_residue"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "tempest-core": {
       tier: 8,
@@ -699,7 +918,10 @@ export const SUBREGION_IDENTITY = {
       biome: "storm_cliffs",
       quirk: "Storm surges intensify damage.",
       encounterBias: { storm: +15 },
-      lootBias: ["storm_essence"]
+      lootBias: ["storm_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "skybreaker-altar": {
       tier: 9,
@@ -707,7 +929,10 @@ export const SUBREGION_IDENTITY = {
       biome: "arcane_storm",
       quirk: "High crit volatility.",
       encounterBias: { arcane: +10, storm: +10 },
-      lootBias: ["arcane_core"]
+      lootBias: ["arcane_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -718,7 +943,10 @@ export const SUBREGION_IDENTITY = {
       biome: "mana_fields",
       quirk: "Mana regeneration increased.",
       encounterBias: { arcane: +10 },
-      lootBias: ["mana_bloom"]
+      lootBias: ["mana_bloom"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "runecliff-ascent": {
       tier: 7,
@@ -726,7 +954,10 @@ export const SUBREGION_IDENTITY = {
       biome: "arcane_storm",
       quirk: "Arcane resonance boosts spell damage.",
       encounterBias: { arcane: +10, storm: +5 },
-      lootBias: ["rune_fragment"]
+      lootBias: ["rune_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "stormrune-vault": {
       tier: 8,
@@ -734,7 +965,10 @@ export const SUBREGION_IDENTITY = {
       biome: "mana_fields",
       quirk: "Spell damage increased.",
       encounterBias: { arcane: +15 },
-      lootBias: ["arcane_core"]
+      lootBias: ["arcane_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -749,7 +983,10 @@ export const SUBREGION_IDENTITY = {
       biome: "entropy_rifts",
       quirk: "Random stat flux distorts combat.",
       encounterBias: { void: +10, chaos: +10 },
-      lootBias: ["void_fragment", "chaos_fragment"]
+      lootBias: ["void_fragment", "chaos_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "voidflare-ridge": {
       tier: 8,
@@ -757,7 +994,10 @@ export const SUBREGION_IDENTITY = {
       biome: "void_barrens",
       quirk: "Void DOT builds rapidly.",
       encounterBias: { void: +15 },
-      lootBias: ["void_essence"]
+      lootBias: ["void_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "shatterrift-core": {
       tier: 9,
@@ -765,7 +1005,10 @@ export const SUBREGION_IDENTITY = {
       biome: "entropy_rifts",
       quirk: "Chaos surges destabilize the area.",
       encounterBias: { chaos: +15, void: +10 },
-      lootBias: ["chaos_core"]
+      lootBias: ["chaos_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -776,7 +1019,10 @@ export const SUBREGION_IDENTITY = {
       biome: "corruption_fields",
       quirk: "Corruption buildup increases over time.",
       encounterBias: { dark: +10, void: +5 },
-      lootBias: ["corrupted_residue"]
+      lootBias: ["corrupted_residue"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "darkspire-breach": {
       tier: 7,
@@ -784,7 +1030,10 @@ export const SUBREGION_IDENTITY = {
       biome: "void_barrens",
       quirk: "Void hazards erupt unpredictably.",
       encounterBias: { void: +10 },
-      lootBias: ["void_fragment"]
+      lootBias: ["void_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "riftborn-hollow": {
       tier: 8,
@@ -792,7 +1041,10 @@ export const SUBREGION_IDENTITY = {
       biome: "entropy_rifts",
       quirk: "Random anomalies manifest.",
       encounterBias: { chaos: +10, void: +10 },
-      lootBias: ["chaos_fragment", "void_essence"]
+      lootBias: ["chaos_fragment", "void_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -807,7 +1059,10 @@ export const SUBREGION_IDENTITY = {
       biome: "mana_fields",
       quirk: "Mana regeneration increased.",
       encounterBias: { arcane: +10 },
-      lootBias: ["mana_bloom"]
+      lootBias: ["mana_bloom"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "riftglow-basin": {
       tier: 7,
@@ -815,7 +1070,10 @@ export const SUBREGION_IDENTITY = {
       biome: "arcane_rift",
       quirk: "Arcane crit chance increased.",
       encounterBias: { arcane: +15 },
-      lootBias: ["arcane_residue"]
+      lootBias: ["arcane_residue"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "astral-echo": {
       tier: 8,
@@ -823,7 +1081,10 @@ export const SUBREGION_IDENTITY = {
       biome: "mana_fields",
       quirk: "Cosmic resonance alters spell effects.",
       encounterBias: { cosmic: +10, arcane: +10 },
-      lootBias: ["astral_fragment"]
+      lootBias: ["astral_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -838,7 +1099,10 @@ export const SUBREGION_IDENTITY = {
       biome: "abyssal_depths",
       quirk: "Darkness reduces accuracy.",
       encounterBias: { dark: +10 },
-      lootBias: ["shadow_essence"]
+      lootBias: ["shadow_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "voidtide-ravine": {
       tier: 8,
@@ -846,7 +1110,10 @@ export const SUBREGION_IDENTITY = {
       biome: "shadow_trench",
       quirk: "Void DOT builds rapidly.",
       encounterBias: { void: +15 },
-      lootBias: ["void_fragment"]
+      lootBias: ["void_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "nightspire-core": {
       tier: 9,
@@ -854,7 +1121,10 @@ export const SUBREGION_IDENTITY = {
       biome: "abyssal_depths",
       quirk: "Corruption intensifies near the core.",
       encounterBias: { dark: +10, void: +10 },
-      lootBias: ["abyss_core"]
+      lootBias: ["abyss_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -865,7 +1135,10 @@ export const SUBREGION_IDENTITY = {
       biome: "nightmare_rifts",
       quirk: "Chaos fissures erupt frequently.",
       encounterBias: { chaos: +15 },
-      lootBias: ["chaos_fragment"]
+      lootBias: ["chaos_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "hollowvoid-chasm": {
       tier: 9,
@@ -873,7 +1146,10 @@ export const SUBREGION_IDENTITY = {
       biome: "abyssal_depths",
       quirk: "Void storms sweep the area.",
       encounterBias: { void: +15 },
-      lootBias: ["void_core"]
+      lootBias: ["void_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "nightmare-throat": {
       tier: 10,
@@ -881,7 +1157,10 @@ export const SUBREGION_IDENTITY = {
       biome: "nightmare_rifts",
       quirk: "Extreme darkness distorts perception.",
       encounterBias: { dark: +15, void: +10 },
-      lootBias: ["nightmare_essence"]
+      lootBias: ["nightmare_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -896,7 +1175,10 @@ export const SUBREGION_IDENTITY = {
       biome: "radiant_fields",
       quirk: "Light boosts healing.",
       encounterBias: { light: +10 },
-      lootBias: ["radiant_shard"]
+      lootBias: ["radiant_shard"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "ascension-ridge": {
       tier: 7,
@@ -904,7 +1186,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ascension_spires",
       quirk: "Holy damage bias increased.",
       encounterBias: { holy: +10 },
-      lootBias: ["holy_fragment"]
+      lootBias: ["holy_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "halo-spire": {
       tier: 8,
@@ -912,7 +1197,10 @@ export const SUBREGION_IDENTITY = {
       biome: "radiant_fields",
       quirk: "Light hazards strike periodically.",
       encounterBias: { light: +15 },
-      lootBias: ["light_essence"]
+      lootBias: ["light_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -923,7 +1211,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ascension_spires",
       quirk: "Solar flares boost fire damage.",
       encounterBias: { fire: +10, light: +10 },
-      lootBias: ["solar_fragment"]
+      lootBias: ["solar_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "celestium-core": {
       tier: 9,
@@ -931,7 +1222,10 @@ export const SUBREGION_IDENTITY = {
       biome: "celestial_fortress",
       quirk: "Divine enemies gather here.",
       encounterBias: { holy: +15 },
-      lootBias: ["divine_core"]
+      lootBias: ["divine_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "halo-crest": {
       tier: 10,
@@ -939,7 +1233,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ascension_spires",
       quirk: "Light crit chance increased.",
       encounterBias: { light: +15 },
-      lootBias: ["radiant_shard"]
+      lootBias: ["radiant_shard"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -950,7 +1247,10 @@ export const SUBREGION_IDENTITY = {
       biome: "celestial_fortress",
       quirk: "Holy DOT intensifies.",
       encounterBias: { holy: +15 },
-      lootBias: ["holy_fragment"]
+      lootBias: ["holy_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "seraph-altar": {
       tier: 10,
@@ -958,7 +1258,10 @@ export const SUBREGION_IDENTITY = {
       biome: "seraphic_plains",
       quirk: "Divine resonance boosts healing.",
       encounterBias: { holy: +10, light: +10 },
-      lootBias: ["seraphic_core"]
+      lootBias: ["seraphic_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "dawnspire-peak": {
       tier: 11,
@@ -966,7 +1269,10 @@ export const SUBREGION_IDENTITY = {
       biome: "ascension_spires",
       quirk: "Light storms sweep the summit.",
       encounterBias: { light: +15 },
-      lootBias: ["radiant_core"]
+      lootBias: ["radiant_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -981,7 +1287,10 @@ export const SUBREGION_IDENTITY = {
       biome: "city",
       quirk: "Merchants offer varied goods.",
       encounterBias: { humanoid: +5 },
-      lootBias: ["coin", "trade_goods"]
+      lootBias: ["coin", "trade_goods"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "academy-grounds": {
       tier: 2,
@@ -989,7 +1298,10 @@ export const SUBREGION_IDENTITY = {
       biome: "city",
       quirk: "Arcane training increases spell crit.",
       encounterBias: { arcane: +5 },
-      lootBias: ["scroll", "ink"]
+      lootBias: ["scroll", "ink"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "spire-plaza": {
       tier: 3,
@@ -997,7 +1309,10 @@ export const SUBREGION_IDENTITY = {
       biome: "city",
       quirk: "Crowds reduce stealth effectiveness.",
       encounterBias: { humanoid: +10 },
-      lootBias: ["coin", "trinket"]
+      lootBias: ["coin", "trinket"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -1008,7 +1323,10 @@ export const SUBREGION_IDENTITY = {
       biome: "arcane_rift",
       quirk: "Spirit energy enhances healing.",
       encounterBias: { spirit: +10 },
-      lootBias: ["spirit_essence"]
+      lootBias: ["spirit_essence"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "spirit-hall": {
       tier: 5,
@@ -1016,7 +1334,10 @@ export const SUBREGION_IDENTITY = {
       biome: "settlement",
       quirk: "Spiritual echoes alter combat.",
       encounterBias: { spirit: +10, arcane: +5 },
-      lootBias: ["spirit_fragment"]
+      lootBias: ["spirit_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "ethereal-crossing": {
       tier: 6,
@@ -1024,7 +1345,10 @@ export const SUBREGION_IDENTITY = {
       biome: "arcane_rift",
       quirk: "Ethereal winds distort movement.",
       encounterBias: { arcane: +10 },
-      lootBias: ["arcane_residue"]
+      lootBias: ["arcane_residue"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -1035,7 +1359,10 @@ export const SUBREGION_IDENTITY = {
       biome: "chaos_fields",
       quirk: "Chaos fissures erupt frequently.",
       encounterBias: { chaos: +15 },
-      lootBias: ["chaos_fragment"]
+      lootBias: ["chaos_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "titanfall-ridge": {
       tier: 10,
@@ -1043,7 +1370,10 @@ export const SUBREGION_IDENTITY = {
       biome: "titanic_crater",
       quirk: "Gravity distortions alter movement.",
       encounterBias: { fire: +10, chaos: +10 },
-      lootBias: ["titan_fragment"]
+      lootBias: ["titan_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "worldrend-core": {
       tier: 11,
@@ -1051,7 +1381,10 @@ export const SUBREGION_IDENTITY = {
       biome: "chaos_fields",
       quirk: "Reality destabilizes near the core.",
       encounterBias: { chaos: +20 },
-      lootBias: ["chaos_core"]
+      lootBias: ["chaos_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   },
 
@@ -1062,7 +1395,10 @@ export const SUBREGION_IDENTITY = {
       biome: "cosmic_wastes",
       quirk: "Cosmic radiation alters combat.",
       encounterBias: { cosmic: +15, void: +10 },
-      lootBias: ["cosmic_fragment"]
+      lootBias: ["cosmic_fragment"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "starfall-hollow": {
       tier: 11,
@@ -1070,7 +1406,10 @@ export const SUBREGION_IDENTITY = {
       biome: "cosmic_wastes",
       quirk: "Falling starlight boosts crit chance.",
       encounterBias: { cosmic: +15 },
-      lootBias: ["starlight_shard"]
+      lootBias: ["starlight_shard"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     },
     "eventide-rift": {
       tier: 12,
@@ -1078,7 +1417,10 @@ export const SUBREGION_IDENTITY = {
       biome: "nightmare_rifts",
       quirk: "Reality thins into dreamstuff.",
       encounterBias: { void: +10, chaos: +10 },
-      lootBias: ["rift_core"]
+      lootBias: ["rift_core"],
+      professionBias: {},
+      elementBias: {},
+      subraceBias: {}
     }
   }
 
