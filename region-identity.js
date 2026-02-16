@@ -9,7 +9,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["beast_migration"],
     globalResonance: ["verdant_bloom"],
     stabilityDrift: +0.02,
-    dangerDrift: +0.00
+    dangerDrift: +0.00,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "verdant-woods": {
@@ -21,7 +24,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["stag_migration"],
     globalResonance: ["verdant_bloom"],
     stabilityDrift: +0.02,
-    dangerDrift: +0.01
+    dangerDrift: +0.01,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "primordial-grove": {
@@ -33,7 +39,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["beast_migration"],
     globalResonance: ["verdant_bloom"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "verdant-wildwood": {
@@ -45,7 +54,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["wolf_pack"],
     globalResonance: ["verdant_bloom"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "plains-field": {
@@ -57,7 +69,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["herd_migration"],
     globalResonance: ["stormfront"],
     stabilityDrift: +0.02,
-    dangerDrift: +0.00
+    dangerDrift: +0.00,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "highland-cliffs": {
@@ -69,7 +84,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["eagle_migration"],
     globalResonance: ["thunder_surge"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "sunspire-highlands": {
@@ -81,7 +99,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["skybeast_migration"],
     globalResonance: ["solar_convergence"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "highlands-of-thorne": {
@@ -93,7 +114,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["rockbeast_migration"],
     globalResonance: ["stormfront"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "mountains": {
@@ -105,7 +129,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["mountain_goat_migration"],
     globalResonance: ["stormfront"],
     stabilityDrift: +0.02,
-    dangerDrift: +0.01
+    dangerDrift: +0.01,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "titanfall": {
@@ -117,7 +144,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["titanborn_migration"],
     globalResonance: ["chaos_storm"],
     stabilityDrift: -0.02,
-    dangerDrift: +0.05
+    dangerDrift: +0.05,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "swamp-marsh": {
@@ -129,7 +159,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["swamp_beast_migration"],
     globalResonance: ["plague_mist"],
     stabilityDrift: +0.00,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "desert-dunes": {
@@ -141,7 +174,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["sand_serpent_migration"],
     globalResonance: ["solar_convergence"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "shattered-desert": {
@@ -153,7 +189,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["shardbeast_migration"],
     globalResonance: ["chaos_storm"],
     stabilityDrift: -0.01,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "volcanic-wastes": {
@@ -165,7 +204,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["fire_elemental_migration"],
     globalResonance: ["inferno_cycle"],
     stabilityDrift: -0.01,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "volcano-rim": {
@@ -177,7 +219,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["lava_beast_migration"],
     globalResonance: ["inferno_cycle"],
     stabilityDrift: -0.02,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "emberforge-depths": {
@@ -189,7 +234,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["metalbeast_migration"],
     globalResonance: ["inferno_cycle"],
     stabilityDrift: -0.02,
-    dangerDrift: +0.05
+    dangerDrift: +0.05,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "emberfang-ridge": {
@@ -201,7 +249,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["emberwolf_migration"],
     globalResonance: ["inferno_cycle"],
     stabilityDrift: -0.01,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "molten-underdeep": {
@@ -213,7 +264,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["underdeep_elemental_migration"],
     globalResonance: ["inferno_cycle"],
     stabilityDrift: -0.02,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "tundra-wastes": {
@@ -225,7 +279,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["frostbeast_migration"],
     globalResonance: ["deepwinter"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "frostlands": {
@@ -237,7 +294,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["ice_elemental_migration"],
     globalResonance: ["deepwinter"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "cave-entrance": {
@@ -249,7 +309,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["cavebeast_migration"],
     globalResonance: ["underdeep_pressure"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.01
+    dangerDrift: +0.01,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "crystal-caverns": {
@@ -261,7 +324,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["crystalbeast_migration"],
     globalResonance: ["mana_flux"],
     stabilityDrift: +0.00,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "shadow-labyrinth": {
@@ -273,7 +339,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["shadowbeast_migration"],
     globalResonance: ["void_storm"],
     stabilityDrift: -0.01,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "ruins-outskirts": {
@@ -285,7 +354,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["undead_migration"],
     globalResonance: ["eclipse"],
     stabilityDrift: +0.00,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "eternal-citadel": {
@@ -297,7 +369,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["seraph_migration"],
     globalResonance: ["divine_convergence"],
     stabilityDrift: +0.02,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "azure-coast": {
@@ -309,7 +384,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["seabird_migration"],
     globalResonance: ["stormfront"],
     stabilityDrift: +0.02,
-    dangerDrift: +0.01
+    dangerDrift: +0.01,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "stormbreaker-coast": {
@@ -321,7 +399,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["stormbeast_migration"],
     globalResonance: ["thunder_surge"],
     stabilityDrift: +0.00,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "outcast-island": {
@@ -333,7 +414,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["seabird_migration"],
     globalResonance: ["stormfront"],
     stabilityDrift: +0.01,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "stormforge-sanctum": {
@@ -345,7 +429,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["storm_elemental_migration"],
     globalResonance: ["thunder_surge"],
     stabilityDrift: -0.01,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "arcstone-enclave": {
@@ -357,7 +444,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["mana_beast_migration"],
     globalResonance: ["mana_flux"],
     stabilityDrift: +0.00,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "void-spire": {
@@ -369,7 +459,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["voidspawn_migration"],
     globalResonance: ["void_storm"],
     stabilityDrift: -0.02,
-    dangerDrift: +0.05
+    dangerDrift: +0.05,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "void-frontier": {
@@ -381,7 +474,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["corruption_beast_migration"],
     globalResonance: ["void_storm"],
     stabilityDrift: -0.01,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "arcane-riftlands": {
@@ -393,7 +489,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["riftbeast_migration"],
     globalResonance: ["mana_flux"],
     stabilityDrift: +0.00,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "abyss-gate": {
@@ -405,7 +504,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["abyssal_beast_migration"],
     globalResonance: ["eclipse"],
     stabilityDrift: -0.01,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "abyssal-scar": {
@@ -417,7 +519,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["nightmare_migration"],
     globalResonance: ["eclipse"],
     stabilityDrift: -0.02,
-    dangerDrift: +0.05
+    dangerDrift: +0.05,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "celestial-expanse": {
@@ -429,7 +534,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["seraph_migration"],
     globalResonance: ["divine_convergence"],
     stabilityDrift: +0.03,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "radiant-ascension-spire": {
@@ -441,7 +549,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["seraph_migration"],
     globalResonance: ["divine_convergence"],
     stabilityDrift: +0.03,
-    dangerDrift: +0.03
+    dangerDrift: +0.03,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "seraphic-crucible": {
@@ -453,7 +564,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["seraph_migration"],
     globalResonance: ["divine_convergence"],
     stabilityDrift: +0.03,
-    dangerDrift: +0.04
+    dangerDrift: +0.04,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "trainers-city": {
@@ -465,7 +579,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: [],
     globalResonance: ["prosperity_cycle"],
     stabilityDrift: +0.05,
-    dangerDrift: +0.00
+    dangerDrift: +0.00,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "spirit-kingdom": {
@@ -477,7 +594,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["spirit_migration"],
     globalResonance: ["divine_convergence"],
     stabilityDrift: +0.02,
-    dangerDrift: +0.02
+    dangerDrift: +0.02,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "worldbreaker-horizon": {
@@ -489,7 +609,10 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["titanborn_migration"],
     globalResonance: ["chaos_storm"],
     stabilityDrift: -0.03,
-    dangerDrift: +0.06
+    dangerDrift: +0.06,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   },
 
   "worlds-end-expanse": {
@@ -501,7 +624,9 @@ export const REGION_IDENTITY = {
     migrationAffinity: ["eldritch_migration"],
     globalResonance: ["eclipse", "chaos_storm"],
     stabilityDrift: -0.03,
-    dangerDrift: +0.05
+    dangerDrift: +0.05,
+    professionBias: { /* e.g., warrior: +5 */ },
+    elementBias: { /* e.g., fire: +10 */ },
+    subraceBias: { /* e.g., undead: +15 */ }
   }
-
 }; // END REGION_IDENTITY
