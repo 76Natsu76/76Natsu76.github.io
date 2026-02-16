@@ -14,7 +14,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The forest hums with quiet life.",
       "Roots twist beneath the soil like veins."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "deep-forest": {
@@ -27,7 +30,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The canopy swallows the light.",
       "Something watches from between the trees."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "wild-forest": {
@@ -40,7 +46,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Untamed growth spreads in every direction.",
       "Wildlife stirs at the slightest sound."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "ancient-forest": {
@@ -53,7 +62,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Magic lingers in every leaf.",
       "The trees remember."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "eldergrove-depths": {
@@ -66,7 +78,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Light and shadow intertwine among ancient roots.",
       "The grove breathes with sacred power."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "elderwood-heart": {
@@ -79,7 +94,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A sacred calm permeates the air.",
       "The heartwood glows with gentle radiance."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "primeval-overgrowth": {
@@ -92,7 +110,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The land itself feels alive.",
       "Ancient growth threatens to reclaim everything."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -109,7 +130,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Open fields stretch to the horizon.",
       "Winds carry distant calls."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "open-steppe": {
@@ -122,7 +146,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Wide, rolling grasslands sway in the wind.",
       "The steppe is never truly still."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "plateau": {
@@ -135,7 +162,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Storms gather quickly on the high plateau.",
       "Thunder echoes across the cliffs."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -152,7 +182,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The air hangs thick with decay.",
       "Every step threatens to sink."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "drowned-marsh": {
@@ -165,7 +198,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Waterlogged ground hides unseen dangers.",
       "Dark waters ripple with unseen movement."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "whispering-marsh": {
@@ -178,7 +214,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Whispers drift across the still waters.",
       "Shadows cling to the fog."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -195,7 +234,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Heat shimmers across endless dunes.",
       "The desert tests all who cross it."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "sunscorched-dunes": {
@@ -208,7 +250,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Sunlight burns fiercely across the dunes.",
       "The air itself seems aflame."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "shattered-desert": {
@@ -221,7 +266,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Reality fractures beneath the scorching sun.",
       "The sands shift with chaotic energy."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -238,7 +286,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The volcano rumbles with restless fury.",
       "Heat radiates from every crack."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "molten-crest": {
@@ -251,7 +302,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Molten stone flows like blood.",
       "Chaos flickers in the flames."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "magma": {
@@ -264,7 +318,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Rivers of magma illuminate the cavern walls.",
       "The air burns with heat."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -281,7 +338,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Cold winds sweep across the barren tundra.",
       "Frost clings to every surface."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "frozen-expanse": {
@@ -294,7 +354,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A vast expanse of frozen silence.",
       "The wind howls endlessly."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "crystalline-tundra": {
@@ -307,7 +370,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Crystals glitter beneath the frost.",
       "Magic pulses through the frozen ground."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -324,7 +390,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Darkness presses in from all sides.",
       "The air is thick and still."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "crystal-cave": {
@@ -337,7 +406,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Crystals refract light into dancing patterns.",
       "Arcane energy hums softly."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "prism-caverns": {
@@ -350,7 +422,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Prismatic light fills the cavern.",
       "Magic refracts in unpredictable ways."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "underdeep": {
@@ -363,7 +438,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The weight of the world presses down.",
       "Shadows cling to the stone."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "subterranean": {
@@ -376,7 +454,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Deep tunnels stretch into darkness.",
       "The air is heavy and stale."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "deep-caverns": {
@@ -389,7 +470,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A suffocating darkness fills the depths.",
       "Reality feels thin here."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -406,7 +490,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Crumbling stones whisper of forgotten ages.",
       "Magic lingers in the ruins."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "forgotten-ruins": {
@@ -419,7 +506,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Ancient glyphs glow faintly.",
       "The ruins remember."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "ruined-kingdom": {
@@ -432,7 +522,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A fallen kingdom haunted by memory.",
       "Light and shadow battle for dominance."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -449,7 +542,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Waves crash against the shore.",
       "Salt hangs in the air."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "island": {
@@ -462,7 +558,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A lonely island surrounded by restless waves.",
       "Life thrives in isolation."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "reef": {
@@ -475,7 +574,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Colorful reefs shimmer beneath the waves.",
       "Light dances across the water."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "open-ocean": {
@@ -488,7 +590,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Endless waters stretch into the unknown.",
       "The depths hide ancient, unseen things."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -505,7 +610,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Storms crash endlessly against the shore.",
       "Thunder rolls across the waves."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "arcane-storm": {
@@ -518,7 +626,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Magic and lightning spiral together in violent harmony.",
       "The air crackles with unstable power."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -535,7 +646,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The land festers with creeping corruption.",
       "Toxic fumes rise from blackened soil."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "void": {
@@ -548,7 +662,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Reality thins into swirling darkness.",
       "Void energy distorts the air."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "void-realm": {
@@ -561,7 +678,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A realm where form and meaning unravel.",
       "Chaos pulses through the void."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "void-labyrinth": {
@@ -574,7 +694,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A twisting maze of shifting shadows.",
       "Whispers echo from impossible angles."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -591,7 +714,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Raw magic saturates the air.",
       "Reality hums with arcane resonance."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "arcane-rift": {
@@ -604,7 +730,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Rifts tear open to reveal swirling magic.",
       "The ground pulses with unstable energy."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "astral-plane": {
@@ -617,7 +746,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Stars shimmer beneath your feet.",
       "Gravity feels optional here."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "astral-nexus": {
@@ -630,7 +762,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A convergence of cosmic pathways.",
       "Energy spirals in impossible patterns."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "astral-spirit": {
@@ -643,7 +778,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Spiritual echoes drift through the astral winds.",
       "Light and thought intertwine."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -660,7 +798,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Heat and darkness churn in the depths.",
       "The abyss hungers."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "abyssal-deep": {
@@ -673,7 +814,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A crushing darkness swallows all light.",
       "Something ancient stirs below."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "eldritch-abyss": {
@@ -686,7 +830,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Reality warps under eldritch influence.",
       "Whispers claw at your mind."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   /* ============================================================
@@ -703,7 +850,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Light cascades from towering spires.",
       "The air hums with divine resonance."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "celestial-forge": {
@@ -716,7 +866,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "Sacred flames burn with purpose.",
       "The forge glows with divine heat."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "celestial-horizon": {
@@ -729,7 +882,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "The sky stretches into radiant infinity.",
       "Light bends across the horizon."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   },
 
   "celestial-fortress": {
@@ -742,7 +898,10 @@ export const BIOME_IDENTITY = {
     flavor: [
       "A bastion of divine power.",
       "Every stone radiates purpose."
-    ]
+    ],
+    professionBias: {},
+    elementBias: {},
+    subraceBias: {}
   }
 
 }; // END BIOME_IDENTITY
