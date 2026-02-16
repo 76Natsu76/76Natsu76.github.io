@@ -151,8 +151,15 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     elementalCharge: regionState.elementalCharge || {}
   };
 
-  // Get rarity + family weights
-  const { rarityWeights, familyWeights } = resolveEncounterWeights(encounterContext);
+  // Get rarity + base family weights
+  const { rarityWeights, familyWeights: baseFamilyWeights } = resolveEncounterWeights(encounterContext);
+  
+  // Apply identity biases (region / biome / subregion)
+  const familyWeights = applyIdentityBiases(baseFamilyWeights, {
+    regionId: regionKey,
+    biomeId: biomeKey,
+    subregionId: subregionKey
+  });
 
   // Crisis family multipliers
   if (crisisData?.familyMult) {
@@ -272,14 +279,12 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
 
   // Rare spawns
   maybeInjectRareSpawn(encounter, EnemyRegistry.templatesByKey);
-  applyIdentityBiases();
-
+  
   // Save
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
   return encounter;
 }
 
-// EXAMPLE: inside your encounter weighting logic
 function applyIdentityBiases(baseWeights, { regionId, biomeId, subregionId }) {
   const region = getRegionIdentity(regionId);
   const biome = getBiomeIdentity(biomeId);
@@ -287,21 +292,18 @@ function applyIdentityBiases(baseWeights, { regionId, biomeId, subregionId }) {
 
   const weights = { ...baseWeights };
 
-  // biome encounterBias
   if (biome?.encounterBias) {
     for (const [tag, delta] of Object.entries(biome.encounterBias)) {
       weights[tag] = (weights[tag] || 0) + delta;
     }
   }
 
-  // region traits / anomalyAffinity / migrationAffinity can hook into tags
   if (region?.traits) {
     for (const trait of region.traits) {
-      weights[trait] = (weights[trait] || 0) + 2; // small generic nudge
+      weights[trait] = (weights[trait] || 0) + 2;
     }
   }
 
-  // subregion encounterBias
   if (subregion?.encounterBias) {
     for (const [tag, delta] of Object.entries(subregion.encounterBias)) {
       weights[tag] = (weights[tag] || 0) + delta;
