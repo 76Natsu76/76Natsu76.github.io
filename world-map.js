@@ -391,7 +391,8 @@ function renderWorldMap(player, worldState, username) {
   for (const regionKey in WORLD_DATA.regions) {
     const region = WORLD_DATA.regions[regionKey];
     const regionState = worldState.regions?.[regionKey] || {};
-    const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;
+    const biomeKey = REGION_TO_BIOME[regionKey] || region.biome;    
+    const tooltip = buildRegionTooltip(regionKey, biomeKey, null);
     const biome = BIOMES[biomeKey];
 
     const globalOverlays = buildGlobalOverlaysForRegion(global, regionKey);
@@ -445,6 +446,7 @@ Visit ${SETTLEMENTS[settlementKey].name}
     out.push(`
 <div class="region-card" id="region-card-${regionKey}">
   <div class="region-header">
+    <div class="region-tooltip">${tooltip}</div>
     <h2>${region.name}</h2>
     <div class="region-subtitle">${format(biomeKey)}</div>
   </div>
@@ -629,7 +631,12 @@ function renderRegionMarkers(player) {
     } else {
       globalEl.style.display = "none";
     }
-    
+
+    // Identity tooltip
+    const biomeKey = REGION_TO_BIOME[regionKey] || WORLD_DATA.regions[regionKey].biome;
+    const tooltip = buildRegionTooltip(regionKey, biomeKey, null);
+    marker.title = tooltip;
+
     const unlocked = isRegionUnlocked(player, regionKey, regionState);
 
     if (!unlocked) {
