@@ -16,12 +16,13 @@ import { resolveEncounterWeights } from "./encounter-resolver.js";
 import { rollEncounterAffixes, applyAffixesToEncounter } from "./encounter-affixes.js";
 import { SEASON_DEFINITIONS } from "./season-definitions.js";
 import { WORLD_DATA } from "./world-data.js";
-
 import { BIOME_IDENTITY } from "./biome-identity.js";
 import { REGION_IDENTITY } from "./region-identity.js";
 import { SUBREGION_IDENTITY } from "./subregion-identity.js"; // if you export it
-
-
+import { PROFESSION_IDENTITY } from "./profession-identity.js";
+import { ELEMENT_IDENTITY } from "./element-identity.js";
+import { SUBRACE_IDENTITY } from "./subrace-identity.js";
+import { VARIANT_IDENTITY } from "./variant-identity.js";
 // Phase D taxonomy (environmental categories)
 import {
   WEATHER_TYPES,
@@ -29,6 +30,8 @@ import {
   MIGRATIONS,
   GLOBAL_MODIFIERS as GLOBAL_PHASED_MODIFIERS
 } from "./environment-taxonomy.js";
+
+
 
 export function initEncounters() {
   return true;
@@ -54,6 +57,28 @@ function getSubregionIdentity(regionId, subregionId) {
   const regionBlock = SUBREGION_IDENTITY[regionId];
   if (!regionBlock) return null;
   return regionBlock[subregionId] || null;
+}
+
+function applyStatMods(base, mods) {
+  return {
+    hp: Math.round(base.hp * (mods.hp ?? 1)),
+    atk: Math.round(base.atk * (mods.atk ?? 1)),
+    def: Math.round(base.def * (mods.def ?? 1)),
+    spd: Math.round(base.spd * (mods.spd ?? 1))
+  };
+}
+
+function applyAdditiveStats(base, add) {
+  return {
+    hp: base.hp + (add.hp ?? 0),
+    atk: base.atk + (add.atk ?? 0),
+    def: base.def + (add.def ?? 0),
+    spd: base.spd + (add.spd ?? 0)
+  };
+}
+
+function mergeArrays(a = [], b = []) {
+  return Array.from(new Set([...a, ...b]));
 }
 
 // ------------------------------------------------------------
@@ -390,59 +415,128 @@ function buildEnemyInstance(
   weather,
   event,
   hazard,
-  variant,
+  variantKey,
   tier
 ) {
+  // ------------------------------------------------------------
+  // 1. Base stats from template
+  // ------------------------------------------------------------
   const levelRange = region.levelRange || [1, 1];
   const level = rollLevel(levelRange);
   const rarityMult = rarityScaling(rarity);
   const levelMult = 1 + (level - 1) * 0.15;
 
-  const baseHPStat = template.baseHP ?? template.hp ?? 1;
-  const baseATKStat = template.baseATK ?? template.atk ?? template.attack ?? 1;
-  const baseDEFStat = template.baseDEF ?? template.def ?? template.defense ?? 0;
+  let stats = {
+    hp: (template.baseHP ?? template.hp ?? 1) * rarityMult * levelMult,
+    atk: (template.baseATK ?? template.atk ?? template.attack ?? 1) * rarityMult * levelMult,
+    def: (template.baseDEF ?? template.def ?? template.defense ?? 0) * rarityMult * levelMult,
+    spd: template.baseSPD ?? template.spd ?? template.speed ?? 10
+  };
 
-  const baseHP = Math.round(baseHPStat * rarityMult * levelMult);
-  let finalATK = Math.round(baseATKStat * rarityMult * levelMult);
-  let finalDEF = Math.round(baseDEFStat * rarityMult * levelMult);
+  // ------------------------------------------------------------
+  // 2. Profession Identity
+  // ------------------------------------------------------------
+  const prof = PROFESSION_IDENTITY[template.profession] || null;
+  if (prof?.statProfile) {
+    stats = applyAdditiveStats(stats, prof.statProfile);
+  }
 
+  // ------------------------------------------------------------
+  // 3. Element Identity
+  // ------------------------------------------------------------
+  const elem = ELEMENT_IDENTITY[template.element] || null;
+  let resistances = [];
+  let weaknesses = [];
+
+  if (elem) {
+    // Element doesn't modify stats directly, but affects combat later
+    // Resistances/weaknesses come from subrace, not element
+  }
+
+  // ------------------------------------------------------------
+  // 4. Subrace Identity
+  // ------------------------------------------------------------
+  const sub = SUBRACE_IDENTITY[template.subrace] || null;
+  if (sub?.statMods) {
+    stats = applyAdditiveStats(stats, sub.statMods);
+  }
+  if (sub?.resistances) resistances = mergeArrays(resistances, sub.resistances);
+  if (sub?.weaknesses) weaknesses = mergeArrays(weaknesses, sub.weaknesses);
+
+  // ------------------------------------------------------------
+  // 5. Variant Identity
+  // ------------------------------------------------------------
+  const variant = VARIANT_IDENTITY[variantKey] || VARIANT_IDENTITY["normal"];
+  if (variant?.statMults) {
+    stats = applyStatMods(stats, variant.statMults);
+  }
+
+  // ------------------------------------------------------------
+  // 6. Region & Biome Combat Modifiers
+  // ------------------------------------------------------------
   if (region.combatModifiers) {
     const cm = region.combatModifiers;
-    if (cm.enemyATKMult) finalATK = Math.round(finalATK * cm.enemyATKMult);
-    if (cm.enemyDEFMult) finalDEF = Math.round(finalDEF * cm.enemyDEFMult);
+    if (cm.enemyATKMult) stats.atk *= cm.enemyATKMult;
+    if (cm.enemyDEFMult) stats.def *= cm.enemyDEFMult;
   }
 
   if (biome.combatModifiers) {
     const bm = biome.combatModifiers;
-    if (bm.enemyATKMult) finalATK = Math.round(finalATK * bm.enemyATKMult);
-    if (bm.enemyDEFMult) finalDEF = Math.round(finalDEF * bm.enemyDEFMult);
+    if (bm.enemyATKMult) stats.atk *= bm.enemyATKMult;
+    if (bm.enemyDEFMult) stats.def *= bm.enemyDEFMult;
+    if (bm.enemyEvasionMult) stats.spd *= bm.enemyEvasionMult;
   }
 
+  // ------------------------------------------------------------
+  // 7. Build modifiers array (weather, event, hazard, variant effects)
+  // ------------------------------------------------------------
   const modifiers = [];
 
   if (weather && WEATHER_MODIFIERS[weather]) modifiers.push(WEATHER_MODIFIERS[weather]);
   if (event && EVENT_MODIFIERS[event]) modifiers.push(EVENT_MODIFIERS[event]);
   if (hazard && HAZARD_MODIFIERS[hazard]) modifiers.push(HAZARD_MODIFIERS[hazard]);
-  if (variant && VARIANT_MODIFIERS[variant]) modifiers.push(VARIANT_MODIFIERS[variant]);
 
-  return {
+  if (variant?.effects?.length) {
+    for (const eff of variant.effects) modifiers.push(`variant_${eff}`);
+  }
+
+  // ------------------------------------------------------------
+  // 8. Final enemy object
+  // ------------------------------------------------------------
+  const final = {
     key: template.key,
     name: template.name,
     family: template.family,
+    profession: template.profession,
     element: template.element || "neutral",
+    subrace: template.subrace || "unknown",
+    variant: variantKey,
+
     rarity,
     tier: template.tier ?? tier,
     level,
 
-    hp: baseHP,
-    hpMax: baseHP,
-    atk: finalATK,
-    def: finalDEF,
+    hp: Math.round(stats.hp),
+    hpMax: Math.round(stats.hp),
+    atk: Math.round(stats.atk),
+    def: Math.round(stats.def),
+    spd: Math.round(stats.spd),
+
+    resistances,
+    weaknesses,
 
     portrait: template.portrait || `/assets/enemies/${template.key}.png`,
     flavor: template.flavor || "",
+    flavorTags: [
+      ...(prof?.behavior || []),
+      ...(variant?.tags || []),
+      ...(sub?.behavior || [])
+    ],
+
     modifiers
   };
+
+  return final;
 }
 
 // ------------------------------------------------------------
