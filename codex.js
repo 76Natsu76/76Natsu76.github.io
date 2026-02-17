@@ -20,6 +20,11 @@ export const CODEX = {
       description: "Burns, spreads, overwhelms...",
       discovered: false
     },
+    water: {
+      name: "Water",
+      description: "Rises, falls, crushes...",
+      discovered: false
+    },
     void: {
       name: "Void",
       description: "Entropy, corruption, unmaking...",
