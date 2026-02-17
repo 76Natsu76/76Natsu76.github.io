@@ -149,7 +149,7 @@
   
     function startEncounter() {
       try {
-        encounter = EncounterEngine.generate(region, username);
+        encounter = EncounterEngine.generate(region, "DEFAULT_SUBREGION", username);
         sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
         renderEncounter();
       } catch (err) {
@@ -159,8 +159,14 @@
     }
   
     function renderEncounter() {
-      const e = encounter.enemy;
-  
+      const e = encounter.enemies?.[0];
+      if (!e) {
+        document.getElementById("encounterPanel").textContent =
+          "Encounter error: No enemies generated.";
+        return;
+      }
+    
+      // Build modifier list
       let modifiersHTML = "";
       if (e.modifiers?.length) {
         modifiersHTML = `
@@ -170,9 +176,9 @@
               .map(
                 m => `
               <div class="modifier-row">
-                <img class="modifier-icon" src="/assets/modifiers/${m.icon}"
+                <img class="modifier-icon" src="/assets/modifiers/${m.icon || "default.png"}"
                     onerror="this.src='/assets/modifiers/default.png'">
-                <div class="modifier-label">${m.text}</div>
+                <div class="modifier-label">${m.text || m}</div>
               </div>
             `
               )
@@ -180,29 +186,39 @@
           </div>
         `;
       }
-  
+    
+      // Identity section
+      const identityHTML = `
+        <div class="panel" style="margin-top:16px;">
+          <h3 style="margin-bottom:6px;">Identity</h3>
+          <div><strong>Profession:</strong> ${format(e.profession)}</div>
+          <div><strong>Element:</strong> ${format(e.element)}</div>
+          <div><strong>Subrace:</strong> ${format(e.subrace)}</div>
+          <div><strong>Variant:</strong> ${format(e.variant)}</div>
+          <div><strong>Resistances:</strong> ${e.resistances?.join(", ") || "None"}</div>
+          <div><strong>Weaknesses:</strong> ${e.weaknesses?.join(", ") || "None"}</div>
+          <div><strong>Behavior Tags:</strong> ${(e.flavorTags || []).join(", ") || "None"}</div>
+          <div style="margin-top:8px; opacity:0.8;"><em>${e.flavor || ""}</em></div>
+        </div>
+      `;
+    
       document.getElementById("encounterPanel").innerHTML = `
         <div class="portrait-frame portrait-${e.rarity.toLowerCase()}">
           <img class="portrait-img" src="${e.portrait}"
               onerror="this.src='/assets/enemies/default.png'">
         </div>
-  
+    
         <h2 style="text-align:center; margin-top:12px;">
           ${format(e.name)} (Lv ${e.level})
         </h2>
-  
+    
         <div style="text-align:center; opacity:0.8;">
-          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(
-            e.rarity
-          )}</span>
+          Rarity: <span class="rarity-${e.rarity.toLowerCase()}">${format(e.rarity)}</span>
         </div>
-  
-        <div style="margin-top:10px; opacity:0.8; text-align:center;">
-          ${e.flavor || ""}
-        </div>
-  
+    
+        ${identityHTML}
         ${modifiersHTML}
-  
+    
         <button class="btn" onclick="inspect()">Inspect</button>
         <button class="btn primary" onclick="fight()">Fight</button>
         <button class="btn" onclick="goToMap()">Flee</button>
@@ -210,11 +226,19 @@
     }
   
     function inspect() {
-      const e = encounter.enemy;
+      const e = encounter.enemies?.[0];
+      if (!e) return;
+    
       alert(
         `${e.name} (Lv ${e.level})\n` +
-          `Rarity: ${e.rarity}\n\n` +
-          (e.flavor || "")
+        `Rarity: ${e.rarity}\n` +
+        `Profession: ${e.profession}\n` +
+        `Element: ${e.element}\n` +
+        `Subrace: ${e.subrace}\n` +
+        `Variant: ${e.variant}\n\n` +
+        `Resistances: ${e.resistances.join(", ") || "None"}\n` +
+        `Weaknesses: ${e.weaknesses.join(", ") || "None"}\n\n` +
+        (e.flavor || "")
       );
     }
   
