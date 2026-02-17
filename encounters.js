@@ -98,27 +98,25 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
 
   const baseTier = subregion.tier ?? region.tier ?? 1;
 
-  // WORLD STATE INTEGRATION
+  // WORLD STATE
   const regionState = getRegionState(regionKey);
   const season = getCurrentSeason();
   const seasonData = SEASON_DEFINITIONS[season] || null;
 
-  // Weather: world-state overrides random weather
+  // WEATHER
   let weather = regionState.weather || pickFromArray(
     region.weatherPool?.length ? region.weatherPool : biome.weatherPool || []
   );
 
-  // Seasonal weather bias (only if region doesn't override)
   if (!regionState.weather && seasonData?.weatherBias) {
     const biased = Object.entries(seasonData.weatherBias)
       .flatMap(([key, mult]) => Array(Math.floor(mult * 10)).fill(key));
-
     if (biased.length && Math.random() < 0.25) {
       weather = pickFromArray(biased);
     }
   }
 
-  // Crisis
+  // CRISIS
   let crisis = null;
   let crisisStage = null;
   let crisisData = null;
@@ -130,63 +128,65 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     crisisData = def?.stages?.[crisisStage] || null;
   }
 
-  // Event
-  const eventPool = region.eventPool || [];
-  const event = pickFromArray(eventPool);
+  // EVENT / HAZARD / VARIANT
+  const event = pickFromArray(region.eventPool || []);
+  const hazard = pickHazard(biome.hazards || []);
+  const variant = pickFromArray(region.variantPool || []);
 
-  // Hazard
-  const hazardPool = biome.hazards || [];
-  const hazard = pickHazard(hazardPool);
-
-  // Variant
-  const variantPool = region.variantPool || [];
-  const variant = pickFromArray(variantPool);
-
-  // Phase D: anomaly / migration / global modifier
+  // PHASE D: anomaly / migration / global
   const anomaly = rollAnomalyForEncounter(biome, regionState, seasonData);
   const migration = rollMigrationForEncounter(regionKey, biome, regionState, crisisData);
   const globalModifier = rollGlobalModifierForEncounter(seasonData);
 
-  // Build unified encounter context
+  // ENCOUNTER CONTEXT
   const encounterContext = {
     region: regionKey,
     subregion: subregionKey,
     biome: biomeKey,
-
     weather,
     event,
     hazard,
     variant,
-
     crisis,
     crisisStage,
     crisisData,
-
     anomaly,
     migration,
     globalModifier,
-
     season,
     seasonData,
-
     flavorTags: biome.flavor || [],
-
     dangerLevel: regionState.dangerLevel || 1.0,
     stability: regionState.stability || 1.0,
     elementalCharge: regionState.elementalCharge || {}
   };
 
-  // Get rarity + base family weights
-  const { rarityWeights, familyWeights: baseFamilyWeights } = resolveEncounterWeights(encounterContext);
-  
-  // Apply identity biases (region / biome / subregion)
-  const familyWeights = applyIdentityBiases(baseFamilyWeights, {
+  // ============================================================
+  // 1. BASE WEIGHTS
+  // ============================================================
+  let { rarityWeights, familyWeights } = resolveEncounterWeights(encounterContext);
+
+  // ============================================================
+  // 2. PHASE E IDENTITY BIAS (region / biome / subregion)
+  // ============================================================
+  familyWeights = applyIdentityBiases(familyWeights, {
     regionId: regionKey,
     biomeId: biomeKey,
     subregionId: subregionKey
   });
 
-  // Crisis family multipliers
+  // ============================================================
+  // 3. PHASE F IDENTITY BIAS (profession / element / subrace)
+  // ============================================================
+  familyWeights = applyIdentityFamilyBiases(familyWeights, {
+    regionId: regionKey,
+    biomeId: biomeKey,
+    subregionId: subregionKey
+  });
+
+  // ============================================================
+  // 4. CRISIS + SEASON MULTIPLIERS
+  // ============================================================
   if (crisisData?.familyMult) {
     for (const [fam, mult] of Object.entries(crisisData.familyMult)) {
       if (familyWeights[fam]) {
@@ -195,7 +195,6 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     }
   }
 
-  // Seasonal family multipliers
   if (seasonData?.encounterMult) {
     for (const [fam, mult] of Object.entries(seasonData.encounterMult)) {
       if (familyWeights[fam]) {
@@ -204,27 +203,31 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     }
   }
 
-  // Roll rarity
+  // ============================================================
+  // 5. ROLL RARITY + FAMILY + TIER
+  // ============================================================
   const rarity = pickWeightedObject(
     Object.fromEntries(
       Object.entries(rarityWeights).map(([k, v]) => [k, v.weight])
     )
   );
 
-  // Roll family
   const family = pickWeightedObject(familyWeights);
 
-  // Roll tier from rarity tiers
   const tiers = rarityWeights[rarity]?.tiers || [baseTier];
   const finalTier = pickFromArray(tiers) || baseTier;
 
-  // Group size
+  // ============================================================
+  // 6. GROUP SIZE
+  // ============================================================
   const groupRule = ENEMY_GROUP_SIZES[family] || ENEMY_GROUP_SIZES.default;
   const count =
     Math.floor(Math.random() * (groupRule.max - groupRule.min + 1)) +
     groupRule.min;
 
-  // Build enemies
+  // ============================================================
+  // 7. BUILD ENEMIES
+  // ============================================================
   const enemies = [];
   for (let i = 0; i < count; i++) {
     const template = enemyOverride
@@ -248,21 +251,20 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     enemies.push(instance);
   }
 
+  // ============================================================
+  // 8. FINAL ENCOUNTER OBJECT
+  // ============================================================
   const encounter = {
     region: regionKey,
     subregion: subregionKey,
     biome: biomeKey,
-
     weather,
     event,
     hazard,
     variant,
-
-    // Phase D fields
     anomaly,
     migration,
     globalModifier,
-
     rarity,
     tier: finalTier,
     flavor: pickFromArray(biome.flavor) || region.flavor || "",
@@ -291,21 +293,21 @@ function generate(regionKey, subregionKey, username, enemyOverride = null) {
     }
   };
 
-  // Affixes
+  // ============================================================
+  // 9. AFFIXES + SCALING + RARE SPAWNS
+  // ============================================================
   const affixKeys = rollEncounterAffixes(Math.random() < 0.25 ? 1 : 0);
   applyAffixesToEncounter(encounter, affixKeys);
 
-  // Dynamic scaling
   const playerLevel = WORLD_DATA.players[username]?.level || 1;
   applyDynamicScaling(encounter, playerLevel, {
     regionDanger: regionState.dangerLevel || 1.0,
     crisisIntensity: crisisData?.dangerMult || 1.0
   });
 
-  // Rare spawns
   maybeInjectRareSpawn(encounter, EnemyRegistry.templatesByKey);
-  
-  // Save
+
+  // SAVE
   sessionStorage.setItem("currentEncounter", JSON.stringify(encounter));
   return encounter;
 }
@@ -336,6 +338,38 @@ function applyIdentityBiases(baseWeights, { regionId, biomeId, subregionId }) {
   }
 
   return weights;
+}
+
+function applyIdentityFamilyBiases(familyWeights, ctx) {
+  const { regionId, biomeId, subregionId } = ctx;
+
+  const region = REGION_IDENTITY[regionId] || {};
+  const biome = BIOME_IDENTITY[biomeId] || {};
+  const subregion = SUBREGION_IDENTITY[regionId]?.[subregionId] || {};
+
+  const result = { ...familyWeights };
+
+  const layers = [region, biome, subregion];
+
+  for (const layer of layers) {
+    if (layer.professionBias) {
+      for (const [prof, delta] of Object.entries(layer.professionBias)) {
+        if (result[prof] != null) result[prof] += delta;
+      }
+    }
+    if (layer.elementBias) {
+      for (const [elem, delta] of Object.entries(layer.elementBias)) {
+        if (result[elem] != null) result[elem] += delta;
+      }
+    }
+    if (layer.subraceBias) {
+      for (const [race, delta] of Object.entries(layer.subraceBias)) {
+        if (result[race] != null) result[race] += delta;
+      }
+    }
+  }
+
+  return result;
 }
 
 // ------------------------------------------------------------
