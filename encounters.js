@@ -30,7 +30,7 @@ import {
   MIGRATIONS,
   GLOBAL_MODIFIERS as GLOBAL_PHASED_MODIFIERS
 } from "./environment-taxonomy.js";
-
+import { selectAbilitiesForEnemy } from "./ability-selector.js";
 
 
 export function initEncounters() {
@@ -569,6 +569,18 @@ function buildEnemyInstance(
 
     modifiers
   };
+  
+  const abilityPool = EnemyRegistry.abilitiesByFamily[template.family] 
+                 || EnemyRegistry.abilitiesByProfession[template.profession]
+                 || EnemyRegistry.defaultAbilities;
+  
+  const abilities = selectAbilitiesForEnemy(final, abilityPool);
+  final.abilities = abilities;
+
+  
+  if (variant === "enraged") final.abilities.push(EnemyRegistry.specialAbilities["frenzy-strike"]);
+  if (variant === "void-touched") final.abilities.push(EnemyRegistry.specialAbilities["entropy-pulse"]);
+  if (variant === "frostbitten") final.abilities.push(EnemyRegistry.specialAbilities["frost-nova"]);
 
   return final;
 }
