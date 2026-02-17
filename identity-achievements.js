@@ -23,3 +23,13 @@ export const IDENTITY_ACHIEVEMENTS = {
     reward: { title: "Beast Master" }
   }
 };
+
+export function updateIdentityAchievements(enemy) {
+  for (const key in IDENTITY_ACHIEVEMENTS) {
+    const ach = IDENTITY_ACHIEVEMENTS[key];
+    if (ach.condition(enemy)) {
+      ach.progress++;
+    }
+  }
+}
+
