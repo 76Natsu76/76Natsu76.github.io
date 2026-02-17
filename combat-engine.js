@@ -17,6 +17,9 @@ import {
   GLOBAL_MODIFIERS,
   ENVIRONMENT_INTERACTIONS
 } from "./environment-taxonomy.js";
+import { registerIdentityKill } from "./data/progression/identity-bonuses.js";
+
+
 
 function applyRegionCombatModifiers(player, enemies, context, logs) {
   const region = World.getRegion(context.regionKey);
@@ -1522,6 +1525,15 @@ export function runCombatRound(player, enemyOrEnemies, context, playerAction, lo
       context.combatEnded = "defeat";
       break;
     }
+    // --- Identity kill tracking ---
+    const enemyList = normalizeEnemies(enemies);
+    for (const enemy of enemyList) {
+      if (enemy.hpCurrent <= 0 && !enemy._killRegistered) {
+        registerIdentityKill(enemy, player);
+        enemy._killRegistered = true;
+      }
+    }
+
     if (allEnemiesDead(enemies)) {
       context.combatEnded = "victory";
       break;
