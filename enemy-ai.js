@@ -316,6 +316,76 @@ export function chooseEnemyActionV3(enemy, player, context, logs) {
     }
   }
 
+  // ============================================================
+  // PHASE F8 — IDENTITY-AWARE AI EXTENSIONS
+  // ============================================================
+  
+  // ELEMENT REACTIONS
+  if (enemy.element === "fire") {
+    const burn = abilities.find(a =>
+      a.statusEffects?.some(se => se.type === "burn")
+    );
+    if (burn && !player.statusEffects.some(e => e.type === "burn")) {
+      return { type: "ability", ability: burn };
+    }
+  }
+  
+  if (enemy.element === "ice") {
+    const slow = abilities.find(a =>
+      a.statusEffects?.some(se => se.type === "slow")
+    );
+    if (slow && !player.statusEffects.some(e => e.type === "slow")) {
+      return { type: "ability", ability: slow };
+    }
+  }
+  
+  if (enemy.element === "electric") {
+    const stun = abilities.find(a =>
+      a.statusEffects?.some(se => se.type === "stun")
+    );
+    if (stun && Math.random() < 0.25) {
+      return { type: "ability", ability: stun };
+    }
+  }
+  
+  // SUBRACE PASSIVES
+  if (enemy.subrace === "wraith") {
+    const phase = abilities.find(a =>
+      a.statusEffects?.some(se => se.type === "dodge-up")
+    );
+    if (phase && !enemy.statusEffects.some(e => e.type === "dodge-up")) {
+      return { type: "ability", ability: phase };
+    }
+  }
+  
+  if (enemy.subrace === "golem") {
+    const fortify = abilities.find(a =>
+      a.statusEffects?.some(se => se.type === "def-up")
+    );
+    if (fortify && enemy.hpCurrent < enemy.hpMax * 0.7) {
+      return { type: "ability", ability: fortify };
+    }
+  }
+
+  // VARIANT SPECIAL MOVES
+  if (enemy.variant === "frostbitten") {
+    const frostNova = abilities.find(a =>
+      a.statusEffects?.some(se => se.type === "freeze")
+    );
+    if (frostNova && Math.random() < 0.20) {
+      return { type: "ability", ability: frostNova };
+    }
+  }
+  
+  if (enemy.variant === "void-touched") {
+    const entropy = abilities.find(a =>
+      a.statusEffects?.some(se => se.type === "corruption")
+    );
+    if (entropy && !player.statusEffects.some(e => e.type === "corruption")) {
+      return { type: "ability", ability: entropy };
+    }
+  }
+
   const kill = abilities.find(a =>
     estimateAbilityDamage(enemy, player, a) >= player.hpCurrent
   );
