@@ -921,6 +921,8 @@
         <div id="enemyManaFill" class="bar-fill"></div>
         <span id="enemyManaText" class="bar-text">MP 0 / 0</span>
       </div>
+
+      <div id="enemyIdentity" class="identity-line"></div>
   
       <button id="inspectEnemyBtn" class="btn inspect-btn">Inspect</button>
     </div>
@@ -1425,6 +1427,8 @@
       document.getElementById("enemyName").textContent = e.name || "Enemy";
       document.getElementById("enemyLevel").textContent =
         "Lv " + (e.level || 1);
+      document.getElementById("enemyIdentity").textContent =
+        `${enemy.profession} • ${enemy.element} • ${enemy.subrace} • ${enemy.variant}`;
   
       updateHPBar("enemyHpFill", "enemyHpText", e.hpCurrent, e.hpMax);
       updateManaBar(
