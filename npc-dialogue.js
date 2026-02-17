@@ -2,6 +2,8 @@
 import { SETTLEMENTS } from "./settlement-definitions.js";
 import { getWorldState } from "./world-state.js";
 import { NPC_TEMPLATES } from "./npc-definitions.js";
+import { NPC_REACTIONS } from "./npc-reactions.js";
+import { NPC_WORLDSTATE_REACTIONS } from "./npc-worldstate.js";
 
 /* ---------------------------------------------------------
    MAIN ENTRY POINT
@@ -10,94 +12,138 @@ export function getNPCDialogue(npc, region, player = null) {
   const template = NPC_TEMPLATES[npc.template] || null;
   if (!template) return "…";
 
-  // 1. Crisis dialogue
-  if (region?.crisis) {
-     const crisisLines = template.dialogue?.crisis;
-     if (crisisLines?.length) return pick(crisisLines);
-  }
-   if (settlement?.crisis) {
-      const crisisLines = template.dialogue?.crisis;
-      if (crisisLines?.length) return pick(crisisLines);
-   }
+  const world = getWorldState();
+  const settlement = SETTLEMENTS[npc.settlementId] || null;
 
-  // 2. Boss awakened
+  const lines = [];
+
+  /* ---------------------------------------------------------
+     1. Crisis dialogue (region or settlement)
+  --------------------------------------------------------- */
+  if (region?.crisis || settlement?.crisis) {
+    const crisisLines = template.dialogue?.crisis;
+    if (crisisLines?.length) return pick(crisisLines);
+  }
+
+  /* ---------------------------------------------------------
+     2. Boss awakened
+  --------------------------------------------------------- */
   if (region?.worldBossActive && region?.worldBossAwakening) {
     const bossLines = template.dialogue?.bossAwakened;
     if (bossLines?.length) return pick(bossLines);
   }
 
-  // 3. Boss defeated
+  /* ---------------------------------------------------------
+     3. Boss defeated
+  --------------------------------------------------------- */
   if (region?.worldBossDefeated) {
     const bossDefeated = template.dialogue?.bossDefeated;
     if (bossDefeated?.length) return pick(bossDefeated);
   }
 
-  // 4. Reputation-based flavor (Phase 3)
+  /* ---------------------------------------------------------
+     4. Identity-aware reactions (Phase F11)
+  --------------------------------------------------------- */
+  if (player?.lastIdentityKill) {
+    const id = player.lastIdentityKill;
+    const reactionPool = NPC_REACTIONS[id];
+    if (reactionPool?.length) {
+      const reaction = pick(reactionPool);
+      lines.push(reaction);
+    }
+  }
+
+  /* ---------------------------------------------------------
+     5. World-state reactions (Phase F11)
+  --------------------------------------------------------- */
+  if (region?.crisis && NPC_WORLDSTATE_REACTIONS.crisis[region.crisis]) {
+    lines.push(NPC_WORLDSTATE_REACTIONS.crisis[region.crisis]);
+  }
+
+  if (world.anomaly && NPC_WORLDSTATE_REACTIONS.anomaly[world.anomaly]) {
+    lines.push(NPC_WORLDSTATE_REACTIONS.anomaly[world.anomaly]);
+  }
+
+  if (world.migration && NPC_WORLDSTATE_REACTIONS.migration[world.migration]) {
+    lines.push(NPC_WORLDSTATE_REACTIONS.migration[world.migration]);
+  }
+
+  /* ---------------------------------------------------------
+     6. Reputation-based flavor
+  --------------------------------------------------------- */
   if (player) {
-    const rep = player.reputation?.[region.key] || 0;
-    const repLine = reputationLine(rep, npc);
+    const repLine = reputationLine(player, region, npc);
     if (repLine) return repLine;
   }
 
-   if (player.bounty?.[region.key] > 0) {
-     return `${npc.name} whispers: "The guards are looking for you."`;
-   }
+  /* ---------------------------------------------------------
+     7. Bounty warning
+  --------------------------------------------------------- */
+  if (player?.bounty?.[region.key] > 0) {
+    return `${npc.name} whispers: "The guards are looking for you."`;
+  }
 
-  // 5. Seasonal flavor
+  /* ---------------------------------------------------------
+     8. Seasonal flavor
+  --------------------------------------------------------- */
   const seasonLine = seasonalLine();
-  if (seasonLine) return seasonLine;
+  if (seasonLine) lines.push(seasonLine);
 
-  // 6. Idle dialogue
+  /* ---------------------------------------------------------
+     9. Royal Courtier special logic
+  --------------------------------------------------------- */
+  if (npc.template === "royal_courtier" && player) {
+    const rep = player.reputation?.[region.key] || 0;
+
+    if (rep >= 2000) {
+      const high = template.dialogue?.highReputation;
+      if (high?.length) return pick(high);
+    }
+
+    const active = player.quests?.active || [];
+
+    if (active.includes("royal_intro")) {
+      return pick(template.dialogue.royalQuestline.intro);
+    }
+    if (active.includes("royal_trial")) {
+      return pick(template.dialogue.royalQuestline.trial);
+    }
+    if (active.includes("royal_oath")) {
+      return pick(template.dialogue.royalQuestline.oath);
+    }
+  }
+
+  /* ---------------------------------------------------------
+     10. Idle dialogue fallback
+  --------------------------------------------------------- */
   const idle = template.dialogue?.idle;
-  if (idle?.length) return pick(idle);
+  if (idle?.length) lines.push(pick(idle));
 
-   // Royal reputation flavor
-   if (npc.template === "royal_courtier") {
-     const rep = player.reputation?.[region.key] || 0;
-   
-     if (rep >= 2000) {
-       const lines = template.dialogue?.highReputation;
-       if (lines?.length) return pick(lines);
-     }
-   
-     // Questline-aware dialogue
-     const active = player.quests.active;
-     if (active.includes("royal_intro")) {
-       return pick(template.dialogue.royalQuestline.intro);
-     }
-     if (active.includes("royal_trial")) {
-       return pick(template.dialogue.royalQuestline.trial);
-     }
-     if (active.includes("royal_oath")) {
-       return pick(template.dialogue.royalQuestline.oath);
-     }
-   }
-  return "…";
+  return lines.length ? pick(lines) : "…";
 }
 
 /* ---------------------------------------------------------
-   REPUTATION FLAVOR (Phase 3 integration)
+   REPUTATION FLAVOR
 --------------------------------------------------------- */
-function reputationLine(rep, npc) {
-  if (player) {
-     const rep = player.reputation?.[region.key] || 0;
-     
-     if (rep >= 2000) {
-       return `${npc.name} looks with stars in their eyes. "It is an honor to meet you, Hero!"`;
-     }
-     if (rep >= 250) {
-       return `${npc.name} smiles warmly. "You're a true friend to our people."`;
-     }
-     if (rep >= 100) {
-       return `${npc.name} nods. "Good to see you again."`;
-     }
-     if (rep < 0) {
-       return `${npc.name} eyes you suspiciously. "Watch yourself."`;
-     }
-     if (rep < -50) {
-       return `${npc.name} glares at you. "You shouldn't be here."`;
-     }
-   }
+function reputationLine(player, region, npc) {
+  const rep = player.reputation?.[region.key] || 0;
+
+  if (rep >= 2000) {
+    return `${npc.name} looks at you with awe. "It is an honor to meet you, Hero."`;
+  }
+  if (rep >= 250) {
+    return `${npc.name} smiles warmly. "You're a true friend to our people."`;
+  }
+  if (rep >= 100) {
+    return `${npc.name} nods. "Good to see you again."`;
+  }
+  if (rep < -50) {
+    return `${npc.name} glares. "You shouldn't be here."`;
+  }
+  if (rep < 0) {
+    return `${npc.name} eyes you suspiciously. "Watch yourself."`;
+  }
+
   return null;
 }
 
@@ -114,12 +160,12 @@ function seasonalLine() {
       "Spring always brings hope."
     ],
     summer: [
-      "Hot day, isn't it?",
-      "Summer nights are the best."
+      "Hot day, isn't it.",
+      "Summer nights carry strange warmth."
     ],
     autumn: [
       "The leaves are turning again.",
-      "Autumn winds carry strange whispers."
+      "Autumn winds carry whispers."
     ],
     winter: [
       "Cold enough to freeze your bones.",
