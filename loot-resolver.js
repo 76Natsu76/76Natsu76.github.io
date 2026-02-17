@@ -5,7 +5,8 @@ import { LOOT_TABLES } from "./loot-table.js";
 import { FAMILY_LOOT_RULES } from "./family-loot-rules.js";
 import { biomeLoot } from "./biome-loot.js";
 import { FLAVOR_LOOT_RULES } from "./flavor-loot-rules.js";
-
+import { PROFESSION_LOOT, ELEMENT_LOOT, SUBRACE_LOOT,
+  VARIANT_LOOT } from "./identity-loot.js";
 import { getRegionState, getCurrentSeason } from "./world-state.js";
 import { SEASON_DEFINITIONS } from "./season-definitions.js";
 import { CRISIS_DEFINITIONS } from "./crisis-definitions.js";
@@ -83,6 +84,35 @@ export function resolveLoot(enemy, context, player) {
     }
   }
 
+  // -----------------------------------------
+  // PHASE F9A — Identity Loot
+  // -----------------------------------------
+  
+  // Profession loot (enemy profession)
+  const identityProfLoot = [];
+  if (enemy.profession && PROFESSION_LOOT[enemy.profession]) {
+    identityProfLoot.push(...PROFESSION_LOOT[enemy.profession]);
+  }
+  
+  // Element loot
+  const identityElemLoot = [];
+  if (enemy.element && ELEMENT_LOOT[enemy.element]) {
+    identityElemLoot.push(...ELEMENT_LOOT[enemy.element]);
+  }
+  
+  // Subrace loot
+  const identitySubraceLoot = [];
+  if (enemy.subrace && SUBRACE_LOOT[enemy.subrace]) {
+    identitySubraceLoot.push(...SUBRACE_LOOT[enemy.subrace]);
+  }
+  
+  // Variant loot
+  const identityVariantLoot = [];
+  if (enemy.variant && VARIANT_LOOT[enemy.variant]) {
+    identityVariantLoot.push(...VARIANT_LOOT[enemy.variant]);
+  }
+
+
   // Base rarity pool
   const basePool = regionLoot[rarity] || [];
 
@@ -106,6 +136,10 @@ export function resolveLoot(enemy, context, player) {
   addWeighted(eventLoot, rarity);
   addWeighted(profLoot, rarity);
   addWeighted(flavorLoot, rarity);
+  addWeighted(identityProfLoot, rarity);
+  addWeighted(identityElemLoot, rarity);
+  addWeighted(identitySubraceLoot, rarity);
+  addWeighted(identityVariantLoot, rarity);
 
   if (!weightedPool.length) return [];
 
@@ -189,6 +223,21 @@ export function resolveLoot(enemy, context, player) {
     for (const item of results) {
       if (item.factionTags?.includes(factionId)) {
         item.quantity += Math.ceil(influence * 0.1);
+      }
+    }
+  }
+
+  // Identity rarity boosts
+  if (enemy.variant === "mythic") {
+    for (const item of results) {
+      item.rarityBoost = (item.rarityBoost || 0) + 1;
+    }
+  }
+  
+  if (enemy.element === "void") {
+    for (const item of results) {
+      if (item.tags?.includes("void")) {
+        item.quantity += 1;
       }
     }
   }
