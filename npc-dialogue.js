@@ -4,6 +4,8 @@ import { getWorldState } from "./world-state.js";
 import { NPC_TEMPLATES } from "./npc-definitions.js";
 import { NPC_REACTIONS } from "./npc-reactions.js";
 import { NPC_WORLDSTATE_REACTIONS } from "./npc-worldstate.js";
+import { ROYAL_COURTIER_DIALOGUE } from "./dialogue/royal-courtier-dialogue.js";
+import { SETTLEMENT_DIALOGUE } from "./dialogue/settlement-dialogue.js";
 
 /* ---------------------------------------------------------
    MAIN ENTRY POINT
@@ -40,6 +42,27 @@ export function getNPCDialogue(npc, region, player = null) {
     const bossDefeated = template.dialogue?.bossDefeated;
     if (bossDefeated?.length) return pick(bossDefeated);
   }
+
+   /* ---------------------------------------------------------
+     -- Settlement dialogue
+  --------------------------------------------------------- */
+   if (settlement?.prosperity != null) {
+     const p = settlement.prosperity;
+     if (p >= 1.3) lines.push(pick(SETTLEMENT_DIALOGUE.prosperity.high));
+     else if (p >= 0.9) lines.push(pick(SETTLEMENT_DIALOGUE.prosperity.medium));
+     else lines.push(pick(SETTLEMENT_DIALOGUE.prosperity.low));
+   }
+   
+   if (settlement?.morale != null) {
+     const m = settlement.morale;
+     if (m >= 1.3) lines.push(pick(SETTLEMENT_DIALOGUE.morale.high));
+     else if (m >= 0.9) lines.push(pick(SETTLEMENT_DIALOGUE.morale.medium));
+     else lines.push(pick(SETTLEMENT_DIALOGUE.morale.low));
+   }
+
+   if (settlement?.identity && SETTLEMENT_DIALOGUE.identityFlavor[settlement.identity]) {
+     lines.push(pick(SETTLEMENT_DIALOGUE.identityFlavor[settlement.identity]));
+   }
 
   /* ---------------------------------------------------------
      4. Identity-aware reactions (Phase F11)
@@ -92,26 +115,33 @@ export function getNPCDialogue(npc, region, player = null) {
   /* ---------------------------------------------------------
      9. Royal Courtier special logic
   --------------------------------------------------------- */
-  if (npc.template === "royal_courtier" && player) {
-    const rep = player.reputation?.[region.key] || 0;
-
-    if (rep >= 2000) {
-      const high = template.dialogue?.highReputation;
-      if (high?.length) return pick(high);
-    }
-
-    const active = player.quests?.active || [];
-
-    if (active.includes("royal_intro")) {
-      return pick(template.dialogue.royalQuestline.intro);
-    }
-    if (active.includes("royal_trial")) {
-      return pick(template.dialogue.royalQuestline.trial);
-    }
-    if (active.includes("royal_oath")) {
-      return pick(template.dialogue.royalQuestline.oath);
-    }
-  }
+  if (npc.template === "royal_courtier") {
+     const rc = ROYAL_COURTIER_DIALOGUE;
+   
+     // High rep
+     if (player?.reputation?.[region.key] >= 2000) {
+       return pick(rc.highReputation);
+     }
+   
+     // Questline
+     const active = player?.quests?.active || [];
+     if (active.includes("royal_intro")) return pick(rc.royalQuestline.intro);
+     if (active.includes("royal_trial")) return pick(rc.royalQuestline.trial);
+     if (active.includes("royal_oath")) return pick(rc.royalQuestline.oath);
+   
+     // Identity reaction
+     if (player?.lastIdentityKill && rc.identityReactions[player.lastIdentityKill]) {
+       return pick(rc.identityReactions[player.lastIdentityKill]);
+     }
+   
+     // Throne room flavor
+     if (npc.location === "throne_room") {
+       return pick(rc.throneRoom);
+     }
+   
+     // Idle fallback
+     return pick(rc.idle);
+   }
 
   /* ---------------------------------------------------------
      10. Idle dialogue fallback
