@@ -1,69 +1,83 @@
 Goblins - Weak on their own but deadly in a group. Traveled in packs in order to kill tired travelers. 
 
-Tiny slime - Harmless and cute creatures. Some people even kept them as pets due to their small size and low maintenance. 
+Tiny Slime - Harmless and cute creatures. Some people even kept them as pets due to their small size and low maintenance. 
 
 Slime - When a tiny slime consumed enough material it will turn into a slime. Some say if a specific material was fed to them enough times, something strange happened. 
 
-Giant rat - Giant creature that would spread diseases. Used to inhabit abandoned houses and cellars. 
+Giant Rat - Giant creature that would spread diseases. Used to inhabit abandoned houses and cellars. 
 
-Stray hound - Discarded dog that eventually lost itself to disease. Stronger than your average dog but were manageable. 
+Stray Hound - Discarded dog that eventually lost itself to disease. Stronger than your average dog but were manageable. 
 
-Sticky slime - When a tiny slime was fed enough adhesive/sticky material (or a creature that makes such material) it would turn into a sticky slime. The sticky slime could produce a substance that would adhere to any surface and was nigh impossible to unstick. 
+Sticky Slime - When a tiny slime was fed enough adhesive/sticky material (or a creature that makes such material) it would turn into a sticky slime. The sticky slime could produce a substance that would adhere to any surface and was nigh impossible to unstick. 
 
 Bandit - A lowlife human that stole from weak or inexperienced travelers 
 
-Feral tracker - Subspecies of stray hound. These beasts were known for their extremely strong sense of smell that could track people from miles away. 
+Feral Tracker - Subspecies of stray hound. These beasts were known for their extremely strong sense of smell that could track people from miles away. 
 
 Cult Novice - Inexperienced zealot devoted to their demonic master. Due to their lack of knowledge they were relatively weak. 
 
 Wolf - Beast known for hunting in packs. If you found one, more are sure to follow. 
 
-Corrosive slime - When a tiny slime absorbed enough corrosive material they turned into a corrosive slime. Their acid could melt through even the toughest material. 
+Corrosive Slime - When a tiny slime absorbed enough corrosive material they turned into a corrosive slime. Their acid could melt through even the toughest material. 
 
-Sigil binder - A witch that used a mysterious group of symbols to cast spells. Any nonwitch who attempted to decipher them were killed by unknown means.
+Sigil Binder - A witch that used a mysterious group of symbols to cast spells. Any nonwitch who attempted to decipher them were killed by unknown means.
 
 Hobgoblin - A stronger version of a goblin. They tended to show up fewer in number than goblins but they still never alone.
 
 Kobold - A relative of the ancient dragons. They maintained a hidden civilization that they defended fiercely to maintain bloodline purity.
 
-Alpha mastiff - A stronger more dominant stray hound. Could control other strays by emitting a disgusting scent. 
+Alpha Mastiff - A stronger more dominant stray hound. Could control other strays by emitting a disgusting scent. 
 
 Skeleton - Undead bones reconstructed and animated with dark magic. Almost no personality was maintained, unless their will was superhuman.
 
-Royal slime - When a slime was nearing the end its life it would become a royal slime. It could control nearby slimes by moving its body in weird motions. People who had seen those body movements had described them as "oddly alluring".
+Royal Slime - When a slime was nearing the end its life it would become a royal slime. It could control nearby slimes by moving its body in weird motions. People who had seen those body movements had described them as "oddly alluring".
 
-Spirit channeler -A medium that would allow wandering spirits to inhabit their body. This would strengthen them proportional to the strength of that body
+Spirit Channeler -A medium that would allow wandering spirits to inhabit their body. This would strengthen them proportional to the strength of that body
 
-Archer rogue - A stealthy assassin that would kill targets in order to obtain money through bounties. They seem to have no loyalties, even to one another.
+Archer Rogue - A stealthy assassin that would kill targets in order to obtain money through bounties. They seem to have no loyalties, even to one another.
 
-Howling warg - A wolf like beast that was far stronger and faster than normal ones. They tended to be seen being ridden by members of the orc race.
+Howling Warg - A wolf like beast that was far stronger and faster than normal ones. They tended to be seen being ridden by members of the orc race.
 
-Grand occultist - A far more experienced zealot towards their demonic master. They would have done anything in order to summon and harness demonic power.
+Grand Occultist - A far more experienced zealot towards their demonic master. They would have done anything in order to summon and harness demonic power.
 
-Bandit captain - The leader of a group of bandits. They were much stronger and faster than their subordinates.
+Bandit Captain - The leader of a group of bandits. They were much stronger and faster than their subordinates.
 
-Skeleton archer - A type of skeleton that primarily used a bow and arrow. They were lethal at a range but manageable up close.
+Skeleton Archer - A type of skeleton that primarily used a bow and arrow. They were lethal at a range but manageable up close.
 
 Zombies - Creatures that like skeletons were brought to life due to dark magic. But the corpses were newer so the skin had not fully decayed.
 
 Ghoul - A superior zombie that evolved due to consuming enough flesh. These ghouls were pale in complexion and surprisingly fast.
 
-Giant spider - A giant spider 🙂
+Giant Spider - A giant spider 🙂
 
-Ranger scout - Humans adept with ranged weapons. Theses rangers were adept at hunting and tracking monsters.
+Ranger Scout - Humans adept with ranged weapons. Theses rangers were adept at hunting and tracking monsters.
 
-Monk disciple - These trainees were on their way to become monks. Monks harnessed internal energy in order the strengthen themselves
+Monk Disciple - These trainees were on their way to become monks. Monks harnessed internal energy in order the strengthen themselves
 
-Shadow step initiate- A person who was studying in assassination. They were light on their feet and would'nt leave a trace of their existance.
+Shadow Step Initiate - A person who was studying in assassination. They were light on their feet and would'nt leave a trace of their existance.
 
-Arcane bloom student- A child who was training in nature magic in order to maintain the natural balance of the world
+Arcane Bloom Student - A child who was training in nature magic in order to maintain the natural balance of the world
 
-Shaman of thorns- A human who used nature magic in order to use totems to enhance their strength. These totems could be found throughout the land and would bless those who found them with enhanced strength.
+Shaman of Thorns - A human who used nature magic in order to use totems to enhance their strength. These totems could be found throughout the land and would bless those who found them with enhanced strength.
 
-Druid of storms- These powerful sorcerers would draw upon the magic that is found within nature in order to create and control weather. They were very dangerous and needed to be avoided. Anyone who would dare to harm nature had to answer to them.
+Druid of Storms - These powerful sorcerers would draw upon the magic that is found within nature in order to create and control weather. They were very dangerous and needed to be avoided. Anyone who would dare to harm nature had to answer to them.
 
-Paladin Initaite- A student who was training to become a paladin. They had a unique way of strengthening their body through specialized training.
+Paladin Initaite - A student who was training to become a paladin. They had a unique way of strengthening their body through specialized training.
 
-Assassin Shade- An assassin who was specialized in sneaking around undetected. They could blend into and phase through shadows.
+Assassin Shade - An assassin who was specialized in sneaking around undetected. They could blend into and phase through shadows.
 
-Terror knight- A scorned knight who was run over by a chariot driven by their king as punishment for disobedience.
+Terror Knight - A scorned knight who was run over by a chariot driven by their king as punishment for disobedience.
+
+Giant Boar - A giant beast that once roamed the plains. Some villages would keep them in pens in order to breed them for food.
+
+Banshee - A female spirit that had a scream that could drive the living to insanity. They were known to attach to one human at a time and would attack and human who would get close to them.
+
+Wraith- A spirit of a human who gave into despair and ended their own life. They wandered throughout the region, haunting the living and attempted to make them feel the same despair they felt. 
+
+Fire Elemental - A race of spirits that specialized in fire magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
+
+Water Elemental - A race of spirits that specialized in water magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
+
+Earth Elemental - A race of spirits that specialized in earth magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
+
+Wind Elemental - A race of spirits that specialized in wind magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
