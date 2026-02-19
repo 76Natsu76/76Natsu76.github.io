@@ -81,3 +81,11 @@ Water Elemental - A race of spirits that specialized in water magic. They were a
 Earth Elemental - A race of spirits that specialized in earth magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
 
 Wind Elemental - A race of spirits that specialized in wind magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
+
+Lightning Elemental - A race of spirits that specialized in electricity magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
+
+Ice Elemental - A race of spirits that specialized in ice and frost magic. They were at war with all the other spirit races in order to gain control over their sacred ceremonial site.
+
+Poison Elemental - Unlike the other elementals the poison elemental was man made through experimentation. The poison elementals were ostracized by the others due to their unnatural creation.
+
+Treant - Tree spirits that were formed when humans would cut down forests as a defense mechanism. They ware extremely strong and would fight without any regard for their life.
